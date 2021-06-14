@@ -22,7 +22,7 @@ pip install package-name
 # how to use requirements.txt to recreate all the required python libraries
 pip install -r requirements.txt.txt
 
-#create requirements
+# create requirements
 pip freeze > requirements
 
 References
