@@ -8,10 +8,8 @@ An attempt to teach kids a programming language - python
 - notepad
 
 # install virtualenv
-Virtual env --> https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/
-py -m pip install virtualenv
-or
-python -m pip install virtualenv
+- Virtual env --> https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/
+- py -m pip install virtualenv / python -m pip install virtualenv
 
 # create virtual env and activate
 virtualenv venv
