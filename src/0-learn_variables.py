@@ -25,6 +25,38 @@ language to represent the chemical structure of molecules. And most importantly:
 Programming languages are formal languages that have been designed to express computations. 
 '''
 
+'''
+Languages can be - interpreted, compiled or run-time compiled. 
+Interpreted: Python is an example of this. It processes a program line by line. As an example, 
+if in a 10 line program, line 3 has a problem, then the program will run line one and line two,
+then fail at line 3.
+
+Compiled: c/c++ is an example of this. It will compile the entire program and if there is a single 
+failure anywhere it will not run the entire code.
+
+Bytecode compiled:  Java compiles it's program into byte code, when the program runs the java's 
+JIT (just in time byte code compiler) compiler will compile  code and optimize 
+the code as the porgeam is running/executing.
+'''
+
+'''
+How to declare a variable in Python
+Python is a dynamic-typed language, which means we don't need to mention the variable type 
+or declare before using it - unlike Java or C . It makes to Python the most efficient and easy to use language. 
+Every variable is treated as an object in Python.
+
+Before declaring a variable, we must follow the given rules.
+
+The first character of the variable can be an alphabet or (_) underscore.
+Special characters (@, #, %, ^, &, *) should not be used in variable name.
+Variable names are case sensitive. For example - age and AGE are two different variables.
+Reserve words cannot be declared as variables.
+ref: https://www.javatpoint.com/how-to-declare-a-variable-in-python
+'''
+
+# variable declaration example in java
+# int value_int = 200
+
 value_int = 200
 #value_int = int(200)
 value_float = 3.14
@@ -39,6 +71,10 @@ print(type(value_int))
 
 
 value_string_concatenation = "hello" + "world?"
+
+var_apple = 'Apple pie'
+print(len(var_apple))                           # 9
+
 value_string_float_concatenation = "hello" + 3.14
 # How about "hello" * 3 ??
 

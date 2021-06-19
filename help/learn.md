@@ -1,0 +1,9 @@
+- variable  - https://www.javatpoint.com/how-to-declare-a-variable-in-python
+- operators - https://www.w3schools.com/python/python_operators.asp
+- if/else   - https://www.w3schools.com/python/python_conditions.asp
+- loop      - https://www.w3schools.com/python/python_while_loops.asp
+- array     - https://www.w3schools.com/python/python_arrays.asp
+- dictionary - https://www.w3schools.com/python/python_dictionaries.asp
+- json
+- package
+- exception
