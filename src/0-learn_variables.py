@@ -83,17 +83,23 @@ value_int_float = value_int + value_float
 
 print(value_int_float)
 
-print("hello " + "World " + 2021)
+#print("hello " + "World " + 2021)
 
 # string formatting not used
 # this works but not preferred
-print('value_int : ' + value_int)
+#print('value_int : ' + value_int)
 
 # string formatting, f-string
 # this is preferred
 print(f'value_int : {value_int}')
 
 value_multiplication_operator = value_int * value_float
-print(f'result of value_multiplication_operator: {value_multiplication_operator}')
+print('result of value_multiplication_operator: ', value_multiplication_operator)
+#print(f'result of value_multiplication_operator: {value_multiplication_operator}')
+#print('result of value_multiplication_operator: {0}'.format(value_multiplication_operator))
+
+# using format() method and refering
+# a position of the object
+print('{0} and {1}'.format('Geeks', 'Portal'))
 
 # read --> https://greenteapress.com/thinkpython2/html/thinkpython2002.html
