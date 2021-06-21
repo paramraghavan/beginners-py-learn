@@ -89,12 +89,24 @@ print(value_int_float)
 # this works but not preferred
 #print('value_int : ' + value_int)
 
+
+value_multiplication_operator = value_int * value_float
+print('result of value_multiplication_operator: ', value_multiplication_operator)
+
+#string formatting
+# @see for more details --> https://www.w3schools.com/python/ref_string_format.asp
+txt1 = "My name is {fname}, I'm {age}".format(fname = "John", age = 36)
+txt2 = "My name is {0}, I'm {1}".format("John",36)
+txt3 = "My name is {}, I'm {}".format("John",36)
+
+print(txt1)
+print(txt2)
+print(txt3)
+
 # string formatting, f-string
 # this is preferred
 print(f'value_int : {value_int}')
 
-value_multiplication_operator = value_int * value_float
-print('result of value_multiplication_operator: ', value_multiplication_operator)
 #print(f'result of value_multiplication_operator: {value_multiplication_operator}')
 #print('result of value_multiplication_operator: {0}'.format(value_multiplication_operator))
 
