@@ -24,8 +24,8 @@ pip freeze > requirements
 
 References
 ----------------------
-https://github.com/Akuli/python-tutorial **
-https://github.com/OmkarPathak/Python-Programs
-https://github.com/geekcomputers/Python
-https://greenteapress.com/thinkpython2/html/thinkpython2002.html
-https://dev.to/lucs1590/python-module-vs-package-vs-library-vs-framework-4i0p
+- https://github.com/Akuli/python-tutorial **
+- https://github.com/OmkarPathak/Python-Programs
+- https://github.com/geekcomputers/Python
+- https://greenteapress.com/thinkpython2/html/thinkpython2002.html
+- https://dev.to/lucs1590/python-module-vs-package-vs-library-vs-framework-4i0p
