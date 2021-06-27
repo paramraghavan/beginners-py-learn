@@ -7,6 +7,13 @@ sentence.split() creates a list of words in the sentence,
 # to get help
 help(str.split)
 
+import random
+
+x= ''
+while x != 'xit':
+    print(random.randint(1, 6))
+    x= input('Roll the dice again, xit to Exit')
+
 
 sentence = input("Enter a sentence: ")
 
