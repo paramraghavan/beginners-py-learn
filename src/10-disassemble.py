@@ -6,6 +6,7 @@ using Cython, then use a C compiler of your choice to get it down to assembly.
 
 import dis
 
+help(dis)
 
 def add_numbers(a,b):
     c = a + b
