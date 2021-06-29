@@ -26,7 +26,7 @@ Process, thread
 -----------------------
 - https://edu.gcfglobal.org/en/computerbasics/understanding-operating-systems/1/ - basic
 - https://www.uow.edu.au/student/learning-co-op/technology-and-software/operating-systems/ - basic
- http://graphics.cs.cmu.edu/courses/15-466-f19/notes/big-picture.html **
+- http://graphics.cs.cmu.edu/courses/15-466-f19/notes/big-picture.html **
 - https://web.stanford.edu/class/cs101/software-1.html *
 - https://www.backblaze.com/blog/whats-the-diff-programs-processes-and-threads/ - see how process works
 - https://thierrysans.me/CSCC69/lectures/01/slides/CSCC69-TheBigPicture.pdf *
