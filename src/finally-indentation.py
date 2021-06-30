@@ -12,3 +12,9 @@ Python uses indentation to indicate a block of code.
 ref: https://www.w3schools.com/python/gloss_python_indentation.asp *
 https://www.geeksforgeeks.org/indentation-in-python/ - optional
 '''
+
+
+for i in range(1,10):
+    i = i+1
+    #print(i)
+print(i)
