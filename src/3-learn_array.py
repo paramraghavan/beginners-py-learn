@@ -50,5 +50,7 @@ print(a)
 
 thing = (1, 2, 3)
 print(thing)
+for item in thing:
+    print(item)
 #try
 thing.append(4)

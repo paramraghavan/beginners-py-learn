@@ -4,6 +4,20 @@
 - spyder
 - notepad
 
+AWS CLI
+------------------
+- Install aws cli
+  python -m pip aws
+  install aws cli msi executable
+  - https://s3.amazonaws.com/aws-cli/AWSCLI64PY3.msi
+
+- run  'aws configure' from command line
+AWS Access Key ID [None]: accesskey
+AWS Secret Access Key [None]: secretkey
+Default region name [None]: 
+Default output format [None]
+
+
 # install virtualenv
 Virtual env --> https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/
 py -m pip install virtualenv
