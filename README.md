@@ -30,3 +30,14 @@ References
 - https://github.com/geekcomputers/Python
 - https://greenteapress.com/thinkpython2/html/thinkpython2002.html
 - https://dev.to/lucs1590/python-module-vs-package-vs-library-vs-framework-4i0p
+
+# Module is a file which contains various Python functions and global variables. 
+It is simply just .py extension file which has python executable code.
+
+# Package is a collection of modules. It must contain an init.py file as a
+flag so that the python interpreter processes it as such. The init.py
+could be an empty file without causing issues.
+
+# Library is a collection of packages.
+
+# Framework is a collection of libraries.
