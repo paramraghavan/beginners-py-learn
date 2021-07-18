@@ -27,6 +27,10 @@ for word in sentence.split():
         counts[word] = 1
 
 print()     # display an empty line
+
+for item in counts:
+    print(item)
+
 for word, count in counts.items():
     if count == 1:
         # "1 times" looks weird
