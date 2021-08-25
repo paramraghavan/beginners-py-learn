@@ -2,7 +2,9 @@
 function() calls a function without any arguments, and function(1, 2, 3)
  calls a function with 1, 2 and 3 as arguments.
 When a function is called, it does something and returns something.
-function(arguments) is "replaced" with the return value in the code that called it. For example, stuff = function() calls a function, and then does stuff = the_return_value and the return value ends up in stuff.
+function(arguments) is "replaced" with the return value in the code that called it. For example,
+stuff = function() calls a function, and then does stuff = the_return_value and the return value
+ends up in stuff.
 Python comes with print and input. They are built-in functions.
 Avoid variable names that conflict with built-in functions.
 
@@ -32,14 +34,6 @@ def add_function_second(value1, value2):
 
 return_value = add_function_second(1,4);
 print(f'adding numbers add_function_second: {return_value}')
-
-
-# return_value = add_function_later(1,4);
-# print(f'adding numbers add_function_later: {return_value}')
-
-def add_function_later(value1, value2):
-    total  = value1 + value2
-
 
 '''
 

@@ -44,8 +44,8 @@ b.append(4)
 print(b)
 print(a)
 
-#Tuples
-#Tuples are a lot like lists, but they're immutable so they can't be
+# Tuples
+# Tuples are a lot like lists, but they're immutable so they can't be
 # changed in-place. We create them like lists, but with () instead of [].
 
 thing = (1, 2, 3)
