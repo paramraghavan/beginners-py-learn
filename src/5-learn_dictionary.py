@@ -25,3 +25,17 @@ county_capital_dict["japan"] = "tokyo"
 # print(county_capital_dict)
 
 print(f'capital of bhutan(this is key) : {county_capital_dict["bhutan"]}(this is value)')
+
+dict = {}
+dict["key1"] = "One"
+dict["key2"] = "Two"
+dict["key3"] = "Three"
+dict["key6"] = "six"
+
+for item in dict:
+    print(item + ' = ' + dict[item])
+
+print('-------------------------------------------')
+
+for key, value in dict.items():
+    print(key + ' = ' + value)
