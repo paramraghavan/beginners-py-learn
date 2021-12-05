@@ -36,3 +36,6 @@ References
 - Package is a collection of modules. It must contain an init.py file as a flag so that the python interpreter processes it as such. The init.py could be an empty file without causing issues.
 - Library is a collection of packages.
 - Framework is a collection of libraries.
+
+# try
+- help('builtins')
