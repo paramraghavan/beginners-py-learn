@@ -22,8 +22,8 @@ def say_bye():
 
 
 # applying decorator literally
-say_hello = my_decorator(say_hello)
-say_hello()
+say_hello_with_decorator_wrapper = my_decorator(say_hello)
+say_hello_with_decorator_wrapper()
 print()
 print('-----------------------------------')
 print()
