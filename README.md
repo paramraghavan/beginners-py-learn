@@ -39,3 +39,8 @@ References
 
 # try
 - help('builtins')
+
+# [Data Structure and Python](https://towardsdatascience.com/which-python-data-structure-should-you-use-fa1edd82946c#:~:text=Python%20has%20primitive%20(or%20basic,rather%20than%20a%20single%20value.)
+![img.png](img.png)
+
+Tuples are immutable, you cannot add, delete, or change items after a tuple is created.
