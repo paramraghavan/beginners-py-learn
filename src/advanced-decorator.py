@@ -1,6 +1,6 @@
 '''
-A decorator is a design pattern that allows a user to add new functionality to an existing object
-without modifying its structure.
+A decorator is a design pattern that allows a user to add new functionality to an
+existing object without modifying its structure.
 
 ref: https://www.geeksforgeeks.org/timing-functions-with-decorators-python/
 '''
