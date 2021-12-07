@@ -45,4 +45,5 @@ References
 
 Tuples are immutable, you cannot add, delete, or change items after a tuple is created.
 
-ref: http://home.ustc.edu.cn/~huang83/ds/Data%20Structures%20and%20Algorithms%20Using%20Python.pdf
+# Book on [Data Structure with Python](http://home.ustc.edu.cn/~huang83/ds/Data%20Structures%20and%20Algorithms%20Using%20Python.pdf) 
+
