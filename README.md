@@ -12,8 +12,8 @@ An attempt to teach kids a programming language - python
 - py -m pip install virtualenv / python -m pip install virtualenv
 
 # create virtual env and activate
-virtualenv venv
-venv\Scripts\activate
+- virtualenv venv
+- venv\Scripts\activate
 
 # install packages
 pip install package-name
