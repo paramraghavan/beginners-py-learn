@@ -84,7 +84,7 @@ x.make_bread()
 this is a delicious toast
 </pre>
 
-- [python inheritance and more](https://elfi-y.medium.com/inheritance-in-python-with-abstract-base-class-abc-5e3b8e910e5e)
+- [click here to learn more on python inheritance](https://elfi-y.medium.com/inheritance-in-python-with-abstract-base-class-abc-5e3b8e910e5e)
 
 # [Data Structure and Python](https://towardsdatascience.com/which-python-data-structure-should-you-use-fa1edd82946c)
 ![img.png](img.png)
