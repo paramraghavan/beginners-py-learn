@@ -40,9 +40,53 @@ References
 # try
 - help('builtins')
 
+
+# Inheritance in Python with abstract base class abc
+- https://elfi-y.medium.com/inheritance-in-python-with-abstract-base-class-abc-5e3b8e910e5e
+## Abstract Base Classes (ABCs)
+Abstract base classes are a form of interface checking. They are classes that contain abstract methods, which are methods declared but without implementation. ABCs are blueprint, cannot be instantiated, and require subclasses to provide implementations for the abstract methods.
+In Python, we use the module ABC. ABC works by
+defining an abstract base class, and ,
+use concrete class implementing an abstract class either by
+— register the class with the abc or,
+— subclass directly from the abc
+
+### Example
+
+<pre>
+from abc import ABC, abstractmethod
+class Flour(ABC):
+  @abstractmethod
+  def make_bread(self):
+    pass
+class Toast(Flour):
+  pass
+x = Toast()
+========================
+Traceback (most recent call last):
+  File "main.py", line 11, in <module>
+    x = Toast()
+TypeError: Can't instantiate abstract class Toast with abstract methods make_bread
+</pre>
+
+- You can see we can’t implement Toast class without implementing the make_bread method.
+<pre>
+from abc import ABC, abstractmethod
+class Flour(ABC):
+  @abstractmethod
+  def make_bread(self):
+    pass
+class Toast(Flour):
+  def make_bread(self):
+  print ("this is a delicious toast")
+x = Toast()
+x.make_bread()
+========================
+this is a delicious toast
+</pre>
+
 # [Data Structure and Python](https://towardsdatascience.com/which-python-data-structure-should-you-use-fa1edd82946c)
 ![img.png](img.png)
-
 Tuples are immutable, you cannot add, delete, or change items after a tuple is created.
 
 # Book on [Data Structure with Python](http://home.ustc.edu.cn/~huang83/ds/Data%20Structures%20and%20Algorithms%20Using%20Python.pdf) 
