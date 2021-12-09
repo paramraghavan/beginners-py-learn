@@ -1,4 +1,4 @@
-# kids-py-learn
+# beginners-py-learn
 An attempt to teach kids a programming language - beginners python 
 
 #IDE
