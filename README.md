@@ -42,7 +42,6 @@ References
 
 
 # Inheritance in Python with abstract base class abc
-- https://elfi-y.medium.com/inheritance-in-python-with-abstract-base-class-abc-5e3b8e910e5e
 ## Abstract Base Classes (ABCs)
 Abstract base classes are a form of interface checking. They are classes that contain abstract methods, which are methods declared but without implementation. ABCs are blueprint, cannot be instantiated, and require subclasses to provide implementations for the abstract methods.
 In Python, we use the module ABC. ABC works by
@@ -84,6 +83,8 @@ x.make_bread()
 ========================
 this is a delicious toast
 </pre>
+
+- [python inheritance and more](https://elfi-y.medium.com/inheritance-in-python-with-abstract-base-class-abc-5e3b8e910e5e)
 
 # [Data Structure and Python](https://towardsdatascience.com/which-python-data-structure-should-you-use-fa1edd82946c)
 ![img.png](img.png)
