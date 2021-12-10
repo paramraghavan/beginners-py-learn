@@ -85,7 +85,13 @@ this is a delicious toast
 </pre>
 
 - [click here to learn more on python inheritance](https://elfi-y.medium.com/inheritance-in-python-with-abstract-base-class-abc-5e3b8e910e5e)
-- [Advanced Sample Code](https://github.com/paramraghavan/python-from-a-java-developer/tree/main/src)
+- [Patterns - code examples ](src/patterns)
+  - Class for Name  - load module class or via file load.
+  - copy, deep copy
+  - decorator
+  - interface
+  - multithreading
+  - stringbuilder  
 
 # [Data Structure and Python](https://towardsdatascience.com/which-python-data-structure-should-you-use-fa1edd82946c)
 ![img.png](img.png)
