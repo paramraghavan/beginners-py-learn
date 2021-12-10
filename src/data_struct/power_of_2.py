@@ -6,6 +6,7 @@ class PowTwo:
     def __init__(self, max=0):
         self.max = max
 
+    # the self returned should implement __next__
     def __iter__(self):
         self.n = 0
         return self
