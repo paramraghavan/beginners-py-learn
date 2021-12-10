@@ -89,7 +89,7 @@ this is a delicious toast
 
 # [Data Structure and Python](https://towardsdatascience.com/which-python-data-structure-should-you-use-fa1edd82946c)
 ![img.png](img.png)
-Tuples are immutable, you cannot add, delete, or change items after a tuple is created.
+- Tuples are immutable, you cannot add, delete, or change items after a tuple is created.
 
 # Book on [Data Structure with Python](http://home.ustc.edu.cn/~huang83/ds/Data%20Structures%20and%20Algorithms%20Using%20Python.pdf) 
 - [for examples see](src/data_struct)
