@@ -31,6 +31,7 @@ class Bag:
         return self._theItems.pop(ndx)
 
     # Returns an iterator for traversing the list of items.
+    # this return _BagIterator which should  implement __next__
     def __iter__(self):
         return _BagIterator(self._theItems)
 
@@ -41,9 +42,6 @@ class _BagIterator:
     def __init__(self, theList):
         self._bagItems = theList
         self._curItems = 0
-    #
-    # def __iter__(self):
-    #     return self
 
     # returns the next item in the list
     def __next__(self):
