@@ -1,7 +1,11 @@
 # Concurrent Parallel and Asynchronous methods
 - **Concurrency** is when the execution of multiple tasks is interleaved, instead of each task being executed sequentially one after another.
 - **Parallelism** is when these tasks are actually being executed in parallel.
+-![image](https://user-images.githubusercontent.com/52529498/145838588-779a071f-1d28-4fd1-a5c7-d025dca96ba8.png)
+- **Asynchrony** is a separate concept (even though related in some contexts). It refers to the fact that one event might be happening at a different time (not in synchrony) to another event. The below diagrams illustrate what's the difference between a synchronous and an asynchronous execution, where the actors can correspond to different threads, processes or even servers.
 
+- ![image](https://user-images.githubusercontent.com/52529498/145838828-24605398-03ad-46b8-bb1f-a59aeec2e056.png)
+- ![image](https://user-images.githubusercontent.com/52529498/145838855-0296111a-a567-4adb-97a4-428311c8d3dc.png)
 
 
 ref: https://stackoverflow.com/questions/4844637/what-is-the-difference-between-concurrency-parallelism-and-asynchronous-methods
