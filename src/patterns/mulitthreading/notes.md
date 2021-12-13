@@ -8,4 +8,6 @@
 - ![image](https://user-images.githubusercontent.com/52529498/145838855-0296111a-a567-4adb-97a4-428311c8d3dc.png)
 
 
-ref: https://stackoverflow.com/questions/4844637/what-is-the-difference-between-concurrency-parallelism-and-asynchronous-methods
+# References 
+- https://stackoverflow.com/questions/4844637/what-is-the-difference-between-concurrency-parallelism-and-asynchronous-methods
+- https://medium.com/@sh.hooshyari/introduction-to-asyncio-in-python-36983d6a715a
