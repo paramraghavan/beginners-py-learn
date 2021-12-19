@@ -99,3 +99,8 @@ this is a delicious toast
 - Tuples are immutable, you cannot add, delete, or change items after a tuple is created.
 - Book on [Data Structure with Python](http://home.ustc.edu.cn/~huang83/ds/Data%20Structures%20and%20Algorithms%20Using%20Python.pdf) 
 - [Python and Data Structure - code examples](src/data_structure)
+
+# Mobile development using python - oh yes
+- https://docs.beeware.org/
+- https://kivy.org/#home. **Note**  packages for iOS can only be generated with Python 2.7 at the moment.
+- https://www.activestate.com/blog/the-best-python-frameworks-for-mobile-development-and-how-to-use-them/#can-i-use-python-for-mobile-app-development-on-both-android-and-ios
