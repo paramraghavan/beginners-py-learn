@@ -14,11 +14,11 @@ def my_decorator(func):
 
 
 def say_hello():
-	print("Hello Geeks!")
+	print("Hello Python!")
 
 @my_decorator
 def say_bye():
-	print("Bye Geeks!")
+	print("Bye Python!")
 
 
 # applying decorator literally
