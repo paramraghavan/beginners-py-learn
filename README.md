@@ -86,7 +86,7 @@ this is a delicious toast
 
 - [click here to learn more on python inheritance](https://elfi-y.medium.com/inheritance-in-python-with-abstract-base-class-abc-5e3b8e910e5e)
 
-# [Python and Patterns - code examples ](src/patterns)
+# [Python and Patterns - code examples ](src/advanced_stuff/patterns)
   - Class for Name  - load module class or via file load.
   - copy, deep copy
   - decorator
@@ -98,7 +98,7 @@ this is a delicious toast
 ![img.png](img.png)
 - Tuples are immutable, you cannot add, delete, or change items after a tuple is created.
 - Book on [Data Structure with Python](http://home.ustc.edu.cn/~huang83/ds/Data%20Structures%20and%20Algorithms%20Using%20Python.pdf) 
-- [Python and Data Structure - code examples](src/data_structure)
+- [Python and Data Structure - code examples](src/advanced_stuff/data_structure)
 
 # Mobile development using python - oh yes
 - https://docs.beeware.org/
