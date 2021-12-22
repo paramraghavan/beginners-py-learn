@@ -58,8 +58,10 @@ class Flour(ABC):
   @abstractmethod
   def make_bread(self):
     pass
+    
 class Toast(Flour):
   pass
+  
 x = Toast()
 ========================
 Traceback (most recent call last):
