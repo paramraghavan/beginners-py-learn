@@ -1,3 +1,7 @@
+'''
+See details at https://realpython.com/linked-lists-python/
+'''
+
 class Node:
     def __init__(self, data):
         self.data = data
