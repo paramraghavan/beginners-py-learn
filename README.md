@@ -7,7 +7,8 @@ An attempt to teach kids a programming language - beginners python
 - spyder
 - notepad
 
-# [Start learning](src/0-learn_variables.py)
+# Start Learning
+[Click here and start with 0-learn_variables.py](src/)
 
 # install virtualenv
 - Virtual env --> https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/
