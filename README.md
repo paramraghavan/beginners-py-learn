@@ -1,11 +1,13 @@
 # beginners-py-learn
 An attempt to teach kids a programming language - beginners python 
 
-#IDE
+# Any one of these IDE's
 - pycharm community editon - using pycharm
 - visual studio code
 - spyder
 - notepad
+
+# [Start learning](src/0-learn_variables.py)
 
 # install virtualenv
 - Virtual env --> https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/
