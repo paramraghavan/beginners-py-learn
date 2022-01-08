@@ -18,6 +18,18 @@ An attempt to teach kids a programming language - beginners python
 - virtualenv venv
 - venv\Scripts\activate
 
+# [Select and activate a environment/virtual environment in Visual Studio Code](https://code.visualstudio.com/docs/python/environments)
+By default, the Python extension looks for and uses the first Python interpreter it finds in the system path. To select a specific environment, 
+use the Python: Select Interpreter command from the Command Palette (Ctrl+Shift+P).
+
+![img_1.png](img_1.png)
+
+The Python: Select Interpreter command displays a list of available global environments, conda environments, and virtual environments. 
+The following image, for example, shows several Anaconda and CPython installations along with a conda environment and a virtual environment 
+(env) that's located within the workspace folder:
+
+![img_2.png](img_2.png)
+
 # install packages
 pip install package-name
 # how to use requirements.txt to recreate all the required python libraries
