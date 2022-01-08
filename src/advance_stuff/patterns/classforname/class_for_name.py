@@ -33,9 +33,13 @@ def get_class( kls ):
         m = getattr(m, comp)
     return m
 
-
+# example 1
 D = get_class("datetime.datetime")
 print(D)
 print(D.now())
 a = D( 2010, 4, 22 )
 print(a)
+
+# example 2
+printName = get_class("level1.level2.sample.printName")
+printName('Test2')
