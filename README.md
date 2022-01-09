@@ -34,7 +34,7 @@ The following image, for example, shows several Anaconda and CPython installatio
 # install packages
 pip install package-name
 # how to use requirements.txt to recreate all the required python libraries
-pip install -r requirements.txt.txt
+pip install -r requirements.txt
 
 # create requirements
 pip freeze > requirements
