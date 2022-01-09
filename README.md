@@ -17,6 +17,7 @@ An attempt to teach kids a programming language - beginners python
 # create virtual env and activate
 - virtualenv venv
 - venv\Scripts\activate
+- Use [this](src/advance_stuff/inspect_local_python_env.py) to inspect you local venv settings
 
 # [Select and activate a environment/virtual environment in Visual Studio Code](https://code.visualstudio.com/docs/python/environments)
 By default, the Python extension looks for and uses the first Python interpreter it finds in the system path. To select a specific environment, 
@@ -37,6 +38,7 @@ pip install -r requirements.txt.txt
 
 # create requirements
 pip freeze > requirements
+
 
 References
 ----------------------
