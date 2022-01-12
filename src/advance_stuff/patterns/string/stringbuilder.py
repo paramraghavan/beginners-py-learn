@@ -1,10 +1,22 @@
+'''
+
+StringIO performing almost the same as +=. I was expecting it to perform at least twice as
+well since it’s referenced in the Python 3 docs alongside .join as a way to concatenate
+str objects.
+
+join is the fastest
+
+ref: https://betterprogramming.pub/python-and-string-concatenation-31772a10fed
+'''
+
+
 from io import StringIO
 
 mylist = ["hello ", "here ", "is ", "a an example ", "of ", "Stringbuilder"]
-file_str = StringIO()
+buffer = StringIO()
 for i in range(len(mylist)):
-    file_str.write(mylist[i])
-print(file_str.getvalue())
+    buffer.write(mylist[i])
+print(buffer.getvalue())
 
 
 '''
@@ -13,7 +25,10 @@ join is preferred  mechanism to concatenate strings in python as it is was faste
 '''
 
 '''
-+
+problem with +=, +
+Since strings are immutable, whenever you join a string to another one it’s creating a new
+ string. With the strings getting bigger and bigger, more data needs to be copied in order 
+ to create these bigger string
 '''
 
 name = 'Guido van Rossum'
@@ -53,4 +68,7 @@ name = 'Guido van Rossum'
 year = 1991
 
 val =  "Python was created by {} and released in {}".format(name, year)
+
+
+
 
