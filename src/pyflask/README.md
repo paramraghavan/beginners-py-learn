@@ -62,5 +62,9 @@ if __name__=='__main__':
 - on browser localhost:5000
 - on browser localhost:5000/hello/flask
 
+Intresting Articles:
+- https://towardsdatascience.com/build-interactive-charts-using-flask-and-d3-js-70f715a76f93
+- https://github.com/samirsaci/matrix-miserables/blob/master/static/js/matrix.js
+
 
 
