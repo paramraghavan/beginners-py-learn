@@ -4,6 +4,9 @@ easier to learn than other frameworks like Django’s etc... It has less base co
 implement a simple web-Application. Flask is the collection of modules and libraries that
 helps the developer to write applications without writing the low-level codes such as protocols,
 thread management, etc. Flask is based on WSGI(Web Server Gateway Interface) toolkit and
-Jinja2 template engine.
+Jinja2 template engine. 
+>Note: Python 2.6 or higher is required for the installation of the Flask
+
+
 
 

@@ -4,7 +4,7 @@ StringIO performing almost the same as +=. I was expecting it to perform at leas
 well since it’s referenced in the Python 3 docs alongside .join as a way to concatenate
 str objects.
 
-join is the fastest
+# Note: join is the fastest, best option
 
 ref: https://betterprogramming.pub/python-and-string-concatenation-31772a10fed
 '''
@@ -17,6 +17,17 @@ buffer = StringIO()
 for i in range(len(mylist)):
     buffer.write(mylist[i])
 print(buffer.getvalue())
+
+
+'''
+ with join
+ If you are reading string from file stream add the it to python list, then use join
+ '''
+buffer = []
+buffer.append("hello ").append( "here ").append( "is ").append( "a an example ").append( "of ").append( "Stringbuilder")
+stream_data = ''.join(buffer)
+print(stream_data)
+
 
 
 '''
