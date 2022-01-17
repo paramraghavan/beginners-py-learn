@@ -5,7 +5,7 @@ elem = { 'TableList' : [ \
 }
 
 '''
-see the usage of for loop with the square brackets,
+see the usage of for loop within the list square brackets,
 building a array of dictionary items
 
 Result:
