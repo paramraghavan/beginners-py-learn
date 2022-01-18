@@ -39,15 +39,6 @@ pip install -r requirements.txt
 # create requirements
 pip freeze > requirements
 
-
-References
-----------------------
-- https://github.com/Akuli/python-tutorial **
-- https://github.com/OmkarPathak/Python-Programs
-- https://github.com/geekcomputers/Python
-- https://greenteapress.com/thinkpython2/html/thinkpython2002.html
-- https://dev.to/lucs1590/python-module-vs-package-vs-library-vs-framework-4i0p
-
 # What's Python Module, Package, Library, Framework
 - Module is a file which contains various Python functions and global variables. It is simply just .py extension file which has python executable code.
 - Package is a collection of modules. It must contain an init.py file as a flag so that the python interpreter processes it as such. The init.py could be an empty file without causing issues.
@@ -123,3 +114,12 @@ this is a delicious toast
 - https://docs.beeware.org/
 - https://kivy.org/#home. **Note**  packages for iOS can only be generated with Python 2.7 at the moment.
 - https://www.activestate.com/blog/the-best-python-frameworks-for-mobile-development-and-how-to-use-them/#can-i-use-python-for-mobile-app-development-on-both-android-and-ios
+
+
+References
+----------------------
+- https://github.com/Akuli/python-tutorial **
+- https://github.com/OmkarPathak/Python-Programs
+- https://github.com/geekcomputers/Python
+- https://greenteapress.com/thinkpython2/html/thinkpython2002.html
+- https://dev.to/lucs1590/python-module-vs-package-vs-library-vs-framework-4i0p
