@@ -7,6 +7,13 @@ sentence.split() creates a list of words in the sentence,
 # to get help
 help(str.split)
 
+import random
+
+x= ''
+while x != 'xit':
+    print(random.randint(1, 6))
+    x= input('Roll the dice again, xit to Exit')
+
 
 sentence = input("Enter a sentence: ")
 
@@ -20,6 +27,10 @@ for word in sentence.split():
         counts[word] = 1
 
 print()     # display an empty line
+
+for item in counts:
+    print(item)
+
 for word, count in counts.items():
     if count == 1:
         # "1 times" looks weird

@@ -7,14 +7,10 @@ sentence.split() creates a list of words in the sentence,
 # to get help
 help(str.split)
 
-import random
-
-x= ''
-while x != 'xit':
-    print(random.randint(1, 6))
-    x= input('Roll the dice again, xit to Exit')
-
-
+'''
+Read a string from standard input - which is your keyboard in this case.  
+The trailing newline is stripped.
+'''
 sentence = input("Enter a sentence: ")
 
 counts = {}     # {word: count, ...}
@@ -28,9 +24,17 @@ for word in sentence.split():
 
 print()     # display an empty line
 
-for item in counts:
-    print(item)
+'''
+item here reads the key value from counts dict,
+and we can use the counts[item] to get the value for
+key
+'''
+for key in counts:
+    print(f' key: {key} <> value: {counts[key]}')
 
+'''
+counts.items() here returns a list of (key,value) pairs
+'''
 for word, count in counts.items():
     if count == 1:
         # "1 times" looks weird
