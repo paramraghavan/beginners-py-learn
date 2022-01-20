@@ -9,6 +9,11 @@ print(f'string add: {str_add}')
 list_add = [1, 2, 3] + [4, 5]
 print(f'list add: {list_add}')
 
+l1 = [1, 2, 3]
+l2 = [4, 5]
+list_add_1 = [*l1, *l2]
+print(f'list add 1: {list_add_1}')
+
 tuple_add = (1, 2, 3) + (4, 5)
 print(f'tuple add: {tuple_add}')
 
