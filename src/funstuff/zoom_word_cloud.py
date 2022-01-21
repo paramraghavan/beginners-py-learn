@@ -2,6 +2,7 @@
 Create background image for online work meetings and interviews.
 Referenced from :
 https://towardsdatascience.com/fun-valentines-day-gift-ideas-for-python-programmers-a27e87b9211b
+https://python-course.eu/applications-python
 '''
 from wordcloud import WordCloud, STOPWORDS
 import imageio
