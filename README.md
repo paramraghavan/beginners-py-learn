@@ -123,3 +123,4 @@ References
 - https://github.com/geekcomputers/Python
 - https://greenteapress.com/thinkpython2/html/thinkpython2002.html
 - https://dev.to/lucs1590/python-module-vs-package-vs-library-vs-framework-4i0p
+- [fun with python](https://python-course.eu/applications-python)
