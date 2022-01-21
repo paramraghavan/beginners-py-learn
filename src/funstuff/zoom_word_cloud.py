@@ -4,6 +4,7 @@ Referenced from :
 https://towardsdatascience.com/fun-valentines-day-gift-ideas-for-python-programmers-a27e87b9211b
 https://python-course.eu/applications-python/python-wordcloud-tutorial.php
 https://python-course.eu/applications-python
+https://www.tutorialexample.com/python-create-word-cloud-image-by-word-frequency-or-weight-value-python-wordcloud-tutorial/
 '''
 from wordcloud import WordCloud, STOPWORDS
 import imageio
