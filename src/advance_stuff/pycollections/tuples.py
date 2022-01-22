@@ -11,7 +11,7 @@ for thing in github:
 print()
 
 '''
-collections.namedtuple
+pycollections.namedtuple
 '''
 
 import collections
