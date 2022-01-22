@@ -1,5 +1,6 @@
 '''
 Here we are reading the entire image and replacing all non black pixels with white pixels.
+https://stackoverflow.com/questions/60018903/how-to-replace-all-pixels-of-a-certain-rgb-value-with-another-rgb-value-in-openc
 '''
 
 #!/usr/bin/env python3
