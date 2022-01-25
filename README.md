@@ -124,3 +124,6 @@ References
 - https://greenteapress.com/thinkpython2/html/thinkpython2002.html
 - https://dev.to/lucs1590/python-module-vs-package-vs-library-vs-framework-4i0p
 - [fun with python](https://python-course.eu/applications-python)
+- [bigO](https://medium.com/@zoebai_70369/big-o-notation-time-and-space-complexity-305a1e301e35)
+- [big0](https://developerinsider.co/big-o-notation-explained-with-examples/#:~:text=O(2n)&text=An%20example%20of%20an%20O,very%20shallow%2C%20then%20rising%20meteorically)
+- [bigO](https://jarednielsen.com/big-o-factorial-time-complexity/)
