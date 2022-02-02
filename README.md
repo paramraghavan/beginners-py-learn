@@ -121,6 +121,8 @@ this is a delicious toast
 - https://kivy.org/#home. **Note**  packages for iOS can only be generated with Python 2.7 at the moment.
 - https://www.activestate.com/blog/the-best-python-frameworks-for-mobile-development-and-how-to-use-them/#can-i-use-python-for-mobile-app-development-on-both-android-and-ios
 
+# python packages
+- https://pypi.org/
 
 References
 ----------------------
