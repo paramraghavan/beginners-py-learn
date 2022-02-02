@@ -17,6 +17,12 @@ An attempt to teach kids a programming language - beginners python
 # create virtual env and activate
 - virtualenv venv
 - venv\Scripts\activate
+- above will get you into the virtual environmant shell
+- now you can install your packages in the above virtual enviroment
+  <pre>
+  pip install -r requiremments
+  Above installs the packages into this newly created virtual enviroment.
+  </pre>
 - Use [this](src/advance_stuff/inspect_local_python_env.py) to inspect you local venv settings
 
 # [Select and activate a environment/virtual environment in Visual Studio Code](https://code.visualstudio.com/docs/python/environments)
