@@ -60,7 +60,7 @@ class BinaryTree:
                     else:
                         curr_node = curr_node.right
 
-    # in  order traversal
+    # iterate in the sort order
     # traverse linked list depth first
     '''
         1) Create an empty stack S.
@@ -71,6 +71,12 @@ class BinaryTree:
          -> Print the popped item, set current = popped_item->right 
          -> Go to step 3.
         5) If current is NULL and stack is empty then we are done.
+        
+        first traverse all the way to the left a
+        print the leaf node
+        travel up pop this node
+        print this node,
+        check if the node  has a right
     '''
     def __iter__(self):
         current_node = self.root
