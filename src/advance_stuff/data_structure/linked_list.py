@@ -15,8 +15,10 @@ class LinkedList:
     def __init__(self, nodes=None):
         self.head = None
         if nodes is not None:
+            # pop usually pops the last or the nth item in the list like a stack
             node = Node(data=nodes.pop(0))
             self.head = node
+            # lists from 0th to nth index
             for elem in nodes:
                 node.next = Node(data=elem)
                 node = node.next

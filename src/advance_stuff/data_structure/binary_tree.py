@@ -71,12 +71,22 @@ class BinaryTree:
          -> Print the popped item, set current = popped_item->right 
          -> Go to step 3.
         5) If current is NULL and stack is empty then we are done.
-        
-        first traverse all the way to the left a
-        print the leaf node
-        travel up pop this node
-        print this node,
-        check if the node  has a right
+        looop:
+            #left
+            first traverse all the way to the left, 
+            keep storing the current node to the stack 
+            until you find the leaf node or the current node.left is None
+            if there are items in stack then
+             pop node out of the stack, assign it to current node
+            
+            # print node
+            print curent node
+            
+            #right
+            Now check if this current node has right node
+            check if the node does not have a right node then
+             pop item from stack and assign it to current node
+        continue the loop 
     '''
     def __iter__(self):
         current_node = self.root

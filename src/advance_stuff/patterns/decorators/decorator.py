@@ -29,3 +29,9 @@ print('-----------------------------------')
 print()
 # applying the decorator  using the @decortor_name  above the say_bye method defination
 say_bye()
+
+@my_decorator
+def say_hello_param(param_value):
+	print(param_value)
+
+say_hello_param('paramater value')
