@@ -1,9 +1,5 @@
 '''
 
-Note::
- The Python runtime does not enforce function and variable type annotations. They can be
-used by third party tools such as type checkers, IDEs, linters, etc.
-
 Important things to note about type hints:
 - They are not enforced at build or run time in any way by Python
 - Instead used by type checkers / linters (like mypy or pyright) and IDEs
@@ -22,8 +18,8 @@ https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html
 x: List[int] = [1]
 x: Set[int] = {6, 7}
 
-# For collections, the type of the collection item is in brackets
-# (Python 3.9+)
+# For Python 3.9+, the type of the collection item is in brackets
+#
 x: list[int] = [1]
 x: set[int] = {6, 7}
 
