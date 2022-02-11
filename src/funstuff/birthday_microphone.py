@@ -24,15 +24,15 @@ plt.axis("off")
 plt.show()
 
 wc_mic = WordCloud(width=1080,
-                   height=501,
+                   height=1080,
                    stopwords=STOPWORDS,
                    background_color="white",
                    max_words=1008,
-                   contour_width=3,
+                   contour_width=6,
                    repeat=True,
                    mask=mic_mask,
                    min_font_size=1,
-                   contour_color='darkred'
+                   contour_color='darkgreen'
                    )
 
 # wc_mic = WordCloud(background_color="white",
