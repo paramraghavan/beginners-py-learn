@@ -41,5 +41,7 @@ a = D( 2010, 4, 22 )
 print(a)
 
 # example 2
+# The __init__.py files are required to make Python treat
+# directories containing the file as packages.
 printName = get_class("level1.level2.sample.printName")
 printName('Test2')
