@@ -18,4 +18,5 @@
 
 
 ** Black and White to Color
-- https://www.pyimagesearch.com/2019/02/25/black-and-white-image-colorization-with-opencv-and-deep-learning/
+- ~~https://www.pyimagesearch.com/2019/02/25/black-and-white-image-colorization-with-opencv-and-deep-learning/~~
+- https://cv-tricks.com/opencv/deep-learning-image-colorization/
