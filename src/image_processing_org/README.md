@@ -12,11 +12,17 @@
 
 
 **Art**
-
-* https://github.com/anishathalye/neural-style
-*
+- https://towardsdatascience.com/art-with-ai-turning-photographs-into-artwork-with-neural-style-transfer-8144ece44bed
+- **https://github.com/anishathalye/neural-style**
 
 
 **Black and White to Color**
 - ~~https://www.pyimagesearch.com/2019/02/25/black-and-white-image-colorization-with-opencv-and-deep-learning/~~
 - https://cv-tricks.com/opencv/deep-learning-image-colorization/
+- **http://richzhang.github.io/colorization/**
+- https://github.com/richzhang/colorization.git
+- https://github.com/legolas123/cv-tricks.com.git
+
+**Image Upscaling**
+- https://learnopencv.com/super-resolution-in-opencv/
+- https://imgupscaler.com/

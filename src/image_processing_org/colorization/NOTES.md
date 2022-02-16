@@ -1,0 +1,4 @@
+ - git clone https://github.com/richzhang/colorization.git
+ - pip install requirements.txt  
+ - demo_release.py -i imgs/ansel_adams3.jpg -o imgs_out
+ - demo_release.py -i imgs/ansel_adams3.JPG -o  saved
