@@ -13,6 +13,8 @@
 - **http://richzhang.github.io/colorization/**
 - https://github.com/richzhang/colorization.git
 - https://github.com/legolas123/cv-tricks.com.git
+- https://github.com/junyanz/interactive-deep-colorization
+- https://github.com/junyanz/interactive-deep-colorization/tree/windows
 
 **Image Upscaling**
 - https://learnopencv.com/super-resolution-in-opencv/
