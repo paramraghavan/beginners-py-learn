@@ -147,3 +147,7 @@ Image Processing
 -----------------
 - https://towardsdatascience.com/image-enhancement-techniques-using-opencv-and-python-9191d5c30d45
 - https://www.adobe.com/express/feature/image/resize/png
+
+Interview Questions
+-------------------
+- https://www.mygreatlearning.com/blog/python-interview-questions/?amp
