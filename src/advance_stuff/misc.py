@@ -55,9 +55,8 @@ print('')
 print('Lists are mutable')
 
 '''
-Now let's use list. list's are immutable so in this case new arrays are created every time
-and assigned to a and b. But a and c are the one and the same immutable list, so they will 
-have the same address assigned
+Now let's use list. Everytime a list is initialized/new arrays are created, a new address location is assigned.
+Here a and b have diffrent address/memory location. But for a and c same address is assigned.
 '''
 a = [10, 20, 30]
 b = [10, 20, 30]
