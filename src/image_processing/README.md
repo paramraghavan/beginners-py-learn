@@ -27,3 +27,6 @@
 **Image Upscaling**
 - https://learnopencv.com/super-resolution-in-opencv/
 - https://imgupscaler.com/
+
+**Image Processing**
+- https://towardsdatascience.com/massive-tutorial-on-image-processing-and-preparation-for-deep-learning-in-python-1-e534ee42f122
