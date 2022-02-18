@@ -1,7 +1,7 @@
 '''
 
 Important things to note about type hints:
-- They are not enforced at build or run time in any way by Python
+- They are not enforced at build or runtime in any way by Python
 - Instead used by type checkers / linters (like mypy or pyright) and IDEs
 
 # In Python 3.8 and earlier, the name of the collection type is
