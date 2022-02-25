@@ -34,4 +34,4 @@ say_bye()
 def say_hello_param(param_value):
 	print(param_value)
 
-say_hello_param('paramater value')
+say_hello_param('parameter value')
