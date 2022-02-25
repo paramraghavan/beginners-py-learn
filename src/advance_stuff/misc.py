@@ -14,9 +14,9 @@ Result:
 tables = []
 tables += [
                 {
-                    "name": table["Name"],
+                    "name": item_dict["Name"],
                 }
-                for table in elem["TableList"]
+                for item_dict in elem["TableList"]
             ]
 
 print(tables)
