@@ -32,8 +32,8 @@ dict["key2"] = "Two"
 dict["key3"] = "Three"
 dict["key6"] = "six"
 
-for item in dict:
-    print(item + ' = ' + dict[item])
+for key in dict:
+    print(key + ' = ' + dict[key])
 
 print('-------------------------------------------')
 

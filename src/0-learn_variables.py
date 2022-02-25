@@ -42,7 +42,7 @@ the code as the porgeam is running/executing.
 '''
 How to declare a variable in Python
 Python is a dynamic-typed language, which means we don't need to mention the variable type 
-or declare before using it - unlike Java or C . It makes to Python the most efficient and easy to use language. 
+or declare before using it - unlike Java or C . It makes Python the most efficient and easy to use language. 
 Every variable is treated as an object in Python.
 
 Before declaring a variable, we must follow the given rules.

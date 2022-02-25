@@ -30,9 +30,9 @@ x = [1, 2, 3]
 x.append([4, 5])
 print(x)
 
-x = [1, 2, 3]
-x.extend([4, 5])
-print(x)
+y = [1, 2, 3]
+y.extend([4, 5])
+print(y)
 
 a = [1, 2, 3]
 b = a.copy()
