@@ -33,8 +33,12 @@ class LinkedList:
 
     # insert at the beginning of the list
     def add_first(self, node):
-        node.next = self.head
-        self.head = node
+        if self.head is None:
+            self.head = node
+            node.next = None
+        else:
+            node.next = self.head
+            self.head = node
 
     # Inserting a new node at the end of the list forces you to traverse
     # the whole linked list first and to add the new node when you reach the end.
