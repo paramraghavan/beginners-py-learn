@@ -1,6 +1,9 @@
 '''
 https://medium.com/@sh.hooshyari/introduction-to-asyncio-in-python-36983d6a715a
-
+https://realpython.com/async-io-python/ **
+python has a package asyncio for this purpose, it has two keywords:
+ async to define coroutines and
+ await to run coroutines
 '''
 
 import asyncio
