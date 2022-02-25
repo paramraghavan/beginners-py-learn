@@ -87,3 +87,15 @@ print(f'Are lists a and b both are one and the same? {a is b}')
 # are stored in or point to the same location/address
 # And this returns true
 print(f'Are lists a and c both are one and the same? {a is c}')
+
+
+
+'''
+Create pandas dataframe
+'''
+import pandas as pd
+
+dict_sample = {'head1':[14,15,16,17], 'head2':[24,25,26,27],'head3':[34,35,36,37], 'head4':[44,45,46,47]}
+df = pd.DataFrame.from_dict(dict_sample)
+print(type(df))
+print(df)
