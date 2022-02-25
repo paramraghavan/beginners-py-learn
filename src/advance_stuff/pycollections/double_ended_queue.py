@@ -11,7 +11,7 @@ names = collections.deque(['theelous3', 'Nitori', 'RubyPinch'])
 print(names)
 
 names.appendleft('wub_wub')
-names.append('go|dfish')
+names.append('goldfish')
 print(names)
 
 value = names.popleft()
