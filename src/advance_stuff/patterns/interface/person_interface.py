@@ -1,3 +1,7 @@
+'''
+Multiple inheritance is supported by python, https://www.geeksforgeeks.org/multiple-inheritance-in-python/
+'''
+
 from abc import ABC, abstractmethod
 class Person(ABC):
   @abstractmethod
