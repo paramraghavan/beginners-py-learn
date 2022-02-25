@@ -43,5 +43,14 @@ print(a)
 # example 2
 # The __init__.py files are required to make Python treat
 # directories containing the file as packages.
+# Getting handle to Node class
+Node = get_class("level1.level2.sample.Node")
+node = Node('hello')
+print(f'printing Node class instance: {node}')
+
+
+# example 3
+# The __init__.py files are required to make Python treat
+# directories containing the file as packages.
 printName = get_class("level1.level2.sample.printName")
 printName('Test2')
