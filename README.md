@@ -58,6 +58,14 @@ pip freeze > requirements
 - Library is a collection of packages.
 - Framework is a collection of libraries.
 
+# Protected variables
+ Protected variables are those data members of a class that can be accessed within the class and the classes derived from that class.
+ In Python, there is no existence of “Public” instance variables. However, we use underscore ‘_’ symbol to determine the access control of a
+ data member in a class. Any member prefixed with an underscore should be treated as a non-public part of the API or any Python code,
+ whether it is a function, a method or a data member. [see](src/protected.py)
+
+
+
 # try
 - help('builtins')
 
