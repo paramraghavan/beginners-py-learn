@@ -93,10 +93,8 @@ self in init method then you will get an error:
  3.  __name__ is a built-in variable which evaluates to the name of the current module. Thus it can be used to check 
   whether the current script is being run on its own or being imported somewhere else by combining it with if
   statement.
-  
-  4. ref https://www.geeksforgeeks.org/__name__-special-variable-python/?ref=lbp
 </pre>
-- [see](src/misc.py)
+- [see](src/advance_stuff/main.py)
 # [Sequence in python](src/advance_stuff/pycollections/sequence.md)
 
 
