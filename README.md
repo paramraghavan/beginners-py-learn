@@ -50,7 +50,8 @@ pip freeze > requirements.txt
 
 # What's Python Module, Package, Library, Framework
 - Module is a file which contains various Python functions and global variables. It is simply just a **'.py'** extension file which has python executable code.
-- Package is a collection of modules. It must contain an init.py file as a flag so that the python interpreter processes it as such. The init.py could be an empty file without causing issues.
+- Package is a collection of modules inside a directory/folder. This directory/folder must contain an init.py file as a flag so that the python interpreter 
+processes it as such. The init.py could be an empty file without causing issues.
 - Library is a collection of packages.
 - Framework is a collection of libraries.
 
