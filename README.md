@@ -64,7 +64,7 @@ processes it as such. The init.py could be an empty file without causing issues.
 
 #  What does the init method do in a Class defination? Why is it necessary? (etc.)
 
--The first argument of every class method, including init, is always a reference to the current instance of the class. By convention, this argument is always
+- The first argument of every class method, including init, is always a reference to the current instance of the class. By convention, this argument is always
  named self. In the init method, self refers to the newly created object; in other class methods, it refers to the instance whose method was called.
 
 - **Python doesn't force you on using "self". You can give it any name you want. But remember the first argument in a method definition is a reference
@@ -80,6 +80,23 @@ self in init method then you will get an error:
 # try
 - help('builtins')
 
+# __name__(A Special variable) in Python
+- <pre>
+ 1. __name__(A Special variable) in Python
+ 
+ 2. Since there is no main() function in Python, when the command to run a python program is given to the interpreter, the 
+  code that is at level 0 indentation is to be executed. However, before doing that, it will define a few special variables.
+  __name__ is one such special variable. If the source file is executed as the main program, the interpreter sets the
+  __name__ variable to have a value “__main__”. If this file is being imported from another module, __name__ will be 
+  set to the module’s name.
+ 
+ 3.  __name__ is a built-in variable which evaluates to the name of the current module. Thus it can be used to check 
+  whether the current script is being run on its own or being imported somewhere else by combining it with if
+  statement.
+  
+  4. ref https://www.geeksforgeeks.org/__name__-special-variable-python/?ref=lbp
+</pre>
+- [see](src/misc.py)
 # [Sequence in python](src/advance_stuff/pycollections/sequence.md)
 
 
