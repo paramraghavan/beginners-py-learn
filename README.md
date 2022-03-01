@@ -56,10 +56,11 @@ processes it as such. The init.py could be an empty file without causing issues.
 - Framework is a collection of libraries.
 
 # Protected variables
- Protected variables are those data members of a class that can be accessed within the class and the classes derived from that class.
+ - Protected variables are those data members of a class that can be accessed within the class and the classes derived from that class.
  In Python, there is no existence of “Public” instance variables. However, we use underscore ‘_’ symbol to determine the access control of a
  data member in a class. Any member prefixed with an underscore should be treated as a non-public part of the API or any Python code,
  whether **it is a function, a method or a data member.** [see](src/advance_stuff/protected.py)
+ - [ref](https://www.geeksforgeeks.org/protected-variable-in-python/)
 
 #  What does the init method do in a Class defination? Why is it necessary? (etc.)
 
