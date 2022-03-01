@@ -24,12 +24,8 @@ An attempt to teach kids a programming language - beginners python
 - virtualenv venv
 - venv\Scripts\activate
 - above will get you into the virtual environmant shell
-- now you can install your packages in the above virtual enviroment
-  <pre>
-  pip install -r requiremments
-  Above installs the packages into this newly created virtual enviroment.
-  </pre>
-
+- now to install all your packages(from requirements.txt) into the above newly created virtual enviroment, use
+  - pip install -r requiremments
 - See [here](src/advance_stuff/inspect_local_python_env.py) to inspect you local venv settings
 
 # [Select and activate a environment/virtual environment in Visual Studio Code](https://code.visualstudio.com/docs/python/environments)
@@ -50,7 +46,7 @@ pip install package-name
 pip install -r requirements.txt
 
 # create requirements
-pip freeze > requirements
+pip freeze > requirements.txt
 
 # What's Python Module, Package, Library, Framework
 - Module is a file which contains various Python functions and global variables. It is simply just a **'.py'** extension file which has python executable code.
