@@ -94,7 +94,7 @@ self in init method then you will get an error:
   whether the current script is being run on its own or being imported somewhere else by combining it with if
   statement.
 </pre>
-- [see](src/advance_stuff/main.py)
+- [see](src/advance_stuff/main/main.py)
 # [Sequence in python](src/advance_stuff/pycollections/sequence.md)
 
 
