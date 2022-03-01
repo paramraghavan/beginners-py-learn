@@ -82,6 +82,8 @@ self in init method then you will get an error:
 # try
 - help('builtins')
 
+# [Sequence in python](src/advance_stuff/pycollections/sequence.md)
+
 
 # Inheritance in Python with abstract base class abc
 ## Abstract Base Classes (ABCs)
