@@ -62,7 +62,7 @@ pip freeze > requirements
  Protected variables are those data members of a class that can be accessed within the class and the classes derived from that class.
  In Python, there is no existence of “Public” instance variables. However, we use underscore ‘_’ symbol to determine the access control of a
  data member in a class. Any member prefixed with an underscore should be treated as a non-public part of the API or any Python code,
- whether it is a function, a method or a data member. [see](src/protected.py)
+ whether **it is a function, a method or a data member.** [see](src/advance_stuff/protected.py)
 
 #  What does the init method do in a Class defination? Why is it necessary? (etc.)
 
@@ -77,7 +77,7 @@ self in init method then you will get an error:
 - init is short for initialization. It is a constructor which gets called when you make an instance of the class and it is not necessary. But
  usually it our practice to write init method for setting default state of the object. If you are not willing to set any state of the object
   initially then you don't need to write this method.
-- [see](src/class_defination.py)
+- [see](src/advance_stuff/class_defination.py)
 
 # try
 - help('builtins')
