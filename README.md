@@ -81,7 +81,7 @@ self in init method then you will get an error:
 - help('builtins')
 
 # __name__(A Special variable) in Python
-- <pre>
+ <pre>
  1. __name__(A Special variable) in Python
  
  2. Since there is no main() function in Python, when the command to run a python program is given to the interpreter, the 
