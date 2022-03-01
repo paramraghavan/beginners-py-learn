@@ -64,7 +64,20 @@ pip freeze > requirements
  data member in a class. Any member prefixed with an underscore should be treated as a non-public part of the API or any Python code,
  whether it is a function, a method or a data member. [see](src/protected.py)
 
+#  What does the init method do in a Class defination? Why is it necessary? (etc.)
 
+-The first argument of every class method, including init, is always a reference to the current instance of the class. By convention, this argument is always
+ named self. In the init method, self refers to the newly created object; in other class methods, it refers to the instance whose method was called.
+
+- **Python doesn't force you on using "self". You can give it any name you want. But remember the first argument in a method definition is a reference
+to the object** Python adds the self argument to the list for you; you do not need to include it when you call the methods. if you didn't provide
+self in init method then you will get an error:
+>TypeError: __init___() takes no arguments (1 given)
+
+- init is short for initialization. It is a constructor which gets called when you make an instance of the class and it is not necessary. But
+ usually it our practice to write init method for setting default state of the object. If you are not willing to set any state of the object
+  initially then you don't need to write this method.
+- [see](src/class_defination.py)
 
 # try
 - help('builtins')

@@ -7,6 +7,8 @@
 
 
 # Defining a class
+# init is short for initialization. It is a constructor which gets called when you make an instance of the class and it is not necessary.
+# Note here no __init__
 class Geek:
     ## protected data members
     _name = "R2J"
