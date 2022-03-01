@@ -11,14 +11,14 @@ An attempt to teach kids a programming language - beginners python
 [Click here and start with 0-learn_variables.py](src/)
 
 # install virtualenv
-- Virtual env --> https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/
-- py -m pip install virtualenv / python -m pip install virtualenv
-<pre>
-Note:
-If pip not installed:
-If pip isn’t installed you need to download the get-pip.py (https://bootstrap.pypa.io/get-pip.py)script and run it:
-$ python get-pip.py
-</pre>
+- [Virtual env](https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/)
+- py -m pip install virtualenv # use this
+- python -m pip install virtualenv # or this
+
+>Note: If pip isn’t installed
+>> you need to download the get-pip.py (https://bootstrap.pypa.io/get-pip.py) script 
+>> and run as follows
+>>> $ python get-pip.py
 
 # create virtual env and activate
 - virtualenv venv
