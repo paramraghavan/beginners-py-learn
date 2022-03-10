@@ -17,7 +17,7 @@ Avoid using the + operator for strings
 Don’t use the + operator for concatenation if you can avoid it. Because strings are immutable, every time you add an element to a string, 
 Python creates a new string and a new address. This means that new memory needs to be allocated each time the string is altered
 '''
-
+mymsg = ' my '
 # Don't
 msg='hello'+mymsg+'world'
 
@@ -44,7 +44,7 @@ def _generator(self):
 
 '''
 If you are iterating through data, you can use the cached version of the regex.
-'''
+
 import re
 match_regex=re.compile("foo|bar")
 
@@ -54,6 +54,7 @@ big_it = None
 for i in big_it:
     m = match_regex.search(i)
     pass
+'''
 
 '''
 Assign a function to a local variable, especially when invoking inside a loop.
@@ -78,6 +79,8 @@ mylist=[]
 for myword in oldList:
       mylist.append(myword.lower())
 
+print(mylist)
 
 # Better choice
-mylist = map(str.lower(), oldList)
+mylist_better = map(str.lower, oldList)
+print(list(mylist_better))
