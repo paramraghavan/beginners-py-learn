@@ -129,7 +129,7 @@ Traceback (most recent call last):
 TypeError: Can't instantiate abstract class Toast with abstract methods make_bread
 </pre>
 
-- You can see we can’t implement Toast class without implementing the make_bread method.
+- You can see we can’t instantiate Toast class without implementing the make_bread method.
 <pre>
 from abc import ABC, abstractmethod
 class Flour(ABC):
