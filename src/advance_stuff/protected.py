@@ -108,8 +108,8 @@ class Dog:
     def __init__(self, name):
         self.name = name    # instance variable unique to each instance
 
-d = Dog('Fido')
-e = Dog('Buddy')
+d = Dog('Romeo')
+e = Dog('Luca')
 d.kind
 print(80 *'-')
 print(f'class variable shared by all instances d.kind --> {d.kind} and e.kind -->  {e.kind}')
