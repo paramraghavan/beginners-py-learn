@@ -1,13 +1,7 @@
 '''
-
 Important things to note about type hints:
 - They are not enforced at build or runtime in any way by Python
 - Instead used by type checkers / linters (like mypy or pyright) and IDEs
-
-# In Python 3.8 and earlier, the name of the collection type is
-# capitalized, and the type is imported from the 'typing' module
-x: List[int] = [1]
-x: Set[int] = {6, 7}
 
 https://docs.python.org/3/library/typing.html
 https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html
@@ -24,7 +18,7 @@ x: list[int] = [1]
 x: set[int] = {6, 7}
 
 https://www.python.org/dev/peps/pep-0484/
-'''
+'''''
 
 from typing import List, Set, Dict, Tuple, Optional, Iterator
 
