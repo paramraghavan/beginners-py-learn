@@ -54,3 +54,13 @@ username, password = login()
 
 ref: https://github.com/Akuli/python-tutorial/blob/master/advanced/functions.md
 '''
+
+def login():
+    username = 'user1' #input("Username: ")
+    password = 'password' #input("Password: ")
+
+    return (username, password)
+
+username, password = login()
+print(80*'-')
+print(f'username : {username}, password: {password}')

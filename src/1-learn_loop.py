@@ -6,7 +6,7 @@ for char in s:
 
 print('basic for loop')
 # for (i=0; i <10; i++)
-for i in range(6):
+for i in range(10):
     print(f'counter {i}')
 
 print('for loop with skip count')
