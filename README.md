@@ -74,9 +74,9 @@ to the object** Python adds the self argument to the list for you; you do not ne
 self in init method then you will get an error:
 >TypeError: __init___() takes no arguments (1 given)
 
-- init is short for initialization. It is a constructor which gets called when you make an instance of the class and it is not necessary. But
- usually it our practice to write init method for setting default state of the object. If you are not willing to set any state of the object
-  initially then you don't need to write this method.
+- init is short for initialization. It is a constructor which gets called when you make an instance of the class
+  and it is not necessary. But usually it our practice to write init method for setting default state of the object.
+  If you are not willing to set any state of the object initially then you don't need to write this method.
 - [see](src/advance_stuff/class_defination.py)
 
 # try
@@ -129,7 +129,7 @@ Traceback (most recent call last):
 TypeError: Can't instantiate abstract class Toast with abstract methods make_bread
 </pre>
 
-- You can see we can’t implement Toast class without implementing the make_bread method.
+- You can see we can’t instantiate Toast class without implementing the make_bread method.
 <pre>
 from abc import ABC, abstractmethod
 class Flour(ABC):
@@ -138,7 +138,7 @@ class Flour(ABC):
     pass
 class Toast(Flour):
   def make_bread(self):
-  print ("this is a delicious toast")
+    print ("this is a delicious toast")
 x = Toast()
 x.make_bread()
 ========================
