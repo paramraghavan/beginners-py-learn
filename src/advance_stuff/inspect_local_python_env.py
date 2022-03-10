@@ -26,4 +26,4 @@ print(f'Returns the name of the Python modules that the current python env/shell
 print(f'Our platform \n {bcolors.BOLD}{sys.platform}{bcolors.ENDC}')
 print(f'All the arguments passed to program \n {bcolors.BOLD}{sys.argv}{bcolors.ENDC}')
 
-print('Other interesting omes -->  sys.exit, sys.stdout, sys.stdin and sys.stdin')
+print('Other interesting ones -->  sys.exit, sys.stdout, sys.stdin and sys.stdin')
