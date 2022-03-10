@@ -25,7 +25,8 @@ An attempt to teach kids a programming language - beginners python
 - venv\Scripts\activate
 - above will get you into the virtual environmant shell
 - now to install all your packages(from requirements.txt) into the above newly created virtual enviroment, use
-  - pip install -r requiremments
+  - pip install -r requiremments.txt
+- pip freeze > requirements.txt # creating the requirements file, this list all the packages used.
 - See [here](src/advance_stuff/inspect_local_python_env.py) to inspect you local venv settings
 
 # [Select and activate a environment/virtual environment in Visual Studio Code](https://code.visualstudio.com/docs/python/environments)
