@@ -5,17 +5,6 @@ data member in a class. Any member prefixed with an underscore should be treated
 whether it is a function, a method or a data member.
 '''''
 
-
-'''
-In the absence of any other superclasses that you specifically want to inherit from, the superclass should always be object,
-which is the root of all classes in Python.
-object is technically the root of "new-style" classes in Python.
-But, if you don't explicitly use the word object when creating classes, then Python 3.x implicitly
-inherits from the **object superclass**.
-'''''
-
-
-
 # Defining a class
 # init is short for initialization. It is a constructor which gets called when you make an instance of the class and it is not necessary.
 # Note here no __init__

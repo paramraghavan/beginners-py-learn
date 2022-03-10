@@ -1,13 +1,17 @@
 # Source: Class and Instance Variables
 # https://docs.python.org/2/tutorial/classes.html#class-and-instance-variables
 
-
 '''
+In the absence of any other superclasses that you specifically want to inherit from, the superclass should always be object,
+which is the root of all classes in Python.
+object is technically the root of "new-style" classes in Python.
+But, if you don't explicitly use the word object when creating classes, then Python 3.x implicitly
+inherits from the **object superclass**.
+
 1. Class variable
 2. instance variable
-
-'''
-
+3. MyClass explicitly inherits from the **object superclass**
+'''''
 class MyClass(object):
     # class variable
     my_CLS_var = 10
