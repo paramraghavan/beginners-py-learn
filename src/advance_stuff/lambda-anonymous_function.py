@@ -34,3 +34,13 @@ def myfunc(n):
 mydoublerfunc = myfunc(2)
 # prints 22
 print(mydoublerfunc(11))
+
+'''
+Another variation, spark UDF uses this way
+'''
+def multiplier(x,y):
+  return x * y
+
+fun = lambda x,y: multiplier(x,y)
+
+print(fun(22,34.1))
