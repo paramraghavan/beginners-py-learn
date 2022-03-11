@@ -36,7 +36,7 @@ mydoublerfunc = myfunc(2)
 print(mydoublerfunc(11))
 
 '''
-Another variation, spark UDF uses this way
+Another variation
 '''
 def multiplier(x,y):
   return x * y
