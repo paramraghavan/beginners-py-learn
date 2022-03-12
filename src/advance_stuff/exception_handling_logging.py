@@ -13,8 +13,9 @@ import psycopg2
 # 	Is the server running on that host and accepting TCP/IP connections?
 # --------------------------------------------------------------------------------
 #
+import traceback
+
 def printStackTrace(message:str) :
-    import traceback
     traceback_error_msg = traceback.format_exc()
     print(f'{80*"-"}\n{message}:\n{80*"-"}\n{traceback_error_msg}{80*"-"}')
 
