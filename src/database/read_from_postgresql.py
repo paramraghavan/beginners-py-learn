@@ -15,7 +15,8 @@ __debug_on__:bool = True
 __fetch_size__ = 100
 
 '''
-Reads and returns  one row at a time
+Reads and returns  one row at a time.
+We are limiting the fetch size to 100, so that all(fetchall) the records from the table are not read into memory
 '''
 def read_row__at_time_postgresql(table_name:str) ->Dict:
 
