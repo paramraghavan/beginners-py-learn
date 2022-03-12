@@ -1,6 +1,10 @@
 # read postgres
 import psycopg2
-import helper
+if __name__ == "__main__":
+    from helper import printStackTrace, start_key
+else:
+    from .helper import printStackTrace, start_key
+
 from typing import Dict
 
 database_name:str = 'testdb'
@@ -8,6 +12,7 @@ username:str = 'testdb'
 password:str =  'testdb'
 
 __debug_on__:bool = True
+__fetch_size__ = 100
 
 '''
 Reads and returns  one row at a time
@@ -21,17 +26,16 @@ def read_row__at_time_postgresql(table_name:str) ->Dict:
             print("Database opened successfully")
 
         cur = conn_postgresql.cursor()
+        # This fetches only 100 records from DB as batches
+        # If you don't specify, the default value is 2000
+        cur.itersize = __fetch_size__
         cur.execute("SELECT fname || ' ' || lname as StudentName, cid as ClassId from students")
-        rows = cur.fetchall()
 
         student_teacher = []
         # indicates end rows from database
         item = {}
-        item[helper.start_key] = helper.start_key
-        for row in rows:
-            # print("StudentName =", row[0])
-            # print("ClassId =", row[1], "\n")
-            # print('teacher =', {dict_of_teachers[row[1]]})
+        item[start_key] = start_key
+        for row in cur:
             item['StudentName'] = row[0]
             item['ClassId']     = row[1]
             if __debug_on__:
@@ -42,7 +46,7 @@ def read_row__at_time_postgresql(table_name:str) ->Dict:
         if __debug_on__:
             print("Operation done successfully")
     except Exception:
-        helper.printStackTrace('Error with postgres database')
+        printStackTrace('Error with postgres database')
         import sys
         sys.exit(-1)
     finally:
@@ -54,3 +58,9 @@ if __name__ == "__main__":
     __debug_on__ = False
     for item in read_row__at_time_postgresql('Students'):
         print(f'Student: {item["StudentName"]}, ClassId = {item["ClassId"]}')
+
+'''
+
+Notes:
+https://medium.com/dev-bits/understanding-postgresql-cursors-with-python-ebc3da591fe7
+'''

@@ -1,5 +1,9 @@
 import pymongo
-import helper
+if __name__ == "__main__":
+    from helper import printStackTrace, start_key
+else:
+    from .helper import printStackTrace, start_key
+
 from typing import Dict
 
 database_name:str = 'testdb'
@@ -38,7 +42,7 @@ def read_from_mongo_db_collection(name_of_collection:str) -> Dict:
         else:
             raise Exception('Error reading from mongodb cursor')
     except Exception:
-        helper.printStackTrace(f'Error reading from mongodb. for collection {collection_teachers}')
+        printStackTrace(f'Error reading from mongodb. for collection {collection_teachers}')
     finally:
         if client:
             client.close()
