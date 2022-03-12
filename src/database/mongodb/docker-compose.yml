@@ -1,0 +1,36 @@
+version: '3.1'
+services:
+  mongo:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_DATABASE=testdb
+      - MONGO_INITDB_ROOT_USERNAME=testdb
+      - MONGO_INITDB_ROOT_PASSWORD=testdb
+    volumes:
+      - ./config_mongo/teachers.json:/tmp/teachers.json
+    ports:
+      - 27017-27019:27017-27019
+  mongo-seed:
+    image: mongo:latest
+    command: mongoimport  --db testdb --collection teachers --file /tmp/teachers.json -u testdb -p testdb --authenticationDatabase admin -h mongo
+    volumes:
+      - ./config_mongo/teachers.json:/tmp/teachers.json
+
+    depends_on:
+      - mongo
+
+  mongo-express:
+    image: mongo-express:latest
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=testdb
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=testdb
+      - ME_CONFIG_BASICAUTH_USERNAME=testdb
+      - ME_CONFIG_BASICAUTH_PASSWORD=testdb
+    depends_on:
+          - mongo

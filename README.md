@@ -161,6 +161,10 @@ this is a delicious toast
 - Book on [Data Structure with Python](http://home.ustc.edu.cn/~huang83/ds/Data%20Structures%20and%20Algorithms%20Using%20Python.pdf) 
 - [Python and Data Structure - code examples](src/advance_stuff/data_structure)
 
+# Python and Databases
+- [Setup a local containarized rdbs instances](src/database/README.md), rdbms - Postgresql and nosql- MongoDB. Shows you how to do read operation
+  using python database driver psycopg2, write to database is left as an exercise.
+
 # Mobile development using python - oh yes
 - https://docs.beeware.org/
 - https://kivy.org/#home. **Note**  packages for iOS can only be generated with Python 2.7 at the moment.
