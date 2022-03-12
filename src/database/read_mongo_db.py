@@ -2,9 +2,9 @@ import pymongo
 import helper
 from typing import Dict
 
-database_name:str = 'singlestone'
-username:str = 'singlestone'
-password:str =  'singlestone'
+database_name:str = 'testdb'
+username:str = 'testdb'
+password:str =  'testdb'
 
 __debug_on__:bool = True
 

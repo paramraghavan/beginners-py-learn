@@ -10,6 +10,7 @@ services:
       - ./config_mongo/teachers.json:/tmp/teachers.json
     ports:
       - 27017-27019:27017-27019
+
   mongo-seed:
     image: mongo:latest
     command: mongoimport  --db testdb --collection teachers --file /tmp/teachers.json -u testdb -p testdb --authenticationDatabase admin -h mongo
@@ -21,6 +22,7 @@ services:
 
   mongo-express:
     image: mongo-express:latest
+    restart: always
     ports:
       - 8081:8081
     environment:

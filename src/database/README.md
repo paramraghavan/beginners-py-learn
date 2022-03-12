@@ -79,17 +79,14 @@ PostgreSQL GUI: http://localhost:8080  (make sure you put `postgres` as the serv
 When writing code to connect to a data store, you should instead use **`localhost`** as the hostname.
 
 
-#### Errors
-- SQLSTATE[08006] when connecting from postgresql client http://localhost:8080
-Try recreating it from scratch:
-Delete ./postgres folder
-docker compose stop
-docker compose down
-docker compose up -d
+#### stop/remove/start from command line
+- docker compose stop
+- docker compose down
+- docker compose up -d
 
-
-docker network ls  
-docker inspect postgres
+- other commands
+  - docker network ls  
+  - docker inspect postgres
 
 
 # reference
