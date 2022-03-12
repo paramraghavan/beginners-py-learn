@@ -18,4 +18,5 @@ app using the directions provided.
 possible to read all the data into memory at one time.
   
 ## Database Servers
+* You have to have postgressql and mongo db up and running, see steps to deploy below.
 * [Steps to deploy and start postgresql and mongodb instances in the docker container](../../database/README.md)
