@@ -173,6 +173,19 @@ this is a delicious toast
 # python packages
 - https://pypi.org/
 
+
+#  D-Tale for interactive data exploration
+## What is  D-Tale?
+ D-Tale is the combination of a Flask back-end and a React front-end to bring you an easy way to view & analyze Pandas
+ data structures. It integrates seamlessly with ipython notebooks & python/ipython terminals. Currently this tool supports
+ such Pandas objects as DataFrame, Series, MultiIndex, DatetimeIndex & RangeIndex.
+**Notes**
+- pip install dtale
+- https://towardsdatascience.com/introduction-to-d-tale-5eddd81abe3f
+- https://www.analyticsvidhya.com/blog/2021/06/exploring-pandas-dataframe-with-d-tale/11
+- https://pypi.org/project/dtale/
+
+
 References
 ----------------------
 - https://github.com/Akuli/python-tutorial **
