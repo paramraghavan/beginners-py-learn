@@ -17,7 +17,7 @@ A `docker-compose.yml` file has been provided. To startup the containerized loca
 > Containers defined in postgresql are :
 >> postgresql_postgres - the postgresql db instance, postgresql_postgres - the postgresql client ui  
 > 
-> Docker containers to be started - postgresql_postgres and postgresql_postgres
+> Docker containers to be started - postgresql_postgres and postgresql_admin
 
 
 > What is docker compose
@@ -71,5 +71,26 @@ database: testdb
 PostgreSQL table: `students`
 PostgreSQL GUI: http://localhost:8080  (make sure you put `postgres` as the server)
 
+
+### Postgresql Browser Client
+![img_1.png](img_1.png)
+
 ### Note: 
 When writing code to connect to a data store, you should instead use **`localhost`** as the hostname.
+
+
+#### Errors
+- SQLSTATE[08006] when connecting from postgresql client http://localhost:8080
+Try recreating it from scratch:
+Delete ./postgres folder
+docker compose stop
+docker compose down
+docker compose up -d
+
+
+docker network ls  
+docker inspect postgres
+
+
+# reference
+- https://medium.com/@etiennerouzeaud/play-databases-with-adminer-and-docker-53dc7789f35f
