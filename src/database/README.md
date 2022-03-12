@@ -6,9 +6,21 @@ A `docker-compose.yml` file has been provided. To startup the containerized loca
 > **Pre-requisite**:
 >> You should have docker installed. If you are like me and using windows as your development enviroment
 >> use this [link](https://docs.docker.com/desktop/windows/install/) to install docker desktop
->>> Using docker command  *'docker compose up'* to deploy container defined in docker-compose.yml
+>>> Using docker command  *'docker compose up'* to deploy multiple containers defined in docker-compose.yml
+> 
+> Containers defined in mongodb are :
+>> mongodb_mongo - the mongo db instance, mongodb_mongo-express - the mongo client ui  
+> 
+> Docker containers to be started - mongodb_mongo and mongodb_mongo
+> 
+> > 
+> Containers defined in postgresql are :
+>> postgresql_postgres - the postgresql db instance, postgresql_postgres - the postgresql client ui  
+> 
+> Docker containers to be started - postgresql_postgres and postgresql_postgres
 
-> What is docket compose
+
+> What is docker compose
 >> Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file
 > to configure your application’s services. Then, with a single command, you create and start all the services from your configuration 
 
@@ -24,6 +36,7 @@ A `docker-compose.yml` file has been provided. To startup the containerized loca
 ```
 cd ./mongodb
 docker compose up
+Above creates a containerized instance of mongodb, creates teachers collection and adds data to this collection
 ```
 
 ### Connection Information
@@ -44,6 +57,7 @@ MongoDB GUI: http://localhost:8081
 ```
 cd ./postgresql
 docker compose up
+Above creates a containerized instance of postgresql database, creates students table and adds data to this table.
 ```
 
 ### Connection Information
