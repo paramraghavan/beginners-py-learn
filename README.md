@@ -162,7 +162,7 @@ this is a delicious toast
 - [Python and Data Structure - code examples](src/advance_stuff/data_structure)
 
 # Python and Databases
-- [Setup a local containarized rdbs instances](src/database/README.md), rdbms - Postgresql and nosql- MongoDB. Shows you how to do read operation
+- [Setup a local containerized rdbs instances](src/database/README.md), rdbms - Postgresql and nosql- MongoDB. Shows you how to do read operation
   using python database driver psycopg2, write to database is left as an exercise.
 
 # Mobile development using python - oh yes

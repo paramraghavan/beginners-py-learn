@@ -1,7 +1,7 @@
 # Database Servers
 
 Docker compose will run all needed development databases locally. 
-A `docker-compose.yml` file has been provided. To startup the containaried local development environment, run:
+A `docker-compose.yml` file has been provided. To startup the containerized local development environment, run:
 
 > **Pre-requisite**:
 >> You should have docker installed. If you are like me and using windows as your development enviroment
