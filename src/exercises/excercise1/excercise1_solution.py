@@ -6,7 +6,7 @@ student_column_purge_list = ['id','email','ssn','address'] # remove id,email,ssn
 
 def process(students_file_name:str, teachers_file_name:str) -> str:
     # read csv file into df
-    students_df = pd.read_csv(students_file_name, delimiter='_')
+    students_df = pd.read_csv(students_file_name, delimiter=sep)
     print(students_df)
     assert len(students_df.columns) == 7, f"Something wrong with the file {students_file_name}"
     assert 'fname' in students_df.columns and 'lname' in students_df.columns and 'cid' in students_df.columns, f'Something wrong with the file {students_file_name}, columns - fname, lname or cid do not exist.'
