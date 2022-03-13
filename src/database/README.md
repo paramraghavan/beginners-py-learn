@@ -79,11 +79,13 @@ PostgreSQL GUI: http://localhost:8080  (make sure you put `postgres` as the serv
 When writing code to connect to a data store, you should instead use **`localhost`** as the hostname.
 
 
-#### stop/remove/start from command line
+#### stop/remove/deploy,start from command line
+# to stop if the container is already running
 - docker compose stop
+# cleanup -delete the container  
 - docker compose down
+# deploy,start  
 - docker compose up -d
-
 - other commands
   - docker network ls  
   - docker inspect postgres
