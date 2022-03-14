@@ -1,5 +1,5 @@
 # beginners-py-learn
-An attempt to teach kids a programming language - beginners python 
+An attempt to teach python for beginners with examples.
 
 # Any one of these IDE's
 - pycharm community editon - using pycharm
