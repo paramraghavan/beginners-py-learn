@@ -1,5 +1,5 @@
 # beginners-py-learn
-An attempt to teach python for beginners with examples.
+An attempt to teach python to beginners with examples.
 
 # Any one of these IDE's
 - pycharm community editon - using pycharm
