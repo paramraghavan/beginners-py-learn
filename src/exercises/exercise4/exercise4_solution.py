@@ -17,6 +17,8 @@ def is_within_range(start_ip, end_ip, ip_value):
     int_end_ip = int(''.join(end_ip.split('.')))
     int_ip_value = int(''.join(ip_value.split('.')))
 
+    # if int_ip_value >= int_start_ip and int_ip_value <= int_end_ip:
+    # using chained comparison instead of anding for between
     if int_start_ip <= int_ip_value <= int_end_ip:
         return  True
     return False
