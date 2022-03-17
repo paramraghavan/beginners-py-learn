@@ -165,25 +165,8 @@ this is a delicious toast
 - [Setup a local containerized rdbs instances](src/database/README.md), rdbms - Postgresql and nosql- MongoDB. Shows you how to do read operation
   using python database driver psycopg2, write to database is left as an exercise.
 
-# Mobile development using python - oh yes
-- https://docs.beeware.org/
-- https://kivy.org/#home. **Note**  packages for iOS can only be generated with Python 2.7 at the moment.
-- https://www.activestate.com/blog/the-best-python-frameworks-for-mobile-development-and-how-to-use-them/#can-i-use-python-for-mobile-app-development-on-both-android-and-ios
-
 # python packages
 - https://pypi.org/
-
-
-#  D-Tale for interactive data exploration
-## What is  D-Tale?
- D-Tale is the combination of a Flask back-end and a React front-end to bring you an easy way to view & analyze Pandas
- data structures. It integrates seamlessly with ipython notebooks & python/ipython terminals. Currently this tool supports
- such Pandas objects as DataFrame, Series, MultiIndex, DatetimeIndex & RangeIndex.
-**Notes**
-- pip install dtale
-- https://towardsdatascience.com/introduction-to-d-tale-5eddd81abe3f
-- https://www.analyticsvidhya.com/blog/2021/06/exploring-pandas-dataframe-with-d-tale/11
-- https://pypi.org/project/dtale/
 
 
 References
@@ -199,11 +182,30 @@ References
 - [bigO](https://jarednielsen.com/big-o-factorial-time-complexity/)
 
 # Interesting ToDo
-- [Computer system status using python](https://github.com/msimms/ComputerStatus) - have checked it out yet, seems promising
+-------------------------------------
+
+- [Computer system status using python](https://github.com/msimms/ComputerStatus) - have not checked it out yet, seems promising
 
 ## Image Processing
 - https://towardsdatascience.com/image-enhancement-techniques-using-opencv-and-python-9191d5c30d45
 - https://www.adobe.com/express/feature/image/resize/png
+
+
+##  D-Tale for interactive data exploration
+### What is  D-Tale?
+ D-Tale is the combination of a Flask back-end and a React front-end to bring you an easy way to view & analyze Pandas
+ data structures. It integrates seamlessly with ipython notebooks & python/ipython terminals. Currently this tool supports
+ such Pandas objects as DataFrame, Series, MultiIndex, DatetimeIndex & RangeIndex.
+**Notes**
+- pip install dtale
+- https://towardsdatascience.com/introduction-to-d-tale-5eddd81abe3f
+- https://www.analyticsvidhya.com/blog/2021/06/exploring-pandas-dataframe-with-d-tale/11
+- https://pypi.org/project/dtale/
+
+## Mobile development using python - oh yes
+- https://docs.beeware.org/
+- https://kivy.org/#home. **Note**  packages for iOS can only be generated with Python 2.7 at the moment.
+- https://www.activestate.com/blog/the-best-python-frameworks-for-mobile-development-and-how-to-use-them/#can-i-use-python-for-mobile-app-development-on-both-android-and-ios
 
 Interview Questions
 -------------------
