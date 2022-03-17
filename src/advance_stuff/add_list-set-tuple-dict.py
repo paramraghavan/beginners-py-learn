@@ -28,7 +28,7 @@ adding dictionary
 '''
 
 dict1 = {'a': 1, 'b': 2}
-dict2 = {'c': 3}
+dict2 = {'c': 3, 'a': 4} # Note a is updated with value '4' in dict2
 dict1_add_dict2 = {**dict1, **dict2}
 print(f'dict1 + dict2: {dict1_add_dict2}')
 
