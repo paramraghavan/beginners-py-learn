@@ -9,9 +9,13 @@ end-ip      10.31.20.50
 
 
 def is_within_range(start_ip, end_ip, ip_value):
-    int_start_ip = int(start_ip.replace('.', ''))
-    int_end_ip = int(end_ip.replace('.', ''))
-    int_ip_value = int(ip_value.replace('.', ''))
+    # int_start_ip = int(start_ip.replace('.', ''))
+    # int_end_ip = int(end_ip.replace('.', ''))
+    # int_ip_value = int(ip_value.replace('.', ''))
+
+    int_start_ip = int(''.join(start_ip.split('.')))
+    int_end_ip = int(''.join(end_ip.split('.')))
+    int_ip_value = int(''.join(ip_value.split('.')))
 
     if int_ip_value >= int_start_ip and int_ip_value <= int_end_ip:
         return  True
