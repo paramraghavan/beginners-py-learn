@@ -39,3 +39,13 @@ print('-------------------------------------------')
 
 for key, value in dict.items():
     print(key + ' = ' + value)
+
+
+#
+# Concatenate dict
+#
+
+dict2 = {'key7':'seven', 'key9':'nine'}
+dict3 = {**dict, **dict2}
+
+print(f'Add dictionaries : {dict3}')

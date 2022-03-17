@@ -86,3 +86,13 @@ print(f'Odd list {num_list[odds]}')
 print(f'Sum of even list {sum(num_list[evens])}')
 print(f'Sum of odd list {sum(num_list[odds])}')
 
+
+'''
+Exercise1:
+Exercise check if a string is a palindrome  using slice.
+A string is a palindrome if the reverse of the string is identical
+to the original string. For example, ‘civic’ is a palindrome, but 
+‘radio’ is not, since the reverse of ‘radio’ is ‘oidar’, but 
+the reverse of ‘civic’ is ‘civic’.
+
+'''

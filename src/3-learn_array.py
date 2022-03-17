@@ -32,33 +32,35 @@ namelist = []
 #namelist = list()
 
 # add names
-namelist.append('name')
+namelist.append('python')
 
-name = input("Enter your name: ")
+name = input("Enter your name[enter 'python' for match]: ")
 if name in namelist:
-    print("I know you!")
+    print("I know you! : {name}")
 else:
-    print("Sorry, I don't know who you are :(")
+    print(f"Sorry, I don't know who you are : {name}")
 
 
 #Advanced - append vs extend
 x = [1, 2, 3]
 x.append([4, 5])
-print(x)
+print(f'append list: {x}')
 
 y = [1, 2, 3]
 y.extend([4, 5])
-print(y)
+print(f'extend list: {y}')
+
+print(f'add list: {[*x,*y]}')
+
 
 a = [1, 2, 3]
 b = a.copy()
 
-print(b)
-
+print(f'a.copy into  b : {b}')
 b.append(4)
 # note b and a
-print(b)
-print(a)
+print(f'note b after b.append : {b}')
+print(f'note a : {a}')
 
 '''
 Tuples
@@ -71,13 +73,3 @@ for item in thing:
     print(item)
 #try
 thing.append(4)
-
-'''
-Exercise1:
-Exercise check if a string is a palindrome  using slice.
-A string is a palindrome if the reverse of the string is identical
-to the original string. For example, ‘civic’ is a palindrome, but 
-‘radio’ is not, since the reverse of ‘radio’ is ‘oidar’, but 
-the reverse of ‘civic’ is ‘civic’.
-
-'''

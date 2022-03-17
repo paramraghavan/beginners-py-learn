@@ -51,8 +51,6 @@ def login():
     return (username, password)
 
 username, password = login()
-
-ref: https://github.com/Akuli/python-tutorial/blob/master/advanced/functions.md
 '''
 
 def login():
