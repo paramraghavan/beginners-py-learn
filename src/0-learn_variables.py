@@ -8,7 +8,7 @@ What happens if you use + between a string and an integer, like "hello" + 3? How
 What happens if you use + between a float and an integer, like 0.5 + 3? How about 0.5 * 3?
 '''
 
-# various data types integer, decimal/float, string
+# various data types integer, decimal/float, string, boolean
 # Stack, heap and virtual heap/memory
 # language - compiled - c/c++, bytecode compiled - java and interpreted - python
 
@@ -41,10 +41,14 @@ the code as the porgeam is running/executing.
 
 '''
 How to declare a variable in Python
-Python is a dynamic-typed language, which means we don't need to mention the variable type 
+Python is a dynamic-typed language, which means we don't need to mention the variable type** 
 or declare before using it - unlike Java or C . It makes Python the most efficient and easy to use language. 
 Every variable is treated as an object in Python.
 
+**Note
+ we can optionally define variable types, but think can be used by some lint checked or ide only.
+ see here for more details src/advance_stuff/type_defination/typedef.py
+  
 Before declaring a variable, we must follow the given rules.
 
 The first character of the variable can be an alphabet or (_) underscore.
