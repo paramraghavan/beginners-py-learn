@@ -1,4 +1,6 @@
 '''
+Give input string s, check if the open and close parenthesis match up, see examples with output below:
+
 Example 1:
 Input: s = "()"
 Output: true
