@@ -5,7 +5,9 @@ gen_range(100, 140, 10)  would produce output:
 [(100, 110), (110, 120), (120, 130), (130, 140)]
 '''
 
-
+'''
+Solution 1
+'''
 def gen_range_values(start, stop, step):
     range_values = []
     for item in range(start, stop, step):
@@ -15,6 +17,7 @@ def gen_range_values(start, stop, step):
     return range_values
 
 '''
+Alternate solution 2. Solution 1 is simple and best
 Another solution to create range list using python 'generator'
 '''
 def gen_range_values_alt(start, stop, step):
