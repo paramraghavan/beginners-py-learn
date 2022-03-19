@@ -9,6 +9,7 @@ loop_counter = 0
 '''
 BigO is range items count X values items count --> mXn, n^2
 Can we reduce the BigO from the order of n^2 ?
+Plain vanilla implementation
 '''
 def map_range_values(range, values):
     map_of_range_values = {}
@@ -31,8 +32,6 @@ def map_range_values(range, values):
     return map_of_range_values
 
 
-
-from math import ceil
 
 '''
 BigO is range items count X values items count --> mXn, n^2
@@ -61,6 +60,9 @@ def divide_conquer(num, range):
         if idx0 > idxn:
             return None
 
+'''
+Uses divide_conquer on sorted range values
+'''
 def map_range_values_alt(range, values):
     map_of_range_values = {}
     global loop_counter
@@ -87,7 +89,6 @@ Can we reduce the BigO from the order of n^2 ?
 Assuming:
  1. Range values start/stop are exclusive to each tuple and are in sorted order
  2. The values in list_values are also sorted
-ref: https://www.tutorialspoint.com/python_data_structure/python_divide_and_conquer.htm
 '''
 
 def check_in_range(num, range_values):
@@ -98,9 +99,9 @@ def check_in_range(num, range_values):
             break
 
     return match
-
-
-
+'''
+Uses check_in_range
+'''
 def map_range_values_both_sorted(range, values):
     map_of_range_values = {}
     global loop_counter
