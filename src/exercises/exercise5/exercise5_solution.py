@@ -112,7 +112,9 @@ def map_range_values_both_sorted(range, values):
         loop_counter += 1
         range_matched = check_in_range(num, range)
         if range_matched is not None and num >= range_matched[1]:
-            range.remove(range_matched)
+            #range.remove(range_matched) or  del range[0]
+            # we know for sure this is the first item
+            del range[0]
             if len(range) == 0:
                 break;
         if range_matched == None:
