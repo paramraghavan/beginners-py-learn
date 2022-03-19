@@ -94,7 +94,6 @@ Assuming:
  1. Range values start/stop are exclusive to each tuple and are in sorted order
  2. The values in list_values are also sorted
 '''
-
 def check_in_range(num, range_values):
     match = None
     for range in range_values:
@@ -103,6 +102,8 @@ def check_in_range(num, range_values):
             break
 
     return match
+
+
 '''
 Uses check_in_range
 '''
