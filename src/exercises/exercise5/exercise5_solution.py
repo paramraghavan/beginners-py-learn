@@ -143,9 +143,14 @@ if __name__ == '__main__':
 
     ''' 
     You will notice that the number for iterations have reduced:
-    Original --> map_of_range_values: {(0, 9): [], (10, 20): [10, 13], (21, 30): [23, 27], (40, 60): [45], (70, 90): [71, 89, 90], (91, 100): [99]}, loop_counter: 84 --> bigO NXM
-    Assuming range sorted --> map_of_range_values_sorted: {(10, 20): [10, 13], (21, 30): [23, 27], (70, 90): [71, 89, 90], (40, 60): [45], (91, 100): [99]}, loop_counter: 45 --> bigO NXlogM 
-    Assuming range and values both sorted --> map_range_values_both_sorted: {(10, 20): [10, 13], (21, 30): [23, 27], (40, 60): [45], (70, 90): [71, 89, 90], (91, 100): [99]}, loop_counter: 13 --> bogO N      
+    Original: Quadratic growth
+     map_of_range_values: {(0, 9): [], (10, 20): [10, 13], (21, 30): [23, 27], (40, 60): [45], (70, 90): [71, 89, 90], (91, 100): [99]}, loop_counter: 84 --> bigO NXM
+     
+    Assuming range sorted: Log-Linear growth
+     map_of_range_values_sorted: {(10, 20): [10, 13], (21, 30): [23, 27], (70, 90): [71, 89, 90], (40, 60): [45], (91, 100): [99]}, loop_counter: 45 --> bigO NXlogM 
+    
+    Assuming range and values both sorted: Linear growth
+    map_range_values_both_sorted: {(10, 20): [10, 13], (21, 30): [23, 27], (40, 60): [45], (70, 90): [71, 89, 90], (91, 100): [99]}, loop_counter: 13 --> bogO N      
     '''
     print(f'map_of_range_values: {map_range_values(list_range, list_values)}, loop_counter: {loop_counter}')
     print(f'map_of_range_values_sorted: {map_range_values_alt(list_range, list_values)}, loop_counter: {loop_counter}')
