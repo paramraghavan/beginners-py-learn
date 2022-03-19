@@ -8,8 +8,9 @@ ref: https://www.geeksforgeeks.org/timing-functions-with-decorators-python/
 def my_decorator(func):
 	def wrapper_function(*args, **kwargs):
 		print("*"*10)
-		func(*args, **kwargs)
+		result = func(*args, **kwargs)
 		print("*"*10)
+		return result
 	return wrapper_function
 
 
