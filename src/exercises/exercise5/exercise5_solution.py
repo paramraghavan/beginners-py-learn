@@ -111,6 +111,8 @@ def map_range_values_both_sorted(range, values):
     for num in values:
         loop_counter += 1
         range_matched = check_in_range(num, range)
+        # once the num value is more than the upper value of range,
+        # then remove this range tuple
         if range_matched is not None and num >= range_matched[1]:
             #range.remove(range_matched) or  del range[0]
             # we know for sure this is the first item
