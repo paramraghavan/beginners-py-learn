@@ -93,6 +93,8 @@ Can we reduce the BigO from the order of n^2 ?
 Assuming:
  1. Range values start/stop are exclusive to each tuple and are in sorted order
  2. The values in list_values are also sorted
+ 3. Here as both are sorted out as we loop thru values, when the value is greater then the lower range
+    we remove that range tuple from range values
 '''
 def check_in_range(num, range_values):
     match = None
