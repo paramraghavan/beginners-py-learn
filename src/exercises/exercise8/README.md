@@ -14,9 +14,19 @@ To sort an array of size n in ascending order:
 
 
 
-# MergeSort
-- divide  elements to leaf nodes
+# MergeSort - a Divide and Conquer algorithm
+- divide  elements to leaf nodes adn merge them back
   ![img.png](img.png)
-- then merge leaf nodes back
-  ![img_1.png](img_1.png)
-- [ref](https://www.interviewbit.com/tutorial/merge-sort-algorithm/)
+-  MergeSort(arr[], l,  r)
+   <pre>
+    If r > l
+         1. Find the middle point to divide the array into two halves:  
+                 middle m = l+ (r-l)/2
+         2. Call mergeSort for first half:   
+                 Call mergeSort(arr, l, m)
+         3. Call mergeSort for second half:
+                 Call mergeSort(arr, m+1, r)
+         4. Merge the two halves sorted in step 2 and 3:
+                 Call merge(arr, l, m, r)
+   </pre>
+- [ref](https://www.geeksforgeeks.org/merge-sort/)

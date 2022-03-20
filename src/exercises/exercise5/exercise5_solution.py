@@ -50,7 +50,7 @@ def divide_conquer(num, range):
     global loop_counter
     while idx0 <= idxn:
         loop_counter += 1
-        # mid value
+        # mid value, double division round lower
         idxm = (idx0 + idxn)//2
 
         if range[idxm][0] <= num <= range[idxm][1]:
