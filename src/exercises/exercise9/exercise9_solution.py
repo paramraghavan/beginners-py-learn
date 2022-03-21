@@ -27,6 +27,11 @@ board9 = [ 'X', 'O', ' ', 'X', 'O', ' ', 'O', 'X' ]
 board10 = [ 'X', 'O', 'X', ' ' ]
 '''
 
+'''
+Todo print the iteration count and get the count down to the minimum  it in  
+reversi_optimised
+'''
+
 def reversi(board):
     result = None
 
@@ -106,3 +111,8 @@ board10 = [ 'X', 'O', 'X', ' ' ]
 result = reversi(board2)
 if result is not None:
     print(result[0], result[1])
+
+
+def reversi_optimised(board):
+    # Todo to implement
+    pass
