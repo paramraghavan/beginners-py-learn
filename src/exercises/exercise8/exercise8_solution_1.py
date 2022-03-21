@@ -16,7 +16,7 @@ def merge_sort(arr):
     if len(arr) > 1:
         global iteration_count
         iteration_count +=1
-        # Finding the mid of the array
+        # Finding the mid of the array, note using double divisior '//'
         mid = len(arr) // 2
 
         # Dividing the array elements
