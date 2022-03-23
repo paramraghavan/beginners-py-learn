@@ -16,7 +16,7 @@ def max_tuple(item, pos):
     return  item[pos]
 
 '''
-As built in function iterates over the list, we can use key to override the default funtion to find the
+As built in function iterates over the list, here we override the default function to find the
 max value.
 '''
 def print_max_value_tuple_pos(tuple_list, pos):
