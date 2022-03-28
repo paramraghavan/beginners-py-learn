@@ -210,3 +210,15 @@ References
 Interview Questions
 -------------------
 - https://www.mygreatlearning.com/blog/python-interview-questions/?amp
+
+ 
+
+To best prepare for Amazon’s Technical Problem Solving Challenge, here are some resources:
+-----------------------------------------------------------------------------------------------------
+- Cracking the Coding Interview - http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+- Algorithm Fundamentals: - http://algs4.cs.princeton.edu/10fundamentals/
+Fundamentals: Go back and re-educate yourself on all data structures & algorithms. You will be challenged on several of the methods in the On-Site interview so you might as well start practicing now! Make sure you even get into more exotic things like hashmaps, b+trees (and variants), caches (and associated algorithms). You may want to visit www.codechef.com
+- Project Euler - http://projecteuler.net/ If you’ve been out of practice, complete up to problem 60 or so. You should be prompted to build useful libraries, which will help give practical experience for interview like problems. Don’t cheat or take shortcuts.
+- Leetcode has additional practice questions: https://leetcode.com/
+- Understand high scale architecture. Go look at how other big sites are structured: http://highscalability.com/blog/category/example
+- Get a feel for the interface and functionality with our demo version: https://www.myamcat.com/amazon-lateral-demo
