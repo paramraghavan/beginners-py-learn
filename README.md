@@ -222,3 +222,11 @@ Fundamentals: Go back and re-educate yourself on all data structures & algorithm
 - Leetcode has additional practice questions: https://leetcode.com/
 - Understand high scale architecture. Go look at how other big sites are structured: http://highscalability.com/blog/category/example
 - Get a feel for the interface and functionality with our demo version: https://www.myamcat.com/amazon-lateral-demo
+
+Licenses in Software Development
+--------------------------------
+Short summaries of the licenses:
+- The MIT, BSD, and ISC licenses are “permissive licenses”. They are extremely short and essentially say “do whatever you want with this, just don’t sue me.”
+- The Apache license says “do whatever you want with this, just don’t sue me” but does so with many more words, which lawyers like because it adds specificity. It also contains a patent license and retaliation clause which is designed to prevent patents (including patent trolls) from encumbering the software project.
+- The GPL licenses (GPLv3, GPLv2, LGPL, Affero GPL) all contain some kind of share-alike license. They essentially say “if you make a derivative work of this, and distribute it to others under certain circumstances, then you have to provide the source code under this license.” The important thing to know here is that “derivative work” and “certain circumstances” both require some legal analysis to understand the meaning and impact for your project.
+- [ref](https://www.exygy.com/blog/which-license-should-i-use-mit-vs-apache-vs-gpl)
