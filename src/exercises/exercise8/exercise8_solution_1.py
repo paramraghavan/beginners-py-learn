@@ -13,6 +13,8 @@ Notes::
 '''
 
 def merge_sort(arr):
+    L = None
+    R = None
     if len(arr) > 1:
         global iteration_count
         iteration_count +=1
@@ -31,10 +33,11 @@ def merge_sort(arr):
         # Sorting the second half
         merge_sort(R)
 
-        # merge back all nodes
+    # merge back all nodes
+    if L is None  and R is not None:
         merge(arr, L, R)
 
-        return arr
+    return arr
 
 def merge(arr, L, R):
     global iteration_count

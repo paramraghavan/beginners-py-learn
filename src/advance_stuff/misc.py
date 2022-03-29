@@ -99,3 +99,28 @@ dict_sample = {'head1':[14,15,16,17], 'head2':[24,25,26,27],'head3':[34,35,36,37
 df = pd.DataFrame.from_dict(dict_sample)
 print(type(df))
 print(df)
+
+
+# Python ternary operator
+'''
+In java
+function isEvenOrOdd(n) {
+  return n % 2 ? 'Odd' : 'Even';
+}
+'''
+# a if condition_is_true else b
+def isEvenOrOdd(n) :
+  return 'Odd' if  (n % 2) else 'Even';
+
+def isEvenOrOdd_alt(n) :
+  return 'Odd' if  (n&1) else 'Even';
+
+
+def log(msg):
+    print(f'{msg}')
+
+log(isEvenOrOdd(10));  # => Even
+log(isEvenOrOdd(10001));  # => Odd
+
+log(isEvenOrOdd_alt(10));  # => Even
+log(isEvenOrOdd_alt(10001));  # => Odd
