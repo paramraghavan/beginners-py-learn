@@ -184,6 +184,25 @@ import cProfile
 if __name__ == '__main__':
     cProfile.run('call()')
 </pre>
+
+Profile Result
+<pre>
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.056    0.056 <string>:1(<module>)
+        2    0.000    0.000    0.056    0.028 exercise7_solution_decorator.py:15(wrapper_function)
+        1    0.000    0.000    0.008    0.008 exercise7_solution_decorator.py:24(small_loop)
+        1    0.000    0.000    0.047    0.047 exercise7_solution_decorator.py:28(big_loop)
+        2    0.000    0.000    0.055    0.028 exercise7_solution_decorator.py:32(loop)
+   120002    0.039    0.000    0.039    0.000 exercise7_solution_decorator.py:33(<genexpr>)
+        1    0.000    0.000    0.056    0.056 exercise7_solution_decorator.py:35(call)
+        1    0.000    0.000    0.056    0.056 {built-in method builtins.exec}
+        2    0.000    0.000    0.000    0.000 {built-in method builtins.print}
+        4    0.000    0.000    0.000    0.000 {built-in method time.time}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        2    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
+        2    0.016    0.008    0.055    0.028 {method 'join' of 'str' objects}
+
+</pre>
 [ref](https://stackoverflow.com/questions/582336/how-do-i-profile-a-python-script)
 
 References
