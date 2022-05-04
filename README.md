@@ -168,6 +168,23 @@ this is a delicious toast
 # python packages
 - https://pypi.org/
 
+# profile python code
+<pre>
+def big_loop():
+    return loop(100000)
+
+def loop(loop_count):
+    return "-".join(str(i) for i in range(loop_count))
+
+def call():
+    small_loop()
+    big_loop()
+
+import cProfile
+if __name__ == '__main__':
+    cProfile.run('call()')
+</pre>
+[ref](https://stackoverflow.com/questions/582336/how-do-i-profile-a-python-script)
 
 References
 ----------------------
