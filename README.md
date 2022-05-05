@@ -205,7 +205,7 @@ Profile Result
         2    0.016    0.008    0.055    0.028 {method 'join' of 'str' objects}
 
 </pre>
-[ref](https://stackoverflow.com/questions/582336/how-do-i-profile-a-python-script),
+[ref](https://stackoverflow.com/questions/582336/how-do-i-profile-a-python-script)
 
 
 # profiling with ui
