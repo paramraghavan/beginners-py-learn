@@ -32,7 +32,16 @@ def big_loop():
 def loop(loop_count):
     return "-".join(str(i) for i in range(loop_count))
 
-if __name__ == '__main__':
+def call():
     small_loop()
     big_loop()
 
+if __name__ == '__main__':
+    import cProfile, pstats
+    profiler = cProfile.Profile()
+    profiler.enable()
+    call()
+    profiler.disable()
+    # Export profiler output to file
+    stats = pstats.Stats(profiler)
+    stats.dump_stats('test.pstat')
