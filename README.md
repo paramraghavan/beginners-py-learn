@@ -170,6 +170,8 @@ this is a delicious toast
 
 # profile python code
 <pre>
+test.py
+
 def big_loop():
     return loop(100000)
 
@@ -203,7 +205,25 @@ Profile Result
         2    0.016    0.008    0.055    0.028 {method 'join' of 'str' objects}
 
 </pre>
-[ref](https://stackoverflow.com/questions/582336/how-do-i-profile-a-python-script)
+[ref](https://stackoverflow.com/questions/582336/how-do-i-profile-a-python-script),
+
+
+# profiling with ui
+- sankeviz profiler
+  - saves the profile to test.profile, - saves the profile  to test.profile, python -m cProfile -o test.pstats test.py
+  - Install snakeviz, pip install snakeviz
+  - snakeviz test.profile
+- gprof2dot profiler
+  - saves the profile to test.stats, - saves the profile  to test.pstats, python -m cProfile -o test.pstats test.py
+  - Install gprof2dot, pip install gprof2dot
+    - brew install graphviz
+  - ~~gprof2dot -f pstats test.pstats | dot -Tpng -o output.png && eog output.png~~ could get eog(eye of Gnome) installed)
+  - gprof2dot -f pstats test.pstats | dot -Tpng -o output.png
+
+- pip install viztracer
+  - viztracer -o result.json -- test.py arg1 arg2 arg3
+  - vizviewer result.json
+[ref](https://medium.com/@narenandu/profiling-and-visualization-tools-in-python-89a46f578989)
 
 References
 ----------------------
