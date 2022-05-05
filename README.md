@@ -208,6 +208,32 @@ Profile Result
 [ref](https://stackoverflow.com/questions/582336/how-do-i-profile-a-python-script)
 
 
+# inline profile
+Profiling spark job submitted to EMR cluster, the results written to teh cluster can be copied over to S3 location.
+<pre>
+test.py
+
+def big_loop():
+    return loop(100000)
+
+def loop(loop_count):
+    return "-".join(str(i) for i in range(loop_count))
+
+def call():
+    small_loop()
+    big_loop()
+
+if __name__ == '__main__':
+    import cProfile, pstats
+    profiler = cProfile.Profile()
+    profiler.enable()
+    call()
+    profiler.disable()
+    # Export profiler output to file
+    stats = pstats.Stats(profiler)
+    stats.dump_stats('test.pstat')
+</pre>
+
 # profiling with ui
 - sankeviz profiler
   - saves the profile to test.profile, - saves the profile  to test.profile, python -m cProfile -o test.pstats test.py
