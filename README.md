@@ -23,6 +23,8 @@ An attempt to teach python to beginners with examples.
 # create virtual env and activate
 - virtualenv venv
 - venv\Scripts\activate
+   > on mac-os:
+   > source ./venv/bin/activate   
 - above will get you into the virtual environmant shell
 - Now to install all your packages(from requirements.txt) into the above newly created virtual enviroment, use
   - pip install -r requiremments.txt
@@ -242,7 +244,7 @@ if __name__ == '__main__':
 - gprof2dot profiler
   - saves the profile to test.stats, - saves the profile  to test.pstats, python -m cProfile -o test.pstats test.py
   - Install gprof2dot, pip install gprof2dot
-    - brew install graphviz
+  - brew install graphviz
   - ~~gprof2dot -f pstats test.pstats | dot -Tpng -o output.png && eog output.png~~ could get eog(eye of Gnome) installed)
   - gprof2dot -f pstats test.pstats | dot -Tpng -o output.png
 
