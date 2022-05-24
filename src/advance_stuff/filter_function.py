@@ -7,13 +7,13 @@ def check_multiples_of_three(number):
 
     return False
 
-# Extract elements from the numbers list for which check_even() returns True
-even_numbers_iterator = filter(check_multiples_of_three, numbers)
+# Extract elements from the numbers list for which check_multiples_of_three() returns True
+multiples_of_three_iterator = filter(check_multiples_of_three, numbers)
 
 # converting to list
-even_numbers = list(even_numbers_iterator)
+multiples_of_three = list(multiples_of_three_iterator)
 
 #
-# returns Output: [2, 4, 6, 8, 10]
+# returns Output: [3, 6, 9]
 #
-print(even_numbers)
+print(multiples_of_three)

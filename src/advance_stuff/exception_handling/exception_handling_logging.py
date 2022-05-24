@@ -15,7 +15,7 @@ import psycopg2
 #
 import traceback
 
-def printStackTrace(message:str) :
+def printStackTrace(message:str) -> None:
     traceback_error_msg = traceback.format_exc()
     print(f'{80*"-"}\n{message}:\n{80*"-"}\n{traceback_error_msg}{80*"-"}')
 

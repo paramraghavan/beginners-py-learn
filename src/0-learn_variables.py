@@ -32,11 +32,11 @@ if in a 10 line program, line 3 has a problem, then the program will run line on
 then fail at line 3.
 
 Compiled: c/c++ is an example of this. It will compile the entire program and if there is a single 
-failure anywhere it will not run the entire code.
+compile failure anywhere it will not run the entire code.
 
 Bytecode compiled:  Java compiles it's program into byte code, when the program runs the java's 
 JIT (just in time byte code compiler) compiler will compile  code and optimize 
-the code as the porgeam is running/executing.
+the code as the program is running/executing.
 '''
 
 '''
