@@ -11,15 +11,32 @@
   This time 42 is printed
 '''
 myGlobal = 5
+#prints 5
+def func0():
+    print(f'func0 myGlobal : {myGlobal}')
 
+# modifies global value, myGlobal
 def func1():
     global myGlobal
     myGlobal = 42
+    print(f'func2 updates global scope myGlobal : {myGlobal}')
 
-
+# prints 42
 def func2():
-    print(f'myGlobal : {myGlobal}')
+    print(f'func2 myGlobal : {myGlobal}')
 
+# prints 11
+# all the changes are local to func3(), does not modify global value, myGlobal
+def func3():
+    myGlobal = 11
+    print(f'func3 updates local scope myGlobal : {myGlobal}')
 
+# prints 42, Global value, as changes func3() are local to func3()
+def func4():
+    print(f'func4 myGlobal : {myGlobal}')
+
+func0()
 func1()
 func2()
+func3()
+func4()

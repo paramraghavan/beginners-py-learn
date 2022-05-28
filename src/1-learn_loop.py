@@ -21,5 +21,14 @@ for c in s:
     reversed_string = c + reversed_string  # appending chars in reverse order
 print(reversed_string)
 
+array = []
+array += [
+            i
+            for i in range(2, 10, 2)
+            ]
+# array  : [2, 4, 6, 8]
+print(f'array  : {array}')
+
+
 
 # while loop
