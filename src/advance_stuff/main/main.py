@@ -13,6 +13,9 @@ current script is being run on its own or being imported somewhere else by combi
 Consider two separate files File1.
 
 We import file1
+
+Note: all  file1 is loaded and as it is loaded it is executed line by line and then main.py
+
 '''
 
 import file1
