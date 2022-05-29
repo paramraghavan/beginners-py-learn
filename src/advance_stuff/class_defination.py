@@ -53,7 +53,7 @@ def run_example_func():
     print(f'run_example_func-->obj1.my_OBJ_var: {obj1.my_OBJ_var}')
 
     # Note, PRINTS    20
-    print(f'run_example_func-->Note Class variable acceddes via object instance--> obj1.my_CLS_var: {obj1.my_CLS_var}')
+    print(f'run_example_func-->Note Class variable accessed via object instance--> obj1.my_CLS_var: {obj1.my_CLS_var}')
 
     # PRINTS    20    (class variable, changed value)
     print(f'run_example_func-->MyClass.my_CLS_var : {MyClass.my_CLS_var}')
