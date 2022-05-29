@@ -1,6 +1,6 @@
 numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-# returns True if number is even
+# returns True if number is a multiple of 3
 def check_multiples_of_three(number):
     if number % 3 == 0:
           return True

@@ -9,7 +9,9 @@ curr_date = '2019-01-21' #
 format_data = '%Y-%m-%d'
 '''
 def last_day_of_month(curr_date:str, format_data:str) ->str:
+    # string parsed to datatime
     run_date = datetime.strptime(curr_date, format_data)
+    # calendar applied on the datetime object created above
     res = calendar.monthrange(run_date.year, run_date.month)[1]
     return str(res)
 
