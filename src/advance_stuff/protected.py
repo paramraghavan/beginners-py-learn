@@ -22,7 +22,7 @@ class Geek(object):
 
     # creating objects of the class
 
-
+print(f'Geek._name: {Geek._name}')
 obj = Geek()
 
 # calling public member
