@@ -314,3 +314,38 @@ Short summaries of the licenses:
 - The Apache license says “do whatever you want with this, just don’t sue me” but does so with many more words, which lawyers like because it adds specificity. It also contains a patent license and retaliation clause which is designed to prevent patents (including patent trolls) from encumbering the software project.
 - The GPL licenses (GPLv3, GPLv2, LGPL, Affero GPL) all contain some kind of share-alike license. They essentially say “if you make a derivative work of this, and distribute it to others under certain circumstances, then you have to provide the source code under this license.” The important thing to know here is that “derivative work” and “certain circumstances” both require some legal analysis to understand the meaning and impact for your project.
 - [ref](https://www.exygy.com/blog/which-license-should-i-use-mit-vs-apache-vs-gpl)
+
+
+Pipenv
+----------
+- Go to the folder with Pipfile and Pipfile.lock
+- pip install pipenv
+- pipenv lock --clear
+- pipenv install -e git+ssh://git@github.com/abc/xyz.git@v0.8.0#egg=xyz
+- pipenv install --dev  ← this install the dev dependencies like pytest, pytest-mock etc
+- pipenv --venv ← this gives you the virtual env folder location, for example /Users/userid/.local/share/virtualenvs/glue-a9kAnMxy
+- pipenv shell  ← activates  virtualenv
+- pipenv install <package> This will create a Pipfile if one doesn't exist
+ref: [Pipenv: A Guide to the New Python Packaging Tool – Real Python](https://realpython.com/pipenv-guide/)
+Notes: brew update && brew install pyenv
+- sample Pipfile
+```properties
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = ">=6.2.3"
+pytest-mock  = ">=3.5.1"
+pytest-cov = "==2.11.1"
+moto= "== 3.1.16"
+
+[packages]
+pyspark = "==3.2.1"
+
+boto3 = ">=1.17.48"
+
+[requires]
+#python_version = "3.9"
+```
