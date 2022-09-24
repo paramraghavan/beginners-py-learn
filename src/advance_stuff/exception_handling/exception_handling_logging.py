@@ -23,6 +23,8 @@ import psycopg2
 #   traceback_obj = sys.exc_info()[2]
 #   print(traceback+obj.tb_lineno)
 #   print(traceback+obj.tb_frame)
+#   print(traceback+obj.tb_next.tb_lineno) <- one level above, closer to where exception occured
+#   print(traceback+obj.tb_next.tb_frame)  <- one level above
 #
 #
 #
