@@ -13,6 +13,11 @@ import psycopg2
 # 	Is the server running on that host and accepting TCP/IP connections?
 # --------------------------------------------------------------------------------
 #
+#   except:
+#    print(traceback.print_exc())
+#    sys.exit(1)
+#
+
 import traceback
 
 def printStackTrace(message:str) -> None:
