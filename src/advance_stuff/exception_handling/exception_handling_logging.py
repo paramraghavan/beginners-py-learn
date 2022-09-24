@@ -17,6 +17,13 @@ import psycopg2
 #    print(traceback.print_exc())
 #    sys.exit(1)
 #
+#   import sys
+#   # has all teh exception info - name, line number, etc..
+#   exception_info_object = sys.exx_info()
+#
+#
+#
+#
 
 import traceback
 
