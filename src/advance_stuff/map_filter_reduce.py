@@ -1,6 +1,6 @@
 #class map in module builtins, map returns iterables
 # and we can pass iterables to list to get the result list back
-
+# help(map)
 langs = ['spark', 'java', 'python', 'scala']
 capitalize_langs = map(str.capitalize , langs)
 print(list(capitalize_langs))
