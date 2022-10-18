@@ -24,6 +24,7 @@ print(list(pass_marks))
 
 ```
 reduce is not builtin  like map and filter, need to import module functools
+```
 from functools import reduce
 
 reduce(...)
