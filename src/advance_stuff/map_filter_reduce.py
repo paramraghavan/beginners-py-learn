@@ -22,9 +22,9 @@ print(list(pass_marks))
 #[70, 99]
 
 
-```
+'''
 reduce is not builtin  like map and filter, need to import module functools
-```
+'''
 from functools import reduce
 
 reduce(...)
