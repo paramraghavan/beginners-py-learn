@@ -1,6 +1,6 @@
 # Python Memory Management
 
-- In Python everything is an object. This means that Dynamic Memory Allocation underlies Python Memory Management.
+- In Python everything is an object,  Dynamic Memory Allocation underlies Python Memory Management.
 When objects are no longer needed, the Python Memory Manager will automatically reclaim memory from them.
 
 -
