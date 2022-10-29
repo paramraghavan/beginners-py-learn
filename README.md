@@ -138,10 +138,10 @@ class Flour(ABC):
   @abstractmethod
   def make_bread(self):
     pass
-class Toast(Flour):
+class BreadMaker(Flour):
   def make_bread(self):
     print ("this is a delicious toast")
-x = Toast()
+x = BreadMaker()
 x.make_bread()
 ========================
 this is a delicious toast
