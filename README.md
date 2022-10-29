@@ -322,7 +322,7 @@ Pipenv
 - Go to the folder with Pipfile and Pipfile.lock
 - pip install pipenv
 - pipenv lock --clear
-- pipenv install -e git+ssh://git@github.com/abc/xyz.git@v0.8.0#egg=xyz
+- pipenv install -e git+ssh://git@github.com/abc/xyz.git@v0.x.0#egg=xyz
 - pipenv install --dev  ← this install the dev dependencies like pytest, pytest-mock etc
 - pipenv --venv ← this gives you the virtual env folder location, for example /Users/userid/.local/share/virtualenvs/glue-a9kAnMxy
 - pipenv shell  ← activates  virtualenv
