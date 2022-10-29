@@ -211,7 +211,7 @@ Profile Result
 
 
 # inline profile
-Profiling spark job submitted to EMR cluster, the results written to teh cluster can be copied over to S3 location.
+Profiling spark job submitted to EMR cluster, the results written to the cluster can be copied over to S3 location - have not tried, not sure how it will pan out. Better option may be to capture the time to execute each function - old style. As with spark jobs -jobs are broken to stages and task, tasks run on individual nodes. 
 <pre>
 test.py
 
