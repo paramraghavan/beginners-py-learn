@@ -96,8 +96,10 @@ lst = ['day' for x in days]
 ```
 
 ### Concat List as str
+```python
 lst = ["apple", "banana", "cherry"]
 ' '.join(lst) # 'apple banana cherry'
+```
 
 ### Slicing/Dicing
 ```python
