@@ -42,13 +42,16 @@ not(x< 5 and x < 10)
 x=[1,2,3]
 y=x.copy() # makes a shallow copy, works for array
 x is y #output :False but x == y output is True
-x is not y 
+print(f' id of x {id(x)},  id of y: {id(y)}') # id's will be different
 
 x=[1,2,3]
 y=x
-x is y 
+x is y # true,as x and y have the same id
+print(f' id of x {id(x)},  id of y: {id(y)}') # x and y will have same id's
+
 
 ### Membership Operator:
-x in y
+x in y #output :False but x == y output is True
 x not in y
+1 in y # true
 ```
