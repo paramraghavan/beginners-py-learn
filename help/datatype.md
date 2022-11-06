@@ -95,6 +95,10 @@ lst = [x.upper() for x in days]
 lst = ['day' for x in days]
 ```
 
+### Concat List as str
+lst = ["apple", "banana", "cherry"]
+' '.join(lst) # 'apple banana cherry'
+
 ### Slicing/Dicing
 ```python
 lst = ['a', 'c', 'd', 'e','f','g','h']
