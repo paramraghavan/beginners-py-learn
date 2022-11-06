@@ -152,7 +152,7 @@ flowers.clear()
 # Copy a Dictionary
 Copy a Dictionary
 dict2 = dict1 #Problem dict2 will only be a reference to dict1, and changes made in dict1 will automatically also be made in dict2.
-dict2.dict1.copy()
+dict2 = dict1.copy()
 
 #fromkeys()
 x = ('key1', 'key2', 'key3')
