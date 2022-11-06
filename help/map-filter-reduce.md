@@ -54,13 +54,11 @@ list(filter(None, marks))
 # Example
 ```python
 from functools import reduce
-numbers = [7,8,3,11,15,20]
+numbers = [7,8,3,11,15,20,23,24,25]
 
 def sum2(first, second):
  return first + second
  
 reduce(sum2,numbers)
-
-numbers = [7,8,3,11,15,20,23,24,25]
-
+#136
 ```
