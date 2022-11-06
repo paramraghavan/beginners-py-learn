@@ -62,12 +62,12 @@ lst1=[1,2,3]
 lst2=[3,4,5]
 lst1 + lst2
 
-### Repetition
-lst * 3
-
 ### Membership
 lst=[1,2,3,4,5]
 3 in lst
+
+### Repetition
+lst * 3
 
 ### Iteration (For, while Loop or List Comprehension)
 #For loop
