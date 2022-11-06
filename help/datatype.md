@@ -44,9 +44,11 @@ type(str(1)
 ## List
 
 ### Updating List. We can also use append method.
+```python
 lst = ['a','b','c', 'd', 'e']
 lst[0]='x'
 lst.appned('f')
+```
 
 ### Delete List Elements. We can also use remove() methods.
 del lst[1]
@@ -55,6 +57,7 @@ del lst[1]
 len(lst)
 
 ### Concat
+```python
 lst1=[1,2,3]
 lst2=[3,4,5]
 lst1 + lst2
@@ -77,8 +80,10 @@ i = 0
 while i < len(lst):
   print(lst[i])
   i = i + 1
+```
 
 # List Compression
+```python
 lst = [1,2,3,4,5]
 [x+1 for x in lst]
 
@@ -87,8 +92,10 @@ lst = [x for x in days if "e" in x]
 lst = [x for x in range(15) if x < 3]
 lst = [x.upper() for x in days]
 lst = ['day' for x in days]
+```
 
 ### Slicing/Dicing
+```python
 lst = ['a', 'c', 'd', 'e','f','g','h']
 lst[::-1] # reverse list, ['h', 'g', 'f', 'e', 'd', 'c', 'a']
 lst[-2]
@@ -97,3 +104,4 @@ lst[-3:]
 lst[::-1]
 lst[::-6]
 lst[::-2] # ['h','f','d','a']
+```
