@@ -32,6 +32,7 @@ Int → Float → Complex. The farther to the right you go, the higher the prece
 
 int(), float(), str()
 
+```python
 int(1.0)  
 int("3")
 type(int("3"))
@@ -39,7 +40,7 @@ float(1)
 float("3")
 str(1)
 type(str(1)
-
+```
 
 ## List
 
