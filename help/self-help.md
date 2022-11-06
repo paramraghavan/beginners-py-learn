@@ -47,7 +47,6 @@ x is not y
 x=[1,2,3]
 y=x
 x is y 
-x in y
 
 ### Membership Operator:
 x in y
