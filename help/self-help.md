@@ -59,7 +59,7 @@ x not in y
 # Modules in python
 
 ### Built-in Modules
-There are several built-in modules in Python. We can directly used the built-in methods with out importing its modules.
+There are several built-in modules in Python. We can directly used the built-in methods with out importing its modules,
 if they are available in global namespace. Example map, filter, str etc.
 
 ```python
@@ -76,11 +76,11 @@ import sys
 # Find out all the sys built in modules
 sys.builtin_module_names
 
-#Find out where sys is lcoated
+#Find out where sys is located
 sys.prefix
 
 ### Using the dir() Function
-We can use dir() built-in function to list all the function names (or variable names) in a module. 
+# We can use dir() built-in function to list all the function names (or variable names) in a module. 
 
 import time
 dir(time)
