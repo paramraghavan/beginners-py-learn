@@ -19,7 +19,7 @@ position = f.seek(0)
 str = f.read(10)
 print("Again read String is : ", str)
 
-fo.close()
+f.close()
  
 ### readline():
  Read one line of the file.
