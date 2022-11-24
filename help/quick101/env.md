@@ -8,7 +8,7 @@ print(dict(os.environ))
 
 # Get the value of
 # 'foo' environment variable
-export foo=bar in the Local Operating System
+export foo=bar #in the Local Operating System
 foo = os.environ['foo']
 foo = os.environ.get('foo')
 
