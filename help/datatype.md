@@ -192,7 +192,8 @@ list(reversed(lst))   #Parent list will not change
 #Also below will work.
 lst[::-1]
 
-sort(reverse)-->Sorts the list
+#help(lst.sort)
+#sort(reverse=True)-->Sorts the list
 lst.sort()
 '''
 
