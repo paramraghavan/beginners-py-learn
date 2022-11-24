@@ -7,17 +7,19 @@
 AWS CLI
 ------------------
 - Install aws cli
-  python -m pip aws
-  install aws cli msi executable
+  - python -m pip aws
+- install aws cli msi executable
   - windows, https://s3.amazonaws.com/aws-cli/AWSCLI64PY3.msi
   - osx, https://awscli.amazonaws.com/AWSCLIV2.pkg  
     
 
 - run  'aws configure' from command line
+```
 AWS Access Key ID [None]: accesskey
 AWS Secret Access Key [None]: secretkey
 Default region name [None]: 
 Default output format [None]
+```
 
 
 # install virtualenv
