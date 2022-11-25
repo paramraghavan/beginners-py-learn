@@ -24,7 +24,7 @@ dir(...)
 dir() #  return the names in the current scope.
 s = 'help'
 dir(s) #prints all the attributes of the string class
-dir(__builtins__) # shows all the methos for str class
+dir(__builtins__) # shows all the built in functions
 help(str)
 help(str.lower)  
 ```  
