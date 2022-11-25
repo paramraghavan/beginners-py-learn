@@ -35,7 +35,7 @@ x=5
 y=10
 
 ### Arithmetic Operators:
-x +y --addition
+x + y --addition
 x - y Substraction
 x * y Multiplication
 x / y Division
@@ -47,7 +47,7 @@ x += 1
 x -= 1
 x *= 1
 
-### Comparisin Operator:
+### Comparison Operator:
 x == y
 x != y
 x > y
