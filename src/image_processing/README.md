@@ -30,3 +30,6 @@
 
 **Image Processing**
 - https://towardsdatascience.com/massive-tutorial-on-image-processing-and-preparation-for-deep-learning-in-python-1-e534ee42f122
+
+** Restore black and white pictures
+- https://analyticsindiamag.com/restore-old-photos-back-to-life-using-deep-latent-space-translation-pytorcg-python-demo/
