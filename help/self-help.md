@@ -107,7 +107,7 @@ otherDict["who"].append(100)
 # Modules in python
 
 ### Built-in Modules
-There are several built-in modules in Python. We can directly used the built-in methods with out importing its modules,
+There are several built-in modules in Python. We can directly use the built-in methods without importing its modules,
 if they are available in global namespace. Example map, filter, str etc.
 
 ```python
