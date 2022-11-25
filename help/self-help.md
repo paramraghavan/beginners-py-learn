@@ -76,6 +76,7 @@ x not in y
 ```
 
 ### copy and deepcopy
+```python
 import copy
 x=[1,2,3]
 #shallow copy
@@ -93,18 +94,14 @@ wordsDict = {
 
 otherDict = copy.deepcopy(wordsDict)
 
-
-'''
-Modify the contents of list object in deep copied dictionary will 
-have no impact on original dictionary because its a deep copy.
-Notice that the otherDict.who is  modified and 100 added to it
-{'Hello': 56, 'at': 23, 'test': 43, 'this': 43, 'who': [56, 34, 44, 100]}
-'''
+# Modify the contents of list object in deep copied dictionary will 
+# have no impact on original dictionary because its a deep copy.
+# Notice that the otherDict.who is  modified and 100 added to it
+# {'Hello': 56, 'at': 23, 'test': 43, 'this': 43, 'who': [56, 34, 44, 100]}
 otherDict["who"].append(100) 
 
-```
-Notice that the wordsDict.who is not modified
-{'Hello': 56, 'at': 23, 'test': 43, 'this': 43, 'who': [56, 34, 44]}
+# Notice that the wordsDict.who is not modified
+# {'Hello': 56, 'at': 23, 'test': 43, 'this': 43, 'who': [56, 34, 44]}
 ```
 
 # Modules in python
