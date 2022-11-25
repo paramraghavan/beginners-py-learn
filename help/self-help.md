@@ -60,7 +60,7 @@ not(x< 5 and x < 10)
  
 ### Identity Operator:
 x=[1,2,3]
-y=x.copy() # makes a shallow copy, works for array
+y=x.copy() # makes a shallow copy, works for simple array
 x is y #output :False but x == y output is True
 print(f' id of x {id(x)},  id of y: {id(y)}') # id's will be different
 
@@ -69,6 +69,35 @@ y=x
 x is y # true,as x and y have the same id
 print(f' id of x {id(x)},  id of y: {id(y)}') # x and y will have same id's
 
+
+import copy
+x=[1,2,3]
+#shallow copy
+y=copy.copy(x) # makes a shallow copy, works for simple array
+
+#deepcopy
+# Dictionary of strings and ints
+wordsDict = {
+    "Hello": 56,
+    "at" : 23 ,
+    "test" : 43,
+    "this" : 43,
+    "who" : [56, 34, 44]
+    }
+
+otherDict = copy.deepcopy(wordsDict)
+
+
+'''
+Modify the contents of list object in deep copied dictionary will 
+have no impact on original dictionary because its a deep copy.
+'''
+otherDict["who"].append(100) 
+# notice that the otherDict.who is  modified and 100 added to it
+# {'Hello': 56, 'at': 23, 'test': 43, 'this': 43, 'who': [56, 34, 44, 100]}
+
+# notice that the wordsDict.who is not modified
+# {'Hello': 56, 'at': 23, 'test': 43, 'this': 43, 'who': [56, 34, 44]}
 
 ### Membership Operator:
 x in y #output :False but x == y output is True
