@@ -355,3 +355,13 @@ boto3 = ">=1.17.48"
 [requires]
 #python_version = "3.9"
 ```
+
+Python and backward compatibility
+----------------------------------
+99% of the time, if it works on Python 3.x, it'll work on 3.y where y >= x. Enabling warnings when running your code on the older version should pop DeprecationWarnings when you use a feature that's deprecated (and therefore likely to change/be removed in later Python versions). Aside from that, you can read the [What's New docs](https://docs.python.org/3/whatsnew/) for each version between the known good version and the later versions, in particular the Deprecated and Removed sections of each.
+
+Python only ever broke compatibility between Python 2 and 3. If you have something that runs on Python 3.8, it will also work on every following version.
+
+They do break compatibility in small ways between minor versions (and once in a while, even between micro versions, where not changing something leaves a worse bug in place, e.g. the change from 3.5.0 to 3.5.1 that broke code that called vars on namedtuples). Another example was async and await becoming keywords in 3.7 IIRC (which broke the pika package, where 0.11 used async as a variable name, and required the 0.12 release of pika). 
+
+ref: https://stackoverflow.com/questions/70467517/how-can-i-know-what-python-versions-can-run-my-code
