@@ -276,6 +276,7 @@ References
 - https://www.adobe.com/express/feature/image/resize/png
 - [Pencil Sketch image](https://github.com/pythonlessons/background_removal)
 - [Artwork Using Python and TensorFlow github](https://github.com/omerbsezer/NeuralStyleTransfer#readme)
+- https://towardsdatascience.com/painting-and-sketching-with-opencv-in-python-4293026d78b
 
 ## Image Restoration
 - https://github.com/shyama95/image-restoration
