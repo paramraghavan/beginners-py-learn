@@ -15,6 +15,27 @@
 - pipenv run pipenv_to_requirements -f , It will generate requirements.txt and, if applicable, requirements-dev.txt, in the current directory. ref: pipenv-to-requirements . Note you need to isntall pipenv_to_requirements package - pip install pipenv-to-requiremen
 - **Macbook M1 problem try**: arch -x86_64 pip install pandas ← run pip command under x86_emulation but the terminal stays in the native arm environment.
 
+**To update/create the Pipfile.lock file**
+- pipenv lock --clear --verbose 
+- pipenv update --clear --verbose or pipenv udapte --clear -vv
+
+**Install whats in pipenv**
+- pipenv install --dev --verbose ← this install the dev dependencies like pytest, pytest-mock etc
+- pipenv intall --dev -vv
+
+**generate requirements.txt**
+- pip install pipenv-to-requirements # one time 
+- pipenv run pipenv_to_requirements -f # create 2 files
+  - requirements-dev.txt 
+  - requirements.txt 
+**pipenv use requirements.txt**
+ - pipenv install -r requirements.txt
+
+** activate/remove venv**
+- pipenv shell  ← activates  virtualenv; This will create a virtual environment if one doesn’t already exist.
+- pipenv --rm - removes virtual environment
+- pipenv install <package> This will create a Pipfile if one doesn't exist
+- 
 **pipenv and pytest**
 * pipenv run pytest -vv test/ or pipenv run pytest --trace -vv test/ 
 * pipenv run list freeze
