@@ -23,6 +23,9 @@
 - pipenv install --dev --verbose ← this install the dev dependencies like pytest, pytest-mock etc
 - pipenv intall --dev -vv
 
+**To see the installed packages**
+- pipenv graph
+
 **generate requirements.txt**
 - pip install pipenv-to-requirements # one time 
 - pipenv run pipenv_to_requirements -f # create 2 files
