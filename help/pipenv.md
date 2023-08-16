@@ -60,6 +60,9 @@ Not sure if my assessment  is correct, here is my observation and what i did
 * following error running - pipenv lock --clear --verbose
     * pipenv.exceptions.ResolutionFailure: ERROR: pip subprocess to install build dependencies exited with 1 ✘ Locking Failed!
     * fix: 
-        * pipenv install --skip-lock --dev --verbose  
-
+        * pipenv install --skip-lock --dev --verbose
+     
+**Build server uses “https://github.com" and our dev pc’s  use “ssh://git@github.com”**  
+[url "ssh://git@github.com/"]
+	insteadOf = https://github.com/
   
