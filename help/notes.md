@@ -7,7 +7,7 @@
 AWS CLI
 ------------------
 - Install aws cli
-  - python -m pip aws
+  - python -m pip install aws
 - install aws cli msi executable
   - windows, https://s3.amazonaws.com/aws-cli/AWSCLI64PY3.msi
   - osx, https://awscli.amazonaws.com/AWSCLIV2.pkg  
