@@ -99,6 +99,21 @@ self in init method then you will get an error:
   If you are not willing to set any state of the object initially then you don't need to write this method.
 - [see](src/advance_stuff/class_defination.py)
 
+# creating and using pipfile 
+- **pipenv install <package>** , creates a Pipfile, if it does not exist
+- **pipenv shell** , activates virtualenv. this will create a virtual enviroment if it does'nt aleady exist
+- **pipenv --rm** , removes the virtual environment
+- **pipenv shell** , activates virtual memory
+- **pipenv install --dev** , installs the dev dependencies like pytest, pytest-mock, etc..
+- **pipenv --venv** , gives you the virtual env location
+
+## pipenv lock
+- `pipenv lock --clear`
+- pipenv lock: This generates a Pipfile.lock, which is used to produce deterministic builds. The Pipfile.lock ensures that every time you (or someone else) installs the dependencies using pipenv, the exact same versions of the dependencies are installed.
+- --clear: When this option is added to pipenv lock, it clears the caches. This means that pipenv will ignore any cached package files it has and fetch the packages again from the Python Package Index (PyPI) or other repositories. This can be useful if you believe that the cache might be causing issues or if you want to ensure that you're getting the latest package files from the source.
+> In essence, the pipenv lock --clear command will regenerate the Pipfile.lock after clearing the caches, ensuring that the lock file is based on the most recent package files from the repositories.
+
+
 # try
 - help('builtins')
 
