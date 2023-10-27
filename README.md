@@ -77,6 +77,10 @@ pip freeze > requirements.txt
 - **pipenv shell** , activates virtual memory
 - **pipenv install --dev** , installs the dev dependencies like pytest, pytest-mock, etc..
 - **pipenv --venv** , gives you the virtual env location
+- pipenv run pytest -vv test/
+- pipenv run list freeze
+- pipenv graph
+- pipenv lock -r > requirements.txt  
 - brew install pipenv
 
 ## pipenv lock
