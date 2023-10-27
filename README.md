@@ -132,6 +132,30 @@ pipenv install --dev -r dev-requirements.txt
 - Final Steps: After the conversion, review the generated Pipfile to ensure all dependencies are
 correctly specified. You might want to manually specify versions or ranges if needed. 
 
+### Specify a Python Version for a New Project:
+If you're starting a new project and know the version of Python you want to use, you can specify it 
+when creating a new virtual environment. For instance, to use Python 3.8:
+```shell
+pipenv --python 3.8
+```
+### pipenv specify python version
+- Setting Python Version in Pipfile. Inside the Pipfile, you can specify the version of 
+Python for your project under the [requires] section:
+```
+[requires]
+python_version = "3.8"
+```
+### Switching Between Projects:
+When you change to a different project directory and run **pipenv shell** or
+**pipenv run**, pipenv will automatically activate the virtual environment 
+associated with that project, which includes using the correct Python 
+version specified for that project.
+
+### Changing Python Version for an Existing Project:
+- If you need to change the Python version for an existing project:
+- Update the Pipfile with the desired version under the **[requires]** section.
+- Remove the existing virtual environment using **pipenv --rm**.
+- Recreate the virtual environment with the new Python version using **pipenv install**.
 
 ## What's Python Module, Package, Library, Framework
 - Module is a file which contains various Python functions and global variables. It is simply just a **'.py'** extension file which has python executable code.
