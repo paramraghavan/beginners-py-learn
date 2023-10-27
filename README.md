@@ -84,6 +84,8 @@ pip freeze > requirements.txt
 - pipenv graph
 - pipenv lock -r > requirements.txt
 - brew install pipenv
+- pipenv run python <your_script.py>, run any Python script within the virtual environment that pipenv set up.
+
 
 ## pipenv lock
 - `pipenv lock --clear`
