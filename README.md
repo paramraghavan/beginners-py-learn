@@ -113,6 +113,27 @@ self in init method then you will get an error:
 - --clear: When this option is added to pipenv lock, it clears the caches. This means that pipenv will ignore any cached package files it has and fetch the packages again from the Python Package Index (PyPI) or other repositories. This can be useful if you believe that the cache might be causing issues or if you want to ensure that you're getting the latest package files from the source.
 > In essence, the pipenv lock --clear command will regenerate the Pipfile.lock after clearing the caches, ensuring that the lock file is based on the most recent package files from the repositories.
 
+- **Sample PipFile**
+```
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = ">=6.2.4"
+moto = "==2.2.0"
+
+[packages]
+urllib3 = ">=1.26.5"
+wheel = ">=0.36.2"
+pyspark = ">=3.3.0"
+boto3 = ">=1.17.48"
+bumpversion = "==0.6.0"
+
+[requires]
+python_version = ">=3.7"
+```
 
 # try
 - help('builtins')
