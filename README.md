@@ -71,7 +71,7 @@ pip install -r requirements.txt
 pip freeze > requirements.txt
 
 ## creating and using pipfile 
-- **pipenv install <package>** , creates a Pipfile, if it does not exist
+- **pipenv install [package]** , creates a Pipfile, if it does not exist
   - To install a specific version of a package, you can use pipenv install package==version. 
     For example, pipenv install requests==2.25.1
 - **pipenv shell** , activates virtualenv. this will create a virtual enviroment if it does'nt aleady exist
