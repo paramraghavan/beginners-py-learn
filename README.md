@@ -70,35 +70,6 @@ pip install -r requirements.txt
 # create requirements
 pip freeze > requirements.txt
 
-# What's Python Module, Package, Library, Framework
-- Module is a file which contains various Python functions and global variables. It is simply just a **'.py'** extension file which has python executable code.
-- Package is a collection of modules inside a directory/folder. This directory/folder must contain an init.py file as a flag so that the python interpreter 
-processes it as such. The init.py could be an empty file without causing issues.
-- Library is a collection of packages.
-- Framework is a collection of libraries.
-
-# Protected variables
- - Protected variables are those data members of a class that can be accessed within the class and the classes derived from that class.
- In Python, there is no existence of “Public” instance variables. However, we use underscore ‘_’ symbol to determine the access control of a
- data member in a class. Any member prefixed with an underscore should be treated as a non-public part of the API or any Python code,
- whether **it is a function, a method or a data member.** [see](src/advance_stuff/protected.py)
- - [ref](https://www.geeksforgeeks.org/protected-variable-in-python/)
-
-#  What does the init method do in a Class defination? Why is it necessary? (etc.)
-
-- The first argument of every class method, including init, is always a reference to the current instance of the class. By convention, this argument is always
- named self. In the init method, self refers to the newly created object; in other class methods, it refers to the instance whose method was called.
-
-- **Python doesn't force you on using "self". You can give it any name you want. But remember the first argument in a method definition is a reference
-to the object** Python adds the self argument to the list for you; you do not need to include it when you call the methods. if you didn't provide
-self in init method then you will get an error:
->TypeError: __init___() takes no arguments (1 given)
-
-- init is short for initialization. It is a constructor which gets called when you make an instance of the class
-  and it is not necessary. But usually it our practice to write init method for setting default state of the object.
-  If you are not willing to set any state of the object initially then you don't need to write this method.
-- [see](src/advance_stuff/class_defination.py)
-
 # creating and using pipfile 
 - **pipenv install <package>** , creates a Pipfile, if it does not exist
 - **pipenv shell** , activates virtualenv. this will create a virtual enviroment if it does'nt aleady exist
@@ -106,6 +77,7 @@ self in init method then you will get an error:
 - **pipenv shell** , activates virtual memory
 - **pipenv install --dev** , installs the dev dependencies like pytest, pytest-mock, etc..
 - **pipenv --venv** , gives you the virtual env location
+- brew install pipenv
 
 ## pipenv lock
 - `pipenv lock --clear`
@@ -134,6 +106,35 @@ bumpversion = "==0.6.0"
 [requires]
 python_version = ">=3.7"
 ```
+
+# What's Python Module, Package, Library, Framework
+- Module is a file which contains various Python functions and global variables. It is simply just a **'.py'** extension file which has python executable code.
+- Package is a collection of modules inside a directory/folder. This directory/folder must contain an init.py file as a flag so that the python interpreter 
+processes it as such. The init.py could be an empty file without causing issues.
+- Library is a collection of packages.
+- Framework is a collection of libraries.
+
+# Protected variables
+ - Protected variables are those data members of a class that can be accessed within the class and the classes derived from that class.
+ In Python, there is no existence of “Public” instance variables. However, we use underscore ‘_’ symbol to determine the access control of a
+ data member in a class. Any member prefixed with an underscore should be treated as a non-public part of the API or any Python code,
+ whether **it is a function, a method or a data member.** [see](src/advance_stuff/protected.py)
+ - [ref](https://www.geeksforgeeks.org/protected-variable-in-python/)
+
+#  What does the init method do in a Class defination? Why is it necessary? (etc.)
+
+- The first argument of every class method, including init, is always a reference to the current instance of the class. By convention, this argument is always
+ named self. In the init method, self refers to the newly created object; in other class methods, it refers to the instance whose method was called.
+
+- **Python doesn't force you on using "self". You can give it any name you want. But remember the first argument in a method definition is a reference
+to the object** Python adds the self argument to the list for you; you do not need to include it when you call the methods. if you didn't provide
+self in init method then you will get an error:
+>TypeError: __init___() takes no arguments (1 given)
+
+- init is short for initialization. It is a constructor which gets called when you make an instance of the class
+  and it is not necessary. But usually it our practice to write init method for setting default state of the object.
+  If you are not willing to set any state of the object initially then you don't need to write this method.
+- [see](src/advance_stuff/class_defination.py)
 
 # try
 - help('builtins')
