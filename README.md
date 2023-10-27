@@ -44,6 +44,24 @@ The following image, for example, shows several Anaconda and CPython installatio
 
 ![img_2.png](img_2.png)
 
+
+# why is pipfile better than requirements.txt
+The `Pipfile` and `Pipfile.lock` system, introduced by the `pipenv` tool, offers some advantages over the traditional `requirements.txt` approach for managing Python package dependencies. Here's why some developers consider `Pipfile` to be better:
+
+1. **Clearer Separation of Production and Development Dependencies**: `Pipfile` allows for a clearer distinction between packages required for production and those required for development. This separation can be seen in the `[packages]` and `[dev-packages]` sections.
+2. **Deterministic Builds with `Pipfile.lock`**: `Pipfile.lock` ensures that you're using the same exact versions of libraries every time you install, leading to deterministic builds. This means that if it works on one machine (e.g., your local development machine), it will work on another machine (e.g., production) without any surprises.
+3. **Better Dependency Resolution**: `pipenv` resolves dependencies in a more sophisticated manner than `pip` does with `requirements.txt`. It creates a dependency graph and resolves conflicts before generating the `Pipfile.lock`.
+4. **Integrated Environment Management**: `pipenv` integrates package management (`pip`) and virtual environment management (`virtualenv`) into one tool. This means you don't need separate tools or commands to manage virtual environments.
+5. **Enhanced Security Features**: `pipenv` checks for security vulnerabilities in your dependencies and informs you about them. It integrates with Python's security database to provide these checks.
+6. **Simpler Syntax**: Some developers find the `Pipfile` syntax to be simpler and more human-readable than `requirements.txt`.
+7. **Support for Multiple Python Versions**: With `pipenv`, you can specify which version of Python you want to use for your project, and it will manage the virtual environment accordingly.
+
+>However, it's essential to note that both systems have their own use cases:
+- **Use Case for `requirements.txt`**: If you need a lightweight and straightforward way to pin specific package versions, `requirements.txt` is still a good choice. It is also widely recognized and supported by many CI/CD systems and cloud platforms.
+- **Use Case for `Pipfile`**: If you want a more comprehensive solution that manages both package dependencies and virtual environments and offers deterministic builds, `Pipfile` and `pipenv` might be the way to go.
+In summary, while `Pipfile` offers some advantages over `requirements.txt`, the best choice depends on the specific needs and preferences of your project.
+
+
 # install packages
 pip install package-name
 # how to use requirements.txt to recreate all the required python libraries
