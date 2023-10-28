@@ -1,8 +1,8 @@
-## is __init__.py necessary
+## is `__init__.py` necessary
 
-- The __init__.py file serves a specific purpose in Python, and its necessity depends on the version of Python and the use-case. Here's a breakdown:
+- The `__init__.py` file serves a specific purpose in Python, and its necessity depends on the version of Python and the use-case. Here's a breakdown:
 Python 2 and Earlier Versions of Python 3:
-  - __init__.py is necessary for a directory to be recognized as a Python package or module. Without an __init__.py file, the directory won't be recognized by Python as a package or module, and its contents won't be importable.
+  - `__init__.py` is necessary for a directory to be recognized as a Python package or module. Without an __init__.py file, the directory won't be recognized by Python as a package or module, and its contents won't be importable.
 It can be an empty file, but it can also contain initialization code for the package or default content that gets run when the package is imported.
 
 - Python 3.3 and Later:
