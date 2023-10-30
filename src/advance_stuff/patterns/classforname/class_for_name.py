@@ -1,7 +1,7 @@
 '''
 ref: https://stackoverflow.com/questions/452969/does-python-have-an-equivalent-to-java-class-forname
 
-We're using __import__ to import the module that holds the class, which required that we first extract the module name
+We're using __import__ to import the module that holds the class, which requires that we first extract the module name
 from the fully qualified name. Then we import the module:
 
 m = __import__( module )
