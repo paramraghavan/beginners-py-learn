@@ -116,6 +116,36 @@ bumpversion = "==0.6.0"
 [requires]
 python_version = ">=3.7"
 ```
+
+## Error with pipenv install, [pipenv.exceptions.ResolutionFailure]: Warning: Your dependencies could not be resolved.
+Try the following
+ - Check for Direct Conflicts:
+      Go through your Pipfile and ensure that there are no direct version conflicts. For instance, if you have specified two packages that depend on different versions of a third package, that could cause a conflict.
+   Update Pipenv & Pip:
+   Sometimes, issues can be resolved simply by updating pip and pipenv.
+   ```sh
+      pip install --upgrade pip pipenv
+   ```
+ - Clear Caches:
+   Old cache data can sometimes lead to resolution errors. You can clear pipenv caches with:
+   ```sh
+   pipenv --clear
+   ```
+ - Use the --pre Option:
+   If one of your dependencies has a pre-release version that you want to use (or need to use), you can tell pipenv to consider pre-releases during dependency resolution:
+   ```sh
+   pipenv lock --pre
+   ```
+
+- Verbose Logging:
+Use verbose logging to get more detailed information about where the resolution is failing.
+```sh
+pipenv lock --verbose
+```
+- Manually Specify Versions:
+If you know a specific package is causing the issue, you can try locking it to a specific version in the Pipfile.    
+
+
 ## How to convert a requirements.txt to a Pipfile 
 - Install pipenv: If you haven't installed pipenv yet, you can do so using pip:
 ```shell
