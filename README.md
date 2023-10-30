@@ -81,7 +81,7 @@ pip freeze > requirements.txt
 - **pipenv --venv** , gives you the virtual env location
 - pipenv run pytest -vv test/
 - pipenv run list freeze
-- pipenv graph
+- pipenv graph -  to inspect the versions actually installed in the virtualenv.
 - pipenv lock -r > requirements.txt
 - brew install pipenv
 - pipenv run python <your_script.py>, run any Python script within the virtual environment that pipenv set up.
