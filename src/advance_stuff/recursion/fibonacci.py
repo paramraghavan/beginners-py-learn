@@ -32,13 +32,16 @@ def nr_Fibonacci(n):
     if n == 3 :
         return 2
 
-    result = 1
-    for i in range(3,n,1):
-        result += i
+    prev_minus_1 = 1
+    prev = 2
+    for i in range(4,n+1,1):
+        curr = prev + prev_minus_1
+        prev_minus_1 = prev
+        prev = curr
 
-    return result
+    return curr
 
-num = 3
+num = 9
 
 # Driver Program
 print(f'Recursive {Fibonacci(num)}')
