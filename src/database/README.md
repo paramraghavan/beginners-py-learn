@@ -11,7 +11,7 @@ A `docker-compose.yml` file has been provided. To startup the containerized loca
 > Containers defined in mongodb are :
 >> mongodb_mongo - the mongo db instance, mongodb_mongo-express - the mongo client ui  
 > 
-> Docker containers to be started - mongodb_mongo and mongodb_mongo
+> Docker containers to be started - mongodb_mongo and mongodb_mongo-express
 > 
 > > 
 > Containers defined in postgresql are :
