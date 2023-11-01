@@ -474,12 +474,12 @@ Short summaries of the licenses:
 
 Python only ever broke compatibility between Python 2 and 3. If you have something that runs on Python 3.8, it will also work on every following version.
 
-
-## Python Generative AI AWS
-- https://www.youtube.com/watch?v=ab1mbj0acDo
-
-
 They do break compatibility in small ways between minor versions (and once in a while, even between micro versions, where not changing something leaves a worse bug in place, e.g. the change from 3.5.0 to 3.5.1 that broke code that called vars on namedtuples). Another example was async and await becoming keywords in 3.7 IIRC (which broke the pika package, where 0.11 used async as a variable name, and required the 0.12 release of pika). 
 - [Python 3.9 vs 3.10](https://www.analyticsvidhya.com/blog/2021/08/differences-between-python-3-10-and-python-3-9-which-you-need-to-know)
 
 ref: https://stackoverflow.com/questions/70467517/how-can-i-know-what-python-versions-can-run-my-code
+
+
+## Python Generative AI AWS
+- https://www.youtube.com/watch?v=ab1mbj0acDo
+
