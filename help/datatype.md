@@ -137,8 +137,8 @@ lst=[1,2,3]
 lst.clear()
 print(lst)
 ```
-```
-copy()	--> Returns a copy of the list. Both will have different address id. (Version 3.3)
+```python
+# copy()	--> Returns a copy of the list. Both will have different address id. (Version 3.3)
 #Copy a list
 list1=["apple", "banana", "cherry"]
 list2 = list1  #Copy a list but both point to the same location
@@ -153,23 +153,18 @@ list2 = list1.copy()
 #Also we can use list() method. Memory ID will be different for both the lists.
 list2 = list(list1)
 
-count()	--> Returns the number of elements with the specified value. 
+# count()	--> Returns the number of elements with the specified value. 
 my_list = [1,2,3,4,5,1,2,3]
-my_list.count(3) --> 2
+my_list.count(3) # --> 2
 
-index(start,stop) -->Returns the index of the first element with the specified value.
+# index(start,stop) -->Returns the index of the first element with the specified value.
 #Find the index of an element
 my_list = ['a','b','c','d','e']
 print(my_list.index('b'))
 #Index of Element starting with 2
 print(my_list.index('c',2)) 
 
-insert(index,object)-->Adds an element at the specified position.
-my_list = ['a','b','c','d','e']
-my_list.insert(0,'x')
-my_list
-
-pop()-->Removes the element at the specified position
+# # pop()-->Removes the element at the specified position
 my_list = [1,2,3,4,5]
 #By Default Last Element is deleted
 my_list.pop()
@@ -177,12 +172,12 @@ my_list.pop()
 my_list.pop(2)
 my_list
 
-remove()-->Removes the item with the specified value
+# remove()-->Removes the item with the specified value
 lst = ['a','b','c','d','e']
 lst.remove('b')
 lst
 
-reverse()-->Reverses the order of the list
+# reverse()-->Reverses the order of the list
 lst=[5,4,-10,15,1]
 lst.reverse()   #The parent list will be reverse
 
@@ -195,12 +190,11 @@ lst[::-1]
 #help(lst.sort)
 #sort(reverse=True)-->Sorts the list
 lst.sort()
-'''
 
 ### sorted() function
-sorted is used to sort any sequence
-sorted(iterable,key, reverse) #Last 2 parameters are optional
-Returns a list
+# sorted is used to sort any sequence
+# sorted(iterable,key, reverse) #Last 2 parameters are optional
+# Returns a list
 
 list=[5,3,9,11,2,27]
 print(sorted(list))
@@ -208,6 +202,12 @@ print(sorted(list))
 list = ['Python','Spark','Java','C']
 print(sorted(list, key=len))
 print(sorted(list, key=len),reverse=True)
+
+list = [(3, 5, 8), (6, 2, 8), (2, 9, 4), (6, 8, 5)]
+sorted(list, key=lambda x: x[1])
+## output
+## [(6, 2, 8), (3, 5, 8), (6, 8, 5), (2, 9, 4)]
+
 ```
 
 
