@@ -311,6 +311,9 @@ this is a delicious toast
 ## python packages
 - https://pypi.org/
 
+## How to build package and manage version numbers
+- https://github.com/paramraghavan/pkg_example_project#readme
+
 ## profile python code
 <pre>
 test.py
