@@ -33,7 +33,8 @@ def student_with_marks_grtr_than_70(mark):
  return mark > 70
 # [99] 
  
-list(filter(student_with_marks_grtr_than_70, marks))
+x = list(filter(student_with_marks_grtr_than_70, marks))
+x = list(filter(lambda a: a >70, marks))
 
 marks=[50,' ',65,None,33,31,33, 49]
 list(filter(None, marks))

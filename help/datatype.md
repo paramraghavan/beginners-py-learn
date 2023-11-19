@@ -39,7 +39,7 @@ type(int("3"))
 float(1)
 float("3")
 str(1)
-type(str(1)
+type(str(1))
 ```
 
 ## List
@@ -86,7 +86,7 @@ while i < len(lst):
 # List Compression
 ```python
 lst = [1,2,3,4,5]
-[x+1 for x in lst]
+lst1 = [x+1 for x in lst]
 
 days= ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 lst = [x for x in days if "e" in x]
