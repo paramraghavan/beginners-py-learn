@@ -27,13 +27,24 @@ asyncio.run(main())
 import asyncio
 import time
 
-async def task(run_id):
-    await asyncio.sleep(1)
-    print(f"done task {run_id}")
+import asyncio
+
+async def my_coroutine(id, delay):
+    print(f"Coroutine {id} starting")
+    await asyncio.sleep(delay)
+    print(f"Coroutine {id} finished")
+    return f"Result from coroutine {id}"
 
 async def main():
-    start = time.time()
-    await asyncio.gather(task(1), task(2), task(3))
-    print(f"all the tasks took {time.time() - start} to run")
+    # List of coroutines
+    tasks = [my_coroutine(1, 2), my_coroutine(2, 1), my_coroutine(3, 3)]
 
+    # Waiting for all coroutines to complete
+    results = await asyncio.gather(*tasks)
+
+    # Print results
+    for result in results:
+        print(result)
+
+# Run the main coroutine
 asyncio.run(main())
