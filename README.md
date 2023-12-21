@@ -75,7 +75,7 @@ pip freeze > requirements.txt
   - To install a specific version of a package, you can use pipenv install package==version. 
     For example, pipenv install requests==2.25.1
 - **pipenv run pip install [package(s)]**
-- **pipenv pip run list**
+- **pip list**
 - **pipenv shell** , activates virtualenv. this will create a virtual enviroment if it does'nt aleady exist
 - **pipenv --rm** , removes the virtual environment
 - **pipenv shell** , activates virtual memory
