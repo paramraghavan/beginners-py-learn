@@ -1,5 +1,5 @@
 # conda  -managing dependencies and isolating your project's environment
-Creating a Conda environment to run your Python code that interacts with Neptune is a good practice for managing dependencies and isolating your project's environment. Here I am going to setup emvironment to connect to AWS Neptune and work iwth jupyter notebook. 
+Creating a Conda environment to run your Python code that interacts with Neptune is a good practice for managing dependencies and isolating your project's environment. Here I am going to setup environment to connect to AWS Neptune and work iwth jupyter notebook. 
 
 > **Purpose**
 >> By using a YAML file to define your Conda environment and its dependencies, you can easily create a consistent and reproducible environment for your Neptune project.
@@ -42,4 +42,20 @@ conda activate <environment_name>
 jupyter notebook
 # When you're finished working in the environment, deactivate it to return to your global Python environment.
 conda deactivate
+```
+
+## You can update a Conda environment by adding or removing packages or changing 
+
+```shell
+conda activate your_environment_name
+# install  the new package not in yaml
+conda install new_package_name
+# remove package
+conda remove package_name_to_remove
+```
+
+## delete conda env
+```shell
+conda env remove --name old_environment_name
+
 ```
