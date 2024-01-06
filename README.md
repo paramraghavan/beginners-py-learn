@@ -75,7 +75,7 @@ pip freeze > requirements.txt
   - To install a specific version of a package, you can use pipenv install package==version. 
     For example, pipenv install requests==2.25.1
 - **pipenv run pip install [package(s)]**
-- **pipenv pip run list**
+- **pip list**
 - **pipenv shell** , activates virtualenv. this will create a virtual enviroment if it does'nt aleady exist
 - **pipenv --rm** , removes the virtual environment
 - **pipenv shell** , activates virtual memory
@@ -485,6 +485,20 @@ ref: https://stackoverflow.com/questions/70467517/how-can-i-know-what-python-ver
 
 ## Python Generative AI AWS
 - https://www.youtube.com/watch?v=ab1mbj0acDo
+
+## pep8
+PEP 8 is the Python Enhancement Proposal which provides guidelines and best practices on how to write Python code. It is not mandatory but considered good practice.
+
+**Key aspects of PEP 8 include:**
+* Indentation: Use 4 spaces per indentation level.
+* Maximum Line Length: Limit all lines to a maximum of 79 characters for code and 72 characters for comments and docstrings.
+* Blank Lines: Use blank lines to separate functions and classes, and larger blocks of code inside functions.
+* Imports: Imports should usually be on separate lines and are always put at the top of the file, just after any module comments and docstrings, and before module globals and constants.
+* Whitespace in Expressions and Statements: Avoid extraneous whitespace in various situations, such as immediately inside parentheses, brackets or braces, between a trailing comma and a following close parenthesis, etc.
+* Comments: Comments should be complete sentences. If a comment is short, the period at the end can be omitted.
+* Naming Conventions: There are various naming conventions for different types of identifiers (e.g., module names, function names, variable names, class names). These conventions include using lowercase with words separated by underscores for function and variable names (function_name), and using CapWords for class names (ClassName).
+* Programming Recommendations: Code is read more often than it is written, so make your code as readable as possible. Avoid complex and obscure expressions; straightforward is better than complicated
+- [pep8](https://peps.python.org/pep-0008/)
 
 ## Get tree structure of you project
 - `brew install tree`
