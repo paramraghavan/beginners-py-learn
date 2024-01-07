@@ -36,12 +36,17 @@ dependencies:
 
 ## Step 3 creating conda env
 ```shell
-conda create -n <environment_name> python=3.x
-conda activate <environment_name>
+# -n flag to specify the name of the environment, creates the file
+# conda create -n neptune_graph_viz
+# This command creates an environment based on the dependencies listed in the "environment.yml" - neptune_graph_viz.yaml file.
+conda env create -f ./neptune_graph_viz.yaml
+conda activate neptune_graph_viz
+#conda activate <environment_name>
 # you can start jupyter notebook
 jupyter notebook
 # When you're finished working in the environment, deactivate it to return to your global Python environment.
 conda deactivate
+conda list
 ```
 
 ## You can update a Conda environment by adding or removing packages or changing 
@@ -58,4 +63,10 @@ conda remove package_name_to_remove
 ```shell
 conda env remove --name old_environment_name
 
+```
+
+## Create Jupyter Kernel
+Once ipykernel is installed, you can create a Jupyter kernel for your Conda environment using the following command:
+```shell
+python -m ipykernel install --user --name your_environment_name --display-name "Your Environment Name"
 ```
