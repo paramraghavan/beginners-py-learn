@@ -47,6 +47,8 @@ jupyter notebook
 # When you're finished working in the environment, deactivate it to return to your global Python environment.
 conda deactivate
 conda list
+# list all conda env's available
+conda env list
 ```
 
 ## You can update a Conda environment by adding or removing packages or changing 
