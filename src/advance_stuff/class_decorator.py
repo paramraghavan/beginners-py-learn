@@ -1,9 +1,11 @@
 '''
 The @classmethod Decorator
-This decorator exists so you can create class methods that are passed the actual class object within the function call, much like self is passed to any other ordinary instance method in a class.
+This decorator exists so you can create class methods that are passed the actual class object within the function call,
+much like self is passed to any other ordinary instance method in a class.
 
-In those instance methods, the self argument is the class instance object itself, which can then be used to act on instance data. @classmethod methods also have a mandatory first argument,
-but this argument isn't a class instance, it's actually the uninstantiated class itself. So, while a typical class method might look like this:
+In those instance methods, the self argument is the class instance object itself, which can then be used to act on
+instance data. @classmethod methods also have a mandatory first argument,but this argument isn't a class instance,
+it's actually the uninstantiated class itself. So, while a typical class method might look like this:
 
 class Student(object):
 
