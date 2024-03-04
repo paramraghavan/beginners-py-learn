@@ -23,7 +23,9 @@ import pandas as pd
 # df_order_line_item_details = pd.DataFrame(order_line_item_details_data)
 
 # Reading CSV files into DataFrames
-df_order = pd.read_csv('order.csv')
+#df_order = pd.read_csv('order.csv')
+# Read the CSV file into a DataFrame with UTF-8 encoding and a custom newline delimiter
+df_order = pd.read_csv('order.csv', encoding='utf-8', lineterminator='\n')
 df_order_line_item = pd.read_csv('order_line_item.csv')
 df_order_line_item_details = pd.read_csv('order_line_item_detail.csv')
 
