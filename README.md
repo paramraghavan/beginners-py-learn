@@ -505,3 +505,11 @@ PEP 8 is the Python Enhancement Proposal which provides guidelines and best prac
 - `tree -I 'dir_to_exclude'` - `dir_to_exclude` is the name of the directory that will be skipped.
 - `tree -I 'dir1|dir2|*pattern*'` - This command will exclude dir1, dir2, and any directories that match the pattern *pattern*. Remember that the pattern matching is case-sensitive by default.
 
+
+## Errors
+
+### openssl error on git clone
+Following resolves it:
+```shell
+git config --global http.sslBackend schannel
+```
