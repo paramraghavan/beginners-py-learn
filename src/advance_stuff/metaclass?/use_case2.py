@@ -19,14 +19,15 @@ class BaseClass:
     def __init__(self, base_param):
         self.base_param = base_param
 
+    def base_method(self):
+        print(f"Method in BaseClass, base_param: {self.base_param}")
+
     def create(self):
         print('create')
 
     def update(self):
         print('update')
 
-    def base_method(self):
-        print(f"Method in BaseClass, base_param: {self.base_param}")
 
 class SingletonBaseClassImpl(BaseClass, metaclass=SingletonMeta):
     def __init__(self, value, base_param):
