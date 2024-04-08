@@ -1,5 +1,10 @@
 class BaseClass:
-
+    """
+    A base class cannot directly access methods of a derived (child) class unless those methods are called within the
+    derived class itself and the base class has a reference to the derived class instance. However, this is not a common or
+    recommended practice in object-oriented programming, as it can lead to tight coupling between the base and derived
+    classes.
+    """
     def start_process(self):
         print("Running " + str(self))
 
