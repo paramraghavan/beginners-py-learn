@@ -53,7 +53,7 @@ def login():
 username, password = login()
 '''
 
-def login():
+def login()->tuple[str, str]:
     username = 'user1' #input("Username: ")
     password = 'password' #input("Password: ")
 
