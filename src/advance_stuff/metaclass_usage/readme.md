@@ -12,3 +12,10 @@ functionality to classes.
 - Singleton pattern implementation. The Singleton pattern ensures that a class has only one instance and provides a
   global point of access to that instance. use_case2
 
+## Base class call the methods in Driver/Child Class
+
+A base class cannot directly access methods of a derived (child) class unless those methods are called within the
+derived class itself and the base class has a reference to the derived class instance. However, this is not a common or
+recommended practice in object-oriented programming, as it can lead to tight coupling between the base and derived
+classes.
+See [base_derived.py](base_derived.py)
