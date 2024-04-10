@@ -71,3 +71,14 @@ work, the behavior might be different from what you would expect in a local file
 To ensure reliable operation, you should test your locking mechanism thoroughly in the specific environment where it
 will be deployed. Additionally, consider using more robust distributed locking mechanisms or coordination services if
 your application requires strong consistency guarantees or if you encounter issues with file locking on EFS.
+
+### Lock/Unlock
+
+**Acquiring an Exclusive Lock:** To acquire an exclusive lock, you use the flock function with the LOCK_EX flag. T*he call to
+flock will block (wait) until the lock can be acquired if the file is already locked by another process. You can also
+use the LOCK_NB flag in combination with LOCK_EX to make the call non-blocking (i.e., it will return an error if the
+lock cannot be immediately acquired).*
+
+**Releasing the Lock**: The lock is automatically released when the file is closed (e.g., using the close method of the file
+object) or when the process holding the lock terminates. You can also explicitly release the lock by calling flock with
+the LOCK_UN flag.
