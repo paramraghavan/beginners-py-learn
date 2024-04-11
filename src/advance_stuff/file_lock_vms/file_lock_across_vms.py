@@ -10,9 +10,9 @@ max_instances = 2
 def acquire_lock():
     while True:
         try:
-            with open(lock_file, 'w') as lock:
-                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                return lock
+            lock = open(lock_file, 'w')
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return lock
         except BlockingIOError:
             time.sleep(1)
 
