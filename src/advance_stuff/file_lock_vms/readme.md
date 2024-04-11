@@ -117,3 +117,9 @@ def release_lock(lock):
     lock.close()
 
 ```
+
+## File lock acquired via fcntl or portalocker when the process dies
+
+When a process that creates a lock dies, the lock is automatically released. All fcntl locks associated with a file are
+removed when that process closes any file descriptor for that file, even if a lock was never requested for that file
+descriptor. Fcntl locks are also not inherited by a child process
