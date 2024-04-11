@@ -82,3 +82,38 @@ lock cannot be immediately acquired).*
 **Releasing the Lock**: The lock is automatically released when the file is closed (e.g., using the close method of the file
 object) or when the process holding the lock terminates. You can also explicitly release the lock by calling flock with
 the LOCK_UN flag.
+
+## Cross platform file lock - Windows and Mac amd Unix
+
+To achieve file locking in a way that works on both Windows and macOS (as well as other Unix-like systems), you can use
+the portalocker library, which provides a cross-platform interface for file locking.
+
+```shell
+pip install portalocker
+```
+
+Then, you can use portalocker to acquire an exclusive lock (similar to fcntl.LOCK_EX) in a cross-platform manner:
+In this rewritten version, portalocker.lock is used to acquire an exclusive, non-blocking lock on the file, and
+portalocker.unlock is used to release the lock. If the lock cannot be acquired immediately, a LockException is raised,
+and the code retries after a brief delay.
+
+```python
+import portalocker
+import time
+
+lock_file = "path/to/lockfile.lock"
+
+def acquire_lock():
+    while True:
+        try:
+            lock = open(lock_file, 'w')
+            portalocker.lock(lock, portalocker.LOCK_EX | portalocker.LOCK_NB)
+            return lock
+        except portalocker.exceptions.LockException:
+            time.sleep(1)
+
+def release_lock(lock):
+    portalocker.unlock(lock)
+    lock.close()
+
+```
