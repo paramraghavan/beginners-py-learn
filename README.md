@@ -380,6 +380,29 @@ if __name__ == '__main__':
     stats.dump_stats('test.pstat')
 </pre>
 
+## pip install vs python -m pip install
+
+### pip install
+
+This command directly invokes the pip executable. Depending on how Python is configured on your system or installed,
+this typically points to a pip that is associated with one of the Python interpreters installed on your system. When you
+use pip install, you're trusting the system's environment to use the correct pip associated with the correct Python
+version you intend to use.
+
+### python -m pip install
+
+This command explicitly tells Python to run the pip module as a script. The key advantage here is that you are
+specifying which Python interpreter you want to use to install packages. This is particularly useful in environments
+where multiple Python versions are installed or in virtual environments. Using python -m pip install ensures that you
+are executing pip for the Python interpreter you are currently using or have specified, and it avoids confusion about
+which Python version pip will operate on.
+
+When working within virtual environments created by venv or virtualenv. It ensures that the packages are installed in
+the virtual environment's site-packages directory, rather than the global Python environment.
+
+python -m pip install makes it explicit which Python interpreter's pip is being used, reducing the risk of installing
+packages into the wrong Python's site-packages directory.
+
 ## profiling with ui
 - sankeviz profiler
   - saves the profile to test.profile, - saves the profile  to test.profile, python -m cProfile -o test.pstats test.py
