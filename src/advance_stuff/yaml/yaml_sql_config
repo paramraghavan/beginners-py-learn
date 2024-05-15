@@ -1,0 +1,8 @@
+config:
+  layers:
+    - name: layer1
+      type: sql
+      query: "SELECT * FROM table1"
+    - name: layer2
+      type: expression
+      expression: "layer1['column1'] + layer1['column2']"
