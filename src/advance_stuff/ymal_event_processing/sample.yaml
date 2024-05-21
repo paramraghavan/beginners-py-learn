@@ -1,0 +1,10 @@
+print_action:
+  type: print
+  parameters:
+    message: "Hello, world!"
+
+save_action:
+  type: save
+  parameters:
+    file_path: "output.txt"
+    content: "This is the content to save."
