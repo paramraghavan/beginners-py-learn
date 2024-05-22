@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from singleton_impl import Singleton
 
 class BaseFactory(ABC):
     def __init__(self, params):
@@ -11,9 +12,14 @@ class BaseFactory(ABC):
 
 class PrintActionFactory(BaseFactory):
     def perform_action(self):
-        print(self.params['message'])
+        message = self.params['message']
+        print(message)
+        Singleton.update_state('last_printed_message', message)
 
 class SaveToFileFactory(BaseFactory):
     def perform_action(self):
-        with open(self.params['filename'], 'w') as file:
-            file.write(self.params['content'])
+        filename = self.params['filename']
+        content = self.params['content']
+        with open(filename, 'w+') as file:
+            file.write(content)
+        Singleton.update_state('last_saved_file', filename)
