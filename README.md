@@ -221,7 +221,7 @@ self in init method then you will get an error:
   and it is not necessary. But usually it our practice to write init method for setting default state of the object.
   If you are not willing to set any state of the object initially then you don't need to write this method.
 - [see](src/advance_stuff/class_defination.py)
-
+- [python class initialization sequence](src/advance_stuff/class_init_sequence/readme.md)
 ## try
 - help('builtins')
 
