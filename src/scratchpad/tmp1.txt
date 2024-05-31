@@ -1,0 +1,19 @@
+
+
+Subject: Coordination for  Release
+
+Hello All,
+
+M and I will be coordinating the v1591 release. Could each of you please respond to the following:
+
+Do you have any code changes going in for this release? (Y/N)
+If you answered "N" to the above, no need to look any further.
+For all those who have changes for this release:
+Please provide a brief 1-2 line summary of your changes.
+The code freeze is by June 5th at noon.
+If you are unable to meet the above deadline, please let us know as soon as possible.
+Thank you.
+
+Best regards,
+
+[Your Name]
