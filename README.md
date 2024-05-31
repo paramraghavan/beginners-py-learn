@@ -1,6 +1,14 @@
 # beginners-py-learn
 An attempt to teach python to beginners with examples.
 
+## **Basics of how a program works**
+[How does a program really works](src/how-does-a-program-run.md)
+
+## Start Learning
+[Click here and start with 0-learn_variables.py](src/)
+
+
+# Setting up Environment and more...
 ## Any one of these IDE's
 - pycharm community editon - using pycharm
 - visual studio code
@@ -19,9 +27,6 @@ The following image, for example, shows several Anaconda and CPython installatio
 
 ![img_2.png](img_2.png)
 
-
-## Start Learning
-[Click here and start with 0-learn_variables.py](src/)
 
 ## Install virtualenv
 - [Virtual env](https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/)
@@ -193,6 +198,7 @@ version specified for that project.
 - Remove the existing virtual environment using **pipenv --rm**.
 - Recreate the virtual environment with the new Python version using **pipenv install**.
 
+# Python nuances
 ## What's Python Module, Package, Library, Framework
 - Module is a file which contains various Python functions and global variables. It is simply just a **'.py'** extension file which has python executable code.
 - Package is a collection of modules inside a directory/folder. This directory/folder must contain an init.py file as a flag so that the python interpreter 
