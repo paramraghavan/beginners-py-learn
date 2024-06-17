@@ -1,4 +1,6 @@
 """
+dump table to csv
+lsit all the tables ib database
 pip install pandas sqlalchemy psycopg2
 
 """
