@@ -1,0 +1,2 @@
+use grammer to parse columns in case when, example - CASE WHEN amount < 100 THEN 'High' WHEN amount * num_count >= 50 THEN 'Medium'
+WHEN amount * num_count <> 50 THEN 'Unsure' ELSE 'Low' end AS amount_category, using grammer syntax with python

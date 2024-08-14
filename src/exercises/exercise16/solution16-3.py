@@ -36,3 +36,31 @@ list_str = custom_convert_to_string(data_list)
 
 print("Dictionary as string:", dict_str)
 print("List as string:", list_str)
+
+
+####################
+def search_dict_ignore_case(dictionary, search_term):
+    search_term_lower = search_term.lower()  # Convert search term to lowercase
+    matches = []
+
+    for key, value in dictionary.items():
+        if key.lower() == search_term_lower:  # Compare keys ignoring case
+            matches.append((key, value))
+
+    return matches
+
+# Example usage:
+sample_dict = {
+    'camelCaseExample': 'This is a test',
+    'AnotherExample': 'Another test string',
+    'LOWERCASE': 'Lowercase example',
+    'UppercaseExample': 'Uppercase example'
+}
+
+search_term = 'lowercase'
+results = search_dict_ignore_case(sample_dict, search_term)
+
+for key, value in results:
+    print(f"Key: {key}, Value: {value}")
+
+###################
