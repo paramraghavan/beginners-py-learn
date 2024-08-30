@@ -409,6 +409,9 @@ the virtual environment's site-packages directory, rather than the global Python
 python -m pip install makes it explicit which Python interpreter's pip is being used, reducing the risk of installing
 packages into the wrong Python's site-packages directory.
 
+## How to convert python script to binary
+- [building_binary_files_for_python_scripts.md](building_binary_files_for_python_scripts.md)
+
 ## profiling with ui
 - sankeviz profiler
   - saves the profile to test.profile, - saves the profile  to test.profile, python -m cProfile -o test.pstats test.py
