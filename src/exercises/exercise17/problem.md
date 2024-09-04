@@ -1,0 +1,2 @@
+code to loop thru files in a folder, call process function to process file. Keep track of number for file in total,
+catch exception around process, add to failure count other wise increment success count
