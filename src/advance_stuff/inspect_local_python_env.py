@@ -2,8 +2,17 @@
 This is to inspect my local python environment
 ref: https://www.geeksforgeeks.org/python-sys-module/
 '''
-
+import os
 import sys
+
+
+def printEnv():
+    print(80*'*')
+    for k,v in os.environ.items():
+        print(f'{k}={v}')
+    print(80 * '*')
+
+printEnv()
 
 #dir(sys)
 help(sys)
@@ -27,3 +36,7 @@ print(f'Our platform \n {bcolors.BOLD}{sys.platform}{bcolors.ENDC}')
 print(f'All the arguments passed to program \n {bcolors.BOLD}{sys.argv}{bcolors.ENDC}')
 
 print('Other interesting ones -->  sys.exit, sys.stdout, sys.stdin and sys.stdin')
+
+
+
+
