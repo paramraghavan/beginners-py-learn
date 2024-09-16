@@ -10,10 +10,14 @@ An attempt to teach python to beginners with examples.
 
 # Setting up Environment and more...
 ## Any one of these IDE's
-- pycharm community editon - using pycharm
+- pycharm community edition - using pycharm
 - visual studio code
 - spyder
 - notepad
+
+## GitHub 101
+- [Github 101 ](github-101.md)
+- [How To Use Github - simple use case](how-to-use-github.md)
 
 ### [Select and activate a environment/virtual environment in Visual Studio Code](https://code.visualstudio.com/docs/python/environments)
 By default, the Python extension looks for and uses the first Python interpreter it finds in the system path. To select a specific environment, 
