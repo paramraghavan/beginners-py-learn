@@ -5,8 +5,8 @@ An attempt to teach python to beginners with examples.
 [How does a program really works](src/how-does-a-program-run.md)
 
 ## Start Learning
-[Click here and start with 0-learn_variables.py](src/)
-
+- [Click here and start with 0-learn_variables.py](src/)
+- [Quick 101](quick101)
 
 # Setting up Environment and more...
 ## Any one of these IDE's
