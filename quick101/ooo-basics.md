@@ -1,4 +1,4 @@
-```
+```python
 class Person:
     # constructor
     def __init__(self,age):
@@ -58,10 +58,11 @@ print(c1.teachers[1].name)
 
 print("The Average Salary is " + str(c1.get_average_salary()))
 
-class Pet
+class Pet:
     # class attribute
     number_of_pets = 0
-    def __init__(self,name, age)
+    
+    def __init__(self,name, age):
         self.name = name
         self.age = age
         Pet.number_of_pets += 1
