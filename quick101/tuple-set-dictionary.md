@@ -4,20 +4,20 @@
  - Are faster than lists.
 
 ### How to Create
-```
-Create tuples with round brackets.
-     t = ('a','b','c','a')
-     t= () #Empty Tuple
-Tuple containing single element – Put a comma after the first element.
-       t =(10,).
-Like lists, tuples can also be sliced, concatenated and membership.
+```python
+# Create tuples with round brackets.
+    t = ('a','b','c','a')
+    t= () #Empty Tuple
+#Tuple containing single element – Put a comma after the first element.
+ t =(10,)
 
-Methods dir():
+# Like lists, tuples can also be sliced, concatenated and membership.
+# Methods dir():
 t=(1,2,3,4,5,1)
-count() -->Returns the number of times a specified value occurs in a tuple
+# count() -->Returns the number of times a specified value occurs in a tuple
 t.count(1) #2
 
-index() -->Searches the tuple for a specified value and returns the position of where it was found
+#index() -->Searches the tuple for a specified value and returns the position of where it was found
 t.index(3)
 ```
 
@@ -27,7 +27,7 @@ t.index(3)
  - Duplicates Not Allowed.
 
 ### show that duplicates have been removed
-```
+```python
 basket = {'apple', 'orange', 'apple', 'pear', 'orange', 'banana'}
 print(basket)                      
 ```
@@ -39,7 +39,7 @@ print(basket)
 ```
 
 ### Support Math operations like union, intersection, difference, symmetric difference etc
-```
+```python
 a = set('abracadabra')
 b = set('alacazam')
 a                                  # unique letters in a
@@ -101,11 +101,11 @@ update
 ```
 
 ## Dictionary
-```
-Dictionaries: We can use Dictionaries to store data in key:value pairs.
-  -- Changable
-  -- No Duplicates
-  -- Ordered (As of Python version 3.7, dictionaries are ordered. In Python 3.6 and earlier, dictionaries are not-ordered.)
+```python
+# Dictionaries: We can use Dictionaries to store data in key:value pairs.
+#   -- Changable
+#   -- No Duplicates
+#   -- Ordered (As of Python version 3.7, dictionaries are ordered. In Python 3.6 and earlier, dictionaries are not-ordered.)
 
 ###
 flowers = {'rose' : 'red', 'hibiscus' : 'orange'}
@@ -118,7 +118,7 @@ len(flowers)
 
 ### Accessing Items
 flowers['rose']
-or
+# or
 flowers.get("rose")
 
 ###Get Keys and Values
@@ -143,6 +143,8 @@ for x in flowers.keys():
 for x in flowers.items():
 	print(f'key: {x[0]},  value: {x[1]}')
 	
+for x,y in flowers.items():
+	print(f'key: {x},  value: {y}')
 
 ### Functions
 
@@ -150,17 +152,15 @@ for x in flowers.items():
 flowers.clear()
 
 # Copy a Dictionary
-Copy a Dictionary
-dict2 = dict1 #Problem dict2 will only be a reference to dict1, and changes made in dict1 will automatically also be made in dict2.
-dict2 = dict1.copy()
+# dict2 = dict1 #Problem dict2 will only be a reference to dict1, and changes made in dict1 will automatically also be made in dict2.
+# dict2 = dict1.copy()
 
 #fromkeys()
-x = ('key1', 'key2', 'key3')
-y = 10
+keys = ('key1', 'key2', 'key3')
+value = 10
 
-dict.fromkeys(x, y)
-
-print(thisdict)
+dict.fromkeys(keys, value) 
+print(dict) #--> #{'key1': 10, 'key2': 10, 'key3': 10}
 
 #The pop() method removes the item with the specified key name:
 flowers.pop('lily')
@@ -168,12 +168,12 @@ flowers.pop('lily')
 flowers.popitem('lily')
 
 #setdefault()
-Returns the value of the specified key. If the key does not exist: insert the key, with the specified value
+# Returns the value of the specified key. If the key does not exist: insert the key, with the specified value
 flowers.setdefault('rose','white')
 
 # Update
 flowers['rose'] = 'white'
-Or
+#Or
 flowers.update({"rose" : "black"})
 
 ### Delete an Item

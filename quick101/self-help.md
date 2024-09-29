@@ -35,11 +35,11 @@ x=5
 y=10
 
 ### Arithmetic Operators:
-x + y --addition
-x - y Substraction
-x * y Multiplication
-x / y Division
-x % y Modulus
+x + y #addition
+x - y #Substraction
+x * y #Multiplication
+x / y #Division
+x % y #Modulus
 
 ### Assignment Operators:
 x = 1
@@ -49,7 +49,7 @@ x *= 1
 
 ### Comparison Operator:
 x == y
-x != y
+x != y # '!\\=' 
 x > y
 x < y
 
@@ -113,7 +113,7 @@ if they are available in global namespace. Example map, filter, str etc.
 ```python
 #Get all the builtins in Python
 dir(__builtins__)
-'''
+```
 
 Some built-in methods are need to be imported like time, datetime etc.
 ```python
