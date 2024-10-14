@@ -1,0 +1,68 @@
+```mermaid
+graph LR
+    A[Blacknight SFTP Server] -->|File Transfer| B[AWS Transfer for SFTP]
+    B -->|Store Files| C[Amazon S3 Bucket]
+    D[Lambda Function] -->|Check Connection| B
+    E[Lambda Function] -->|Check New Files| C
+    F[CloudWatch] -->|Trigger| D
+    F -->|Trigger| E
+    D -->|Alert| G[SNS]
+    E -->|Alert| G
+    G -->|Notify| H[You]
+
+```
+
+
+``mermaid
+graph TD
+    A[Third-party SFTP Server]
+    B[AWS Lambda Function]
+    C[AWS Systems Manager Parameter Store]
+    D[Amazon CloudWatch Events]
+    E[Amazon CloudWatch Alarms]
+    F[Amazon SNS]
+    G[You/Your Team]
+    D -->|Trigger on Schedule| B
+    B -->|Retrieve Credentials| C
+    B -->|Check Connection/Files| A
+    B -->|Log Results| E
+    E -->|Trigger Alarm| F
+    F -->|Send Notification| G
+    style A fill: #f9f, stroke: #333, stroke-width: 2px
+    style B fill: #bbf, stroke: #333, stroke-width: 2px
+    style C fill: #bfb, stroke: #333, stroke-width: 2px
+    style D fill: #fbb, stroke: #333, stroke-width: 2px
+    style E fill: #fbf, stroke: #333, stroke-width: 2px
+    style F fill: #bff, stroke: #333, stroke-width: 2px
+
+```
+
+```pseudo
+JOB_NAME: "30_Minute_Job"
+SCHEDULE: "Every 30 minutes"
+
+ALERTS:
+  - ON_FAILURE:
+      NOTIFICATION: Email
+      RECIPIENTS: [operator@company.com, manager@company.com]
+      MESSAGE: "30_Minute_Job has failed. Please investigate immediately."
+
+  - ON_LATE_START:
+      CONDITION: "5 minutes after scheduled start time"
+      NOTIFICATION: SMS
+      RECIPIENTS: [+1234567890]
+      MESSAGE: "30_Minute_Job start is delayed by more than 5 minutes."
+
+  - ON_LONG_RUN:
+      CONDITION: "Job runs for more than 20 minutes"
+      NOTIFICATION: Email
+      RECIPIENTS: [operator@company.com]
+      MESSAGE: "30_Minute_Job is running longer than expected. Please check for issues."
+
+  - ON_SLA_BREACH:
+      CONDITION: "Job not completed 25 minutes after scheduled start time"
+      NOTIFICATION: Email, SMS
+      RECIPIENTS: [operator@company.com, +1234567890]
+      MESSAGE: "SLA breach for 30_Minute_Job. Immediate attention required."
+
+```
