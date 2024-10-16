@@ -1,0 +1,2 @@
+- Create  mock DataSourceSetting for snowflake
+- Create a generic mock connection for db, aws - s3,lambda, etc  rest api, and more
