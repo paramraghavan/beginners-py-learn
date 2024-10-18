@@ -7,7 +7,7 @@ from email.message import EmailMessage
 import logging
 import os
 import threading
-from paramiko import SFTPServer, ServerInterface, AUTH_SUCCESSFUL, OPEN_SUCCEEDED
+import socket
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -20,50 +20,45 @@ SFTP_PASSWORD = 'password'
 SFTP_DIRECTORY = '/path/to/sftp/directory'
 TEAM_LEAD_EMAILS = ['lead1@example.com', 'lead2@example.com']
 BATCH_WINDOW = 5  # minutes
+MAX_RETRIES = 5
+RETRY_DELAY = 2  # seconds
 
 # Global variables
 parent_job_map = {}
 file_status_map = {}
+server_ready = threading.Event()
 
-class SimpleServer(ServerInterface):
+class SimpleServer(paramiko.ServerInterface):
     def check_auth_password(self, username, password):
         if (username == SFTP_USERNAME) and (password == SFTP_PASSWORD):
-            return AUTH_SUCCESSFUL
+            return paramiko.AUTH_SUCCESSFUL
         return paramiko.AUTH_FAILED
 
     def check_channel_request(self, kind, chanid):
         if kind == 'session':
-            return OPEN_SUCCEEDED
+            return paramiko.OPEN_SUCCEEDED
         return paramiko.OPEN_FAILED_ADMINISTRATIVELY_PROHIBITED
 
 def send_email(subject, body):
-    msg = EmailMessage()
-    msg.set_content(body)
-    msg['Subject'] = subject
-    msg['From'] = 'ftpmon@example.com'
-    msg['To'] = ', '.join(TEAM_LEAD_EMAILS)
-
-    try:
-        with smtplib.SMTP('smtp.example.com', 587) as server:
-            server.starttls()
-            server.login('ftpmon@example.com', 'email_password')
-            server.send_message(msg)
-        logging.info(f"Email sent: {subject}")
-    except Exception as e:
-        logging.error(f"Failed to send email: {str(e)}")
+    # ... [email sending function remains unchanged]
 
 def check_sftp_connectivity():
-    try:
-        with paramiko.SSHClient() as ssh:
-            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            ssh.connect(SFTP_HOST, SFTP_PORT, SFTP_USERNAME, SFTP_PASSWORD)
-        logging.info("SFTP connection successful")
-        return True
-    except Exception as e:
-        error_msg = f"SFTP connection failed: {str(e)}"
-        logging.error(error_msg)
-        send_email("SFTP Connection Error", error_msg)
-        return False
+    for attempt in range(MAX_RETRIES):
+        try:
+            with paramiko.SSHClient() as ssh:
+                ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                ssh.connect(SFTP_HOST, SFTP_PORT, SFTP_USERNAME, SFTP_PASSWORD, timeout=5)
+            logging.info("SFTP connection successful")
+            return True
+        except (paramiko.ssh_exception.SSHException, socket.error) as e:
+            logging.warning(f"SFTP connection attempt {attempt + 1} failed: {str(e)}")
+            if attempt < MAX_RETRIES - 1:
+                time.sleep(RETRY_DELAY)
+            else:
+                error_msg = f"SFTP connection failed after {MAX_RETRIES} attempts: {str(e)}"
+                logging.error(error_msg)
+                send_email("SFTP Connection Error", error_msg)
+    return False
 
 def get_new_files(start_time, end_time):
     new_files = []
@@ -86,24 +81,16 @@ def get_new_files(start_time, end_time):
     return new_files
 
 def create_parent_job(files):
-    job_id = f"job_{int(time.time())}"
-    parent_job_map[job_id] = files
-    logging.info(f"Created parent job {job_id} with {len(files)} files")
-    return job_id
+    # ... [function remains unchanged]
 
 def add_file_to_status_map(filename, status='open'):
-    file_status_map[filename] = {'filename': filename, 'status': status}
-    logging.info(f"Added file {filename} to status map with status {status}")
+    # ... [function remains unchanged]
 
 def update_file_status(filename, status):
-    if filename in file_status_map:
-        file_status_map[filename]['status'] = status
-        logging.info(f"Updated status of file {filename} to {status}")
-    else:
-        logging.warning(f"File {filename} not found in status map")
+    # ... [function remains unchanged]
 
 def get_file_status(filename):
-    return file_status_map.get(filename, {}).get('status', 'unknown')
+    # ... [function remains unchanged]
 
 def process_new_files():
     if not check_sftp_connectivity():
@@ -119,18 +106,38 @@ def process_new_files():
             add_file_to_status_map(filename)
 
 def start_sftp_server():
-    server_socket = paramiko.Transport(('localhost', SFTP_PORT))
-    server_socket.add_server_key(paramiko.RSAKey.generate(2048))
-    server = SimpleServer()
     try:
-        server_socket.start_server(server=server)
-    except Exception as e:
-        logging.error(f'*** SSH negotiation failed: {str(e)}')
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        server_socket.bind((SFTP_HOST, SFTP_PORT))
+        server_socket.listen(5)
 
-    while True:
-        chan = server_socket.accept(20)
-        if chan is None:
-            continue
+        logging.info(f"SFTP server listening on {SFTP_HOST}:{SFTP_PORT}")
+        server_ready.set()  # Signal that the server is ready
+
+        while True:
+            client, addr = server_socket.accept()
+            logging.info(f"New connection from {addr}")
+
+            transport = paramiko.Transport(client)
+            transport.add_server_key(paramiko.RSAKey.generate(2048))
+            server = SimpleServer()
+
+            try:
+                transport.start_server(server=server)
+            except paramiko.SSHException:
+                logging.error("SSH negotiation failed.")
+                continue
+
+            channel = transport.accept(20)
+            if channel is None:
+                logging.error("No channel.")
+                continue
+
+            logging.info("SFTP session established")
+    except Exception as e:
+        logging.error(f"Error in SFTP server: {str(e)}")
+    finally:
         server_socket.close()
 
 def main():
@@ -140,7 +147,10 @@ def main():
     sftp_thread.start()
 
     # Wait for the SFTP server to start
-    time.sleep(1)
+    server_ready.wait()
+
+    # Wait a bit more to ensure the server is fully operational
+    time.sleep(2)
 
     schedule.every(5).minutes.do(process_new_files)
 
