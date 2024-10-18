@@ -1,69 +1,79 @@
-import logging
-from pyftpdlib.authorizers import DummyAuthorizer
-from pyftpdlib.handlers import SFTPHandler
-from pyftpdlib.servers import FTPServer
+import paramiko
+import socket
+import threading
 import os
+import sys
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# SFTP Server configuration
+HOST = 'localhost'
+PORT = 2222
+USERNAME = 'user'
+PASSWORD = 'password'
 
-# SFTP Server Configuration
-SFTP_HOST = "127.0.0.1"
-SFTP_PORT = 2222
-SFTP_USERNAME = "user"
-SFTP_PASSWORD = "password"
-SFTP_DIRECTORY = os.path.expanduser("~/sftp_root")  # Use a directory in the user's home
+# Path for server's files
+SERVER_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sftp_root')
+
+# Ensure the server directory exists
+os.makedirs(SERVER_DIR, exist_ok=True)
 
 
-def main():
-    # Ensure the SFTP directory exists
-    os.makedirs(SFTP_DIRECTORY, exist_ok=True)
+class SFTPServer(paramiko.ServerInterface):
+    def check_auth_password(self, username, password):
+        if (username == USERNAME) and (password == PASSWORD):
+            return paramiko.AUTH_SUCCESSFUL
+        return paramiko.AUTH_FAILED
 
-    # Create a dummy authorizer for managing 'virtual' users
-    authorizer = DummyAuthorizer()
+    def check_channel_request(self, kind, chanid):
+        if kind == 'session':
+            return paramiko.OPEN_SUCCEEDED
+        return paramiko.OPEN_FAILED_ADMINISTRATIVELY_PROHIBITED
 
-    # Define a new user having full r/w permissions
-    authorizer.add_user(SFTP_USERNAME, SFTP_PASSWORD, SFTP_DIRECTORY, perm='elradfmwM')
 
-    # Instantiate a SFTPHandler with RSA host key
-    handler = SFTPHandler
-    handler.authorizer = authorizer
+def handle_client(client_socket):
+    transport = paramiko.Transport(client_socket)
+    transport.add_server_key(paramiko.RSAKey.generate(2048))
+    server = SFTPServer()
 
-    # Define RSA host key path
-    keyfile_path = os.path.expanduser('~/sftp_server_rsa.key')
+    try:
+        transport.start_server(server=server)
+    except paramiko.SSHException:
+        print("*** SSH negotiation failed.")
+        return
 
-    # Generate RSA key if it doesn't exist
-    if not os.path.exists(keyfile_path):
-        from cryptography.hazmat.primitives import serialization
-        from cryptography.hazmat.primitives.asymmetric import rsa
-        from cryptography.hazmat.backends import default_backend
+    channel = transport.accept(20)
+    if channel is None:
+        print("*** No channel.")
+        return
 
-        key = rsa.generate_private_key(
-            public_exponent=65537,
-            key_size=2048,
-            backend=default_backend()
-        )
+    print("*** Authenticated!")
 
-        with open(keyfile_path, 'wb') as keyfile:
-            keyfile.write(key.private_bytes(
-                encoding=serialization.Encoding.PEM,
-                format=serialization.PrivateFormat.TraditionalOpenSSL,
-                encryption_algorithm=serialization.NoEncryption()
-            ))
+    try:
+        sftp_server = paramiko.SFTPServer(channel, SERVER_DIR)
+        sftp_server.serve_forever()
+    except Exception as e:
+        print(f"*** SFTP server error: {str(e)}")
+    finally:
+        channel.close()
 
-        logging.info(f"Generated RSA key: {keyfile_path}")
 
-    handler.host_key = keyfile_path
+def start_server():
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.bind((HOST, PORT))
+    except Exception as e:
+        print(f"*** Bind failed: {str(e)}")
+        sys.exit(1)
 
-    # Instantiate FTP server class and listen to 127.0.0.1:2222
-    server = FTPServer((SFTP_HOST, SFTP_PORT), handler)
+    print(f"[*] Listening for connection on {HOST}:{PORT}")
+    sock.listen(5)
 
-    # Start ftp server
-    logging.info(f"SFTP Server is starting on {SFTP_HOST}:{SFTP_PORT}")
-    logging.info(f"SFTP root directory: {SFTP_DIRECTORY}")
-    logging.info(f"Username: {SFTP_USERNAME}, Password: {SFTP_PASSWORD}")
-    server.serve_forever()
+    while True:
+        client, addr = sock.accept()
+        print(f"[*] Got a connection from {addr[0]}:{addr[1]}")
+        client_handler = threading.Thread(target=handle_client, args=(client,))
+        client_handler.start()
 
 
 if __name__ == "__main__":
-    main()
+    start_server()
