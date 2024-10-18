@@ -28,6 +28,17 @@ def generate_host_key():
     return key
 
 
+class SFTPHandler(paramiko.SFTPServerInterface):
+    def __init__(self, server, *largs, **kwargs):
+        super().__init__(server, *largs, **kwargs)
+
+    def list_folder(self, path):
+        try:
+            return super().list_folder(path)
+        except IOError:
+            return []
+
+
 class SFTPServer(paramiko.ServerInterface):
     def check_auth_password(self, username, password):
         if (username == USERNAME) and (password == PASSWORD):
@@ -59,7 +70,8 @@ def handle_client(client_socket, host_key):
     print("*** Authenticated!")
 
     try:
-        sftp_server = paramiko.SFTPServer(channel, SERVER_DIR)
+        sftp_handler = SFTPHandler(server)
+        sftp_server = paramiko.SFTPServer(channel, SERVER_DIR, sftp_si=sftp_handler)
         sftp_server.serve_forever()
     except Exception as e:
         print(f"*** SFTP server error: {str(e)}")
