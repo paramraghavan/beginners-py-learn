@@ -28,17 +28,6 @@ def generate_host_key():
     return key
 
 
-class SFTPHandler(paramiko.SFTPServerInterface):
-    def __init__(self, server, *largs, **kwargs):
-        super().__init__(server, *largs, **kwargs)
-
-    def list_folder(self, path):
-        try:
-            return super().list_folder(path)
-        except IOError:
-            return []
-
-
 class SFTPServer(paramiko.ServerInterface):
     def check_auth_password(self, username, password):
         if (username == USERNAME) and (password == PASSWORD):
@@ -49,6 +38,17 @@ class SFTPServer(paramiko.ServerInterface):
         if kind == 'session':
             return paramiko.OPEN_SUCCEEDED
         return paramiko.OPEN_FAILED_ADMINISTRATIVELY_PROHIBITED
+
+
+class SFTPServerInterface(paramiko.SFTPServerInterface):
+    def __init__(self, server, *largs, **kwargs):
+        super().__init__(server, *largs, **kwargs)
+
+    def list_folder(self, path):
+        try:
+            return super().list_folder(path)
+        except OSError:
+            return []
 
 
 def handle_client(client_socket, host_key):
@@ -70,7 +70,7 @@ def handle_client(client_socket, host_key):
     print("*** Authenticated!")
 
     try:
-        sftp_handler = SFTPHandler(server)
+        sftp_handler = SFTPServerInterface(server)
         sftp_server = paramiko.SFTPServer(channel, SERVER_DIR, sftp_si=sftp_handler)
         sftp_server.serve_forever()
     except Exception as e:
