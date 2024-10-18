@@ -10,11 +10,22 @@ PORT = 2222
 USERNAME = 'user'
 PASSWORD = 'password'
 
-# Path for server's files
-SERVER_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sftp_root')
+# Path for server's files and host key
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+SERVER_DIR = os.path.join(SCRIPT_DIR, 'sftp_root')
+HOST_KEY_FILE = os.path.join(SCRIPT_DIR, 'sftp_host_key')
 
 # Ensure the server directory exists
 os.makedirs(SERVER_DIR, exist_ok=True)
+
+
+def generate_host_key():
+    if not os.path.exists(HOST_KEY_FILE):
+        key = paramiko.RSAKey.generate(2048)
+        key.write_private_key_file(HOST_KEY_FILE)
+    else:
+        key = paramiko.RSAKey(filename=HOST_KEY_FILE)
+    return key
 
 
 class SFTPServer(paramiko.ServerInterface):
@@ -29,9 +40,9 @@ class SFTPServer(paramiko.ServerInterface):
         return paramiko.OPEN_FAILED_ADMINISTRATIVELY_PROHIBITED
 
 
-def handle_client(client_socket):
+def handle_client(client_socket, host_key):
     transport = paramiko.Transport(client_socket)
-    transport.add_server_key(paramiko.RSAKey.generate(2048))
+    transport.add_server_key(host_key)
     server = SFTPServer()
 
     try:
@@ -57,6 +68,7 @@ def handle_client(client_socket):
 
 
 def start_server():
+    host_key = generate_host_key()
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -66,12 +78,13 @@ def start_server():
         sys.exit(1)
 
     print(f"[*] Listening for connection on {HOST}:{PORT}")
+    print(f"[*] Host key fingerprint is: {host_key.get_fingerprint().hex()}")
     sock.listen(5)
 
     while True:
         client, addr = sock.accept()
         print(f"[*] Got a connection from {addr[0]}:{addr[1]}")
-        client_handler = threading.Thread(target=handle_client, args=(client,))
+        client_handler = threading.Thread(target=handle_client, args=(client, host_key))
         client_handler.start()
 
 
