@@ -1,0 +1,26 @@
+
+Write a python program, ftpmon, which continously runs and  checks  SFTP server every five minutes and gets a list of files
+with date time which got copied over into the SFTP server, so when the job runs at 11.oo am, it gets a list of files that
+got into SFTP server after 10.55 am and before 11.00 am. If the ftpmon crashes or fails email to  comma separated email addresses of  team lead
+
+When we get a list to files at the 5 min interval run, then we create parent job id and add  the files  to list to  the
+parent_job_map add parent job_id as key and list files as values There is a concept of batch window  if the batch window is
+five mins, then all the files within that time windows get assigend to the same parent job id.
+For example:
+- From 10.55 to 11.00 we have 2 files, one file at 10.57  and another one at 10.58, so the batch windows starts at 10.57 am
+- From 11.00 - 11.05 wre have 2 files , one file at 11.01 and another one at 11.03
+- The files at time 10.57, 10.58 and 11.01 all get assigned the same parent job id
+ - But file at 11.03 gets assigned a new parent job id
+
+Run a mock ftp server
+ - send files to this FTP server at random times in a batch of 2 -5 files in  window of  5 minutes -
+ - between 57th minute to 2nd min of next hour or between 10th and 15th minute of  same hour .
+ - These files should be  saved  in a hash using a api/function call - create, read, update
+ - with key as filename and  values - filename, status
+  - when file  added to sftp add a key/value to the hashmap , key as file name and value as  a row with status open
+   - it can be queried back to get status - open, error, complete
+   - and updated with status of complete
+
+As the monitor runs, at every 5 min interval it make sure to test SFTP connectivity,
+ - on error log error and to comma separated  email addresses of team leads
+ - to add more error logs as needed

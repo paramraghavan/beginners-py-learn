@@ -1,0 +1,6 @@
+- Use the paramiko library for SFTP operations, 
+- schedule for running tasks every 5 minutes, 
+- Implement the concept of a batch window and parent job IDs as requested.
+- A mock FTP server is simulated in a separate thread, adding files at random times within the specified windows.
+- File statuses are managed using a dictionary 
+- Add Error handling and email notifications are implemented for connectivity issues and crashes.
