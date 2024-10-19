@@ -1,4 +1,7 @@
-# Using sqllite to store state
+# Using Sqllite to store state
+Shared memory,[sharedmemory](../sharedmemory), usage did not work when  tracking state in dictionary. this dictionary
+is shared across scripts that run as separate python scripts. Using SQLLite as alternative approach. 
+
 
 * We have 2 scripts
 * One to add  new file name with state and another to view state by given filename
