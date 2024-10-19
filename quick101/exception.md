@@ -1,4 +1,26 @@
+# Exception handling with try, except, else, and finally
+
+* Try: This block will test the excepted error to occur
+* Except:  Here you can handle the error
+* Else: If there is no exception then this block will be executed
+* Finally: Finally block always gets executed either exception is generated or not
+
+
+```python
+try:
+       # Some Code.... 
+except:
+       # optional block
+       # Handling of exception (if required)
+else:
+       # execute if no exception
+finally:
+      # Some code .....(always executed)
 ```
+
+
+
+```python
 ###
 print(sal)
 #Exit Code as 1
