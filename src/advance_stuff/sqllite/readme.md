@@ -1,6 +1,6 @@
 # Using Sqllite to store state
-Shared memory,[sharedmemory](../sharedmemory), usage did not work when  tracking state in dictionary. this dictionary
-is shared across scripts that run as separate python scripts. Using SQLLite as alternative approach. 
+Shared memory,[sharedmemory](../sharedmemory), usage did not work when  tracking state in dictionary. We tried to 
+share this dictionary shared across scripts that run as separate python scripts. Using SQLLite as alternative approach. 
 
 
 * We have 2 scripts
