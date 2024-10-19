@@ -187,6 +187,8 @@ def monitor_sftp():
 
     files = get_sftp_file_list(time_window_minutes=TIME_INTERVAL)
     process_files(files)
+    #cleeanup parent_job_map, remove all the parent jobs that have all child jobs that are no tin open state
+    cleanup()
 
 def main():
     schedule.every(TIME_INTERVAL).minutes.do(monitor_sftp)
