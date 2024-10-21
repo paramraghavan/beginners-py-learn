@@ -206,3 +206,31 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+"""
+import paramiko
+import logging
+import time
+from typing import Tuple, Union
+
+def test_sftp_connectivity(max_retries: int = 3, 
+                           retry_intervals: Tuple[int, ...] = (30, 60, 90)) -> bool:
+    for attempt in range(max_retries + 1):
+        try:
+            with paramiko.SSHClient() as ssh:
+                ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                ssh.connect(SFTP_HOST, SFTP_PORT, SFTP_USERNAME, SFTP_PASSWORD)
+            logging.info("SFTP connection test successful")
+            return True
+        except Exception as e:
+            error_msg = f"SFTP connection test failed (Attempt {attempt + 1}/{max_retries + 1}): {str(e)}"
+            logging.error(error_msg)
+            
+            if attempt < max_retries:
+                wait_time = retry_intervals[attempt]
+                logging.info(f"Retrying in {wait_time} seconds...")
+                time.sleep(wait_time)
+            else:
+                send_email("SFTP Connectivity Error", error_msg)
+                return False
+"""
