@@ -8,6 +8,7 @@ ref: https://www.geeksforgeeks.org/timing-functions-with-decorators-python/
 def my_decorator(func):
 	def wrapper_function(*args, **kwargs):
 		print("*"*10)
+		print(f'Running: {func.__name__}({args},{kwargs})')
 		result = func(*args, **kwargs)
 		print("*"*10)
 		return result
