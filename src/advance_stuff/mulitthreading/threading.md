@@ -1,10 +1,9 @@
-2. `threading` module:
+# Thread
 
 The `threading` module is part of Python's standard library and is used for creating and managing threads, allowing
 concurrent execution of code.
 
 Key features:
-
 - Create and start new threads
 - Synchronize threads using locks, events, and semaphores
 - Share data between threads safely
@@ -29,7 +28,7 @@ for i in range(5):
     t.start()
 
 for t in threads:
-    t.join()
+    t.join() # wait for all workers to come back home.
 
 print("All workers finished")
 ```
