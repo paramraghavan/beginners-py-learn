@@ -1,0 +1,2 @@
+Using boto3 access aws Athena, query the s3 logs and filter by eventname - Get and Put and by some value in
+requestParameters and limit it to first 100 matches and return a string or json or csv string response
