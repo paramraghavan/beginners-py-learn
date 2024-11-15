@@ -1,7 +1,3 @@
-Create a script that will find all Python files starting with "run", execute them, and save their outputs to
-corresponding text files.
-
-```python
 import os
 import subprocess
 from datetime import datetime
@@ -27,7 +23,7 @@ def find_run_files(directory: str) -> List[str]:
 def execute_python_file(file_path: str) -> Tuple[str, int, str]:
     """
     Execute a Python file and return its output
-    
+
     Returns:
         Tuple containing (output, return_code, error_message)
     """
@@ -102,54 +98,15 @@ def main(directory: str = ".") -> None:
         if error_msg.strip():
             print(f"Errors encountered: {error_msg.strip()}")
 
-
-if __name__ == "__main__":
-    # Use current directory by default, or accept directory as command line argument
-    directory = sys.argv[1] if len(sys.argv) > 1 else "."
-    main(directory)
-
-```
-
-To use this script:
-
-1. Save it as `execute_run_files.py`
-
-2. Run it in one of two ways:
-
-```bash
+"""
 # To process files in current directory
 python execute_run_files.py
 
 # To process files in a specific directory
 python execute_run_files.py /path/to/your/directory
-```
+"""
 
-The script will:
-
-1. Find all Python files starting with "run" in the specified directory
-2. Execute each file one at a time
-3. Create a corresponding `*_output.txt` file for each executed Python file
-4. Include timestamps, execution status, output, and any error messages in the output files
-
-Example output file format:
-
-```
-Execution Time: 2024-03-14 10:00:00
-Status: Success
-==================================================
-OUTPUT:
-[Your script's output here]
-
-ERRORS:
-[Any error messages here]
-```
-
-Features:
-
-- 5-minute timeout per file
-- Error handling for file operations
-- Captures both stdout and stderr
-- Sorted execution order
-- Status reporting during execution
-- Detailed output files with timestamps
-
+if __name__ == "__main__":
+    # Use current directory by default, or accept directory as command line argument
+    directory = sys.argv[1] if len(sys.argv) > 1 else "."
+    main(directory)
