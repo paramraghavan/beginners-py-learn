@@ -1,27 +1,38 @@
-from importlib.metadata import distribution
-import importlib.metadata
+import pkg_resources
 import subprocess
 import sys
-from pip._internal.commands.show import search_packages_info
-from typing import Dict, List, Tuple, Optional
+from collections import defaultdict
 
 
-def is_package_installed(package_name: str) -> bool:
+def is_package_installed(package_name):
     """
     Check if a package is installed in the current environment.
+
+    Args:
+        package_name (str): Name of the package to check
+
+    Returns:
+        bool: True if installed, False otherwise
     """
     try:
-        importlib.metadata.distribution(package_name)
+        pkg_resources.working_set.by_key[package_name]
         return True
-    except importlib.metadata.PackageNotFoundError:
+    except KeyError:
         return False
 
 
-def install_package(package_name: str) -> bool:
+def install_package(package_name):
     """
     Install a package using pip.
+
+    Args:
+        package_name (str): Name of the package to install
+
+    Returns:
+        bool: True if installation successful, False otherwise
     """
     try:
+        # Use pip to install the package
         subprocess.check_call([sys.executable, "-m", "pip", "install", package_name])
         return True
     except subprocess.CalledProcessError:
@@ -29,45 +40,18 @@ def install_package(package_name: str) -> bool:
         return False
 
 
-def get_package_info(package_name: str) -> Optional[Dict]:
-    """
-    Get detailed information about a package using pip's API.
-    """
-    try:
-        # Get package information using importlib.metadata
-        dist = importlib.metadata.distribution(package_name)
-        requires = [str(req) for req in dist.requires] if dist.requires else []
-
-        return {
-            'name': dist.metadata['Name'],
-            'version': dist.version,
-            'requires': requires
-        }
-    except (importlib.metadata.PackageNotFoundError, KeyError) as e:
-        return None
-
-
-def parse_requirement(req_string: str) -> str:
-    """
-    Parse a requirement string to get the base package name.
-    """
-    # Remove version specifiers and extras
-    for operator in ['>=', '<=', '==', '>', '<', '~=', '!=']:
-        if operator in req_string:
-            req_string = req_string.split(operator)[0]
-
-    # Remove any extras (e.g., package[extra])
-    if '[' in req_string:
-        req_string = req_string.split('[')[0]
-
-    return req_string.strip()
-
-
-def get_package_dependencies(package_name: str, auto_install: bool = False) -> Optional[
-    Tuple[List[str], List[str], Dict[str, str]]]:
+def get_package_dependencies(package_name, auto_install=False):
     """
     Get all dependencies for a given package name.
+
+    Args:
+        package_name (str): Name of the package to analyze
+        auto_install (bool): Whether to automatically install missing packages
+
+    Returns:
+        tuple: (direct_deps, all_deps, versions) or None if package cannot be analyzed
     """
+    # Check if package is installed
     if not is_package_installed(package_name):
         print(f"\nPackage '{package_name}' is not installed.")
 
@@ -85,58 +69,52 @@ def get_package_dependencies(package_name: str, auto_install: bool = False) -> O
             return None
 
     try:
-        pkg_info = get_package_info(package_name)
-        if not pkg_info:
-            print(f"Could not find information for package {package_name}")
-            return None
-
-        # Get direct dependencies
-        direct_deps = pkg_info['requires']
-
-        # Store all dependencies (including transitive ones)
-        all_deps = set()
-        visited = set()  # Track visited packages to avoid infinite recursion
-
-        def collect_deps(pkg_name: str) -> None:
-            """Recursively collect all dependencies"""
-            if pkg_name in visited:
-                return
-
-            visited.add(pkg_name)
-            pkg_info = get_package_info(pkg_name)
-
-            if pkg_info and pkg_info['requires']:
-                for dep in pkg_info['requires']:
-                    base_dep = parse_requirement(dep)
-                    all_deps.add(base_dep)
-
-                    if auto_install and not is_package_installed(base_dep):
-                        print(f"Installing missing dependency: {base_dep}")
-                        install_package(base_dep)
-
-                    collect_deps(base_dep)
-
-        # Start collecting dependencies
-        collect_deps(package_name)
-
-        # Get versions for all dependencies
-        versions = {}
-        for dep in all_deps:
-            try:
-                versions[dep] = importlib.metadata.version(dep)
-            except importlib.metadata.PackageNotFoundError:
-                versions[dep] = "Not installed"
-
-        return direct_deps, sorted(all_deps), versions
-
-    except Exception as e:
-        print(f"Error analyzing dependencies: {str(e)}")
+        # Get the distribution object for the package
+        dist = pkg_resources.working_set.by_key[package_name]
+    except KeyError:
+        print(f"Error accessing package '{package_name}' after installation.")
         return None
 
+    # Get direct dependencies
+    direct_deps = [str(req) for req in dist.requires()]
 
-def print_dependency_tree(package_name: str, auto_install: bool = False) -> None:
+    # Get all dependencies (including transitive)
+    def get_all_deps(package):
+        deps = set()
+        try:
+            dist = pkg_resources.working_set.by_key[package]
+            for req in dist.requires():
+                dep_name = req.key
+                deps.add(dep_name)
+                # If auto_install is enabled, try to install missing dependencies
+                if auto_install and not is_package_installed(dep_name):
+                    print(f"Installing missing dependency: {dep_name}")
+                    install_package(dep_name)
+                deps.update(get_all_deps(dep_name))
+        except KeyError:
+            pass
+        return deps
+
+    all_deps = get_all_deps(package_name)
+
+    # Get installed versions
+    versions = {}
+    for dep in all_deps:
+        try:
+            versions[dep] = pkg_resources.working_set.by_key[dep].version
+        except KeyError:
+            versions[dep] = "Not installed"
+
+    return direct_deps, sorted(all_deps), versions
+
+
+def print_dependency_tree(package_name, auto_install=False):
     """
     Print a formatted dependency tree for the package.
+
+    Args:
+        package_name (str): Name of the package to analyze
+        auto_install (bool): Whether to automatically install missing packages
     """
     result = get_package_dependencies(package_name, auto_install)
 
@@ -145,27 +123,14 @@ def print_dependency_tree(package_name: str, auto_install: bool = False) -> None
 
     direct_deps, all_deps, versions = result
 
-    try:
-        package_version = importlib.metadata.version(package_name)
-    except importlib.metadata.PackageNotFoundError:
-        package_version = "Not installed"
-
     print(f"\nDependency analysis for {package_name}:")
-    print(f"Package version: {package_version}")
-
     print("\nDirect dependencies:")
-    if direct_deps:
-        for dep in direct_deps:
-            print(f"  • {dep}")
-    else:
-        print("  No direct dependencies found")
+    for dep in direct_deps:
+        print(f"  • {dep}")
 
     print("\nAll dependencies (including transitive):")
-    if all_deps:
-        for dep in all_deps:
-            print(f"  • {dep} (version: {versions[dep]})")
-    else:
-        print("  No dependencies found")
+    for dep in all_deps:
+        print(f"  • {dep} (version: {versions[dep]})")
 
     print(f"\nTotal number of dependencies: {len(all_deps)}")
 
@@ -173,6 +138,7 @@ def print_dependency_tree(package_name: str, auto_install: bool = False) -> None
 if __name__ == "__main__":
     import argparse
 
+    # Set up command line argument parsing
     parser = argparse.ArgumentParser(description="Analyze Python package dependencies")
     parser.add_argument("package_name", help="Name of the package to analyze")
     parser.add_argument("--install", action="store_true",
@@ -180,6 +146,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     print_dependency_tree(args.package_name, args.install)
+
 
 """
 parser.add_argument("--install", action="store_true")
