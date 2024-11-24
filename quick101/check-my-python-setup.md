@@ -111,4 +111,10 @@ pip-compile --no-annotate --no-emit-index-url <(echo "package_name")
 - Recursively install dependencies if needed
 - Direct dependencies (immediately required by the package)
 - All dependencies (including transitive/nested dependencies)
-- 
+```shell
+# analyze only
+python [package_dependency_analyzer.py](package_dependency_analyzer.py) <package name>
+
+# analyze and auto install as needed
+python [package_dependency_analyzer.py](package_dependency_analyzer.py) <package name> --install
+```
