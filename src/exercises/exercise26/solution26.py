@@ -16,7 +16,7 @@ def extract_sql_statements(log_file_path, output_file=None):
         list: List of dictionaries containing SQL statements and metadata
     """
     # Common SQL keywords to help identify SQL statements
-    sql_keywords = r'\b(SELECT|INSERT|UPDATE|DELETE|CREATE|DROP|ALTER|MERGE|TRUNCATE|BEGIN|COMMIT|ROLLBACK)\b'
+    sql_keywords = r'\b(SELECT|INSERT|UPDATE|DELETE|CREATE|CREATE OR REPLACE|DROP|ALTER|MERGE|TRUNCATE|BEGIN|COMMIT|ROLLBACK)\b'
 
     # Regular expression pattern to match SQL statements
     # This pattern looks for SQL keywords followed by text until a semicolon or new line
