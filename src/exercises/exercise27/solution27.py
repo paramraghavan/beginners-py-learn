@@ -4,162 +4,202 @@ from datetime import datetime, timedelta
 from collections import Counter
 
 
-def create_sample_data():
-    """
-    Generate synthetic job execution data for testing.
-    Returns DataFrame with columns: job_name, start_date_time, end_date_time,
-    ingest_location, status
-    """
-    jobs = ['JobA', 'JobB', 'JobC', 'JobD', 'JobE']
+def generate_sample_data(num_records=1000):
+    np.random.seed(42)
+    jobs = [f"Job_{chr(65 + i)}" for i in range(5)]  # Job_A through Job_E
+
     data = []
+    current_time = datetime(2024, 1, 1)
 
-    start_date = datetime(2024, 1, 1)
-    for job in jobs:
-        current_date = start_date
-        # Random frequency between 15 minutes and 1 week (in minutes)
-        frequency = np.random.choice([15, 30, 60, 240, 1440, 10080])
+    for _ in range(num_records):
+        job_name = np.random.choice(jobs)
 
-        for _ in range(100):
-            # Calculate normal duration as 50% of frequency with 10% standard deviation
-            duration = np.random.normal(frequency * 0.5, frequency * 0.1)
-            end_date = current_date + timedelta(minutes=duration)
+        # Different intervals for different jobs
+        if job_name == "Job_A":
+            interval = timedelta(minutes=30)
+            duration = np.random.normal(25 * 60, 5 * 60)  # around 25 minutes
+        elif job_name == "Job_B":
+            interval = timedelta(hours=1)
+            duration = np.random.normal(45 * 60, 10 * 60)  # around 45 minutes
+        elif job_name == "Job_C":
+            interval = timedelta(hours=24)
+            duration = np.random.normal(120 * 60, 30 * 60)  # around 2 hours
+        else:
+            interval = timedelta(minutes=int(np.random.choice([15, 30, 60, 1440])))
+            duration = np.random.normal(30 * 60, 10 * 60)  # around 30 minutes
 
-            # 5% chance of extended runtime (3x normal duration)
-            if np.random.random() < 0.05:
-                duration *= 3
-                end_date = current_date + timedelta(minutes=duration)
+        # Occasionally generate longer runs
+        if np.random.random() < 0.05:
+            duration *= 3
 
-            data.append({
-                'job_name': job,
-                'start_date_time': current_date,
-                'end_date_time': end_date,
-                'ingest_location': f'/data/{job.lower()}',
-                'status': np.random.choice(['Success', 'Failed'], p=[0.95, 0.05])
-            })
+        start_time = current_time + timedelta(minutes=int(np.random.randint(-30, 30)))
+        end_time = start_time + timedelta(seconds=int(abs(duration)))
 
-            # Schedule next run after completion + frequency interval
-            increment = max(timedelta(minutes=int(frequency)),
-                            end_date - current_date + timedelta(minutes=int(frequency)))
-            current_date += increment
+        # Generate status with bias towards success
+        status = np.random.choice(['Success', 'Failed', 'Running', 'Start'],
+                                  p=[0.85, 0.10, 0.03, 0.02])
+
+        data.append({
+            'job_name': job_name,
+            'start_date_time': start_time,
+            'end_date_time': end_time,
+            's3_location': f's3://bucket/{job_name}/{start_time.strftime("%Y/%m/%d/%H")}/',
+            'status': status
+        })
+
+        current_time += interval
 
     return pd.DataFrame(data)
 
 
-def detect_job_frequency(time_diffs):
+def detect_schedule_pattern(timestamps, intervals):
     """
-    Analyze time differences between job runs to determine execution frequency.
-
-    Args:
-        time_diffs: pandas Series of timedelta objects between consecutive runs
-
-    Returns:
-        str: Human-readable description of detected frequency
+    Sophisticated schedule detection that looks for various patterns in job execution times
     """
-    # Convert time differences to minutes
-    minutes_diff = time_diffs.dt.total_seconds() / 60
+    # Convert timestamps to various components for pattern detection
+    times = pd.DataFrame({
+        'timestamp': timestamps,
+        'hour': timestamps.dt.hour,
+        'minute': timestamps.dt.minute,
+        'day': timestamps.dt.day,
+        'weekday': timestamps.dt.weekday,
+        'month': timestamps.dt.month
+    })
 
-    # Remove outliers using IQR method
-    q1, q3 = minutes_diff.quantile([0.25, 0.75])
-    iqr = q3 - q1
-    valid_diffs = minutes_diff[(minutes_diff >= q1 - 1.5 * iqr) &
-                               (minutes_diff <= q3 + 1.5 * iqr)]
+    # Get median interval in minutes
+    median_interval = intervals.median()
 
-    # Get median interval after removing outliers
-    median_interval = valid_diffs.median()
+    # Analyze hour patterns
+    hour_counts = Counter(times['hour'])
+    distinct_hours = sorted(hour_counts.keys())
 
-    # Standard scheduling intervals and their descriptions
-    intervals = {
-        15: "Every 15 minutes",
-        30: "Every 30 minutes",
-        60: "Hourly",
-        120: "Every 2 hours",
-        240: "Every 4 hours",
-        360: "Every 6 hours",
-        720: "Every 12 hours",
-        1440: "Daily",
-        10080: "Weekly",
-        20160: "Bi-weekly"
-    }
+    # Analyze minute patterns
+    minute_counts = Counter(times['minute'])
+    distinct_minutes = sorted(minute_counts.keys())
 
-    # Find closest standard interval
-    closest_interval = min(intervals.keys(),
-                           key=lambda x: abs(x - median_interval))
+    # Analyze weekday patterns
+    weekday_counts = Counter(times['weekday'])
 
-    # Return custom interval if no standard interval matches within 20% tolerance
-    if abs(closest_interval - median_interval) > closest_interval * 0.2:
-        return f"Every {round(median_interval)} minutes"
+    # Pattern detection logic
+    if median_interval <= 15:
+        # Check if it's exactly every 15 minutes
+        if all(m % 15 == 0 for m in distinct_minutes):
+            return "Every 15 minutes"
+        return f"Approximately every {round(median_interval)} minutes"
 
-    return intervals[closest_interval]
+    elif median_interval <= 30:
+        if all(m % 30 == 0 for m in distinct_minutes):
+            return "Every 30 minutes"
+        return f"Approximately every {round(median_interval)} minutes"
+
+    elif median_interval <= 60:
+        if all(m == 0 for m in distinct_minutes):
+            return "Hourly on the hour"
+        return "Hourly"
+
+    elif median_interval <= 180:
+        hours = round(median_interval / 60)
+        return f"Every {hours} hours"
+
+    elif median_interval <= 1440:
+        # Daily pattern detection
+        if len(distinct_hours) == 1:
+            hour = distinct_hours[0]
+            return f"Daily at {hour:02d}:00"
+        elif len(distinct_hours) > 1:
+            hours_str = ", ".join(f"{h:02d}:00" for h in distinct_hours)
+            return f"Daily at {hours_str}"
+
+    elif median_interval <= 10080:  # Weekly
+        if len(weekday_counts) == 1:
+            weekday = list(weekday_counts.keys())[0]
+            weekday_name = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][weekday]
+            if len(distinct_hours) == 1:
+                hour = distinct_hours[0]
+                return f"Weekly on {weekday_name} at {hour:02d}:00"
+            return f"Weekly on {weekday_name}"
+
+    elif median_interval <= 43200:  # Monthly
+        if len(set(times['day'])) == 1:
+            day = times['day'].iloc[0]
+            if len(distinct_hours) == 1:
+                hour = distinct_hours[0]
+                return f"Monthly on day {day} at {hour:02d}:00"
+            return f"Monthly on day {day}"
+
+    # If no specific pattern is detected
+    if median_interval > 43200:
+        return "Custom (> Monthly)"
+    else:
+        return f"Custom (~ every {round(median_interval)} minutes)"
 
 
-def analyze_job_schedules(df, output_file='job_analysis.csv'):
-    """
-    Analyze job execution patterns and performance metrics, export to CSV.
-
-    Args:
-        df: DataFrame with columns: job_name, start_date_time, end_date_time, status
-        output_file: Name of the CSV file to export results
-
-    Returns:
-        DataFrame with analysis results per job and exports to CSV
-    """
-    # Convert timestamp columns and calculate execution duration
+def analyze_job_schedules(df):
+    # Convert datetime columns to datetime type if they aren't already
     df['start_date_time'] = pd.to_datetime(df['start_date_time'])
     df['end_date_time'] = pd.to_datetime(df['end_date_time'])
-    df['execution_time'] = (df['end_date_time'] - df['start_date_time']).dt.total_seconds() / 60
 
-    results = {}
+    # Calculate execution time in seconds
+    df['execution_time'] = (df['end_date_time'] - df['start_date_time']).dt.total_seconds()
+
+    results = []
 
     for job_name in df['job_name'].unique():
-        # Analyze each job separately
         job_data = df[df['job_name'] == job_name].sort_values('start_date_time')
 
-        # Calculate intervals between consecutive starts
-        time_diffs = job_data['start_date_time'].diff()
+        # Calculate intervals between consecutive runs
+        # intervals = (job_data['start_date_time'].diff().dt.total_seconds() / 60).dropna()
+        intervals = (job_data['start_date_time'].diff().dt.total_seconds()).dropna()
 
-        # Detect schedule pattern (skip first row with NaN diff)
-        schedule = detect_job_frequency(time_diffs[1:])
+        # Calculate success rate
+        total_runs = len(job_data)
+        success_runs = len(job_data[job_data['status'] == 'Success'])
+        success_rate = (success_runs / total_runs) * 100 if total_runs > 0 else 0
 
-        # Get earliest and latest run timestamps
-        earliest_run = job_data['start_date_time'].min()
-        latest_run = job_data['start_date_time'].max()
+        # Detect schedule pattern
+        schedule = detect_schedule_pattern(job_data['start_date_time'], intervals)
 
-        # Compile metrics
-        results[job_name] = {
+        # Additional statistics
+        std_interval = intervals.std()
+        # schedule_consistency = (1 - (std_interval / intervals.mean())) * 100 if intervals.mean() > 0 else 0
+
+        results.append({
             'job_name': job_name,
             'schedule': schedule,
-            'avg_execution_time': job_data['execution_time'].mean(),
-            'min_execution_time': job_data['execution_time'].min(),
-            'max_execution_time': job_data['execution_time'].max(),
-            'success_rate': (job_data['status'] == 'Success').mean() * 100,
-            'total_runs': len(job_data),
-            'median_interval_minutes': time_diffs[1:].dt.total_seconds().median() / 60,
-            'earliest_run': earliest_run,
-            'latest_run': latest_run
-        }
+            'avg_execution_time': round(job_data['execution_time'].mean(), 2),
+            'min_execution_time': round(job_data['execution_time'].min(), 2),
+            'max_execution_time': round(job_data['execution_time'].max(), 2),
+            'success_rate': round(success_rate, 2),
+            'total_runs': total_runs,
+            'median_interval': round(intervals.median(), 2),
+            'std_deviation_interval': round(std_interval, 2),
+            'earliest_run': job_data['start_date_time'].min(),
+            'latest_run': job_data['start_date_time'].max()
+        })
 
-    # Convert results to DataFrame
-    results_df = pd.DataFrame(results).T
-
-    # Reorder columns to match requested header
-    column_order = [
-        'job_name', 'schedule', 'avg_execution_time', 'min_execution_time',
-        'max_execution_time', 'success_rate', 'total_runs',
-        'median_interval_minutes', 'earliest_run', 'latest_run'
-    ]
-    results_df = results_df[column_order]
-
-    # Export to CSV
-    results_df.to_csv(output_file, index=False)
-    print(f"Analysis results exported to {output_file}")
-
-    return results_df
-
+    return pd.DataFrame(results)
 
 # Example usage
 if __name__ == "__main__":
     # Generate and analyze sample data
-    df = create_sample_data()
-    results = analyze_job_schedules(df, 'job_analysis.csv')
-    print("\nJob Analysis Results:")
-    print(results.round(2))
+    df = generate_sample_data()
+
+    # Save raw data to CSV
+    df.to_csv('job_execution_data.csv', index=False)
+
+    # Analyze the data
+    results_df = analyze_job_schedules(df)
+
+    # Format datetime columns and round numeric columns
+    results_df['earliest_run'] = results_df['earliest_run'].dt.strftime('%Y-%m-%d %H:%M:%S')
+    results_df['latest_run'] = results_df['latest_run'].dt.strftime('%Y-%m-%d %H:%M:%S')
+    results_df = results_df.round({
+        'avg_execution_time': 2,
+        'min_execution_time': 2,
+        'max_execution_time': 2,
+        'success_rate': 2,
+        'median_interval_minutes': 2
+    })
+
+    # Save results to CSV
+    results_df.to_csv('job_schedule_analysis.csv', index=False)
