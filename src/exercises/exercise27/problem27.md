@@ -8,3 +8,8 @@ ususally it completed in the alloted time, some times it exceeds 30 minutes take
 this happens. the jobA will not run for next X hours when this job A is running, and the next job A will run 30 minutes
 after this job A has completed Help me with python code that reads the csv data, munges it gets me the job schedules for
 each job by job-name, average, min and max execution time for each jobs by job-name Also make some sample data
+
+Create csv file with
+Header columns :
+job_name, schedule, avg_execution_time, min_execution_time, max_execution_time, success_rate, total run,
+median_interval_minutes, earliest_run and latest run

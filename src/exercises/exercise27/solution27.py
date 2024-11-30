@@ -38,8 +38,8 @@ def create_sample_data():
             })
 
             # Schedule next run after completion + frequency interval
-            increment = max(timedelta(minutes=frequency),
-                            end_date - current_date + timedelta(minutes=frequency))
+            increment = max(timedelta(minutes=int(frequency)),
+                            end_date - current_date + timedelta(minutes=int(frequency)))
             current_date += increment
 
     return pd.DataFrame(data)
@@ -92,20 +92,16 @@ def detect_job_frequency(time_diffs):
     return intervals[closest_interval]
 
 
-def analyze_job_schedules(df):
+def analyze_job_schedules(df, output_file='job_analysis.csv'):
     """
-    Analyze job execution patterns and performance metrics.
+    Analyze job execution patterns and performance metrics, export to CSV.
 
     Args:
         df: DataFrame with columns: job_name, start_date_time, end_date_time, status
+        output_file: Name of the CSV file to export results
 
     Returns:
-        DataFrame with analysis results per job:
-        - Detected schedule
-        - Average/min/max execution times
-        - Success rate
-        - Total runs
-        - Median interval between runs
+        DataFrame with analysis results per job and exports to CSV
     """
     # Convert timestamp columns and calculate execution duration
     df['start_date_time'] = pd.to_datetime(df['start_date_time'])
@@ -124,24 +120,46 @@ def analyze_job_schedules(df):
         # Detect schedule pattern (skip first row with NaN diff)
         schedule = detect_job_frequency(time_diffs[1:])
 
+        # Get earliest and latest run timestamps
+        earliest_run = job_data['start_date_time'].min()
+        latest_run = job_data['start_date_time'].max()
+
         # Compile metrics
         results[job_name] = {
+            'job_name': job_name,
             'schedule': schedule,
             'avg_execution_time': job_data['execution_time'].mean(),
             'min_execution_time': job_data['execution_time'].min(),
             'max_execution_time': job_data['execution_time'].max(),
             'success_rate': (job_data['status'] == 'Success').mean() * 100,
             'total_runs': len(job_data),
-            'median_interval_minutes': time_diffs[1:].dt.total_seconds().median() / 60
+            'median_interval_minutes': time_diffs[1:].dt.total_seconds().median() / 60,
+            'earliest_run': earliest_run,
+            'latest_run': latest_run
         }
 
-    return pd.DataFrame(results).T
+    # Convert results to DataFrame
+    results_df = pd.DataFrame(results).T
+
+    # Reorder columns to match requested header
+    column_order = [
+        'job_name', 'schedule', 'avg_execution_time', 'min_execution_time',
+        'max_execution_time', 'success_rate', 'total_runs',
+        'median_interval_minutes', 'earliest_run', 'latest_run'
+    ]
+    results_df = results_df[column_order]
+
+    # Export to CSV
+    results_df.to_csv(output_file, index=False)
+    print(f"Analysis results exported to {output_file}")
+
+    return results_df
 
 
 # Example usage
 if __name__ == "__main__":
     # Generate and analyze sample data
     df = create_sample_data()
-    results = analyze_job_schedules(df)
+    results = analyze_job_schedules(df, 'job_analysis.csv')
     print("\nJob Analysis Results:")
     print(results.round(2))
