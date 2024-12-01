@@ -5,43 +5,57 @@ import random
 
 
 def generate_sample_data(output_file='job_executions.csv', num_jobs=10, days=30):
-    """Generate sample job execution data"""
+    """
+    Generate sample job execution data with various scheduling patterns.
+
+    Args:
+        output_file (str): Path to save the generated CSV file
+        num_jobs (int): Number of different jobs to generate (not used currently as patterns are predefined)
+        days (int): Number of days of historical data to generate
+
+    Returns:
+        pandas.DataFrame: Generated job execution data
+    """
     jobs = []
 
-    # Define different job patterns
+    # Define different job patterns to simulate various real-world scenarios
     patterns = [
-        {'name': 'JobA', 'frequency': 30, 'unit': 'minutes', 'occasional_delay': True},
-        {'name': 'JobB', 'frequency': 60, 'unit': 'minutes'},
-        {'name': 'JobC', 'frequency': 24, 'unit': 'hours'},
-        {'name': 'JobD', 'frequency': 1, 'unit': 'week'},
-        {'name': 'JobE', 'times_per_day': [9, 15]},  # Runs at 9AM and 3PM
-        {'name': 'JobF', 'frequency': 15, 'unit': 'minutes'},
-        {'name': 'JobG', 'frequency': 12, 'unit': 'hours'},
-        {'name': 'JobH', 'times_per_day': [8, 12, 16, 20]},  # Runs 4 times a day
-        {'name': 'JobI', 'frequency': 2, 'unit': 'week'},
-        {'name': 'JobJ', 'frequency': 1, 'unit': 'month'}
+        {'name': 'JobA', 'frequency': 30, 'unit': 'minutes', 'occasional_delay': True},  # Job that sometimes runs long
+        {'name': 'JobB', 'frequency': 60, 'unit': 'minutes'},  # Hourly job
+        {'name': 'JobC', 'frequency': 24, 'unit': 'hours'},  # Daily job
+        {'name': 'JobD', 'frequency': 1, 'unit': 'week'},  # Weekly job
+        {'name': 'JobE', 'times_per_day': [9, 15]},  # Runs twice daily at fixed times
+        {'name': 'JobF', 'frequency': 15, 'unit': 'minutes'},  # Runs every 15 minutes
+        {'name': 'JobG', 'frequency': 12, 'unit': 'hours'},  # Runs twice daily
+        {'name': 'JobH', 'times_per_day': [8, 12, 16, 20]},  # Runs 4 times daily
+        {'name': 'JobI', 'frequency': 2, 'unit': 'week'},  # Bi-weekly job
+        {'name': 'JobJ', 'frequency': 1, 'unit': 'month'}  # Monthly job
     ]
 
+    # Calculate start date for data generation
     start_date = datetime.now() - timedelta(days=days)
 
+    # Generate data for each job pattern
     for pattern in patterns:
         current_time = start_date
         job_name = pattern['name']
 
         while current_time < datetime.now():
-            # Normal execution time between 5 and 15 minutes
+            # Generate random execution time (5-15 minutes normally)
             execution_time = random.randint(5, 15)
 
-            # For JobA, occasionally have longer execution times
+            # Special handling for JobA - occasionally runs much longer (2-3 hours)
             if pattern.get('occasional_delay') and random.random() < 0.1:
-                execution_time = random.randint(120, 180)  # 2-3 hours
+                execution_time = random.randint(120, 180)
 
+            # Calculate job start and end times
             start_time = current_time
             end_time = start_time + timedelta(minutes=execution_time)
 
-            # Determine status (90% success rate)
+            # Simulate job success/failure (90% success rate)
             status = random.choices(['Success', 'Failed'], weights=[90, 10])[0]
 
+            # Create job execution record
             jobs.append({
                 'job_name': job_name,
                 'start_date_time': start_time,
@@ -50,8 +64,9 @@ def generate_sample_data(output_file='job_executions.csv', num_jobs=10, days=30)
                 'status': status
             })
 
-            # Calculate next run time based on pattern
+            # Calculate next run time based on job pattern
             if 'frequency' in pattern:
+                # Handle frequency-based schedules (every X minutes/hours/weeks/months)
                 if pattern['unit'] == 'minutes':
                     increment = timedelta(minutes=pattern['frequency'])
                 elif pattern['unit'] == 'hours':
@@ -61,7 +76,7 @@ def generate_sample_data(output_file='job_executions.csv', num_jobs=10, days=30)
                 elif pattern['unit'] == 'month':
                     increment = timedelta(days=30 * pattern['frequency'])
 
-                # For jobs with occasional delays, ensure next run is after completion
+                # For jobs with occasional delays (like JobA), ensure next run starts after completion
                 if pattern.get('occasional_delay'):
                     current_time = max(end_time + timedelta(minutes=30),
                                        current_time + increment)
@@ -69,9 +84,11 @@ def generate_sample_data(output_file='job_executions.csv', num_jobs=10, days=30)
                     current_time += increment
 
             elif 'times_per_day' in pattern:
-                # Move to next scheduled time
+                # Handle fixed-time schedules (runs at specific times each day)
                 current_date = current_time.date()
                 next_time = None
+
+                # Find next scheduled time for today
                 for hour in pattern['times_per_day']:
                     scheduled_time = datetime.combine(current_date,
                                                       datetime.min.time().replace(hour=hour))
@@ -79,7 +96,8 @@ def generate_sample_data(output_file='job_executions.csv', num_jobs=10, days=30)
                         next_time = scheduled_time
                         break
 
-                if next_time is None:  # Move to next day's first scheduled time
+                # If no more runs today, move to first run of next day
+                if next_time is None:
                     current_date += timedelta(days=1)
                     next_time = datetime.combine(current_date,
                                                  datetime.min.time().replace(
@@ -95,9 +113,18 @@ def generate_sample_data(output_file='job_executions.csv', num_jobs=10, days=30)
 
 
 def analyze_job_schedules(df):
-    """Analyze job execution patterns and generate schedule summary"""
+    """
+    Analyze job execution patterns and generate schedule summary.
+
+    Args:
+        df (pandas.DataFrame): Input DataFrame containing job execution data
+
+    Returns:
+        pandas.DataFrame: Analysis results with schedule patterns and statistics
+    """
     results = []
 
+    # Analyze each job separately
     for job_name in df['job_name'].unique():
         job_df = df[df['job_name'] == job_name].copy()
 
@@ -105,10 +132,10 @@ def analyze_job_schedules(df):
         job_df['execution_time'] = (job_df['end_date_time'] -
                                     job_df['start_date_time']).dt.total_seconds() / 60
 
-        # Calculate intervals between starts
+        # Calculate intervals between consecutive starts
         job_df['interval'] = job_df['start_date_time'].diff().dt.total_seconds() / 60
 
-        # Basic statistics
+        # Calculate basic statistics
         avg_exec_time = job_df['execution_time'].mean()
         std_dev_exec_time = job_df['execution_time'].std()
         min_exec_time = job_df['execution_time'].min()
@@ -119,17 +146,19 @@ def analyze_job_schedules(df):
         earliest_run = job_df['start_date_time'].min()
         latest_run = job_df['start_date_time'].max()
 
-        # Determine schedule pattern
+        # Determine schedule pattern through analysis
         schedule = "Unknown"
 
-        # Check if job runs at specific times
+        # Check if job runs at specific times of day
         job_df['hour'] = job_df['start_date_time'].dt.hour
         unique_hours = sorted(job_df['hour'].unique())
-        if len(unique_hours) <= 4:  # If job runs at specific hours
+
+        # If job runs at 4 or fewer distinct hours, it's likely scheduled at fixed times
+        if len(unique_hours) <= 4:
             times = [f"{hour:02d}:00" for hour in unique_hours]
             schedule = f"Daily at {', '.join(times)}"
         else:
-            # Check for regular intervals
+            # Otherwise, determine the frequency based on median interval
             if median_interval < 60:  # Less than hourly
                 schedule = f"Every {int(round(median_interval))} minutes"
             elif median_interval < 1440:  # Less than daily
@@ -142,6 +171,7 @@ def analyze_job_schedules(df):
                 weeks = round(median_interval / 10080, 1)
                 schedule = f"Every {weeks} weeks"
 
+        # Compile results for this job
         results.append({
             'job_name': job_name,
             'schedule': schedule,
@@ -165,7 +195,7 @@ df = generate_sample_data()
 # Analyze schedules
 results_df = analyze_job_schedules(df)
 
-# Save results
+# Save results to CSV
 results_df.to_csv('job_schedule_analysis.csv', index=False)
 
 # Display results
