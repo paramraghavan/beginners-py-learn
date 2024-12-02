@@ -123,6 +123,9 @@ def analyze_job_schedules(df):
         pandas.DataFrame: Analysis results with schedule patterns and statistics
     """
     results = []
+    # Convert datetime columns to datetime type if they aren't already
+    df['start_date_time'] = pd.to_datetime(df['start_date_time'])
+    df['end_date_time'] = pd.to_datetime(df['end_date_time'])
 
     # Analyze each job separately
     for job_name in df['job_name'].unique():
@@ -134,6 +137,15 @@ def analyze_job_schedules(df):
 
         # Calculate intervals between consecutive starts
         job_df['interval'] = job_df['start_date_time'].diff().dt.total_seconds() / 60
+
+        # Add date column for daily run calculation
+        job_df['date'] = job_df['start_date_time'].dt.date
+
+        # Calculate runs per day statistics
+        daily_runs = job_df.groupby('date').size()
+        avg_runs_per_day = daily_runs.mean()
+        min_runs_per_day = daily_runs.min()
+        max_runs_per_day = daily_runs.max()
 
         # Calculate basic statistics
         avg_exec_time = job_df['execution_time'].mean()
@@ -171,10 +183,21 @@ def analyze_job_schedules(df):
                 weeks = round(median_interval / 10080, 1)
                 schedule = f"Every {weeks} weeks"
 
+        # Format daily frequency description
+        if avg_runs_per_day >= 1:
+            daily_freq = (f"Runs {avg_runs_per_day:.1f} times per day on average "
+                          f"(min: {min_runs_per_day}, max: {max_runs_per_day})")
+        else:
+            daily_freq = "Runs less than once per day"
+
         # Compile results for this job
         results.append({
             'job_name': job_name,
             'schedule': schedule,
+            'daily_frequency': daily_freq,
+            'avg_runs_per_day': round(avg_runs_per_day, 2),
+            'min_runs_per_day': min_runs_per_day,
+            'max_runs_per_day': max_runs_per_day,
             'avg_execution_time': round(avg_exec_time, 2),
             'std_dev_execution_time': round(std_dev_exec_time, 2),
             'min_execution_time': round(min_exec_time, 2),
