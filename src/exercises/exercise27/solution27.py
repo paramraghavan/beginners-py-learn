@@ -123,6 +123,17 @@ def analyze_job_schedules(df):
         pandas.DataFrame: Analysis results with schedule patterns and statistics
     """
     results = []
+    """
+        convert UTC to EST
+        2024-11-25T14:33:09364354Z 
+        Above  is a UTC timestamp in ISO 8601 format. The 'Z' at the end specifically indicates UTC
+
+        Date: 2024-11-25
+        Time: 14:33:09
+        Microseconds: 364354
+        Z: UTC timezone indicator
+        df['est_time'] = pd.to_datetime(df['utc_column']).dt.tz_localize('UTC').dt.tz_convert('America/New_York')
+    """
     # Convert datetime columns to datetime type if they aren't already
     df['start_date_time'] = pd.to_datetime(df['start_date_time'])
     df['end_date_time'] = pd.to_datetime(df['end_date_time'])
