@@ -58,6 +58,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 import os
 from typing import List, Dict, Optional, NamedTuple
+import pandas as pd
 
 
 class FileStatus(Enum):
@@ -83,19 +84,17 @@ class FileObject:
     Attributes:
         file_name: Name of the file being processed
         file_size: Size of the file in bytes
-        modified_time: Last modification time of the file
+        in_time: Create time of the file
         status: Current processing status of the file
-        start_time: When monitoring of this file began
-        end_time: When monitoring of this file ended
         attempts: Number of monitoring attempts made
+        alert: Alert sent True/False
     """
     file_name: str
     file_size: int
-    modified_time: datetime
+    in_time: datetime
     status: FileStatus = FileStatus.PENDING
-    start_time: Optional[datetime] = None
-    end_time: Optional[datetime] = None
     attempts: int = 0
+    alert:bool = False
 
     def matches(self, other_metadata: FileMetadata) -> bool:
         """
@@ -109,8 +108,56 @@ class FileObject:
         """
         return (self.file_name == other_metadata.name and
                 self.file_size == other_metadata.size and
-                self.modified_time == other_metadata.modified_time)
+                self.in_time == other_metadata.modified_time)
 
+class FileStateTracker:
+    """
+    Tracks file states in a thread-safe manner using a DataFrame.
+    """
+
+    def __init__(self):
+        self.df = pd.DataFrame(columns=[
+            'file_name', 'file_size', 'in_time', 'status',
+            'attempts', 'alert'
+        ])
+        self.lock = threading.Lock()
+
+    def update_file_state(self, file_obj: FileObject):
+        """
+        Updates or adds a file's state in the DataFrame.
+        Uses composite key of file_name + file_size for uniqueness.
+        """
+        with self.lock:
+            row = {
+                'file_name': file_obj.file_name,
+                'file_size': file_obj.file_size,
+                'in_time': file_obj.in_time,
+                'status': file_obj.status.value,
+                'attempts': file_obj.attempts,
+                'alert': file_obj.alert
+            }
+
+            # Create composite mask using both file_name and file_size
+            mask = (self.df['file_name'] == file_obj.file_name) & \
+                   (self.df['file_size'] == file_obj.file_size)
+
+            if mask.any():
+                self.df.loc[mask] = pd.Series(row)
+            else:
+                self.df.loc[len(self.df)] = row
+
+    def get_dataframe(self) -> pd.DataFrame:
+        """Returns a copy of the current DataFrame"""
+        with self.lock:
+            return self.df.copy()
+
+    def clear_data(self):
+        """Clears all data from the DataFrame"""
+        with self.lock:
+            self.df = pd.DataFrame(columns=[
+                'file_name', 'file_size', 'in_time', 'status',
+                'attempts', 'alert'
+            ])
 
 class GatherObject:
     """
@@ -148,9 +195,11 @@ class GatherObject:
             file_obj = FileObject(
                 file_name=file_metadata.name,
                 file_size=file_metadata.size,
-                modified_time=file_metadata.modified_time
+                in_time=file_metadata.modified_time
             )
             self.files.append(file_obj)
+            # Update state tracker
+            self.file_monitor.state_tracker.update_file_state(file_obj)
 
 class FileMonitor:
     """
@@ -194,6 +243,9 @@ class FileMonitor:
         self.workers: List[threading.Thread] = []
         self.num_workers = num_workers
         self.shutdown_monitor = None
+        # manages state of filemonitor in dataframe
+        self.state_tracker = FileStateTracker()
+
 
     def file_arrival_api(self) -> List[FileMetadata]:
         """
@@ -374,6 +426,9 @@ class FileMonitor:
 
                 status = self.file_monitor.file_status_api(file_obj.file_name)
                 file_obj.status = status
+
+                # Update state tracker after each status change
+                self.file_monitor.state_tracker.update_file_state(file_obj)
 
                 if status == FileStatus.COMPLETE:
                     break
