@@ -5,7 +5,7 @@ module.
 
 1. **Lock (Mutex):**
    A basic synchronization primitive that allows only one thread to enter the locked code at a time.
-
+- Example 1
 ```python
 import threading
 
@@ -17,6 +17,33 @@ def synchronized_function():
         # Critical section
         print("This will only execute one at a time")
 ```
+
+- Example 2
+```python
+import threading
+lock = threading.Lock()
+
+# Methods available:
+lock.acquire()  # Get the lock (block until available)
+lock.release()  # Release the lock
+lock.locked()   # Check if lock is currently held
+
+# Two ways to use:
+
+# 1. Context Manager (recommended)
+with lock:
+    # Critical section here
+    perform_thread_sensitive_operation()
+
+# 2. Manual acquire/release (more error-prone)
+lock.acquire()
+try:
+    # Critical section here
+    perform_thread_sensitive_operation()
+finally:
+    lock.release()  # Always release, even if exception occurs
+```
+
 
 2. **RLock (Reentrant Lock):**
    Similar to Lock, but can be acquired multiple times by the same thread.
