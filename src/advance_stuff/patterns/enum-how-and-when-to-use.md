@@ -168,7 +168,7 @@ if file.status == FileStatus.COMPLETE:
     process_complete_file(file)
 ```
 
-7. Real-world Example from Our File Monitor[file_monitor.py](../../exercises/exercise29/file_monitor.py):
+7. Real-world Example from Our File Monitor[file_monitor.py](../../projects/monitor-file-stream/file_monitor.py):
 
 ```python
 class FileStatus(Enum):
