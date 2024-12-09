@@ -127,11 +127,29 @@
             <a href="?page={{ page-1 }}">&laquo; Previous</a>
         {% endif %}
 
-        {% for p in range(max(1, page-2), min(total_pages+1, page+3)) %}
+        {# Calculate pagination range #}
+        {% set start_page = [1, page - 2]|max %}
+        {% set end_page = [total_pages, page + 2]|min %}
+
+        {% if start_page > 1 %}
+            <a href="?page=1">1</a>
+            {% if start_page > 2 %}
+                <span>...</span>
+            {% endif %}
+        {% endif %}
+
+        {% for p in range(start_page, end_page + 1) %}
             <a href="?page={{ p }}" {% if p == page %}class="active"{% endif %}>
                 {{ p }}
             </a>
         {% endfor %}
+
+        {% if end_page < total_pages %}
+            {% if end_page < total_pages - 1 %}
+                <span>...</span>
+            {% endif %}
+            <a href="?page={{ total_pages }}">{{ total_pages }}</a>
+        {% endif %}
 
         {% if page < total_pages %}
             <a href="?page={{ page+1 }}">Next &raquo;</a>
