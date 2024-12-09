@@ -353,32 +353,41 @@ class FileMonitor:
                 schedule.run_pending()
                 time.sleep(1)
 
-        def gather_files(self) -> None:
-            """
-            Performs a complete gathering cycle for new files.
+    def gather_files(self) -> None:
+        """
+        Performs a complete gathering cycle for new files, stopping when no new files
+        are detected for 5 minutes or when the gather window completes.
+        """
+        self.current_gather = GatherObject()
+        last_file_time = time.time()
+        files_seen = set()
 
-            Creates a new GatherObject and performs multiple checks for new files
-            according to the configured intervals. Files are added to the job queue
-            only if they haven't been seen before in this gather window.
-            """
-            self.current_gather = GatherObject()
+        while True:
+            if self.file_monitor.shutdown_event.is_set():
+                break
 
-            for _ in range(self.file_monitor.gather_check_times):
-                if self.file_monitor.shutdown_event.is_set():
-                    break
+            new_files = self.file_monitor.file_arrival_api()
+            found_new = False
 
-                new_files = self.file_monitor.file_arrival_api()
-                for file_metadata in new_files:
+            for file_metadata in new_files:
+                if file_metadata not in files_seen:
                     self.current_gather.add_file(file_metadata)
+                    files_seen.add(file_metadata)
+                    last_file_time = time.time()
+                    found_new = True
 
-                time.sleep(self.file_monitor.gather_check_interval * 60)
+            # Break if no new files for 5 minutes
+            if time.time() - last_file_time > 300:  # 5 minutes in seconds
+                break
 
-            # Add gathered files to queue
-            for file_obj in self.current_gather.files:
-                self.file_monitor.job_queue.put(file_obj)
+            time.sleep(self.file_monitor.gather_check_interval * 60)
 
-            # Create manifest
-            self.file_monitor.create_manifest(self.current_gather)
+        # Add gathered files to queue
+        for file_obj in self.current_gather.files:
+            self.file_monitor.job_queue.put(file_obj)
+
+        # Create manifest
+        self.file_monitor.create_manifest(self.current_gather)
 
 
     class Worker(threading.Thread):
