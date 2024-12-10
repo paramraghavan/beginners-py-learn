@@ -52,3 +52,37 @@ print("Original DataFrame:")
 print(df)
 print("\nFiltered and sorted DataFrame (last 30 minutes):")
 print(df_filtered)
+
+```python
+def check_update_or_add_row(df, new_row):
+    # Create condition to check all relevant columns
+    condition = (
+        (df['filename'] == new_row['filename']) & 
+        (df['intime'] == new_row['intime']) & 
+        (df['filesize'] == new_row['filesize'])
+    )
+    
+    if condition.any():
+        # Row exists, update it
+        index = condition.idxmax()  # Get index of matching row
+        df.loc[index] = new_row  # Update the row
+        print("Row updated")
+    else:
+        # Row doesn't exist, add it
+        df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+        print("Row added")
+    
+    return df
+
+# Example usage:
+new_row = {
+    'filename': 'file1.zip',
+    'intime': '12/5/24 7:15:20 AM',
+    'filesize': '1.38 MB',
+    'status': 'Valid',
+    'alert': 'OK'
+}
+
+# Update DataFrame
+df = check_update_or_add_row(df, new_row)
+```
