@@ -56,6 +56,15 @@ print(df_filtered)
 ```python
 def check_update_or_add_row(df, new_row):
     # Create condition to check all relevant columns
+    # Example of what condition might look like:
+    # 0    False
+    # 1    True    <- matching row
+    # 2    False
+    # 3    False
+    # dtype: bool
+    
+    # condition.any() returns True if ANY value is True
+    # condition.all() returns True if ALL values are True
     condition = (
         (df['filename'] == new_row['filename']) & 
         (df['intime'] == new_row['intime']) & 
