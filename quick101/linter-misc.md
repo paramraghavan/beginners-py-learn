@@ -222,3 +222,131 @@ pre-commit install
 This installs the git hook scripts in your `.git/hooks/` directory. Now every time you run `git commit`, the pre-commit
 hooks will run automatically.
 
+## Bandit linter
+
+Bandit is a security linter that finds common security issues in Python code. Here's how to use it:
+
+Install:
+
+```bash
+pip install bandit
+```
+
+Here are examples of security issues Bandit catches:
+
+1. Hardcoded Passwords (Bad):
+
+```python
+# Bandit will flag this
+password = "my_hardcoded_password"
+connection = connect(user="admin", password=password)
+```
+
+2. Unsafe YAML Loading (Bad):
+
+```python
+import yaml
+
+# Bandit will flag this - unsafe!
+data = yaml.load(file_content)
+
+# Safe version:
+data = yaml.safe_load(file_content)
+```
+
+3. SQL Injection Risk (Bad):
+
+```python
+# Bandit will flag this
+query = "SELECT * FROM users WHERE id = " + user_id
+cursor.execute(query)
+
+# Safe version:
+query = "SELECT * FROM users WHERE id = %s"
+cursor.execute(query, (user_id,))
+```
+
+4. Command Injection Risk (Bad):
+
+```python
+import subprocess
+
+# Bandit will flag this
+subprocess.Popen("cat " + user_input, shell=True)
+
+# Safe version:
+subprocess.Popen(["cat", user_input], shell=False)
+```
+
+Run Bandit:
+
+```bash
+# Scan single file
+bandit file.py
+
+# Scan directory
+bandit -r ./your_project_directory
+
+# Generate HTML report
+bandit -r ./your_project_directory -f html -o bandit-report.html
+
+# Ignore certain tests
+bandit -r ./your_project_directory -s B101,B102
+```
+
+Configure with `.bandit` file in project root:
+
+```yaml
+skips: [ 'B101','B601' ]
+exclude_dirs: [ 'tests', 'venv' ]
+```
+
+## Bandit linter on pycharm
+
+Here's how to set up Bandit in PyCharm:
+
+1. First install Bandit:
+
+```bash
+pip install bandit
+```
+
+2. Configure in PyCharm:
+
+- Go to Settings/Preferences (Ctrl+Alt+S)
+- Navigate to Tools → External Tools
+- Click + to add new tool
+- Fill in these details:
+
+```
+Name: Bandit
+Program: $PyInterpreterDirectory$/bandit
+Arguments: -r $FileDir$
+Working Directory: $ProjectFileDir$
+```
+
+3. Optional: Create keyboard shortcut
+
+- Go to Settings → Keymap
+- Find External Tools → External Tools → Bandit
+- Right-click and Add Keyboard Shortcut
+- Choose your preferred shortcut
+
+4. Usage:
+
+- Right-click on a Python file/folder
+- Select External Tools → Bandit
+- View results in PyCharm's console
+
+5. For specific file:
+
+```
+Arguments: $FilePath$
+```
+
+For recursive directory scan with report:
+
+```
+Arguments: -r $FileDir$ -f html -o $ProjectFileDir$/bandit-report.html
+```
+

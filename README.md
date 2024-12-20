@@ -19,6 +19,18 @@ An attempt to teach python to beginners with examples.
 - [Github 101 ](github-101.md)
 - [How To Use Github - simple use case](how-to-use-github.md)
 
+## Linter and misc
+These are comprehensive code analysis, style guide compliance, code formatter pep8 style fixes and more
+These tools do:
+* pylint: comprehensive code analysis
+* flake8: style guide enforcement
+* black: code formatter
+* mypy: type checking
+* autopep8: PEP 8 style fixes
+* isort: import sorter
+* bandit: security linter
+More details: [linter-misc.md](quick101/linter-misc.md)
+
 ### [Select and activate a environment/virtual environment in Visual Studio Code](https://code.visualstudio.com/docs/python/environments)
 By default, the Python extension looks for and uses the first Python interpreter it finds in the system path. To select a specific environment, 
 use the Python: Select Interpreter command from the Command Palette (Ctrl+Shift+P).
