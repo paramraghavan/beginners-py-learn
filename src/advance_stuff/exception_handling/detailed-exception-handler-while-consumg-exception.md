@@ -15,6 +15,17 @@ except Exception as e:
     traceback.print_exc()
     # Continue with your error handling logic
 ```
+```python
+# Method 1.1: Using traceback module (Most detailed), error message as string to be logged
+try:
+    1/0  # Example exception
+except Exception as e:
+    # Get traceback as string
+    error_msg = traceback.format_exc()
+    
+    # Log the full traceback
+    logger.error(f"An error occurred: {str(e)}\n{error_msg}")
+```
 
 ```python
 # Method 2: Using exc_info from sys
