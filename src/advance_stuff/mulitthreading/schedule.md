@@ -1,5 +1,5 @@
-I'd be happy to explain the use of the `schedule` and `threading` modules in Python. These modules are useful for task
-scheduling and concurrent execution. Let me give you a brief overview of each:
+Using the `schedule` and `threading` modules in Python. These modules are useful for task
+scheduling and concurrent execution. 
 
 1. `schedule` module:
 
