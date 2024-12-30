@@ -7,6 +7,10 @@ x = '2024-05-09 10:30:45:123456'
 now = datetime.now()
 print(now)
 
+# time with 0 minutes and millis
+now_with_zero_seconds = now.replace(second=0,microsecond=0)
+print(now_with_zero_seconds)
+
 # Creating a specific datetime object
 specific_datetime = datetime(2024, 6, 3, 10, 30, 45, 123456)
 print(specific_datetime)
