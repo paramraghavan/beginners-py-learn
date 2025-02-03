@@ -191,3 +191,5 @@ export PYTHONPATH="/path/to/parent/directory:$PYTHONPATH"
 set PYTHONPATH=C:\path\to\parent\directory;%PYTHONPATH%
 ```
 
+## Debug stacktrace 
+strace -s 1024 > /tmp/why.txt -f python your_script.py
