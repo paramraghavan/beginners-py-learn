@@ -193,3 +193,12 @@ set PYTHONPATH=C:\path\to\parent\directory;%PYTHONPATH%
 
 ## Debug stacktrace 
 strace -s 1024 > /tmp/why.txt -f python your_script.py
+
+Above command traces system calls made by your Python script with these key elements:
+
+- `-s 1024`: Sets maximum string size to 1024 bytes (default is 32)
+- `> /tmp/why.txt`: Redirects trace output to this file
+- `-f`: Follows child processes (traces subprocess forks)
+- Traces all system calls made by `python your_script.py`
+  The trace output will show every system call, its arguments, and return values, useful for debugging or understanding
+  program behavior at the OS level.
