@@ -1,0 +1,1 @@
+create a python script to monitor server - email and log on server shutdown
