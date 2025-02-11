@@ -88,6 +88,27 @@
             border-radius: 4px;
             border: 1px solid #ddd;
         }
+        /* New styles for search functionality */
+        .search-container {
+            margin: 20px 0;
+            width: 100%;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
+        }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -119,7 +140,11 @@
         {% endif %}
     {% endwith %}
 
-    <p>Total Records: {{ total_records }}</p>
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search across all columns..." oninput="filterTable()">
+    </div>
+
+    <p>Total Records: <span id="recordCount">{{ total_records }}</span></p>
 
     <table>
         <thead>
@@ -134,7 +159,7 @@
         </thead>
         <tbody>
             {% for record in records %}
-            <tr {% if record.alert %}class="alert"{% endif %}>
+            <tr {% if record.alert %}class="alert"{% endif %} data-searchable>
                 <td>{{ record.file_name }}</td>
                 <td>{{ record.file_size }}</td>
                 <td>{{ record.in_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
@@ -185,6 +210,25 @@
             url.searchParams.set('per_page', size);
             url.searchParams.set('page', 1); // Reset to first page when changing page size
             window.location.href = url.toString();
+        }
+
+        function filterTable() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('tr[data-searchable]');
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchText)) {
+                    row.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+
+            // Update the record count
+            document.getElementById('recordCount').textContent = visibleCount;
         }
     </script>
 </body>
