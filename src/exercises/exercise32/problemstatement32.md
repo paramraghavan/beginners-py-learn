@@ -1,0 +1,1 @@
+search across columns in pandas data frame for a given string and return df with matching rows
