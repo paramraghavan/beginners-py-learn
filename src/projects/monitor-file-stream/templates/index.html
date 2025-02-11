@@ -205,10 +205,33 @@
     </div>
 
     <script>
+        // Store the current page size and search text in sessionStorage
+        function initializeState() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentPerPage = urlParams.get('per_page') || '10';
+            const currentSearch = sessionStorage.getItem('searchText') || '';
+
+            // Set initial values
+            document.getElementById('page-size').value = currentPerPage;
+            document.getElementById('searchInput').value = currentSearch;
+
+            // Apply initial filter if there's a saved search
+            if (currentSearch) {
+                filterTable();
+            }
+        }
+
         function changePageSize(size) {
             const url = new URL(window.location);
             url.searchParams.set('per_page', size);
             url.searchParams.set('page', 1); // Reset to first page when changing page size
+
+            // Preserve the search parameter if it exists
+            const searchText = document.getElementById('searchInput').value;
+            if (searchText) {
+                sessionStorage.setItem('searchText', searchText);
+            }
+
             window.location.href = url.toString();
         }
 
@@ -216,6 +239,9 @@
             const searchText = document.getElementById('searchInput').value.toLowerCase();
             const rows = document.querySelectorAll('tr[data-searchable]');
             let visibleCount = 0;
+
+            // Save search text to sessionStorage
+            sessionStorage.setItem('searchText', searchText);
 
             rows.forEach(row => {
                 const text = row.textContent.toLowerCase();
@@ -230,6 +256,9 @@
             // Update the record count
             document.getElementById('recordCount').textContent = visibleCount;
         }
+
+        // Initialize the state when the page loads
+        window.addEventListener('load', initializeState);
     </script>
 </body>
 </html>
