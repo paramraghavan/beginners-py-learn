@@ -1,0 +1,1 @@
+create a singleton class which read a yaml config file and expose values via static method
