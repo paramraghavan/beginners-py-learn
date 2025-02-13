@@ -93,7 +93,7 @@ if __name__ == "__main__":
     # Get value with default
     debug_mode = ConfigManager.get_value('debug', False)
 
-    # Reload configuration if needed
+    # Reload for dynamic configuration updates
     ConfigManager.reload_config()
 
     print(f"Database Host: {db_host}")
