@@ -1,0 +1,7 @@
+- type: print_action
+  params:
+    message: "Hello, World!"
+- type: save_to_file
+  params:
+    filename: "output.txt"
+    content: "This is a test content."
