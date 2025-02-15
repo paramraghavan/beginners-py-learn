@@ -223,12 +223,80 @@ processes it as such. The init.py could be an empty file without causing issues.
 - Library is a collection of packages.
 - Framework is a collection of libraries.
 
-## Protected variables
- - Protected variables are those data members of a class that can be accessed within the class and the classes derived from that class.
- In Python, there is no existence of “Public” instance variables. However, we use underscore ‘_’ symbol to determine the access control of a
- data member in a class. Any member prefixed with an underscore should be treated as a non-public part of the API or any Python code,
- whether **it is a function, a method or a data member.** [see](src/advance_stuff/protected.py)
- - [ref](https://www.geeksforgeeks.org/protected-variable-in-python/)
+## Variable access control: public, protected, and private variables
+These are conventions rather than strict enforcement like in languages such as Java or C++. 
+Here's how they work in python
+
+---
+
+### **1. Public Variables**
+
+- Can be accessed from anywhere (inside and outside the class).
+- No special prefix needed.
+
+```python
+class Example:
+    def __init__(self):
+        self.public_var = "I am public"
+
+
+obj = Example()
+print(obj.public_var)  # ✅ Accessible
+obj.public_var = "Modified"  # ✅ Can be modified
+print(obj.public_var)
+```
+
+---
+
+### **2. Protected Variables**
+
+- Indicated by a **single underscore (`_`)**.
+- Meant to be used only within the class and its subclasses.
+- Still accessible from outside, but it's a convention not to access it directly.
+
+```python
+class Example:
+    def __init__(self):
+        self._protected_var = "I am protected"
+
+
+obj = Example()
+print(obj._protected_var)  # ✅ Accessible (but should be treated as private)
+obj._protected_var = "Modified"  # ✅ Can be modified (not recommended)
+print(obj._protected_var)
+```
+
+---
+
+### **3. Private Variables**
+
+- Indicated by a **double underscore (`__`)**.
+- Python uses **name mangling** to make it harder to access directly.
+- The variable name is changed internally (e.g., `__private_var` becomes `_Example__private_var`).
+
+```python
+class Example:
+    def __init__(self):
+        self.__private_var = "I am private"
+
+
+obj = Example()
+# print(obj.__private_var)  # ❌ AttributeError: Cannot access directly
+
+# Accessing private variable using name mangling
+print(obj._Example__private_var)  # ✅ Accessible but not recommended
+```
+
+---
+
+### **Key Differences**
+
+| Type          | Prefix | Access from Outside Class?          | Best Practice                        |
+|---------------|--------|-------------------------------------|--------------------------------------|
+| **Public**    | None   | ✅ Yes                               | Free to use                          |
+| **Protected** | `_`    | ✅ Yes (but avoid)                   | Use inside class and subclasses only |
+| **Private**   | `__`   | ❌ No (can access via name mangling) | Keep within class                    |
+
 
 ## What does the init method do in a Class defination? Why is it necessary? (etc.)
 
@@ -243,6 +311,7 @@ self in init method then you will get an error:
 - init is short for initialization. It is a constructor which gets called when you make an instance of the class
   and it is not necessary. But usually it our practice to write init method for setting default state of the object.
   If you are not willing to set any state of the object initially then you don't need to write this method.
+- [init and new](quick101/init-and-new.md)
 - [see](src/advance_stuff/class_defination.py)
 - [python class initialization sequence](src/advance_stuff/class_init_sequence/readme.md)
 ## try
