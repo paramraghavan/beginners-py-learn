@@ -241,8 +241,8 @@ class Example:
 
 
 obj = Example()
-print(obj.public_var)  # ✅ Accessible
-obj.public_var = "Modified"  # ✅ Can be modified
+print(obj.public_var)  # 🟢 Accessible
+obj.public_var = "Modified"  # 🟢 Can be modified
 print(obj.public_var)
 ```
 
@@ -261,8 +261,8 @@ class Example:
 
 
 obj = Example()
-print(obj._protected_var)  # ✅ Accessible (but should be treated as private)
-obj._protected_var = "Modified"  # ✅ Can be modified (not recommended)
+print(obj._protected_var)  # 🟢 Accessible (but should be treated as private)
+obj._protected_var = "Modified"  # 🟢 Can be modified (not recommended)
 print(obj._protected_var)
 ```
 
@@ -281,21 +281,21 @@ class Example:
 
 
 obj = Example()
-# print(obj.__private_var)  # ❌ AttributeError: Cannot access directly
+# print(obj.__private_var)  # 🔴 AttributeError: Cannot access directly
 
 # Accessing private variable using name mangling
-print(obj._Example__private_var)  # ✅ Accessible but not recommended
+print(obj._Example__private_var)  # 🟢 Accessible but not recommended
 ```
 
 ---
 
 ### **Key Differences**
 
-| Type          | Prefix | Access from Outside Class?          | Best Practice                        |
-|---------------|--------|-------------------------------------|--------------------------------------|
-| **Public**    | None   | ✅ Yes                               | Free to use                          |
-| **Protected** | `_`    | ✅ Yes (but avoid)                   | Use inside class and subclasses only |
-| **Private**   | `__`   | ❌ No (can access via name mangling) | Keep within class                    |
+| Type          | Prefix | Access from Outside Class?        | Best Practice                        |
+|---------------|--------|-----------------------------------|--------------------------------------|
+| **Public**    | None   | 🟢 Yes                             | Free to use                          |
+| **Protected** | `_`    | 🟢 Yes (but avoid)                 | Use inside class and subclasses only |
+| **Private**   | `__`   | 🔴 No (can access via name mangling) | Keep within class                    |
 
 
 ## What does the init method do in a Class defination? Why is it necessary? (etc.)
