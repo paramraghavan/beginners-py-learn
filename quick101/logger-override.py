@@ -34,7 +34,10 @@ if not logging.getLogger().handlers:
 # Now import other modules
 import your_other_module
 # ...rest of your application...
+# Get the root logger directly
+logger = logging.getLogger()  # Empty string or no arguments returns the root logger
 
+logger.info("This is an info message from main")
 ## end main.py
 
 # my_module.py
