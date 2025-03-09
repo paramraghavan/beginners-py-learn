@@ -45,4 +45,13 @@ zip(['a', 'b', 'c'], [1, 2, 3]) would yield
 zip_obj = zip(['a', 'b', 'c'], [1, 2, 3])
 dict(zip_obj)
 # result {'a': 1, 'b': 2, 'c': 3}
+
+zip_obj = zip(['a', 'b', 'c'], [1, 2, 3,4,5,6])
+dict(zip_obj)
+# result {'a': 1, 'b': 2, 'c': 3}
+
+zip_obj = zip(['a', 'b', 'c'], [1, 2])
+dict(zip_obj)
+# result {'a': 1, 'b': 2}
+
 ```
