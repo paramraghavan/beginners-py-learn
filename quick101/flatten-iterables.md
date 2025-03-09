@@ -36,3 +36,13 @@ all_files = chain.from_iterable(file_types) # ['doc1.txt', 'doc2.txt', 'image1.j
 for file in all_files:
     print(f"Processing {file}")
 ```
+
+# zip() is a Python function that takes multiple iterables and returns an iterator of tuples
+Example:
+zip(['a', 'b', 'c'], [1, 2, 3]) would yield 
+
+```python
+zip_obj = zip(['a', 'b', 'c'], [1, 2, 3])
+dict(zip_obj)
+# result {'a': 1, 'b': 2, 'c': 3}
+```
