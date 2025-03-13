@@ -32,6 +32,9 @@ These tools do:
 * bandit: security linter
 More details: [linter-misc.md](quick101/linter-misc.md)
 
+## Vulnerability
+- [vulnerability-check.md](quick101%2Fvulnerability-check.md)
+
 ### [Select and activate a environment/virtual environment in Visual Studio Code](https://code.visualstudio.com/docs/python/environments)
 By default, the Python extension looks for and uses the first Python interpreter it finds in the system path. To select a specific environment, 
 use the Python: Select Interpreter command from the Command Palette (Ctrl+Shift+P).
