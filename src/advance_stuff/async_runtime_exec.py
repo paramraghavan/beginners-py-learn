@@ -61,15 +61,13 @@ async def async_runtime_exec(
             process = await asyncio.create_subprocess_shell(
                 command if isinstance(command, str) else " ".join(command),
                 stdout=stdout_dest,
-                stderr=stderr_dest,
-                text=True  # Get text instead of bytes
+                stderr=stderr_dest
             )
         else:
             process = await asyncio.create_subprocess_exec(
                 *command,
                 stdout=stdout_dest,
-                stderr=stderr_dest,
-                text=True  # Get text instead of bytes
+                stderr=stderr_dest
             )
 
         # Store process info
