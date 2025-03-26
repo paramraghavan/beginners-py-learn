@@ -1,0 +1,21 @@
+/* -----------------------------------------------------
+ * Job Name: check_job_monitor
+ * Description: Monitors and restarts job_monitor process
+ * ----------------------------------------------------- */
+
+insert_job: check_job_monitor   job_type: c
+description: "Checks if job_monitor process is running and starts it if needed"
+owner: username                 /* Replace with your username */
+machine: hostname               /* Replace with your hostname */
+command: /path/to/check_job_monitor.sh
+permission: gx,ge,wx            /* Modify as needed */
+date_conditions: 1
+start_times: "00:00"
+run_window: "00:00-23:59"
+/* Replace n with your desired interval in minutes */
+run_calendar: null
+cycle_frequency: n
+std_out_file: "/path/to/logs/check_job_monitor.out"
+std_err_file: "/path/to/logs/check_job_monitor.err"
+alarm_if_fail: 1
+max_run_alarm: 5                /* Alarm if job runs longer than 5 minutes */
