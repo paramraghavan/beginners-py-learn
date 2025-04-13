@@ -5,8 +5,10 @@ import subprocess
 import ast
 import argparse
 import time
+import json
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 
 # Define required packages
 REQUIRED_PACKAGES = {
@@ -261,24 +263,465 @@ def analyze_code(file_or_dir, options):
                     print(f"   - {issue['tool']}: {issue['findings']}")
 
     if options.output:
-        # Save report to file
-        with open(options.output, "w") as f:
-            f.write("# Code Review Report\n\n")
-            f.write(f"Analyzed {len(python_files)} Python files in {file_or_dir}\n\n")
+        output_path = Path(options.output)
 
-            f.write("## Summary\n\n")
-            f.write(f"- Files with issues: {files_with_issues}/{len(python_files)}\n")
-            f.write(f"- Analysis time: {time.time() - start_time:.2f} seconds\n\n")
+        # Determine if we should generate HTML or Markdown
+        if output_path.suffix.lower() == '.html' or options.html:
+            generate_html_report(output_path, python_files, results, file_or_dir,
+                                 files_with_issues, start_time, sorted_results)
+            print(f"\n📊 HTML Report saved to {output_path}")
+        else:
+            # Save markdown report to file
+            with open(output_path, "w") as f:
+                f.write("# Code Review Report\n\n")
+                f.write(f"Analyzed {len(python_files)} Python files in {file_or_dir}\n\n")
 
-            f.write("## Detailed Findings\n\n")
-            for result in sorted_results:
-                if result["issues"]:
-                    f.write(f"### {result['file']}\n\n")
-                    for issue in result["issues"]:
-                        f.write(f"- **{issue['tool']}**: {issue['findings']}\n")
-                    f.write("\n")
+                f.write("## Summary\n\n")
+                f.write(f"- Files with issues: {files_with_issues}/{len(python_files)}\n")
+                f.write(f"- Analysis time: {time.time() - start_time:.2f} seconds\n\n")
 
-        print(f"\n📝 Report saved to {options.output}")
+                f.write("## Detailed Findings\n\n")
+                for result in sorted_results:
+                    if result["issues"]:
+                        f.write(f"### {result['file']}\n\n")
+                        for issue in result["issues"]:
+                            f.write(f"- **{issue['tool']}**: {issue['findings']}\n")
+                        f.write("\n")
+
+            print(f"\n📝 Report saved to {output_path}")
+
+
+def generate_html_report(output_path, python_files, results, file_or_dir,
+                         files_with_issues, start_time, sorted_results):
+    """Generate an HTML report with charts and detailed findings."""
+
+    # Count issues by tool
+    tools_count = {}
+    file_issues = {}
+
+    for result in results:
+        file_path = str(result["file"])
+        file_name = result["file"].name
+
+        if file_name not in file_issues:
+            file_issues[file_name] = {}
+
+        for issue in result["issues"]:
+            tool = issue["tool"]
+            if tool not in tools_count:
+                tools_count[tool] = 0
+            tools_count[tool] += 1
+
+            if tool not in file_issues[file_name]:
+                file_issues[file_name][tool] = issue["findings"]
+
+    # Create HTML content
+    html_content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Code Review Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <style>
+        body {{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }}
+        h1, h2, h3 {{
+            color: #2c3e50;
+        }}
+        .header {{
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }}
+        .header h1 {{
+            margin: 0;
+            color: white;
+        }}
+        .summary-box {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }}
+        .summary-item {{
+            flex: 1;
+            min-width: 200px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }}
+        .metric {{
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #3498db;
+        }}
+        .charts-container {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }}
+        .chart-container {{
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }}
+        table {{
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }}
+        th, td {{
+            padding: 12px 15px;
+            text-align: left;
+        }}
+        thead {{
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }}
+        tbody tr {{
+            border-bottom: 1px solid #dddddd;
+        }}
+        tbody tr:nth-of-type(even) {{
+            background-color: #f8f9fa;
+        }}
+        .severity-high {{
+            background-color: #ff6b6b;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }}
+        .severity-medium {{
+            background-color: #feca57;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }}
+        .severity-low {{
+            background-color: #1dd1a1;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }}
+        .issues-container {{
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }}
+        .file-issues {{
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }}
+        .file-name {{
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            color: #2c3e50;
+        }}
+        .tool-list {{
+            list-style-type: none;
+            padding-left: 10px;
+        }}
+        .tool-item {{
+            margin-bottom: 5px;
+            padding: 8px;
+            border-radius: 4px;
+            background-color: #e8eaf6;
+        }}
+        .tool-name {{
+            font-weight: bold;
+            color: #3f51b5;
+        }}
+        .search-box {{
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }}
+        #issueFilters {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }}
+        .filter-button {{
+            padding: 8px 15px;
+            background-color: #e8eaf6;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }}
+        .filter-button.active {{
+            background-color: #3f51b5;
+            color: white;
+        }}
+        .hidden {{
+            display: none;
+        }}
+        footer {{
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Python Code Review Report</h1>
+        <p>Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+    </div>
+
+    <h2>Project Overview</h2>
+    <div class="summary-box">
+        <div class="summary-item">
+            <h3>Files Analyzed</h3>
+            <div class="metric">{len(python_files)}</div>
+            <p>Python files</p>
+        </div>
+        <div class="summary-item">
+            <h3>Files with Issues</h3>
+            <div class="metric">{files_with_issues}</div>
+            <p>{round(files_with_issues / len(python_files) * 100, 1)}% of all files</p>
+        </div>
+        <div class="summary-item">
+            <h3>Analysis Time</h3>
+            <div class="metric">{round(time.time() - start_time, 2)}</div>
+            <p>seconds</p>
+        </div>
+        <div class="summary-item">
+            <h3>Total Issues</h3>
+            <div class="metric">{sum(tools_count.values())}</div>
+            <p>across all tools</p>
+        </div>
+    </div>
+
+    <h2>Analysis Results</h2>
+
+    <div class="charts-container">
+        <div class="chart-container">
+            <h3>Issues by Tool</h3>
+            <canvas id="toolsChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h3>Top Files with Issues</h3>
+            <canvas id="filesChart"></canvas>
+        </div>
+    </div>
+
+    <h2>Detailed Findings</h2>
+
+    <input type="text" id="searchBox" class="search-box" placeholder="Search for files...">
+
+    <div id="issueFilters">
+        <button class="filter-button active" data-filter="all">All</button>
+        {' '.join([f'<button class="filter-button" data-filter="{tool}">{tool}</button>' for tool in tools_count])}
+    </div>
+
+    <div class="issues-container" id="issuesContainer">
+    """
+
+    # Generate HTML for each file with issues
+    for result in sorted_results:
+        if result["issues"]:
+            file_name = result["file"].name
+            file_path = str(result["file"])
+
+            issue_classes = " ".join([issue["tool"] for issue in result["issues"]])
+
+            html_content += f"""
+        <div class="file-issues" data-file="{file_name}" data-tools="{issue_classes}">
+            <div class="file-name">{file_path}</div>
+            <ul class="tool-list">
+            """
+
+            for issue in result["issues"]:
+                html_content += f"""
+                <li class="tool-item">
+                    <span class="tool-name">{issue["tool"]}:</span> {issue["findings"]}
+                </li>
+                """
+
+            html_content += """
+            </ul>
+        </div>
+            """
+
+    # Add JavaScript for interactivity
+    html_content += """
+    </div>
+
+    <script>
+        // Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tools chart
+            const toolsCtx = document.getElementById('toolsChart').getContext('2d');
+            const toolsChart = new Chart(toolsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: TOOLS_LABELS,
+                    datasets: [{
+                        data: TOOLS_DATA,
+                        backgroundColor: [
+                            '#ff6b6b', '#feca57', '#1dd1a1', '#5f27cd', '#54a0ff',
+                            '#ff9ff3', '#00d2d3', '#f368e0', '#48dbfb', '#341f97'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        }
+                    }
+                }
+            });
+
+            // Files chart
+            const filesCtx = document.getElementById('filesChart').getContext('2d');
+            const filesChart = new Chart(filesCtx, {
+                type: 'bar',
+                data: {
+                    labels: FILES_LABELS,
+                    datasets: [{
+                        label: 'Number of Issues',
+                        data: FILES_DATA,
+                        backgroundColor: '#3498db',
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Search functionality
+            const searchBox = document.getElementById('searchBox');
+            const issuesContainer = document.getElementById('issuesContainer');
+            const fileIssues = issuesContainer.getElementsByClassName('file-issues');
+
+            searchBox.addEventListener('keyup', function() {
+                const searchTerm = this.value.toLowerCase();
+
+                for (let i = 0; i < fileIssues.length; i++) {
+                    const fileName = fileIssues[i].getAttribute('data-file').toLowerCase();
+
+                    if (fileName.includes(searchTerm)) {
+                        fileIssues[i].classList.remove('hidden');
+                    } else {
+                        fileIssues[i].classList.add('hidden');
+                    }
+                }
+            });
+
+            // Filter functionality
+            const filterButtons = document.querySelectorAll('.filter-button');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+
+                    // Update active button
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Show/hide file issues based on filter
+                    for (let i = 0; i < fileIssues.length; i++) {
+                        if (filter === 'all') {
+                            fileIssues[i].classList.remove('hidden');
+                        } else {
+                            const tools = fileIssues[i].getAttribute('data-tools');
+
+                            if (tools.includes(filter)) {
+                                fileIssues[i].classList.remove('hidden');
+                            } else {
+                                fileIssues[i].classList.add('hidden');
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        // Data for charts
+        const TOOLS_LABELS = JSON.parse('TOOLS_LABELS_JSON');
+        const TOOLS_DATA = JSON.parse('TOOLS_DATA_JSON');
+        const FILES_LABELS = JSON.parse('FILES_LABELS_JSON');
+        const FILES_DATA = JSON.parse('FILES_DATA_JSON');
+    </script>
+
+    <footer>
+        <p>Generated by Python Code Review Tool</p>
+    </footer>
+</body>
+</html>
+    """
+
+    # Prepare data for charts
+    tools_labels = list(tools_count.keys())
+    tools_data = list(tools_count.values())
+
+    # Get top 10 files with most issues
+    top_files = sorted(file_issues.items(), key=lambda x: len(x[1]), reverse=True)[:10]
+    files_labels = [file_name for file_name, _ in top_files]
+    files_data = [len(issues) for _, issues in top_files]
+
+    # Convert to JSON strings
+    tools_labels_json = json.dumps(tools_labels)
+    tools_data_json = json.dumps(tools_data)
+    files_labels_json = json.dumps(files_labels)
+    files_data_json = json.dumps(files_data)
+
+    # Insert data into HTML
+    html_content = html_content.replace('TOOLS_LABELS_JSON', tools_labels_json)
+    html_content = html_content.replace('TOOLS_DATA_JSON', tools_data_json)
+    html_content = html_content.replace('FILES_LABELS_JSON', files_labels_json)
+    html_content = html_content.replace('FILES_DATA_JSON', files_data_json)
+
+    # Write to file
+    with open(output_path, "w") as f:
+        f.write(html_content)
 
 
 def main():
@@ -288,6 +731,8 @@ def main():
     parser.add_argument("-o", "--output", help="Save report to file")
     parser.add_argument("-v", "--verbose", action="store_true", help="Show detailed output")
     parser.add_argument("-q", "--quiet", action="store_true", help="Show minimal output")
+    parser.add_argument("--html", action="store_true",
+                        help="Generate HTML report (even if output doesn't have .html extension)")
 
     # Tool selection options
     parser.add_argument("--all", action="store_true", help="Run all checks (default)")
