@@ -22,6 +22,9 @@
   In PyCharm: Settings → External Tools → Add Black
   Use: Right-click on file/folder → External Tools → black
 
+- Bandit: Security-focused linter for finding common security issues
+
+
 Development Tools:
 
 1. pytest
