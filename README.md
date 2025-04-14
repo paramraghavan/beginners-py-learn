@@ -30,7 +30,7 @@ These tools do:
 * autopep8: PEP 8 style fixes
 * isort: import sorter
 * bandit: security linter
-More details: [linter-misc.md](quick101/linter-misc.md)
+More details: [linter-misc.md](quick101%2Fcode_review%2Flinter-misc.md)
 
 ## Vulnerability
 - [vulnerability-check.md](quick101%2Fvulnerability-check.md)
