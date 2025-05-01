@@ -1,8 +1,10 @@
-Here’s a list of **handy Unix commands** that are especially useful for everyday file management, searching, system monitoring, and scripting:
+Here’s a list of **handy Unix commands** that are especially useful for everyday file management, searching, system
+monitoring, and scripting:
 
 ---
 
 # 🔍 **File & Directory Navigation**
+
 - `ls -l` — long listing of files
 - `ls -a` — include hidden files
 - `cd dirname/` — change directory
@@ -12,6 +14,7 @@ Here’s a list of **handy Unix commands** that are especially useful for everyd
 ---
 
 # 📂 **File Operations**
+
 - `cp file1 file2` — copy a file
 - `mv file1 file2` — rename or move a file
 - `rm file` — remove file
@@ -22,6 +25,7 @@ Here’s a list of **handy Unix commands** that are especially useful for everyd
 ---
 
 # 🔍 **Search & Find**
+
 - `find . -name "*.txt"` — find all `.txt` files recursively
 - `grep "pattern" file.txt` — search inside files
 - `grep -r "pattern" folder/` — recursive grep
@@ -30,27 +34,28 @@ Here’s a list of **handy Unix commands** that are especially useful for everyd
 ---
 
 # 🧹 **Disk & File Management**
+
 - `du -sh *` — show size of all files/folders in current directory
 - `df -h` — show disk space usage
 - `stat filename` — detailed info on file
 
-
 # 📦 **Archiving & Compression**
+
 - `tar -czvf archive.tar.gz folder/` — compress folder
 - `tar -xzvf archive.tar.gz` — extract compressed folder
 - `zip -r archive.zip folder/` — zip folder
 - `unzip archive.zip` — unzip archive
 
-
 # 🧪 **System Monitoring**
+
 - `top` — live system processes
 - `htop` — better process viewer (install with `brew install htop`)
 - `ps aux | grep processname` — find running processes
 - `kill PID` — terminate process by PID
 - `uptime` — system uptime
 
-
 # **Other Handy Tools**
+
 - `history` — command history
 - `!!` — rerun last command
 - `chmod +x script.sh` — make script executable
@@ -110,7 +115,9 @@ find . -name "*.log" -exec wc -l {} \;
 # Find files by size (larger than 10MB)
 find . -size +10M
 ```
+
 ### find and delete
+
 ```shell
 
 # This will list all the files that match the pattern. Once you're confident the 
@@ -125,6 +132,7 @@ find . -name '._*' -type f -delete
 ```
 
 ### Explanation:
+
 - `find .` — starts searching in the current directory.
 - `-name '._*'` — looks for files that start with `._`.
 - `-type f` — ensures only files are targeted (not directories).
@@ -272,8 +280,11 @@ tr 'a-z' 'A-Z' < lowercase.txt > uppercase.txt
 # Remove leading and trailing whitespace
 cat file.txt | tr -s '[:blank:]' | sed 's/^[ \t]*//;s/[ \t]*$//'
 
-# Split a file into pieces
+# Split a file into pieces, To split into chunks of 10MB
 split -b 10M largefile.bin part_
+
+#  split into 5 equal parts:
+split -n 5 largefile.bin part_
 
 # Remove duplicate lines (must be sorted first)
 sort file.txt | uniq
@@ -289,3 +300,36 @@ grep -n "TODO" $(find . -name "*.py") | cut -d':' -f1,2 | sort -t':' -k1,1 -k2n,
 grep "ERROR" *.log | cut -d':' -f3 | sort | uniq -c | sort -nr
 ```
 
+## Strings
+
+The `strings` command is a utility for displaying printable character sequences found in binary files.
+
+Basic usage:
+
+```
+strings [options] file
+```
+
+Common options:
+
+- `-a`: Scan the entire file, not just initialized data sections
+- `-n LENGTH`: Set minimum string length (default is 4)
+- `-t FORMAT`: Show the offset of each string (o=octal, d=decimal, x=hex)
+- `-e ENCODING`: Specify character encoding (s=single-7-bit, S=single-8-bit, b=16-bit big-endian, l=16-bit
+  little-endian)
+
+Examples:
+
+```
+strings file.bin                   # Show strings with default length (4)
+strings -n 10 file.bin             # Show only strings 10+ characters long
+strings -t x file.bin              # Show hex offsets for each string
+strings -e b file.bin              # Handle as 16-bit big-endian
+```
+
+The strings command is useful for:
+
+- Finding text in binary files
+- Analyzing malware or suspicious files
+- Extracting readable content from executable files
+- Examining compiled programs for clues
