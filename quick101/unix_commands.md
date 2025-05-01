@@ -1,4 +1,63 @@
-I'd be happy to provide examples of common Unix commands for file manipulation. Here's a guide to these essential commands:
+Here’s a list of **handy Unix commands** that are especially useful for everyday file management, searching, system monitoring, and scripting:
+
+---
+
+# 🔍 **File & Directory Navigation**
+- `ls -l` — long listing of files
+- `ls -a` — include hidden files
+- `cd dirname/` — change directory
+- `pwd` — print current directory
+- `tree` — visual directory structure (install via `brew install tree`)
+
+---
+
+# 📂 **File Operations**
+- `cp file1 file2` — copy a file
+- `mv file1 file2` — rename or move a file
+- `rm file` — remove file
+- `rm -r folder/` — remove directory recursively
+- `touch filename` — create empty file
+- `mkdir new_folder` — create new directory
+
+---
+
+# 🔍 **Search & Find**
+- `find . -name "*.txt"` — find all `.txt` files recursively
+- `grep "pattern" file.txt` — search inside files
+- `grep -r "pattern" folder/` — recursive grep
+- `grep -i` — case-insensitive search
+
+---
+
+# 🧹 **Disk & File Management**
+- `du -sh *` — show size of all files/folders in current directory
+- `df -h` — show disk space usage
+- `stat filename` — detailed info on file
+
+
+# 📦 **Archiving & Compression**
+- `tar -czvf archive.tar.gz folder/` — compress folder
+- `tar -xzvf archive.tar.gz` — extract compressed folder
+- `zip -r archive.zip folder/` — zip folder
+- `unzip archive.zip` — unzip archive
+
+
+# 🧪 **System Monitoring**
+- `top` — live system processes
+- `htop` — better process viewer (install with `brew install htop`)
+- `ps aux | grep processname` — find running processes
+- `kill PID` — terminate process by PID
+- `uptime` — system uptime
+
+
+# **Other Handy Tools**
+- `history` — command history
+- `!!` — rerun last command
+- `chmod +x script.sh` — make script executable
+- `echo $VAR` — print environment variable
+- `alias ll='ls -lAh'` — create shortcut (add to `.zshrc` or `.bashrc`)
+
+---
 
 # File Manipulation Commands in Unix
 
