@@ -65,6 +65,11 @@ def clean_filesystem(directory):
     remove_empty_folders(directory)
 
 if __name__ == "__main__":
+    """
+        mount
+        diskutil list
+        diskutil partitionDisk /dev/disk2 MBR FAT32 MUSIC 32G free unused 0B
+    """
     import sys
 
     if len(sys.argv) != 2:
