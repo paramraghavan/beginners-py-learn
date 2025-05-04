@@ -131,6 +131,25 @@ find . -name '._*' -type f
 find . -name '._*' -type f -delete
 ```
 
+### find all files that are not *.mp3
+To **list all files except `.mp3` files**, use the following command:
+
+```bash
+find . -type f ! -iname "*.mp3"
+```
+
+### Explanation:
+- `find .` — search recursively from the current directory
+- `-type f` — only include files (not directories)
+- `! -iname "*.mp3"` — exclude files with `.mp3` extension (case-insensitive)
+
+If you want to list them with more details (like `ls -l`), use:
+
+```bash
+find . -type f ! -iname "*.mp3" -exec ls -lh {} +
+```
+
+
 ### Explanation:
 
 - `find .` — starts searching in the current directory.
