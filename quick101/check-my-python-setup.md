@@ -3,8 +3,10 @@
 - python -m site
 - python -m site --user-site
 - pip config list
+- pip -V
 - pip show <package>
 - Check python being used by the current python console/env
+- python -v --> track import sequences in Python code
 
 ```python
 import sys
