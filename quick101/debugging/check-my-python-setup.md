@@ -14,8 +14,8 @@ import sys
 print(sys.executable)
 ```
 
-- [env.md](env.md)
-- [pipenv.md](pipenv.md)
+- [env.md](../env.md)
+- [pipenv.md](../pipenv.md)
 
 ## To list all Python installations on your PC, you can try the following methods:
 
@@ -195,6 +195,8 @@ set PYTHONPATH=C:\path\to\parent\directory;%PYTHONPATH%
 
 ## Debug stacktrace 
 strace -s 1024 > /tmp/why.txt -f python your_script.py
+strace -s 1024 -f python test_jwt.py > /tmp/why.txt 2>&1
+strace -s 1024 -f -o /tmp/why.txt python test_jwt.py
 
 Above command traces system calls made by your Python script with these key elements:
 
@@ -204,3 +206,6 @@ Above command traces system calls made by your Python script with these key elem
 - Traces all system calls made by `python your_script.py`
   The trace output will show every system call, its arguments, and return values, useful for debugging or understanding
   program behavior at the OS level.
+
+## see also
+[debugging-with-python.md](debugging-with-python.md)
