@@ -62,6 +62,9 @@ if __name__=='__main__':
 - on browser localhost:5000
 - on browser localhost:5000/hello/flask
 
+## Also see 
+- [streamlit](..%2Fstreamlit%2Freadme.md)
+
 ## Reference/Interesting Articles:
 - https://www.geeksforgeeks.org/python-introduction-to-web-development-using-flask/
 - https://towardsdatascience.com/build-interactive-charts-using-flask-and-d3-js-70f715a76f93
