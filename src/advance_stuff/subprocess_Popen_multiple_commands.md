@@ -43,8 +43,15 @@ import subprocess
 import os
 
 # Run setup_env.sh first
+# Executes the script in a new subprocess
+# Separate environment - changes don't affect the parent shell
+# Environment variables set in the script are lost when the subprocess ends
 p1 = subprocess.Popen("./setup_env.sh", shell=True)
-p1.wait()
+
+# Blocks execution - your Python script pauses at this line
+# Waits for completion - doesn't return until the subprocess finishes
+# Returns exit code - gives you the process's return code (0 for success, non-zero for failure)
+exit_code = p1.wait()
 
 # Create environment with HADOOP_HOME set
 env = os.environ.copy()
