@@ -206,3 +206,4 @@ if __name__ == "__main__":
     print("- test_given_date(date(2025, 8, 7))")
     print("- test_given_date(datetime(2025, 8, 7, 10, 30))")
     print("- show_business_days_for_month(2025, 8)")
+# or make an array of 5th business day for next 10 years and use it
