@@ -3,6 +3,11 @@
 - python -m site
 - python -m site --user-site
 - pip config list
+- python -m pip config list
+- python -m pip config list -v
+- python -m pip config set key value # updates pip.conf(or pip.ini on Windows), here you set the custom package index URL for pip
+  - for example pip config set global.index-url https://my.private.pypi.org/simple/
+- python -m pip list -v 
 - pip -V
 - pip show <package>
 - Check python being used by the current python console/env
