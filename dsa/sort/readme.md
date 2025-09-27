@@ -1,8 +1,10 @@
-Here’s a simple Python implementation of **Selection Sort**, **Quick Sort**, and **Merge Sort**, along with explanations of their **Big-O complexities**:
+Here’s a simple Python implementation of **Selection Sort**, **Quick Sort**, and **Merge Sort**, along with explanations
+of their **Big-O complexities**:
 
 ---
 
 ## 1. Selection Sort
+![selection_sort_detailed.png](selection_sort_detailed.png)
 
 ```python
 def selection_sort(arr):
@@ -10,12 +12,13 @@ def selection_sort(arr):
     for i in range(n):
         # Assume the min element is at i
         min_idx = i
-        for j in range(i+1, n):
+        for j in range(i + 1, n):
             if arr[j] < arr[min_idx]:
                 min_idx = j
         # Swap the found minimum with the first element
         arr[i], arr[min_idx] = arr[min_idx], arr[i]
     return arr
+
 
 # Example
 print(selection_sort([64, 25, 12, 22, 11]))
@@ -40,7 +43,6 @@ Sorted: [11, 12, 22, 25, 64]
 
 ```
 
-
 **Complexity**:
 
 * Best case: **O(n²)**
@@ -53,16 +55,18 @@ Sorted: [11, 12, 22, 25, 64]
 ---
 
 ## 2. Quick Sort
+![quicksort_detailed.png](quicksort_detailed.png)
 
 ```python
 def quicksort(arr):
     if len(arr) <= 1:
         return arr
-    pivot = arr[len(arr)//2]   # choose middle element as pivot
+    pivot = arr[len(arr) // 2]  # choose middle element as pivot
     left = [x for x in arr if x < pivot]
     middle = [x for x in arr if x == pivot]
     right = [x for x in arr if x > pivot]
     return quicksort(left) + middle + quicksort(right)
+
 
 # Example
 print(quicksort([64, 25, 12, 22, 11]))
@@ -88,9 +92,9 @@ Right = [64, 25, 22]
 
 Now sort Right [64, 25, 22]:
 Pivot = 25
-  Left = [22]
-  Middle = [25]
-  Right = [64]
+Left = [22]
+Middle = [25]
+Right = [64]
 
 → [22, 25, 64]
 
@@ -100,20 +104,23 @@ Left + Middle + Right = [11, 12] + [22, 25, 64]
 Sorted: [11, 12, 22, 25, 64]
 
 ```
+
 ---
 
 ## 3. Merge Sort
+![mergesort_detailed.png](mergesort_detailed.png)
 
 ```python
 def merge_sort(arr):
     if len(arr) <= 1:
         return arr
 
-    mid = len(arr)//2
+    mid = len(arr) // 2
     left = merge_sort(arr[:mid])
     right = merge_sort(arr[mid:])
 
     return merge(left, right)
+
 
 def merge(left, right):
     result = []
@@ -130,6 +137,7 @@ def merge(left, right):
     result.extend(left[i:])
     result.extend(right[j:])
     return result
+
 
 # Example
 print(merge_sort([64, 25, 12, 22, 11]))
@@ -155,26 +163,27 @@ Merge → [25, 64]
 
 Right half [12, 22, 11]:
 Split → [12] + [22, 11]
-        [22, 11] → [22] + [11]
-                   Merge → [11, 22]
+[22, 11] → [22] + [11]
+Merge → [11, 22]
 Merge → [12, 11, 22] → [11, 12, 22]
 
 Final merge:
 [25, 64] + [11, 12, 22]
 → Compare step by step:
-  25 vs 11 → [11]
-  25 vs 12 → [11, 12]
-  25 vs 22 → [11, 12, 22]
-  (Left left: [25, 64]) → add them
-  Final → [11, 12, 22, 25, 64]
+25 vs 11 → [11]
+25 vs 12 → [11, 12]
+25 vs 22 → [11, 12, 22]
+(Left left: [25, 64]) → add them
+Final → [11, 12, 22, 25, 64]
 
 ```
+
 ---
 
 ✅ **Summary Table**
 
 | Algorithm      | Best       | Average    | Worst      | Space    |
-| -------------- | ---------- | ---------- | ---------- | -------- |
+|----------------|------------|------------|------------|----------|
 | Selection Sort | O(n²)      | O(n²)      | O(n²)      | O(1)     |
 | Quick Sort     | O(n log n) | O(n log n) | O(n²)      | O(log n) |
 | Merge Sort     | O(n log n) | O(n log n) | O(n log n) | O(n)     |
