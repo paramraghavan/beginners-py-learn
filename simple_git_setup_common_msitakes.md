@@ -8,6 +8,14 @@ Here's a practical guide for setting up Git and handling common issues:
 - Mac: `brew install git` or install Xcode Command Line Tools
 - Linux: `sudo apt install git` (Ubuntu/Debian) or `sudo yum install git` (RHEL/CentOS)
 
+** Use ssh or https **
+- if you use ssh, you will have to create ssh key and upload the public key to your gitbub account
+
+**show my current .gitconfig file and its location**
+```bash
+git config --global --list --show-origin
+```
+
 **Configure your identity** (required for commits):
 
 ```bash

@@ -4,7 +4,7 @@ of their **Big-O complexities**:
 ---
 
 ## 1. Selection Sort
-![selection_sort_detailed.png](selection_sort_detailed.png)
+<img src="selection_sort_detailed.png" alt="selection sort detailed" width="50%">
 
 ```python
 def selection_sort(arr):
@@ -55,7 +55,7 @@ Sorted: [11, 12, 22, 25, 64]
 ---
 
 ## 2. Quick Sort
-![quicksort_detailed.png](quicksort_detailed.png)
+<img src="quicksort_detailed.png" alt="Quicksort detailed" width="50%">
 
 ```python
 def quicksort(arr):
@@ -108,7 +108,7 @@ Sorted: [11, 12, 22, 25, 64]
 ---
 
 ## 3. Merge Sort
-![mergesort_detailed.png](mergesort_detailed.png)
+<img src="mergesort_detailed.png" alt="Mergesort detailed" width="50%">
 
 ```python
 def merge_sort(arr):
