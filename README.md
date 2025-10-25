@@ -19,6 +19,7 @@ An attempt to teach python to beginners with examples.
 ## GitHub 101
 - [Github 101 ](github-101.md)
 - [How To Use Github - simple use case](how-to-use-github.md)
+- [simple_git_setup_common_msitakes.md](simple_git_setup_common_msitakes.md)
 
 ## Linter and misc
 These are comprehensive code analysis, style guide compliance, code formatter pep8 style fixes and more
@@ -394,6 +395,10 @@ this is a delicious toast
   - multithreading
   - stringbuilder  
 
+## __dunder__ methods and designing apis
+  - [dunder_methods](quick101%2Fdunder-methods%2Freadme.md)
+  - [designing-apis](src%2Fadvance_stuff%2Fapis-how-to%2Freadme.md)
+
 ## [Data Structure and Python](https://towardsdatascience.com/which-python-data-structure-should-you-use-fa1edd82946c)
 ![img.png](img.png)
 - Tuples are immutable, you cannot add, delete, or change items after a tuple is created.
@@ -522,6 +527,7 @@ packages into the wrong Python's site-packages directory.
 ## References
 ----------------------
 - https://github.com/Akuli/python-tutorial **
+- https://developers.google.com/edu/python **
 - https://github.com/OmkarPathak/Python-Programs
 - https://github.com/geekcomputers/Python
 - https://greenteapress.com/thinkpython2/html/thinkpython2002.html
