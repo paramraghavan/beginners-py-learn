@@ -17,8 +17,8 @@ An attempt to teach python to beginners with examples.
 - notepad
 
 ## GitHub 101
-- [Github 101 ](github-101.md)
-- [How To Use Github - simple use case](how-to-use-github.md)
+- [Github 101 ](quick101/how-to-git/github-101.md)
+- [How To Use Github - simple use case](quick101/how-to-git/how-to-use-github.md)
 - [simple_git_setup_common_msitakes.md](simple_git_setup_common_msitakes.md)
 
 ## Linter and misc
