@@ -21,6 +21,9 @@ An attempt to teach python to beginners with examples.
 - [How To Use Github - simple use case](quick101/how-to-git/how-to-use-github.md)
 - [simple_git_setup_common_msitakes.md](simple_git_setup_common_msitakes.md)
 
+## Math for Computer Science
+- https://courses.csail.mit.edu/6.042/spring18/mcs.pdf
+
 ## Linter and misc
 These are comprehensive code analysis, style guide compliance, code formatter pep8 style fixes and more
 These tools do:
