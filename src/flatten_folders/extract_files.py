@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """
-Script to extract files from concatenated text files created by concat_files.py
-Reads the concatenated output and recreates the original file structure.
-
-python ./extract_files.py ./concatenated_output -o ./restored
+Script to rebuild a project's original directory structure from a
+single concatenated bundle file.
 """
 
 import os
@@ -12,164 +10,56 @@ import argparse
 from pathlib import Path
 
 
-def parse_concatenated_file(file_path):
+def extract_from_bundle(bundle_file, output_dir, dry_run=False):
     """
-    Parse a concatenated file and extract individual files.
-    
-    Returns:
-        List of tuples: (relative_path, content)
+    Parses the bundle and recreates directories and files.
     """
-    with open(file_path, 'r', encoding='utf-8') as f:
+    bundle_path = Path(bundle_file)
+    output_base = Path(output_dir)
+
+    if not bundle_path.exists():
+        print(f"Error: Bundle file '{bundle_file}' not found.")
+        return
+
+    # Read the entire bundle into memory for regex processing
+    with open(bundle_path, 'r', encoding='utf-8') as f:
         content = f.read()
-    
-    files = []
-    
-    # Pattern to match file blocks
-    # Looking for: START FILE: {path} ... END FILE: {path}
+
+    # Regex Logic Breakdown:
+    # 1. Look for 50 dashes
+    # 2. Capture the relative path after 'START FILE: '
+    # 3. Use (.*?) to lazily capture all content until the 'END FILE' tag
+    # 4. Use \1 backreference to ensure the END filename matches the START filename
+    # 5. re.DOTALL allows the '.' to match newline characters
     pattern = r'-{50}\nSTART FILE: (.+?)\n-{50}\n(.*?)\n-{50}\nEND FILE: \1\n-{50}'
-    
     matches = re.finditer(pattern, content, re.DOTALL)
-    
+
+    extracted_count = 0
     for match in matches:
-        relative_path = match.group(1).strip()
-        file_content = match.group(2)
-        files.append((relative_path, file_content))
-    
-    return files
+        rel_path_str = match.group(1).strip()  # The captured relative path
+        file_content = match.group(2)  # The captured file content
 
+        # Combine the extraction root with the relative path from the bundle
+        target_path = output_base / rel_path_str
 
-def extract_files(concatenated_dir, output_dir, dry_run=False):
-    """
-    Extract files from concatenated text files.
-    
-    Args:
-        concatenated_dir: Directory containing concatenated files
-        output_dir: Directory to extract files to
-        dry_run: If True, only show what would be extracted without writing
-    """
-    concatenated_dir = Path(concatenated_dir)
-    output_dir = Path(output_dir)
-    
-    if not concatenated_dir.exists():
-        print(f"Error: Concatenated directory '{concatenated_dir}' does not exist.")
-        return 1
-    
-    # Find all .txt files in the concatenated directory
-    concat_files = list(concatenated_dir.glob('*.txt'))
-    
-    if not concat_files:
-        print(f"No .txt files found in '{concatenated_dir}'")
-        return 1
-    
-    print(f"Found {len(concat_files)} concatenated file(s)")
-    print(f"Output directory: {output_dir}")
-    if dry_run:
-        print("DRY RUN - No files will be written\n")
-    else:
-        print()
-    
-    total_files = 0
-    
-    for concat_file in sorted(concat_files):
-        print(f"\nProcessing: {concat_file.name}")
-        
-        try:
-            extracted = parse_concatenated_file(concat_file)
-            
-            if not extracted:
-                print(f"  Warning: No files found in {concat_file.name}")
-                continue
-            
-            print(f"  Found {len(extracted)} file(s)")
-            
-            for relative_path, content in extracted:
-                # Create the full output path
-                output_path = output_dir / relative_path
-                
-                if dry_run:
-                    print(f"    Would extract: {relative_path}")
-                else:
-                    # Create parent directories if needed
-                    output_path.parent.mkdir(parents=True, exist_ok=True)
-                    
-                    # Write the file
-                    with open(output_path, 'w', encoding='utf-8') as f:
-                        f.write(content)
-                    
-                    print(f"    Extracted: {relative_path}")
-                
-                total_files += 1
-        
-        except Exception as e:
-            print(f"  Error processing {concat_file.name}: {e}")
-    
-    print(f"\n{'Would extract' if dry_run else 'Extracted'} {total_files} file(s) total")
-    return 0
+        if dry_run:
+            print(f"Would extract: {rel_path_str}")
+        else:
+            # Recreate the folder structure if it doesn't exist (parents=True)
+            target_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(target_path, 'w', encoding='utf-8') as f:
+                f.write(file_content)
+            print(f"Extracted: {rel_path_str}")
 
+        extracted_count += 1
 
-def main():
-    parser = argparse.ArgumentParser(
-        description='Extract files from concatenated text files created by concat_files.py'
-    )
-    parser.add_argument(
-        'concatenated_dir',
-        help='Path to the directory containing concatenated .txt files (e.g., ./concatenated_output)'
-    )
-    parser.add_argument(
-        '-o', '--output',
-        default='./extracted_files',
-        help='Output directory for extracted files (default: ./extracted_files)'
-    )
-    parser.add_argument(
-        '--dry-run',
-        action='store_true',
-        help='Show what would be extracted without actually writing files'
-    )
-    parser.add_argument(
-        '--file',
-        help='Extract only from a specific concatenated file (e.g., project.txt)'
-    )
-    
-    args = parser.parse_args()
-    
-    concatenated_dir = Path(args.concatenated_dir)
-    
-    # If a specific file is specified, process only that file
-    if args.file:
-        specific_file = concatenated_dir / args.file
-        if not specific_file.exists():
-            print(f"Error: File '{specific_file}' does not exist.")
-            return 1
-        
-        # Temporarily create a list with just this file
-        temp_dir = concatenated_dir
-        print(f"Processing specific file: {args.file}")
-        print(f"Output directory: {args.output}\n")
-        
-        extracted = parse_concatenated_file(specific_file)
-        if not extracted:
-            print(f"No files found in {args.file}")
-            return 1
-        
-        print(f"Found {len(extracted)} file(s)")
-        
-        output_dir = Path(args.output)
-        for relative_path, content in extracted:
-            output_path = output_dir / relative_path
-            
-            if args.dry_run:
-                print(f"  Would extract: {relative_path}")
-            else:
-                output_path.parent.mkdir(parents=True, exist_ok=True)
-                with open(output_path, 'w', encoding='utf-8') as f:
-                    f.write(content)
-                print(f"  Extracted: {relative_path}")
-        
-        print(f"\n{'Would extract' if args.dry_run else 'Extracted'} {len(extracted)} file(s)")
-        return 0
-    
-    return extract_files(concatenated_dir, args.output, args.dry_run)
+    print(f"\nFinished. {'Total files found' if dry_run else 'Total files extracted'}: {extracted_count}")
 
 
 if __name__ == '__main__':
-    exit(main())
+    parser = argparse.ArgumentParser(description='Rebuild project from a single concatenated file.')
+    parser.add_argument('bundle_file', help='The concatenated .txt file')
+    parser.add_argument('-o', '--output', default='./restored_project', help='Where to extract files')
+    parser.add_argument('--dry-run', action='store_true', help='Show what would happen without writing')
+    args = parser.parse_args()
+    extract_from_bundle(args.bundle_file, args.output, args.dry_run)
