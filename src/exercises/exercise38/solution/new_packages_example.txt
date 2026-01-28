@@ -1,0 +1,19 @@
+# Example: List of new packages to install
+# Add one package per line
+# You can also specify version constraints like: package>=1.0,<2.0
+
+requests
+flask
+pandas
+numpy
+boto3
+pyyaml
+python-dateutil
+httpx
+pydantic
+cryptography
+sqlalchemy
+redis
+celery
+fastapi
+uvicorn
