@@ -1,229 +1,266 @@
-# Python Package Compatibility Resolver
+# Package Compatibility Resolver
 
-A script to find compatible versions of new Python packages **without updating any existing installed packages** on your AWS edge node.
+A Python script to find compatible versions when adding new packages to an existing virtual environment.
 
-**Supports custom internal package indexes (not just PyPI).**
+## What It Does
 
-## Quick Start
+```
+pip freeze > exiting_packages.txt
+┌─────────────────────────────────────────────────────────────────┐
+│                         INPUTS                                  │
+├─────────────────────────────────────────────────────────────────┤
+│  existing_packages.txt     +     new_packages.txt               │
+│  (from your venv)                (packages to add)              │
+│                                                                 │
+│  numpy==1.24.0                   scikit-learn                   │
+│  pandas==2.0.0                   matplotlib>=3.5                │
+│  requests==2.28.0                seaborn                        │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    RESOLUTION PROCESS                           │
+├─────────────────────────────────────────────────────────────────┤
+│  1. Creates a temporary isolated virtual environment            │
+│  2. Combines existing + new packages into one requirements      │
+│  3. Installs everything in the temp venv                        │
+│  4. pip's resolver finds compatible versions automatically      │
+│  5. Checks for any dependency conflicts                         │
+│  6. Exports the resolved versions                               │
+│  7. Cleans up temp environment                                  │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                         OUTPUT                                  │
+├─────────────────────────────────────────────────────────────────┤
+│  requirements_resolved.txt                                      │
+│                                                                 │
+│  numpy==1.26.0          ← upgraded for sklearn compatibility    │
+│  pandas==2.0.0          ← unchanged                             │
+│  requests==2.28.0       ← unchanged                             │
+│  scikit-learn==1.3.0    ← new                                   │
+│  matplotlib==3.8.0      ← new                                   │
+│  seaborn==0.13.0        ← new                                   │
+│  ...plus all transitive dependencies                            │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+## Why Use This?
+
+| Problem | Solution |
+|---------|----------|
+| Adding new packages might break existing ones | Tests in isolated environment first |
+| Don't know which versions are compatible | pip's resolver figures it out |
+| Manual trial-and-error takes forever | Automated single command |
+| Afraid to modify production venv | Safe - doesn't touch your real environment |
+
+## Usage
+
+### Step 1: Export Existing Packages
 
 ```bash
-# Using your internal index with installed packages from a file
-python find_compatible_versions.py \
-    --installed-packages-file pip_list_output.txt \
-    --new-packages-file new_packages.txt \
-    --index-url https://your-internal-index.com/simple/ \
-    --trusted-host your-internal-index.com
+# Activate your TARGET virtual environment
+source /path/to/your/venv/bin/activate
+
+# Export installed packages
+pip freeze > existing_packages.txt
+
+# Deactivate (optional)
+deactivate
 ```
 
-## Step-by-Step Usage
-
-### Step 1: Export installed packages from your AWS edge node
-
-On your edge node, run:
-```bash
-pip list > installed_packages.txt
-# OR
-pip freeze > installed_packages.txt
-```
-
-### Step 2: Create your new packages list
-
-Create `new_packages.txt` with one package per line:
-```
-httpx
-celery
-fastapi
-pydantic
-redis
-boto3
-kafka-python
-aiohttp
-sqlalchemy
-paramiko
-python-dotenv
-pyyaml
-cryptography
-uvicorn
-websockets
-```
-
-### Step 3: Run the resolver
+### Step 2: Create New Packages File
 
 ```bash
-python find_compatible_versions.py \
-    --installed-packages-file installed_packages.txt \
-    --new-packages-file new_packages.txt \
-    --index-url https://your-internal-pypi.company.com/simple/ \
-    --trusted-host your-internal-pypi.company.com
+# List packages you want to add (one per line)
+cat > new_packages.txt << EOF
+scikit-learn
+matplotlib>=3.5
+seaborn
+EOF
 ```
 
-### Step 4: Install using generated files
+### Step 3: Run the Resolver
 
 ```bash
-# Option A: Use requirements file with constraints
-pip install -r new_requirements.txt -c current_constraints.txt \
-    --index-url https://your-internal-pypi.company.com/simple/ \
-    --trusted-host your-internal-pypi.company.com
+# Basic usage
+python resolve_packages.py existing_packages.txt new_packages.txt
 
-# Option B: Use generated script
-./install_new_packages.sh
+# With custom index URL
+python resolve_packages.py existing_packages.txt new_packages.txt \
+    --index-url https://your-pypi.com/simple
+
+# With all options
+python resolve_packages.py existing_packages.txt new_packages.txt \
+    --index-url https://your-pypi.com/simple \
+    --output resolved.txt \
+    --strict
 ```
 
-## All Options
+### Step 4: Install Resolved Packages
 
-| Option | Description |
-|--------|-------------|
-| **Package Options** | |
-| `--new-packages` | Space-separated list of packages to install |
-| `--new-packages-file` | File containing new packages (one per line) |
-| `--installed-packages-file` | File with installed packages (pip list/freeze output) |
-| **Index Options** | |
-| `--index-url`, `-i` | Your internal package index URL |
-| `--extra-index-url` | Additional index (use alongside primary) |
-| `--trusted-host` | Skip SSL verification for this host |
-| **Output Options** | |
-| `--constraints-output` | Output constraints file (default: `current_constraints.txt`) |
-| `--requirements-output` | Output requirements file (default: `new_requirements.txt`) |
-| `--script-output` | Output install script (default: `install_new_packages.sh`) |
-| `--generate-pip-conf` | Generate example pip.conf for your index |
-| **Behavior** | |
-| `--dry-run` | Preview only, don't generate files |
-| `--verbose`, `-v` | Show detailed output |
+```bash
+# Activate your TARGET venv again
+source /path/to/your/venv/bin/activate
 
-## Supported Input Formats
+# Install the resolved versions
+pip install -r requirements_resolved.txt --index-url https://your-pypi.com/simple
 
-### Installed Packages File
-
-The script accepts multiple formats:
-
-**pip list format:**
-```
-Package              Version
--------------------- ----------
-boto3                1.26.0
-requests             2.31.0
-numpy                1.24.3
+# Verify no conflicts
+pip check
 ```
 
-**pip freeze format:**
-```
-boto3==1.26.0
-requests==2.31.0
-numpy==1.24.3
-```
-
-**Simple format:**
-```
-boto3 1.26.0
-requests 2.31.0
-numpy 1.24.3
-```
-
-### New Packages File
+## Command Line Options
 
 ```
-# Comments are supported
-httpx
-celery
-fastapi>=0.100.0    # Version constraints work too
-pydantic
+python resolve_packages.py <existing_packages.txt> <new_packages.txt> [OPTIONS]
+
+Arguments:
+    existing_packages.txt   File from 'pip freeze' of your current environment
+    new_packages.txt        File with new packages to add
+
+Options:
+    --index-url URL         Custom PyPI index URL
+    --strict                Keep existing versions pinned exactly (may fail)
+    --output FILE           Output filename (default: requirements_resolved.txt)
+    --help                  Show help message
 ```
+
+## Resolution Strategies
+
+### Flexible (Default)
+
+- Converts `==` to `>=` for existing packages
+- Allows pip to upgrade packages if needed for compatibility
+- **Recommended** - higher success rate
+
+```bash
+python resolve_packages.py existing.txt new.txt
+```
+
+### Strict
+
+- Keeps existing package versions exactly as specified
+- May fail if new packages require different versions
+- Use when you cannot upgrade existing packages
+
+```bash
+python resolve_packages.py existing.txt new.txt --strict
+```
+
+## Output Files
+
+| File | Description |
+|------|-------------|
+| `requirements_resolved.txt` | Final resolved versions - use this to install |
+| `requirements_combined.txt` | Combined input file (for debugging) |
 
 ## Example Output
 
 ```
-============================================================
-PYTHON PACKAGE COMPATIBILITY RESOLVER
-============================================================
+=================================================================
+🐍 Package Compatibility Resolver
+=================================================================
 
-Package Index: https://internal-pypi.company.com/simple/
-Trusted Host: internal-pypi.company.com
+  Existing packages: existing_packages.txt
+  New packages:      new_packages.txt
+  Index URL:         https://pypi.org/simple (default)
+  Strategy:          FLEXIBLE (allow upgrades)
+  Output file:       requirements_resolved.txt
 
-Step 1: Loading currently installed packages...
-  Reading from file: installed_packages.txt
-  Found 45 installed packages
+-----------------------------------------------------------------
+📁 Reading input files...
+-----------------------------------------------------------------
+   Existing packages: 45
+   New packages:      3
 
-Step 2: Creating constraints file...
-Created constraints file with 45 packages: current_constraints.txt
+📦 New packages to add:
+   - scikit-learn
+   - matplotlib
+   - seaborn
 
-  Already installed packages (will be skipped):
-    - requests (2.31.0)
-    - boto3 (1.26.0)
+-----------------------------------------------------------------
+🔄 Resolving dependencies...
+-----------------------------------------------------------------
+📄 Combined requirements: requirements_combined.txt
+🔨 Creating temporary test environment...
+   Upgrading pip...
+   ✅ Test environment ready
 
-Step 3: Resolving compatible versions...
-  New packages to resolve: httpx, celery, fastapi
+📦 Installing packages in test environment...
+   (This may take several minutes)
 
-============================================================
-RESOLUTION RESULTS
-============================================================
+🔍 Checking for dependency conflicts...
+   ✅ No conflicts found
 
-Compatible versions found:
+=================================================================
+✅ SUCCESS!
+=================================================================
 
-  Package                        Version        
-  ------------------------------ ---------------
-  celery                         5.3.1          
-  fastapi                        0.103.0        
-  httpx                          0.24.1         
-  ... (dependencies listed)
+📄 Output: requirements_resolved.txt
 
-  Note: 12 additional dependencies will be installed
+-----------------------------------------------------------------
+📊 CHANGES SUMMARY
+-----------------------------------------------------------------
 
-============================================================
-GENERATING OUTPUT FILES
-============================================================
+   Unchanged: 42
 
-Generated requirements file: new_requirements.txt
-Generated installation script: install_new_packages.sh
+🔄 Version changes (3):
+   numpy: 1.24.0 → 1.26.0
+   scipy: 1.10.0 → 1.11.0
+   threadpoolctl: 3.1.0 → 3.2.0
 
-To install the packages, run:
-  pip install -r new_requirements.txt -c current_constraints.txt --index-url https://internal-pypi.company.com/simple/
+➕ New packages (15):
+   contourpy==1.2.0
+   cycler==0.12.1
+   fonttools==4.47.0
+   joblib==1.3.2
+   ...
 
-Or use the generated script:
-  ./install_new_packages.sh
+-----------------------------------------------------------------
+🚀 INSTALL COMMAND
+-----------------------------------------------------------------
+
+pip install -r requirements_resolved.txt
+
+🧹 Cleaning up...
+
+✅ Done!
 ```
-
-## Output Files Generated
-
-| File | Description |
-|------|-------------|
-| `current_constraints.txt` | All current packages pinned to their versions |
-| `new_requirements.txt` | New packages with resolved compatible versions |
-| `install_new_packages.sh` | Ready-to-run installation script (includes your index URL) |
-| `pip.conf.example` | (Optional) Example pip config for your index |
-
-## How It Works
-
-1. **Reads installed packages** from your provided file (or scans current env)
-2. **Creates constraints file** pinning all existing packages to current versions
-3. **Uses pip's resolver** with `--constraint` flag to find compatible versions
-4. **Queries your internal index** for available package versions
-5. **Generates installation files** with your index URL baked in
-
-## Tips for AWS Edge Nodes
-
-1. **Export packages first**: Run `pip list > installed.txt` on your edge node
-2. **Test with dry-run**: Always preview with `--dry-run` before generating files
-3. **Use trusted-host**: If your internal index uses self-signed certs
-4. **Check network access**: Ensure the resolver machine can reach your index
-5. **Transfer files**: Copy generated files to your edge node for installation
 
 ## Troubleshooting
 
-**"Package not found in index"**
-- Verify the package exists in your internal index
-- Check the package name spelling
-- Try `pip search <package> --index-url <your-url>` to verify
+### "Could not find a version that satisfies the requirement"
 
-**"No compatible version found"**
-- The package requires a newer version of an existing dependency
-- Try installing an older version: `package<=1.0` in your list
+- Check package name spelling
+- Verify index URL is correct and accessible
+- Try removing version constraints from new packages
 
-**Network/SSL errors**
-- Use `--trusted-host` for self-signed certificates
-- Verify the index URL is correct and accessible
+### "Conflicting dependencies"
+
+- Try without `--strict` flag
+- Some packages may have incompatible requirements
+- Check the specific error message for which packages conflict
+
+### Resolution takes too long
+
+- Normal for large environments (50+ packages)
+- Can take 5-15 minutes
+- pip is resolving the entire dependency tree
+
+### Installation fails in target venv
+
+```bash
+# Check what's wrong
+pip check
+
+# See dependency tree
+pip install pipdeptree
+pipdeptree --reverse --packages <problem-package>
+```
 
 ## Requirements
 
-- Python 3.7+
-- pip 21.0+ (for `--report` flag support)
-- Network access to your package index
+- Python 3.6+
+- No external dependencies (uses only standard library + pip)
