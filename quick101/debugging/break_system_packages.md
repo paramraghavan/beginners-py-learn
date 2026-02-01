@@ -1,9 +1,14 @@
-# --break-system-packages - Simple Notes
+# --break-system-packages
 
 ## What It Does
+
 * Install packages individually (bypasses conflict)
 * Allows pip to install packages into system Python (bypassing modern safety checks).
 
+> The **--break-system-packages** flag in Python's pip tool is a command-line option that forces the installation of Python
+> libraries into your system's global Python environment, bypassing modern safety checks designed to protect the OS. It
+> acts as an "escape hatch" to override PEP 668 (Externally Managed Environments), a standard that prevents pip from
+> causing conflicts with packages installed by your operating system's package manager (like apt or pacman).
 
 ## Quick Rule
 
