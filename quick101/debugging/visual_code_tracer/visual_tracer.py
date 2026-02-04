@@ -49,6 +49,8 @@ class Config:
     max_arg_len = 80
     exclude = {"site-packages", "lib/python", "/usr/lib", "<frozen", 
                "flask", "werkzeug", "visual_tracer", "threading", "queue"}
+    include_funcs = None  # If set, only trace these functions (substring match)
+    exclude_funcs = None  # If set, skip these functions (substring match)
 
 cfg = Config()
 
@@ -74,7 +76,19 @@ def _should_trace(path, func):
     for p in cfg.exclude:
         if p in path:
             return False
-    return path.endswith('.py')
+    if not path.endswith('.py'):
+        return False
+    # Check function name filters
+    if cfg.exclude_funcs:
+        for pattern in cfg.exclude_funcs:
+            if pattern.lower() in func.lower():
+                return False
+    if cfg.include_funcs:
+        for pattern in cfg.include_funcs:
+            if pattern.lower() in func.lower():
+                return True
+        return False  # include_funcs set but no match
+    return True
 
 def _trace_fn(frame, event, arg):
     if not cfg.enabled:
@@ -168,6 +182,10 @@ HTML_PAGE = """<!DOCTYPE html>
         .layout{display:flex;height:100vh}
         .sidebar{width:240px;background:#161b22;border-right:1px solid #30363d;display:flex;flex-direction:column}
         .sidebar-header{padding:12px;border-bottom:1px solid #30363d;font-weight:bold;color:#58a6ff}
+        .search-box{padding:10px;border-bottom:1px solid #30363d;background:#21262d}
+        .search-box input{width:100%;padding:8px 12px;background:#0d1117;border:1px solid #30363d;border-radius:4px;color:#c9d1d9;font-size:12px}
+        .search-box input::placeholder{color:#6e7681}
+        .search-box input:focus{outline:none;border-color:#58a6ff}
         .filter-list{flex:1;overflow-y:auto;padding:8px}
         .filter-item{display:flex;align-items:center;padding:6px 8px;border-radius:4px;cursor:pointer;margin-bottom:2px;font-size:12px}
         .filter-item:hover{background:#21262d}
@@ -183,8 +201,12 @@ HTML_PAGE = """<!DOCTYPE html>
         .status.on{background:#3fb950}.status.off{background:#f85149}
         .stats{display:flex;gap:10px;font-size:11px}
         .stats span{background:#21262d;padding:3px 8px;border-radius:4px}
-        .ctrls{display:flex;gap:6px}
+        .ctrls{display:flex;gap:6px;align-items:center}
         .ctrls select,.ctrls button{background:#21262d;color:#c9d1d9;border:1px solid #30363d;padding:4px 10px;border-radius:4px;cursor:pointer}
+        .main-search{flex:1;max-width:300px;margin:0 15px}
+        .main-search input{width:100%;padding:6px 12px;background:#0d1117;border:1px solid #30363d;border-radius:4px;color:#c9d1d9;font-size:12px}
+        .main-search input::placeholder{color:#6e7681}
+        .main-search input:focus{outline:none;border-color:#58a6ff}
         .trace-box{flex:1;overflow:auto;padding:10px}
         .line{display:flex;padding:2px 0}
         .line.hidden{display:none}
@@ -222,6 +244,7 @@ HTML_PAGE = """<!DOCTYPE html>
 <div class="layout">
     <div class="sidebar">
         <div class="sidebar-header">Functions</div>
+        <div class="search-box"><input type="text" id="search" placeholder="🔍 Search functions..."></div>
         <div class="filter-list" id="flist"></div>
         <div class="filter-btns"><button id="btnAll">All</button><button id="btnNone">None</button></div>
     </div>
@@ -229,6 +252,7 @@ HTML_PAGE = """<!DOCTYPE html>
         <div class="header">
             <h1><span class="status" id="st"></span>Tracer</h1>
             <div class="stats"><span>Calls: <b id="nc">0</b></span><span>Visible: <b id="nv">0</b></span></div>
+            <div class="main-search"><input type="text" id="mainSearch" placeholder="🔍 Filter trace..."></div>
             <div class="ctrls">
                 <select id="ed"><option value="vscode">VS Code</option><option value="cursor">Cursor</option><option value="pycharm">PyCharm</option></select>
                 <button id="btnClr">Clear</button>
@@ -247,7 +271,9 @@ var traceBox=document.getElementById('traceBox');
 var flist=document.getElementById('flist');
 var empty=document.getElementById('empty');
 var mbg=document.getElementById('mbg');
-var curFile='', curLine=0;
+var searchBox=document.getElementById('search');
+var mainSearchBox=document.getElementById('mainSearch');
+var curFile='', curLine=0, searchTerm='';
 
 var sse=new EventSource('/stream');
 sse.onopen=function(){document.getElementById('st').className='status on';};
@@ -300,7 +326,11 @@ function render(e){
 }
 
 function isHid(e){
+    // Search filter - hide if doesn't match search term
+    if(searchTerm && e.func_name.toLowerCase().indexOf(searchTerm)===-1) return true;
+    // Manual filter - hide if unchecked
     if(hidden[e.func_name])return true;
+    // Parent filter - hide if parent is hidden
     var p=e.parent_id;
     while(p){var x=calls[p];if(x&&hidden[x.func_name])return true;p=x?x.parent_id:0;}
     return false;
@@ -312,6 +342,8 @@ function updFlist(){
     arr.sort(function(a,b){return b[1]-a[1];});
     for(var i=0;i<arr.length;i++){
         var n=arr[i][0],c=arr[i][1],h=hidden[n];
+        // Skip if doesn't match search
+        if(searchTerm && n.toLowerCase().indexOf(searchTerm)===-1) continue;
         var d=document.createElement('div');
         d.className='filter-item'+(h?' disabled':'');
         d.innerHTML='<input type="checkbox" data-fn="'+esc(n)+'"'+(h?'':' checked')+'><span>'+esc(n)+'</span><span class="cnt" data-f="'+esc(n)+'">'+c+'</span>';
@@ -384,8 +416,11 @@ document.addEventListener('click',function(e){
 
 document.getElementById('btnAll').onclick=function(){hidden={};applyF();updFlist();};
 document.getElementById('btnNone').onclick=function(){for(var n in funcs)hidden[n]=true;applyF();updFlist();};
+searchBox.oninput=function(){searchTerm=this.value.toLowerCase();mainSearchBox.value=this.value;applyF();updFlist();};
+mainSearchBox.oninput=function(){searchTerm=this.value.toLowerCase();searchBox.value=this.value;applyF();updFlist();};
 document.getElementById('btnClr').onclick=function(){
-    evts=[];nc=0;funcs={};hidden={};calls={};
+    evts=[];nc=0;funcs={};hidden={};calls={};searchTerm='';
+    searchBox.value='';mainSearchBox.value='';
     traceBox.querySelectorAll('.line').forEach(function(e){e.remove();});
     flist.innerHTML='';
     document.getElementById('nc').textContent='0';
@@ -517,14 +552,30 @@ def _on_exit():
             print("\n👋 Bye")
 
 
-def trace(port=5050, open_browser=True, keep_alive=True):
-    """Start tracing. Just add: from visual_tracer import trace; trace()"""
+def trace(port=5050, open_browser=True, keep_alive=True, include=None, exclude=None):
+    """
+    Start tracing. Just add: from visual_tracer import trace; trace()
+    
+    Args:
+        port: Server port (default 5050)
+        open_browser: Auto-open browser (default True)
+        keep_alive: Keep server running after script ends (default True)
+        include: Only trace functions matching these patterns (list of strings)
+        exclude: Skip functions matching these patterns (list of strings)
+    
+    Examples:
+        trace()                              # Trace all functions
+        trace(include=['process', 'fetch'])  # Only trace functions containing 'process' or 'fetch'
+        trace(exclude=['helper', 'util'])    # Skip functions containing 'helper' or 'util'
+    """
     _start_server(port)
     
     cfg.enabled = True
     cfg.depth = 0
     cfg.call_stack = []
     cfg.call_counter = 0
+    cfg.include_funcs = include
+    cfg.exclude_funcs = exclude
     
     sys.setprofile(_trace_fn)
     
@@ -551,4 +602,4 @@ if __name__ == '__main__':
     print("Start server: python visual_tracer.py")
     print("Then add to your code: from visual_tracer import trace; trace()")
     app = _create_app()
-    app.run(host='0.0.0.0', port=5052, threaded=True)
+    app.run(host='0.0.0.0', port=5050, threaded=True)
