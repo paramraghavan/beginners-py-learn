@@ -14,6 +14,7 @@ An attempt to teach python to beginners with examples.
 - pycharm community edition - using pycharm
 - visual studio code
 - spyder
+- [simple_python_environment.md](simple_python_environment.md)
 - notepad
 
 ## GitHub 101
