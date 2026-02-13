@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Cheatsheet — Developer & Data Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,wght@0,400;0,600;1,400&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#111214;--bg2:#18191d;--surface:#1e2025;--surface2:#252830;--border:#2e3039;--border2:#3a3d48;--text:#b8bcc8;--text-dim:#6c7086;--heading:#e8eaf0;--white:#f4f5f7;--amber:#f5a623;--amber-dim:rgba(245,166,35,0.12);--green:#50d890;--green-dim:rgba(80,216,144,0.10);--blue:#5b9cf5;--blue-dim:rgba(91,156,245,0.10);--pink:#e878a0;--pink-dim:rgba(232,120,160,0.10);--cyan:#56d4c8;--cyan-dim:rgba(86,212,200,0.10);--red:#f06868;--purple:#a78bfa;--purple-dim:rgba(167,139,250,0.10);--code-bg:#14151a;--radius:10px;--radius-lg:14px}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;overflow-x:hidden}
+.header{padding:48px 32px 32px;text-align:center;position:relative;border-bottom:1px solid var(--border)}.header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 50% 0%,rgba(245,166,35,0.06),transparent),radial-gradient(ellipse 30% 50% at 75% 10%,rgba(80,216,144,0.04),transparent);pointer-events:none}.header h1{font-family:'Newsreader',serif;font-size:clamp(2.2rem,4.5vw,3.6rem);color:var(--heading);letter-spacing:-0.03em;position:relative}.header h1 em{font-style:italic;color:var(--amber);font-weight:400}.header p{font-size:0.95rem;color:var(--text-dim);margin-top:6px;position:relative;font-weight:400}
+.search-wrap{max-width:480px;margin:20px auto 0;position:relative}.search-wrap input{width:100%;padding:10px 16px 10px 40px;background:var(--surface);border:1px solid var(--border);border-radius:999px;color:var(--heading);font-family:'Outfit',sans-serif;font-size:0.88rem;outline:none;transition:border-color .2s}.search-wrap input:focus{border-color:var(--amber)}.search-wrap input::placeholder{color:var(--text-dim)}.search-wrap svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-dim);width:16px;height:16px}
+.nav{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;padding:16px 24px;position:sticky;top:0;z-index:100;background:rgba(17,18,20,0.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}.nav a{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;padding:5px 12px;border-radius:999px;text-decoration:none;color:var(--text-dim);border:1px solid transparent;transition:all .2s;white-space:nowrap}.nav a:hover,.nav a.active{color:var(--amber);border-color:rgba(245,166,35,0.3);background:var(--amber-dim)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:18px;padding:28px 24px 80px;max-width:1520px;margin:0 auto}
+.section-divider{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:24px 0 4px}.section-divider h2{font-family:'Newsreader',serif;font-size:1.6rem;color:var(--heading);white-space:nowrap;font-weight:600;letter-spacing:-0.02em}.section-divider .line{flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}.section-divider .badge{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:3px 10px;border-radius:6px;white-space:nowrap}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:border-color .25s,transform .2s,box-shadow .25s;animation:cardIn .45s ease both}.card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,0.25)}@keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}.card.wide{grid-column:span 2}
+.card-head{display:flex;align-items:center;gap:10px;padding:16px 18px 10px}.card-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;font-weight:600;flex-shrink:0}.card-head h3{font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:700;color:var(--heading);letter-spacing:-0.01em}.card-tag{margin-left:auto;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 8px;border-radius:5px;background:var(--surface2);color:var(--text-dim)}.card-body{padding:0 18px 18px}.card-body>p{font-size:0.8rem;color:var(--text-dim);margin:4px 0 8px;line-height:1.5}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;overflow-x:auto;margin:6px 0;font-size:0.76rem;line-height:1.75}code{font-family:'IBM Plex Mono',monospace;font-size:inherit}pre code{color:var(--text)}
+.kw{color:var(--purple)}.fn{color:var(--green)}.st{color:var(--amber)}.cm{color:var(--text-dim);font-style:italic}.nb{color:var(--cyan)}.op{color:var(--pink)}.num{color:var(--blue)}.dc{color:var(--pink)}
+.tbl{width:100%;border-collapse:collapse;margin:8px 0;font-size:0.76rem}.tbl th{text-align:left;padding:7px 10px;color:var(--text-dim);font-weight:600;font-size:0.68rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border)}.tbl td{padding:6px 10px;border-bottom:1px solid rgba(46,48,57,0.5)}.tbl td code{color:var(--green);font-size:0.74rem}
+@media(max-width:880px){.grid{grid-template-columns:1fr;padding:18px 12px 60px}.card.wide{grid-column:span 1}.header{padding:32px 16px 24px}.nav{gap:4px;padding:12px 10px}}
+.card.hidden{display:none}.section-divider.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="header"><h1>Python <em>Cheatsheet</em></h1><p>Essential reference for Python developers &amp; data engineers</p><div class="search-wrap"><svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input type="text" id="search" placeholder="Search topics… e.g. pandas, spark, airflow, sql" autocomplete="off"></div></div>
+<nav class="nav" id="nav"><a href="#core">Core</a><a href="#strings">Strings</a><a href="#data-structures">Structures</a><a href="#functions">Functions</a><a href="#oop">OOP</a><a href="#comprehensions">Comprehensions</a><a href="#files">File I/O</a><a href="#errors">Errors</a><a href="#sql">SQL</a><a href="#pandas">Pandas</a><a href="#etl">ETL</a><a href="#spark">PySpark</a><a href="#cloud">Cloud</a><a href="#api">APIs</a><a href="#concurrency">Concurrency</a><a href="#validation">Validation</a><a href="#orchestration">Airflow</a><a href="#config">Config</a><a href="#tips">Pro Tips</a></nav>
+<div class="grid" id="grid">
+
+<div class="section-divider" id="core" data-section="core"><h2>Core Python</h2><div class="line"></div><span class="badge" style="background:var(--amber-dim);color:var(--amber)">Fundamentals</span></div>
+
+<div class="card" data-tags="variables types int float str bool none bytes conversion type casting">
+<div class="card-head"><div class="card-icon" style="background:var(--amber-dim);color:var(--amber)">V</div><h3>Variables & Data Types</h3><span class="card-tag">Basics</span></div>
+<div class="card-body"><pre><code><span class="cm"># Dynamic typing</span>
+x = <span class="num">10</span>              <span class="cm"># int</span>
+pi = <span class="num">3.14</span>           <span class="cm"># float</span>
+name = <span class="st">"Alice"</span>      <span class="cm"># str</span>
+active = <span class="nb">True</span>       <span class="cm"># bool</span>
+nothing = <span class="nb">None</span>      <span class="cm"># NoneType</span>
+raw = <span class="st">b"bytes"</span>      <span class="cm"># bytes</span>
+
+<span class="cm"># Type checking & conversion</span>
+<span class="fn">type</span>(x)              <span class="cm"># &lt;class 'int'&gt;</span>
+<span class="fn">isinstance</span>(x, <span class="nb">int</span>)  <span class="cm"># True</span>
+<span class="fn">int</span>(<span class="st">"42"</span>)  /  <span class="fn">str</span>(<span class="num">3.14</span>)  /  <span class="fn">float</span>(<span class="st">"2.7"</span>)
+
+<span class="cm"># Multiple assignment & swap</span>
+a, b, c = <span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>
+a, b = b, a</code></pre></div></div>
+
+<div class="card" data-tags="if else elif ternary for while loop range break continue match case control flow">
+<div class="card-head"><div class="card-icon" style="background:var(--purple-dim);color:var(--purple)">CF</div><h3>Control Flow</h3><span class="card-tag">Basics</span></div>
+<div class="card-body"><pre><code><span class="cm"># Conditionals</span>
+<span class="kw">if</span> x > <span class="num">0</span>:
+    <span class="fn">print</span>(<span class="st">"positive"</span>)
+<span class="kw">elif</span> x == <span class="num">0</span>:
+    <span class="fn">print</span>(<span class="st">"zero"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"negative"</span>)
+
+<span class="cm"># Ternary</span>
+label = <span class="st">"even"</span> <span class="kw">if</span> x % <span class="num">2</span> == <span class="num">0</span> <span class="kw">else</span> <span class="st">"odd"</span>
+
+<span class="cm"># Loops</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):          <span class="cm"># 0..4</span>
+<span class="kw">for</span> k, v <span class="kw">in</span> d.items():      <span class="cm"># dict</span>
+
+<span class="cm"># Match (3.10+)</span>
+<span class="kw">match</span> status:
+    <span class="kw">case</span> <span class="num">200</span>: handle_ok()
+    <span class="kw">case</span> <span class="num">404</span>: not_found()
+    <span class="kw">case</span> _:   error()
+
+<span class="cm"># While</span>
+<span class="kw">while</span> <span class="nb">True</span>:
+    data = fetch()
+    <span class="kw">if not</span> data: <span class="kw">break</span>
+    process(data)</code></pre></div></div>
+
+<div class="section-divider" id="strings" data-section="strings"><h2>Strings</h2><div class="line"></div></div>
+
+<div class="card wide" data-tags="string split join replace strip lower upper fstring format encode regex raw">
+<div class="card-head"><div class="card-icon" style="background:var(--pink-dim);color:var(--pink)">Str</div><h3>String Operations & f-strings</h3><span class="card-tag">Essential</span></div>
+<div class="card-body"><pre><code>s = <span class="st">"Hello, World!"</span>
+
+<span class="cm"># Slicing</span>
+s[<span class="num">0</span>:<span class="num">5</span>]  <span class="cm"># "Hello"</span>         s[::<span class="num">-1</span>]  <span class="cm"># reversed</span>
+
+<span class="cm"># Key methods</span>
+s.<span class="fn">lower</span>() / s.<span class="fn">upper</span>() / s.<span class="fn">title</span>() / s.<span class="fn">strip</span>()
+s.<span class="fn">split</span>(<span class="st">","</span>)            <span class="cm"># ["Hello", " World!"]</span>
+<span class="st">"-"</span>.<span class="fn">join</span>([<span class="st">"a"</span>,<span class="st">"b"</span>])     <span class="cm"># "a-b"</span>
+s.<span class="fn">replace</span>(<span class="st">"World"</span>, <span class="st">"Python"</span>)
+s.<span class="fn">startswith</span>(<span class="st">"He"</span>) / s.<span class="fn">endswith</span>(<span class="st">"!"</span>)
+s.<span class="fn">find</span>(<span class="st">"World"</span>)         <span class="cm"># 7 (-1 if missing)</span>
+s.<span class="fn">encode</span>(<span class="st">"utf-8"</span>)       <span class="cm"># bytes — pipelines</span>
+
+<span class="cm"># f-strings (3.6+)</span>
+<span class="st">f"</span><span class="st">{name} is {age} years old"</span>
+<span class="st">f"</span><span class="st">{3.14159:.2f}"</span>       <span class="cm"># "3.14"</span>
+<span class="st">f"</span><span class="st">{1_000_000:,}"</span>      <span class="cm"># "1,000,000"</span>
+<span class="st">f"</span><span class="st">{x = }"</span>             <span class="cm"># "x = 42" (3.8+)</span>
+
+<span class="cm"># Raw strings — regex & paths</span>
+path = <span class="st">r"C:\data\files"</span>
+pattern = <span class="st">r"\d{4}-\d{2}-\d{2}"</span></code></pre></div></div>
+
+<div class="section-divider" id="data-structures" data-section="data-structures"><h2>Data Structures</h2><div class="line"></div></div>
+
+<div class="card" data-tags="list append insert pop remove sort sorted slice unpack extend">
+<div class="card-head"><div class="card-icon" style="background:var(--green-dim);color:var(--green)">[]</div><h3>Lists</h3><span class="card-tag">Core</span></div>
+<div class="card-body"><pre><code>lst = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>]
+
+lst.<span class="fn">append</span>(<span class="num">6</span>)        <span class="cm"># add to end</span>
+lst.<span class="fn">insert</span>(<span class="num">0</span>, <span class="num">0</span>)     <span class="cm"># at position</span>
+lst.<span class="fn">extend</span>([<span class="num">7</span>,<span class="num">8</span>])    <span class="cm"># merge</span>
+lst.<span class="fn">pop</span>() / lst.<span class="fn">pop</span>(<span class="num">0</span>)
+lst.<span class="fn">remove</span>(<span class="num">3</span>)         <span class="cm"># first match</span>
+
+<span class="cm"># Search & Sort</span>
+<span class="num">3</span> <span class="kw">in</span> lst             <span class="cm"># True</span>
+lst.<span class="fn">sort</span>(key=<span class="kw">lambda</span> x: -x)
+<span class="fn">sorted</span>(lst)          <span class="cm"># new list</span>
+
+<span class="cm"># Slicing</span>
+lst[<span class="num">1</span>:<span class="num">4</span>]  <span class="cm"># [2,3,4]</span>
+lst[::<span class="num">-1</span>] <span class="cm"># reversed</span>
+
+<span class="cm"># Unpacking</span>
+first, *rest = lst
+a, b, *_ = lst</code></pre></div></div>
+
+<div class="card" data-tags="dict dictionary get set pop update items keys values defaultdict counter set union intersection namedtuple tuple">
+<div class="card-head"><div class="card-icon" style="background:var(--blue-dim);color:var(--blue)">{}</div><h3>Dicts, Sets & Tuples</h3><span class="card-tag">Core</span></div>
+<div class="card-body"><pre><code><span class="cm"># Dictionary</span>
+d = {<span class="st">"name"</span>: <span class="st">"Alice"</span>, <span class="st">"age"</span>: <span class="num">30</span>}
+d[<span class="st">"name"</span>]                 <span class="cm"># "Alice"</span>
+d.<span class="fn">get</span>(<span class="st">"email"</span>, <span class="st">"N/A"</span>)    <span class="cm"># safe</span>
+d | {<span class="st">"x"</span>: <span class="num">1</span>}             <span class="cm"># merge (3.9+)</span>
+d.<span class="fn">setdefault</span>(<span class="st">"k"</span>, [])    <span class="cm"># get or init</span>
+
+<span class="cm"># defaultdict — no KeyError</span>
+<span class="kw">from</span> collections <span class="kw">import</span> defaultdict
+dd = <span class="fn">defaultdict</span>(<span class="nb">list</span>)
+dd[<span class="st">"key"</span>].<span class="fn">append</span>(<span class="num">1</span>)
+
+<span class="cm"># Sets — dedup & lookup</span>
+s1 <span class="op">&</span> s2  <span class="cm"># intersect</span>
+s1 <span class="op">|</span> s2  <span class="cm"># union</span>
+s1 <span class="op">-</span> s2  <span class="cm"># diff</span>
+
+<span class="cm"># Named tuples</span>
+<span class="kw">from</span> collections <span class="kw">import</span> namedtuple
+Row = <span class="fn">namedtuple</span>(<span class="st">"Row"</span>,[<span class="st">"id"</span>,<span class="st">"name"</span>,<span class="st">"val"</span>])
+r = Row(<span class="num">1</span>, <span class="st">"sensor"</span>, <span class="num">42.5</span>)</code></pre></div></div>
+
+<div class="section-divider" id="functions" data-section="functions"><h2>Functions</h2><div class="line"></div></div>
+
+<div class="card" data-tags="function def lambda map filter reduce args kwargs type hints return optional">
+<div class="card-head"><div class="card-icon" style="background:var(--cyan-dim);color:var(--cyan)">λ</div><h3>Functions & Lambdas</h3><span class="card-tag">Core</span></div>
+<div class="card-body"><pre><code><span class="kw">def</span> <span class="fn">transform</span>(record, mapping=<span class="nb">None</span>):
+    <span class="st">"""Transform a single record."""</span>
+    mapping = mapping <span class="kw">or</span> {}
+    <span class="kw">return</span> {mapping.<span class="fn">get</span>(k,k): v
+            <span class="kw">for</span> k, v <span class="kw">in</span> record.items()}
+
+<span class="cm"># *args and **kwargs</span>
+<span class="kw">def</span> <span class="fn">flex</span>(*args, **kwargs): ...
+
+<span class="cm"># Lambda & higher-order</span>
+<span class="fn">list</span>(<span class="fn">map</span>(<span class="kw">lambda</span> x: x*<span class="num">2</span>, [<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>]))
+<span class="fn">list</span>(<span class="fn">filter</span>(<span class="kw">lambda</span> x: x><span class="num">2</span>, [<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>]))
+
+<span class="cm"># Type hints</span>
+<span class="kw">from</span> typing <span class="kw">import</span> Optional
+<span class="kw">def</span> <span class="fn">process</span>(data: <span class="nb">list</span>[<span class="nb">dict</span>]) -> <span class="nb">list</span>[<span class="nb">dict</span>]:
+    <span class="kw">return</span> [clean(r) <span class="kw">for</span> r <span class="kw">in</span> data]</code></pre></div></div>
+
+<div class="card" data-tags="decorator retry generator yield lazy memory streaming pipeline wraps">
+<div class="card-head"><div class="card-icon" style="background:var(--amber-dim);color:var(--amber)">@</div><h3>Decorators & Generators</h3><span class="card-tag">Intermediate</span></div>
+<div class="card-body"><pre><code><span class="cm"># Retry decorator</span>
+<span class="kw">from</span> functools <span class="kw">import</span> wraps
+<span class="kw">def</span> <span class="fn">retry</span>(n=<span class="num">3</span>, delay=<span class="num">1</span>):
+    <span class="kw">def</span> <span class="fn">dec</span>(func):
+        <span class="dc">@wraps</span>(func)
+        <span class="kw">def</span> <span class="fn">wrap</span>(*a, **kw):
+            <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n):
+                <span class="kw">try</span>: <span class="kw">return</span> <span class="fn">func</span>(*a,**kw)
+                <span class="kw">except</span>:
+                    <span class="kw">if</span> i==n-<span class="num">1</span>: <span class="kw">raise</span>
+                    time.<span class="fn">sleep</span>(delay*<span class="num">2</span>**i)
+        <span class="kw">return</span> wrap
+    <span class="kw">return</span> dec
+
+<span class="cm"># Generator — stream large files</span>
+<span class="kw">def</span> <span class="fn">read_chunks</span>(path, sz=<span class="num">8192</span>):
+    <span class="kw">with</span> <span class="fn">open</span>(path) <span class="kw">as</span> f:
+        <span class="kw">while</span> chunk := f.<span class="fn">read</span>(sz):
+            <span class="kw">yield</span> chunk
+
+<span class="cm"># Generator pipeline (lazy)</span>
+lines = (l.<span class="fn">strip</span>() <span class="kw">for</span> l <span class="kw">in</span> <span class="fn">open</span>(<span class="st">"big.csv"</span>))
+rows  = (l.<span class="fn">split</span>(<span class="st">","</span>) <span class="kw">for</span> l <span class="kw">in</span> lines)
+valid = (r <span class="kw">for</span> r <span class="kw">in</span> rows <span class="kw">if</span> <span class="fn">len</span>(r)==<span class="num">5</span>)</code></pre></div></div>
+
+<div class="section-divider" id="oop" data-section="oop"><h2>OOP & Data Models</h2><div class="line"></div></div>
+
+<div class="card wide" data-tags="class dataclass pydantic inheritance abstract abc validator schema model">
+<div class="card-head"><div class="card-icon" style="background:var(--purple-dim);color:var(--purple)">C</div><h3>Dataclasses, Pydantic & ABC</h3><span class="card-tag">OOP</span></div>
+<div class="card-body"><pre><code><span class="cm"># Dataclass (3.7+)</span>
+<span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass, field, asdict
+
+<span class="dc">@dataclass</span>
+<span class="kw">class</span> <span class="fn">PipelineConfig</span>:
+    source: <span class="nb">str</span>
+    destination: <span class="nb">str</span>
+    batch_size: <span class="nb">int</span> = <span class="num">1000</span>
+    tags: <span class="nb">list</span> = <span class="fn">field</span>(default_factory=<span class="nb">list</span>)
+
+cfg = PipelineConfig(<span class="st">"s3://in"</span>, <span class="st">"pg://db"</span>)
+<span class="fn">asdict</span>(cfg)   <span class="cm"># → dict</span>
+
+<span class="cm"># Pydantic — validation</span>
+<span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel, field_validator
+
+<span class="kw">class</span> <span class="fn">EventSchema</span>(BaseModel):
+    event_id: <span class="nb">str</span>
+    timestamp: datetime
+    value: <span class="nb">float</span>
+
+    <span class="dc">@field_validator</span>(<span class="st">"value"</span>)
+    <span class="dc">@classmethod</span>
+    <span class="kw">def</span> <span class="fn">positive</span>(cls, v):
+        <span class="kw">if</span> v < <span class="num">0</span>: <span class="kw">raise</span> ValueError(<span class="st">"must be >= 0"</span>)
+        <span class="kw">return</span> v
+
+<span class="cm"># Abstract base class</span>
+<span class="kw">from</span> abc <span class="kw">import</span> ABC, abstractmethod
+<span class="kw">class</span> <span class="fn">BaseExtractor</span>(ABC):
+    <span class="dc">@abstractmethod</span>
+    <span class="kw">def</span> <span class="fn">extract</span>(self) -> <span class="nb">list</span>[<span class="nb">dict</span>]: ...</code></pre></div></div>
+
+<div class="section-divider" id="comprehensions" data-section="comprehensions"><h2>Comprehensions</h2><div class="line"></div></div>
+
+<div class="card wide" data-tags="list dict set comprehension walrus nested flatten conditional">
+<div class="card-head"><div class="card-icon" style="background:var(--green-dim);color:var(--green)">[x]</div><h3>List, Dict & Set Comprehensions</h3><span class="card-tag">Pythonic</span></div>
+<div class="card-body"><pre><code>squares = [x**<span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)]
+evens   = [x <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20</span>) <span class="kw">if</span> x % <span class="num">2</span> == <span class="num">0</span>]
+flat    = [x <span class="kw">for</span> row <span class="kw">in</span> matrix <span class="kw">for</span> x <span class="kw">in</span> row]
+
+<span class="cm"># Dict — column renaming</span>
+col_map = {c: c.<span class="fn">lower</span>().<span class="fn">replace</span>(<span class="st">" "</span>,<span class="st">"_"</span>) <span class="kw">for</span> c <span class="kw">in</span> cols}
+
+<span class="cm"># Set</span>
+types = {<span class="fn">type</span>(v).__name__ <span class="kw">for</span> v <span class="kw">in</span> data.values()}
+
+<span class="cm"># Walrus (3.8+)</span>
+results = [y <span class="kw">for</span> x <span class="kw">in</span> data <span class="kw">if</span> (y := clean(x)) <span class="kw">is not</span> <span class="nb">None</span>]</code></pre></div></div>
+
+<div class="section-divider" id="files" data-section="files"><h2>File I/O & Serialization</h2><div class="line"></div></div>
+
+<div class="card wide" data-tags="file read write open json csv yaml pathlib glob path serialize pickle">
+<div class="card-head"><div class="card-icon" style="background:var(--amber-dim);color:var(--amber)">IO</div><h3>Files, JSON, CSV, YAML & Paths</h3><span class="card-tag">I/O</span></div>
+<div class="card-body"><pre><code><span class="cm"># Read / Write</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"f.txt"</span>) <span class="kw">as</span> f: content = f.<span class="fn">read</span>()
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"out.txt"</span>,<span class="st">"w"</span>) <span class="kw">as</span> f: f.<span class="fn">write</span>(<span class="st">"data\n"</span>)
+
+<span class="cm"># Large file line-by-line</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"huge.csv"</span>) <span class="kw">as</span> f:
+    <span class="kw">for</span> line <span class="kw">in</span> f: process(line)
+
+<span class="cm"># JSON</span>
+<span class="kw">import</span> json
+data = json.<span class="fn">loads</span>(s)
+s = json.<span class="fn">dumps</span>(data, indent=<span class="num">2</span>, default=<span class="nb">str</span>)
+
+<span class="cm"># CSV</span>
+<span class="kw">import</span> csv
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"d.csv"</span>) <span class="kw">as</span> f:
+    <span class="kw">for</span> row <span class="kw">in</span> csv.<span class="fn">DictReader</span>(f): <span class="fn">print</span>(row)
+
+<span class="cm"># YAML</span>
+<span class="kw">import</span> yaml
+config = yaml.<span class="fn">safe_load</span>(<span class="fn">open</span>(<span class="st">"c.yaml"</span>))
+
+<span class="cm"># pathlib</span>
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+p = Path(<span class="st">"data"</span>) / <span class="st">"raw"</span> / <span class="st">"file.csv"</span>
+p.<span class="fn">exists</span>() / p.<span class="fn">read_text</span>() / p.stem / p.suffix
+<span class="fn">list</span>(Path(<span class="st">"."</span>).<span class="fn">glob</span>(<span class="st">"**/*.csv"</span>))
+p.<span class="fn">mkdir</span>(parents=<span class="nb">True</span>, exist_ok=<span class="nb">True</span>)</code></pre></div></div>
+
+<div class="section-divider" id="errors" data-section="errors"><h2>Errors & Logging</h2><div class="line"></div></div>
+
+<div class="card wide" data-tags="try except error exception raise custom logging logger structlog context manager">
+<div class="card-head"><div class="card-icon" style="background:rgba(240,104,104,0.12);color:var(--red)">!</div><h3>Exception Handling & Logging</h3><span class="card-tag">Essential</span></div>
+<div class="card-body"><pre><code><span class="kw">try</span>:
+    result = <span class="num">10</span> / x
+<span class="kw">except</span> ZeroDivisionError:
+    <span class="fn">print</span>(<span class="st">"div by zero"</span>)
+<span class="kw">except</span> (ValueError, KeyError) <span class="kw">as</span> e:
+    log.<span class="fn">error</span>(<span class="st">"Err: %s"</span>, e)
+<span class="kw">except</span> Exception <span class="kw">as</span> e:
+    log.<span class="fn">error</span>(<span class="st">"Fatal"</span>, exc_info=<span class="nb">True</span>); <span class="kw">raise</span>
+<span class="kw">else</span>:    save(result)     <span class="cm"># no error</span>
+<span class="kw">finally</span>: cleanup()        <span class="cm"># always</span>
+
+<span class="cm"># Custom pipeline exceptions</span>
+<span class="kw">class</span> <span class="fn">PipelineError</span>(Exception): ...
+<span class="kw">class</span> <span class="fn">ExtractionError</span>(PipelineError): ...
+
+<span class="cm"># Context manager</span>
+<span class="kw">from</span> contextlib <span class="kw">import</span> contextmanager
+<span class="dc">@contextmanager</span>
+<span class="kw">def</span> <span class="fn">db_tx</span>(conn):
+    <span class="kw">try</span>: <span class="kw">yield</span> conn.<span class="fn">cursor</span>(); conn.<span class="fn">commit</span>()
+    <span class="kw">except</span>: conn.<span class="fn">rollback</span>(); <span class="kw">raise</span>
+
+<span class="cm"># Logging setup</span>
+<span class="kw">import</span> logging
+logging.<span class="fn">basicConfig</span>(level=logging.INFO,
+    format=<span class="st">"%(asctime)s | %(levelname)-8s | %(message)s"</span>)
+log = logging.<span class="fn">getLogger</span>(<span class="st">"etl"</span>)
+log.<span class="fn">info</span>(<span class="st">"Loaded %d rows"</span>, count)</code></pre></div></div>
+
+<div class="section-divider" id="sql" data-section="sql"><h2>SQL & Databases</h2><div class="line"></div><span class="badge" style="background:var(--green-dim);color:var(--green)">Data Eng</span></div>
+
+<div class="card" data-tags="sqlite sql database query create insert parameterized cursor">
+<div class="card-head"><div class="card-icon" style="background:var(--blue-dim);color:var(--blue)">db</div><h3>SQLite</h3><span class="card-tag">Built-in</span></div>
+<div class="card-body"><pre><code><span class="kw">import</span> sqlite3
+conn = sqlite3.<span class="fn">connect</span>(<span class="st">"data.db"</span>)
+conn.row_factory = sqlite3.Row
+cur = conn.<span class="fn">cursor</span>()
+
+cur.<span class="fn">execute</span>(<span class="st">"""CREATE TABLE IF NOT EXISTS
+    events (id INTEGER PRIMARY KEY,
+            name TEXT, value REAL)"""</span>)
+
+<span class="cm"># Parameterized (NEVER f-strings!)</span>
+cur.<span class="fn">execute</span>(<span class="st">"INSERT INTO events VALUES (?,?,?)"</span>,
+    (<span class="num">1</span>, <span class="st">"temp"</span>, <span class="num">23.5</span>))
+cur.<span class="fn">executemany</span>(<span class="st">"INSERT INTO events VALUES (?,?,?)"</span>, batch)
+conn.<span class="fn">commit</span>()
+
+rows = cur.<span class="fn">execute</span>(
+    <span class="st">"SELECT * FROM events WHERE value > ?"</span>,
+    (<span class="num">20</span>,)).<span class="fn">fetchall</span>()</code></pre></div></div>
+
+<div class="card" data-tags="sqlalchemy postgres psycopg2 engine connection pool bulk insert copy execute values pandas">
+<div class="card-head"><div class="card-icon" style="background:var(--cyan-dim);color:var(--cyan)">SA</div><h3>SQLAlchemy & PostgreSQL</h3><span class="card-tag">Production</span></div>
+<div class="card-body"><pre><code><span class="kw">from</span> sqlalchemy <span class="kw">import</span> create_engine, text
+engine = <span class="fn">create_engine</span>(
+    <span class="st">"postgresql://u:pw@host/db"</span>, pool_size=<span class="num">10</span>)
+
+<span class="kw">with</span> engine.<span class="fn">connect</span>() <span class="kw">as</span> c:
+    rows = c.<span class="fn">execute</span>(<span class="fn">text</span>(
+        <span class="st">"SELECT * FROM t WHERE age > :a"</span>),
+        {<span class="st">"a"</span>:<span class="num">25</span>}).<span class="fn">mappings</span>().<span class="fn">all</span>()
+
+<span class="cm"># Pandas ↔ SQL</span>
+df = pd.<span class="fn">read_sql</span>(<span class="st">"SELECT * FROM t"</span>, engine)
+df.<span class="fn">to_sql</span>(<span class="st">"clean"</span>, engine, if_exists=<span class="st">"replace"</span>,
+    index=<span class="nb">False</span>, method=<span class="st">"multi"</span>, chunksize=<span class="num">5000</span>)
+
+<span class="cm"># psycopg2 — COPY (fastest)</span>
+<span class="kw">from</span> psycopg2.extras <span class="kw">import</span> execute_values
+<span class="fn">execute_values</span>(cur,
+    <span class="st">"INSERT INTO t (a,b) VALUES %s"</span>, data)
+cur.<span class="fn">copy_expert</span>(
+    <span class="st">"COPY t FROM STDIN CSV HEADER"</span>, f)</code></pre></div></div>
+
+<div class="section-divider" id="pandas" data-section="pandas"><h2>Pandas</h2><div class="line"></div><span class="badge" style="background:var(--blue-dim);color:var(--blue)">Data Eng</span></div>
+
+<div class="card" data-tags="pandas dataframe read csv parquet json sql inspect shape dtypes info describe head memory">
+<div class="card-head"><div class="card-icon" style="background:var(--blue-dim);color:var(--blue)">pd</div><h3>Create & Inspect</h3><span class="card-tag">Pandas</span></div>
+<div class="card-body"><pre><code><span class="kw">import</span> pandas <span class="kw">as</span> pd
+
+df = pd.<span class="fn">read_csv</span>(<span class="st">"data.csv"</span>)
+df = pd.<span class="fn">read_json</span>(<span class="st">"d.json"</span>, lines=<span class="nb">True</span>)
+df = pd.<span class="fn">read_parquet</span>(<span class="st">"d.parquet"</span>)
+df = pd.<span class="fn">read_sql</span>(<span class="st">"SELECT * FROM t"</span>, engine)
+
+df.<span class="fn">head</span>(<span class="num">10</span>)  /  df.<span class="fn">shape</span>  /  df.<span class="fn">dtypes</span>
+df.<span class="fn">info</span>()   /  df.<span class="fn">describe</span>()
+df.<span class="fn">memory_usage</span>(deep=<span class="nb">True</span>)
+df.<span class="fn">isnull</span>().<span class="fn">sum</span>()  /  df.<span class="fn">nunique</span>()</code></pre></div></div>
+
+<div class="card" data-tags="pandas filter select loc iloc query sort apply map where column transform datetime">
+<div class="card-head"><div class="card-icon" style="background:var(--pink-dim);color:var(--pink)">pd</div><h3>Select, Filter & Transform</h3><span class="card-tag">Pandas</span></div>
+<div class="card-body"><pre><code>df[<span class="st">"col"</span>]  /  df[[<span class="st">"a"</span>,<span class="st">"b"</span>]]
+df.<span class="fn">loc</span>[<span class="num">0</span>:<span class="num">5</span>, <span class="st">"name"</span>]   <span class="cm"># label</span>
+df.<span class="fn">iloc</span>[<span class="num">0</span>:<span class="num">5</span>, <span class="num">0</span>:<span class="num">2</span>]    <span class="cm"># position</span>
+
+df[df[<span class="st">"age"</span>] > <span class="num">25</span>]
+df.<span class="fn">query</span>(<span class="st">"age > 25 and city == 'NYC'"</span>)
+
+df[<span class="st">"name"</span>] = df[<span class="st">"name"</span>].<span class="fn">str</span>.<span class="fn">lower</span>()
+df[<span class="st">"flag"</span>] = np.<span class="fn">where</span>(df[<span class="st">"x"</span>]><span class="num">0</span>, <span class="num">1</span>, <span class="num">0</span>)
+df[<span class="st">"date"</span>] = pd.<span class="fn">to_datetime</span>(df[<span class="st">"ds"</span>])
+df[<span class="st">"yr"</span>] = df[<span class="st">"date"</span>].dt.year
+df[<span class="st">"cat"</span>] = df[<span class="st">"raw"</span>].<span class="fn">map</span>({<span class="st">"A"</span>:<span class="st">"alpha"</span>})</code></pre></div></div>
+
+<div class="card wide" data-tags="pandas groupby agg pivot merge join concat clean dropna fillna duplicates rename parquet save chunksize">
+<div class="card-head"><div class="card-icon" style="background:var(--green-dim);color:var(--green)">pd</div><h3>GroupBy, Merge, Clean & Export</h3><span class="card-tag">Pandas</span></div>
+<div class="card-body"><pre><code><span class="cm"># GroupBy</span>
+df.<span class="fn">groupby</span>(<span class="st">"city"</span>)[<span class="st">"rev"</span>].<span class="fn">agg</span>([<span class="st">"sum"</span>,<span class="st">"mean"</span>,<span class="st">"count"</span>])
+df.<span class="fn">groupby</span>(<span class="st">"dept"</span>)[<span class="st">"salary"</span>].<span class="fn">transform</span>(<span class="st">"mean"</span>)
+pd.<span class="fn">pivot_table</span>(df, values=<span class="st">"sales"</span>, index=<span class="st">"region"</span>, columns=<span class="st">"qtr"</span>, aggfunc=<span class="st">"sum"</span>)
+
+<span class="cm"># Merge</span>
+pd.<span class="fn">merge</span>(df1, df2, on=<span class="st">"id"</span>, how=<span class="st">"left"</span>)
+pd.<span class="fn">concat</span>([df1, df2], ignore_index=<span class="nb">True</span>)
+
+<span class="cm"># Clean</span>
+df.<span class="fn">dropna</span>(subset=[<span class="st">"id"</span>])  /  df.<span class="fn">fillna</span>({<span class="st">"score"</span>:<span class="num">0</span>})
+df.<span class="fn">drop_duplicates</span>(subset=[<span class="st">"id"</span>], keep=<span class="st">"last"</span>)
+df.<span class="fn">rename</span>(columns={<span class="st">"old"</span>:<span class="st">"new"</span>})
+df.<span class="fn">astype</span>({<span class="st">"age"</span>:<span class="nb">int</span>, <span class="st">"name"</span>:<span class="st">"string"</span>})
+
+<span class="cm"># Chunked reading</span>
+<span class="kw">for</span> chunk <span class="kw">in</span> pd.<span class="fn">read_csv</span>(<span class="st">"huge.csv"</span>, chunksize=<span class="num">100_000</span>):
+    process(chunk)
+
+<span class="cm"># Export</span>
+df.<span class="fn">to_csv</span>(<span class="st">"out.csv"</span>, index=<span class="nb">False</span>)
+df.<span class="fn">to_parquet</span>(<span class="st">"out.parquet"</span>, compression=<span class="st">"snappy"</span>)
+df.<span class="fn">to_json</span>(<span class="st">"out.jsonl"</span>, orient=<span class="st">"records"</span>, lines=<span class="nb">True</span>)</code></pre></div></div>
+
+<div class="section-divider" id="etl" data-section="etl"><h2>ETL Patterns</h2><div class="line"></div><span class="badge" style="background:var(--amber-dim);color:var(--amber)">Pipeline</span></div>
+
+<div class="card" data-tags="etl extract transform load pipeline class pattern batch process">
+<div class="card-head"><div class="card-icon" style="background:var(--amber-dim);color:var(--amber)">ET</div><h3>ETL Pipeline Class</h3><span class="card-tag">Pattern</span></div>
+<div class="card-body"><pre><code><span class="kw">class</span> <span class="fn">ETLPipeline</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, cfg):
+        self.cfg = cfg
+        self.stats = {<span class="st">"in"</span>:<span class="num">0</span>,<span class="st">"out"</span>:<span class="num">0</span>,<span class="st">"err"</span>:<span class="num">0</span>}
+
+    <span class="kw">def</span> <span class="fn">extract</span>(self):
+        raw = fetch(self.cfg[<span class="st">"source"</span>])
+        self.stats[<span class="st">"in"</span>] = <span class="fn">len</span>(raw)
+        <span class="kw">return</span> raw
+
+    <span class="kw">def</span> <span class="fn">transform</span>(self, raw):
+        out = []
+        <span class="kw">for</span> r <span class="kw">in</span> raw:
+            <span class="kw">try</span>:
+                out.<span class="fn">append</span>(clean(r))
+            <span class="kw">except</span>:
+                self.stats[<span class="st">"err"</span>] += <span class="num">1</span>
+        self.stats[<span class="st">"out"</span>] = <span class="fn">len</span>(out)
+        <span class="kw">return</span> out
+
+    <span class="kw">def</span> <span class="fn">load</span>(self, data):
+        bulk_insert(self.cfg[<span class="st">"dest"</span>], data)
+
+    <span class="kw">def</span> <span class="fn">run</span>(self):
+        self.<span class="fn">load</span>(self.<span class="fn">transform</span>(self.<span class="fn">extract</span>()))
+        log.<span class="fn">info</span>(<span class="st">"Done: %s"</span>, self.stats)</code></pre></div></div>
+
+<div class="card" data-tags="batch islice chunk dead letter queue dlq error handling pattern">
+<div class="card-head"><div class="card-icon" style="background:var(--pink-dim);color:var(--pink)">B</div><h3>Batching & Dead Letter Queue</h3><span class="card-tag">Pattern</span></div>
+<div class="card-body"><pre><code><span class="kw">from</span> itertools <span class="kw">import</span> islice
+
+<span class="kw">def</span> <span class="fn">batched</span>(iterable, n):
+    it = <span class="fn">iter</span>(iterable)
+    <span class="kw">while</span> b := <span class="fn">list</span>(<span class="fn">islice</span>(it, n)):
+        <span class="kw">yield</span> b
+
+<span class="kw">for</span> batch <span class="kw">in</span> <span class="fn">batched</span>(records, <span class="num">5000</span>):
+    bulk_insert(db, batch)
+
+<span class="cm"># Dead Letter Queue</span>
+<span class="kw">def</span> <span class="fn">process_dlq</span>(records, proc):
+    ok, fail = <span class="num">0</span>, <span class="num">0</span>
+    <span class="kw">with</span> <span class="fn">open</span>(<span class="st">"dlq.jsonl"</span>,<span class="st">"a"</span>) <span class="kw">as</span> dlq:
+        <span class="kw">for</span> r <span class="kw">in</span> records:
+            <span class="kw">try</span>:
+                <span class="fn">proc</span>(r); ok += <span class="num">1</span>
+            <span class="kw">except</span> Exception <span class="kw">as</span> e:
+                fail += <span class="num">1</span>
+                dlq.<span class="fn">write</span>(json.<span class="fn">dumps</span>({
+                    <span class="st">"rec"</span>:r, <span class="st">"err"</span>:<span class="fn">str</span>(e)
+                })+<span class="st">"\n"</span>)</code></pre></div></div>
+
+<div class="section-divider" id="spark" data-section="spark"><h2>PySpark</h2><div class="line"></div><span class="badge" style="background:var(--cyan-dim);color:var(--cyan)">Big Data</span></div>
+
+<div class="card wide" data-tags="spark pyspark session read csv parquet json filter withcolumn groupby join window write partition sql">
+<div class="card-head"><div class="card-icon" style="background:var(--cyan-dim);color:var(--cyan)">⚡</div><h3>PySpark Essentials</h3><span class="card-tag">Distributed</span></div>
+<div class="card-body"><pre><code><span class="kw">from</span> pyspark.sql <span class="kw">import</span> SparkSession
+<span class="kw">from</span> pyspark.sql <span class="kw">import</span> functions <span class="kw">as</span> F
+<span class="kw">from</span> pyspark.sql.window <span class="kw">import</span> Window
+
+spark = SparkSession.builder.appName(<span class="st">"ETL"</span>).<span class="fn">getOrCreate</span>()
+
+<span class="cm"># Read</span>
+df = spark.read.<span class="fn">csv</span>(<span class="st">"data.csv"</span>, header=<span class="nb">True</span>, inferSchema=<span class="nb">True</span>)
+df = spark.read.<span class="fn">parquet</span>(<span class="st">"s3://bucket/data/"</span>)
+
+<span class="cm"># Transform</span>
+df = df.<span class="fn">filter</span>(F.<span class="fn">col</span>(<span class="st">"age"</span>) > <span class="num">25</span>)
+df = df.<span class="fn">withColumn</span>(<span class="st">"name_lower"</span>, F.<span class="fn">lower</span>(F.<span class="fn">col</span>(<span class="st">"name"</span>)))
+df = df.<span class="fn">dropDuplicates</span>([<span class="st">"id"</span>]).<span class="fn">fillna</span>({<span class="st">"score"</span>: <span class="num">0</span>})
+
+<span class="cm"># GroupBy & Join</span>
+agg = df.<span class="fn">groupBy</span>(<span class="st">"city"</span>).<span class="fn">agg</span>(F.<span class="fn">count</span>(<span class="st">"*"</span>).<span class="fn">alias</span>(<span class="st">"cnt"</span>), F.<span class="fn">avg</span>(<span class="st">"salary"</span>).<span class="fn">alias</span>(<span class="st">"avg_sal"</span>))
+result = df1.<span class="fn">join</span>(df2, on=<span class="st">"user_id"</span>, how=<span class="st">"left"</span>)
+
+<span class="cm"># Window function</span>
+w = Window.<span class="fn">partitionBy</span>(<span class="st">"dept"</span>).<span class="fn">orderBy</span>(F.<span class="fn">desc</span>(<span class="st">"salary"</span>))
+df = df.<span class="fn">withColumn</span>(<span class="st">"rank"</span>, F.<span class="fn">row_number</span>().<span class="fn">over</span>(w))
+
+<span class="cm"># SQL interface</span>
+df.<span class="fn">createOrReplaceTempView</span>(<span class="st">"events"</span>)
+spark.<span class="fn">sql</span>(<span class="st">"SELECT city, COUNT(*) FROM events GROUP BY city"</span>)
+
+<span class="cm"># Write — partitioned</span>
+df.write.<span class="fn">parquet</span>(<span class="st">"out/"</span>, mode=<span class="st">"overwrite"</span>, partitionBy=[<span class="st">"year"</span>,<span class="st">"month"</span>])</code></pre></div></div>
+
+<div class="section-divider" id="cloud" data-section="cloud"><h2>Cloud & Object Storage</h2><div class="line"></div></div>
+
+<div class="card wide" data-tags="aws s3 boto3 upload download gcs google cloud storage put object list paginator">
+<div class="card-head"><div class="card-icon" style="background:var(--amber-dim);color:var(--amber)">S3</div><h3>AWS S3 & GCS</h3><span class="card-tag">Cloud</span></div>
+<div class="card-body"><pre><code><span class="kw">import</span> boto3; <span class="kw">from</span> io <span class="kw">import</span> BytesIO
+s3 = boto3.<span class="fn">client</span>(<span class="st">"s3"</span>)
+
+s3.<span class="fn">upload_file</span>(<span class="st">"local.csv"</span>, <span class="st">"bucket"</span>, <span class="st">"data/f.csv"</span>)
+s3.<span class="fn">download_file</span>(<span class="st">"bucket"</span>, <span class="st">"data/f.csv"</span>, <span class="st">"local.csv"</span>)
+
+<span class="cm"># Read into Pandas</span>
+obj = s3.<span class="fn">get_object</span>(Bucket=<span class="st">"b"</span>, Key=<span class="st">"d/f.csv"</span>)
+df = pd.<span class="fn">read_csv</span>(BytesIO(obj[<span class="st">"Body"</span>].<span class="fn">read</span>()))
+df = pd.<span class="fn">read_parquet</span>(<span class="st">"s3://b/d/f.parquet"</span>)
+
+<span class="cm"># Write to S3</span>
+buf = BytesIO(); df.<span class="fn">to_parquet</span>(buf); buf.<span class="fn">seek</span>(<span class="num">0</span>)
+s3.<span class="fn">put_object</span>(Bucket=<span class="st">"b"</span>, Key=<span class="st">"out/d.parquet"</span>, Body=buf)
+
+<span class="cm"># List (paginated)</span>
+<span class="kw">for</span> page <span class="kw">in</span> s3.<span class="fn">get_paginator</span>(<span class="st">"list_objects_v2"</span>).<span class="fn">paginate</span>(Bucket=<span class="st">"b"</span>, Prefix=<span class="st">"data/"</span>):
+    <span class="kw">for</span> o <span class="kw">in</span> page.<span class="fn">get</span>(<span class="st">"Contents"</span>,[]): <span class="fn">print</span>(o[<span class="st">"Key"</span>])
+
+<span class="cm"># GCS</span>
+<span class="kw">from</span> google.cloud <span class="kw">import</span> storage
+blob = storage.<span class="fn">Client</span>().<span class="fn">bucket</span>(<span class="st">"b"</span>).<span class="fn">blob</span>(<span class="st">"d/f.csv"</span>)
+blob.<span class="fn">upload_from_filename</span>(<span class="st">"local.csv"</span>)</code></pre></div></div>
+
+<div class="section-divider" id="api" data-section="api"><h2>API Interaction</h2><div class="line"></div></div>
+
+<div class="card wide" data-tags="requests api http get post session retry pagination paginated aiohttp async">
+<div class="card-head"><div class="card-icon" style="background:var(--purple-dim);color:var(--purple)">⇄</div><h3>Requests, Pagination & Async</h3><span class="card-tag">API</span></div>
+<div class="card-body"><pre><code><span class="kw">import</span> requests
+<span class="kw">from</span> requests.adapters <span class="kw">import</span> HTTPAdapter
+<span class="kw">from</span> urllib3.util.retry <span class="kw">import</span> Retry
+
+session = requests.<span class="fn">Session</span>()
+retry = <span class="fn">Retry</span>(total=<span class="num">3</span>, backoff_factor=<span class="num">1</span>, status_forcelist=[<span class="num">429</span>,<span class="num">500</span>,<span class="num">502</span>,<span class="num">503</span>])
+session.<span class="fn">mount</span>(<span class="st">"https://"</span>, <span class="fn">HTTPAdapter</span>(max_retries=retry))
+
+resp = session.<span class="fn">get</span>(<span class="st">"https://api.example.com/data"</span>,
+    params={<span class="st">"page"</span>:<span class="num">1</span>}, headers={<span class="st">"Authorization"</span>:<span class="st">"Bearer T"</span>}, timeout=<span class="num">30</span>)
+resp.<span class="fn">raise_for_status</span>(); data = resp.<span class="fn">json</span>()
+
+<span class="cm"># Paginated extraction</span>
+<span class="kw">def</span> <span class="fn">extract_all</span>(url, size=<span class="num">100</span>):
+    all_data, page = [], <span class="num">1</span>
+    <span class="kw">while</span> <span class="nb">True</span>:
+        batch = session.<span class="fn">get</span>(url, params={<span class="st">"page"</span>:page,<span class="st">"limit"</span>:size}).<span class="fn">json</span>()[<span class="st">"data"</span>]
+        <span class="kw">if not</span> batch: <span class="kw">break</span>
+        all_data.<span class="fn">extend</span>(batch); page += <span class="num">1</span>
+    <span class="kw">return</span> all_data
+
+<span class="cm"># Async (aiohttp)</span>
+<span class="kw">import</span> asyncio, aiohttp
+<span class="kw">async def</span> <span class="fn">fetch_all</span>(urls):
+    <span class="kw">async with</span> aiohttp.<span class="fn">ClientSession</span>() <span class="kw">as</span> s:
+        <span class="kw">return</span> [<span class="kw">await</span> r.<span class="fn">json</span>() <span class="kw">for</span> r <span class="kw">in</span> <span class="kw">await</span> asyncio.<span class="fn">gather</span>(*[s.<span class="fn">get</span>(u) <span class="kw">for</span> u <span class="kw">in</span> urls])]</code></pre></div></div>
+
+<div class="section-divider" id="concurrency" data-section="concurrency"><h2>Concurrency</h2><div class="line"></div></div>
+
+<div class="card wide" data-tags="threading multiprocessing concurrent futures asyncio pool executor parallel io cpu bound">
+<div class="card-head"><div class="card-icon" style="background:var(--green-dim);color:var(--green)">∥</div><h3>Threading, Multiprocessing & Asyncio</h3><span class="card-tag">Performance</span></div>
+<div class="card-body"><pre><code><span class="cm"># Threads — I/O-bound (API, files)</span>
+<span class="kw">from</span> concurrent.futures <span class="kw">import</span> ThreadPoolExecutor, as_completed
+
+<span class="kw">with</span> <span class="fn">ThreadPoolExecutor</span>(<span class="num">10</span>) <span class="kw">as</span> pool:
+    futs = {pool.<span class="fn">submit</span>(fetch, u): u <span class="kw">for</span> u <span class="kw">in</span> urls}
+    <span class="kw">for</span> f <span class="kw">in</span> <span class="fn">as_completed</span>(futs):
+        <span class="kw">try</span>:   data = f.<span class="fn">result</span>()
+        <span class="kw">except</span>: log.<span class="fn">error</span>(<span class="st">"Failed %s"</span>, futs[f])
+
+<span class="cm"># Processes — CPU-bound (transforms)</span>
+<span class="kw">from</span> multiprocessing <span class="kw">import</span> Pool
+<span class="kw">with</span> <span class="fn">Pool</span>(<span class="num">8</span>) <span class="kw">as</span> p:
+    results = p.<span class="fn">map</span>(heavy_transform, chunks)
+
+<span class="cm"># asyncio — high-concurrency I/O</span>
+<span class="kw">async def</span> <span class="fn">worker</span>(q):
+    <span class="kw">while</span> <span class="nb">True</span>:
+        item = <span class="kw">await</span> q.<span class="fn">get</span>()
+        <span class="kw">await</span> process(item)
+        q.<span class="fn">task_done</span>()</code></pre></div></div>
+
+<div class="section-divider" id="validation" data-section="validation"><h2>Data Validation</h2><div class="line"></div></div>
+
+<div class="card wide" data-tags="pydantic validation schema quality check assert data test dq">
+<div class="card-head"><div class="card-icon" style="background:var(--pink-dim);color:var(--pink)">✓</div><h3>Schema Validation & DQ Checks</h3><span class="card-tag">Quality</span></div>
+<div class="card-body"><pre><code><span class="cm"># Pydantic batch validation</span>
+<span class="kw">def</span> <span class="fn">validate_batch</span>(records):
+    valid, invalid = [], []
+    <span class="kw">for</span> r <span class="kw">in</span> records:
+        <span class="kw">try</span>:   valid.<span class="fn">append</span>(EventSchema(**r).<span class="fn">model_dump</span>())
+        <span class="kw">except</span> Exception <span class="kw">as</span> e: invalid.<span class="fn">append</span>({<span class="st">"rec"</span>:r, <span class="st">"err"</span>:<span class="fn">str</span>(e)})
+    <span class="kw">return</span> valid, invalid
+
+<span class="cm"># DataFrame quality checks</span>
+<span class="kw">def</span> <span class="fn">dq_checks</span>(df):
+    checks = {
+        <span class="st">"no_null_ids"</span>:     df[<span class="st">"id"</span>].<span class="fn">notnull</span>().<span class="fn">all</span>(),
+        <span class="st">"positive_vals"</span>:   (df[<span class="st">"value"</span>] >= <span class="num">0</span>).<span class="fn">all</span>(),
+        <span class="st">"unique_ids"</span>:      df[<span class="st">"id"</span>].is_unique,
+        <span class="st">"min_rows"</span>:        <span class="fn">len</span>(df) >= <span class="num">100</span>,
+        <span class="st">"valid_dates"</span>:     df[<span class="st">"date"</span>].<span class="fn">between</span>(<span class="st">"2020-01-01"</span>,<span class="st">"2030-01-01"</span>).<span class="fn">all</span>(),
+    }
+    <span class="kw">for</span> name, ok <span class="kw">in</span> checks.items():
+        log.<span class="fn">info</span>(<span class="st">"[%s] %s"</span>, <span class="st">"PASS"</span> <span class="kw">if</span> ok <span class="kw">else</span> <span class="st">"FAIL"</span>, name)
+    <span class="kw">return</span> <span class="fn">all</span>(checks.values())</code></pre></div></div>
+
+<div class="section-divider" id="orchestration" data-section="orchestration"><h2>Orchestration</h2><div class="line"></div></div>
+
+<div class="card" data-tags="airflow dag schedule operator task python pipeline orchestration cron">
+<div class="card-head"><div class="card-icon" style="background:var(--green-dim);color:var(--green)">AF</div><h3>Apache Airflow DAG</h3><span class="card-tag">Orchestration</span></div>
+<div class="card-body"><pre><code><span class="kw">from</span> airflow <span class="kw">import</span> DAG
+<span class="kw">from</span> airflow.operators.python <span class="kw">import</span> PythonOperator
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime, timedelta
+
+<span class="kw">with</span> <span class="fn">DAG</span>(
+    dag_id=<span class="st">"daily_etl"</span>,
+    schedule=<span class="st">"0 6 * * *"</span>,
+    start_date=<span class="fn">datetime</span>(<span class="num">2024</span>,<span class="num">1</span>,<span class="num">1</span>),
+    catchup=<span class="nb">False</span>,
+    default_args={
+      <span class="st">"retries"</span>: <span class="num">3</span>,
+      <span class="st">"retry_delay"</span>: <span class="fn">timedelta</span>(minutes=<span class="num">5</span>)
+    },
+) <span class="kw">as</span> dag:
+    e = <span class="fn">PythonOperator</span>(task_id=<span class="st">"extract"</span>,
+        python_callable=extract_fn)
+    t = <span class="fn">PythonOperator</span>(task_id=<span class="st">"transform"</span>,
+        python_callable=transform_fn)
+    l = <span class="fn">PythonOperator</span>(task_id=<span class="st">"load"</span>,
+        python_callable=load_fn)
+    e >> t >> l</code></pre></div></div>
+
+<div class="card" data-tags="cron schedule expression time daily weekly hourly monthly">
+<div class="card-head"><div class="card-icon" style="background:var(--blue-dim);color:var(--blue)">⏱</div><h3>Cron Quick Reference</h3><span class="card-tag">Scheduling</span></div>
+<div class="card-body"><table class="tbl"><thead><tr><th>Expression</th><th>Schedule</th></tr></thead><tbody>
+<tr><td><code>0 * * * *</code></td><td>Every hour</td></tr>
+<tr><td><code>0 6 * * *</code></td><td>Daily at 6 AM</td></tr>
+<tr><td><code>*/15 * * * *</code></td><td>Every 15 min</td></tr>
+<tr><td><code>0 0 * * 0</code></td><td>Weekly Sunday</td></tr>
+<tr><td><code>0 0 1 * *</code></td><td>Monthly 1st</td></tr>
+<tr><td><code>0 6 * * 1-5</code></td><td>Weekdays 6 AM</td></tr>
+</tbody></table></div></div>
+
+<div class="section-divider" id="config" data-section="config"><h2>Config & CLI</h2><div class="line"></div></div>
+
+<div class="card" data-tags="environment variable env dotenv config settings os environ argparse cli docker dockerfile">
+<div class="card-head"><div class="card-icon" style="background:var(--cyan-dim);color:var(--cyan)">⚙</div><h3>Env, Config, CLI & Docker</h3><span class="card-tag">Deploy</span></div>
+<div class="card-body"><pre><code><span class="cm"># Environment</span>
+<span class="kw">import</span> os
+<span class="kw">from</span> dotenv <span class="kw">import</span> load_dotenv
+<span class="fn">load_dotenv</span>()
+DB = os.environ.<span class="fn">get</span>(<span class="st">"DB_HOST"</span>, <span class="st">"localhost"</span>)
+
+<span class="cm"># Config class</span>
+<span class="dc">@dataclass</span>
+<span class="kw">class</span> <span class="fn">Config</span>:
+    db_host: <span class="nb">str</span> = os.environ.<span class="fn">get</span>(<span class="st">"DB_HOST"</span>,<span class="st">"localhost"</span>)
+    batch: <span class="nb">int</span> = <span class="fn">int</span>(os.environ.<span class="fn">get</span>(<span class="st">"BATCH"</span>,<span class="st">"5000"</span>))
+    <span class="dc">@property</span>
+    <span class="kw">def</span> <span class="fn">db_url</span>(self):
+        <span class="kw">return</span> <span class="st">f"pg://{self.db_host}"</span>
+
+<span class="cm"># CLI</span>
+<span class="kw">import</span> argparse
+p = argparse.<span class="fn">ArgumentParser</span>()
+p.<span class="fn">add_argument</span>(<span class="st">"--source"</span>, required=<span class="nb">True</span>)
+p.<span class="fn">add_argument</span>(<span class="st">"--batch-size"</span>, type=<span class="nb">int</span>, default=<span class="num">5000</span>)
+p.<span class="fn">add_argument</span>(<span class="st">"--dry-run"</span>, action=<span class="st">"store_true"</span>)
+args = p.<span class="fn">parse_args</span>()
+
+<span class="cm"># Dockerfile</span>
+<span class="cm"># FROM python:3.12-slim</span>
+<span class="cm"># WORKDIR /app</span>
+<span class="cm"># COPY requirements.txt .</span>
+<span class="cm"># RUN pip install --no-cache-dir -r requirements.txt</span>
+<span class="cm"># COPY . .</span>
+<span class="cm"># CMD ["python", "main.py"]</span></code></pre></div></div>
+
+<div class="section-divider" id="tips" data-section="tips"><h2>Pro Tips</h2><div class="line"></div><span class="badge" style="background:var(--amber-dim);color:var(--amber)">Essential</span></div>
+
+<div class="card" data-tags="enumerate zip any all sorted defaultdict counter chain itertools collections">
+<div class="card-head"><div class="card-icon" style="background:var(--cyan-dim);color:var(--cyan)">⚡</div><h3>Built-in Superpowers</h3><span class="card-tag">Tips</span></div>
+<div class="card-body"><pre><code><span class="kw">for</span> i, v <span class="kw">in</span> <span class="fn">enumerate</span>(items, <span class="num">1</span>): ...
+<span class="fn">dict</span>(<span class="fn">zip</span>(keys, values))
+<span class="fn">any</span>(r[<span class="st">"err"</span>] <span class="kw">for</span> r <span class="kw">in</span> rows)
+<span class="fn">all</span>(r.<span class="fn">get</span>(<span class="st">"id"</span>) <span class="kw">for</span> r <span class="kw">in</span> rows)
+<span class="fn">sorted</span>(files, key=<span class="kw">lambda</span> f: f.stat().st_mtime)
+
+<span class="kw">from</span> collections <span class="kw">import</span> Counter, deque
+Counter(<span class="st">"banana"</span>).<span class="fn">most_common</span>(<span class="num">2</span>)
+
+<span class="kw">from</span> itertools <span class="kw">import</span> chain, islice
+<span class="fn">list</span>(<span class="fn">chain</span>([<span class="num">1</span>,<span class="num">2</span>], [<span class="num">3</span>,<span class="num">4</span>]))
+<span class="fn">list</span>(<span class="fn">islice</span>(huge_gen, <span class="num">100</span>))</code></pre></div></div>
+
+<div class="card" data-tags="flatten merge dict timing regex hashlib checksum one liner trick">
+<div class="card-head"><div class="card-icon" style="background:var(--pink-dim);color:var(--pink)">🧠</div><h3>One-Liners & Tricks</h3><span class="card-tag">Tips</span></div>
+<div class="card-body"><pre><code><span class="cm"># Flatten</span>
+flat = [x <span class="kw">for</span> sub <span class="kw">in</span> nested <span class="kw">for</span> x <span class="kw">in</span> sub]
+
+<span class="cm"># Dedup, keep order</span>
+seen = <span class="fn">set</span>()
+uniq = [x <span class="kw">for</span> x <span class="kw">in</span> lst
+        <span class="kw">if</span> x <span class="kw">not in</span> seen <span class="kw">and not</span> seen.<span class="fn">add</span>(x)]
+
+merged = d1 | d2          <span class="cm"># merge dicts (3.9+)</span>
+v = d.<span class="fn">get</span>(<span class="st">"a"</span>,{}).<span class="fn">get</span>(<span class="st">"b"</span>) <span class="cm"># safe nested</span>
+
+<span class="cm"># Timing</span>
+<span class="kw">from</span> time <span class="kw">import</span> perf_counter
+t = <span class="fn">perf_counter</span>()
+<span class="fn">print</span>(<span class="st">f"</span><span class="st">{perf_counter()-t:.4f}s"</span>)
+
+<span class="cm"># Regex — extract dates</span>
+<span class="kw">import</span> re
+dates = re.<span class="fn">findall</span>(<span class="st">r'\d{4}-\d{2}-\d{2}'</span>, log)
+
+<span class="cm"># File checksum</span>
+<span class="kw">import</span> hashlib
+hashlib.<span class="fn">md5</span>(<span class="fn">open</span>(<span class="st">"f"</span>,<span class="st">"rb"</span>).<span class="fn">read</span>()).<span class="fn">hexdigest</span>()</code></pre></div></div>
+
+<div class="card wide" data-tags="quick reference table virtual env pip install debug profile format parquet jsonl docker">
+<div class="card-head"><div class="card-icon" style="background:var(--amber-dim);color:var(--amber)">⌨</div><h3>Quick Reference</h3><span class="card-tag">Reference</span></div>
+<div class="card-body"><table class="tbl"><thead><tr><th>Operation</th><th>Syntax</th><th>Note</th></tr></thead><tbody>
+<tr><td>Virtual env</td><td><code>python -m venv .venv && source .venv/bin/activate</code></td><td>Isolate</td></tr>
+<tr><td>Install</td><td><code>pip install -r requirements.txt</code></td><td>Pin versions</td></tr>
+<tr><td>Debugger</td><td><code>breakpoint()</code></td><td>3.7+</td></tr>
+<tr><td>Profile</td><td><code>python -m cProfile -s cumtime script.py</code></td><td>Bottlenecks</td></tr>
+<tr><td>Format</td><td><code>black . && ruff check .</code></td><td>Lint</td></tr>
+<tr><td>Type check</td><td><code>mypy script.py</code></td><td>Static</td></tr>
+<tr><td>Parquet</td><td><code>df.to_parquet("f.parquet", compression="snappy")</code></td><td>Columnar</td></tr>
+<tr><td>JSONL</td><td><code>df.to_json("f.jsonl", orient="records", lines=True)</code></td><td>Line-delim</td></tr>
+<tr><td>Docker</td><td><code>docker build -t etl . && docker run etl</code></td><td>Container</td></tr>
+<tr><td>Env vars</td><td><code>export DB_HOST=localhost</code></td><td>Session</td></tr>
+</tbody></table></div></div>
+
+</div>
+
+<script>
+const input=document.getElementById('search'),cards=document.querySelectorAll('.card'),dividers=document.querySelectorAll('.section-divider');
+input.addEventListener('input',()=>{const q=input.value.toLowerCase().trim();cards.forEach(c=>{const t=(c.dataset.tags||'').toLowerCase(),x=c.textContent.toLowerCase();c.classList.toggle('hidden',q&&!t.includes(q)&&!x.includes(q))});dividers.forEach(d=>{let n=d.nextElementSibling,v=false;while(n&&!n.classList.contains('section-divider')){if(n.classList.contains('card')&&!n.classList.contains('hidden'))v=true;n=n.nextElementSibling}d.classList.toggle('hidden',!v)})});
+const secs=document.querySelectorAll('.section-divider[id]'),navs=document.querySelectorAll('.nav a');
+new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){navs.forEach(a=>a.classList.remove('active'));const l=document.querySelector('.nav a[href="#'+e.target.id+'"]');if(l)l.classList.add('active')}})},{rootMargin:'-100px 0px -70% 0px'}).observe&&secs.forEach(s=>new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){navs.forEach(a=>a.classList.remove('active'));const l=document.querySelector('.nav a[href="#'+e.target.id+'"]');if(l)l.classList.add('active')}})},{rootMargin:'-100px 0px -70% 0px'}).observe(s));
+</script>
+</body></html>
