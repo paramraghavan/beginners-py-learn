@@ -1,0 +1,116 @@
+# ============================================================================
+# Docker Compose for Local Development
+# ============================================================================
+# Usage:
+#   docker compose up        # Start all services
+#   docker compose up -d     # Start in background
+#   docker compose down      # Stop all services
+#   docker compose logs -f   # View logs
+
+version: '3.8'
+
+services:
+  # --------------------------------------------------------------------------
+  # Main Application
+  # --------------------------------------------------------------------------
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: production
+    container_name: myapp
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - PORT=8000
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health').raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # --------------------------------------------------------------------------
+  # Development Application (with hot reload)
+  # --------------------------------------------------------------------------
+  app-dev:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: development
+    container_name: myapp-dev
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    environment:
+      - ENVIRONMENT=development
+      - LOG_LEVEL=debug
+      - PORT=8000
+    volumes:
+      - ../src:/app/src:ro
+      - ../tests:/app/tests:ro
+    restart: unless-stopped
+    networks:
+      - app-network
+    profiles:
+      - dev
+
+  # --------------------------------------------------------------------------
+  # Optional: Redis Cache
+  # --------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: myapp-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - app-network
+    profiles:
+      - full
+
+  # --------------------------------------------------------------------------
+  # Optional: PostgreSQL Database
+  # --------------------------------------------------------------------------
+  postgres:
+    image: postgres:15-alpine
+    container_name: myapp-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${DB_USER:-myapp}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-myapp}
+      - POSTGRES_DB=${DB_NAME:-myapp}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-myapp}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - app-network
+    profiles:
+      - full
+
+# Networks
+networks:
+  app-network:
+    driver: bridge
+
+# Volumes
+volumes:
+  redis-data:
+  postgres-data:

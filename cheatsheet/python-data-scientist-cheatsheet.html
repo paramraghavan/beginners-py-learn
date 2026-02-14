@@ -3,1044 +3,1157 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Python Cheatsheet — Dev & Data Science</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Instrument+Serif&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Python Cheatsheet — Developer & Data Scientist</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,wght@0,400;0,600;1,400&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0c0e13;
-    --surface: #13161d;
-    --surface-hover: #1a1e28;
-    --border: #252a36;
-    --text: #c8cdd8;
-    --text-dim: #6b7280;
-    --heading: #eef0f4;
-    --accent: #6ee7b7;
-    --accent2: #818cf8;
-    --accent3: #f9a8d4;
-    --accent4: #fbbf24;
-    --accent5: #67e8f9;
-    --code-bg: #0a0c10;
-    --tag-bg: #1e293b;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    min-height: 100vh;
-  }
-
-  /* Header */
-  .hero {
-    padding: 60px 40px 40px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    border-bottom: 1px solid var(--border);
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(110,231,183,0.08), transparent),
-                radial-gradient(ellipse 40% 40% at 80% 20%, rgba(129,140,248,0.06), transparent);
-    pointer-events: none;
-  }
-  .hero h1 {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    color: var(--heading);
-    letter-spacing: -0.02em;
-    margin-bottom: 8px;
-    position: relative;
-  }
-  .hero h1 span { color: var(--accent); }
-  .hero p {
-    font-size: 1.05rem;
-    color: var(--text-dim);
-    max-width: 500px;
-    margin: 0 auto;
-    position: relative;
-  }
-
-  /* Navigation pills */
-  .nav {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 20px 40px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(12,14,19,0.85);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav a {
-    font-size: 0.78rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 6px 14px;
-    border-radius: 999px;
-    text-decoration: none;
-    color: var(--text-dim);
-    border: 1px solid var(--border);
-    transition: all 0.2s;
-  }
-  .nav a:hover {
-    color: var(--accent);
-    border-color: var(--accent);
-    background: rgba(110,231,183,0.06);
-  }
-
-  /* Grid */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 20px;
-    padding: 30px 30px 80px;
-    max-width: 1500px;
-    margin: 0 auto;
-  }
-
-  /* Cards */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    overflow: hidden;
-    transition: border-color 0.3s, transform 0.2s;
-    animation: fadeUp 0.5s ease both;
-  }
-  .card:hover {
-    border-color: #3a4050;
-    transform: translateY(-2px);
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .card:nth-child(1) { animation-delay: 0s; }
-  .card:nth-child(2) { animation-delay: 0.04s; }
-  .card:nth-child(3) { animation-delay: 0.08s; }
-  .card:nth-child(4) { animation-delay: 0.12s; }
-  .card:nth-child(5) { animation-delay: 0.16s; }
-
-  .card-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 18px 20px 12px;
-  }
-  .card-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 9px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.9rem;
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-  .card-header h2 {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--heading);
-    letter-spacing: -0.01em;
-  }
-  .card-header .tag {
-    margin-left: auto;
-    font-size: 0.65rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 3px 8px;
-    border-radius: 6px;
-    background: var(--tag-bg);
-    color: var(--text-dim);
-  }
-
-  .card-body { padding: 0 20px 20px; }
-
-  /* Code blocks */
-  pre {
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 16px;
-    overflow-x: auto;
-    margin: 8px 0;
-    font-size: 0.78rem;
-    line-height: 1.7;
-  }
-  code {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.78rem;
-  }
-  pre code { color: var(--text); }
-
-  .kw { color: var(--accent2); }
-  .fn { color: var(--accent); }
-  .st { color: var(--accent3); }
-  .cm { color: var(--text-dim); font-style: italic; }
-  .nb { color: var(--accent4); }
-  .op { color: var(--accent5); }
-  .num { color: var(--accent4); }
-
-  .card-body p {
-    font-size: 0.82rem;
-    color: var(--text-dim);
-    margin: 6px 0;
-    line-height: 1.55;
-  }
-
-  .mini-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 8px 0;
-    font-size: 0.78rem;
-  }
-  .mini-table th {
-    text-align: left;
-    padding: 6px 10px;
-    color: var(--text-dim);
-    font-weight: 600;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    border-bottom: 1px solid var(--border);
-  }
-  .mini-table td {
-    padding: 5px 10px;
-    border-bottom: 1px solid rgba(37,42,54,0.5);
-  }
-  .mini-table td code {
-    color: var(--accent);
-    font-size: 0.76rem;
-  }
-
-  .wide { grid-column: span 2; }
-  @media (max-width: 840px) {
-    .grid { grid-template-columns: 1fr; }
-    .wide { grid-column: span 1; }
-    .hero { padding: 40px 20px 30px; }
-    .grid { padding: 20px 14px 60px; }
-  }
-
-  .section-divider {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 20px 0 4px;
-  }
-  .section-divider h3 {
-    font-family: 'Instrument Serif', serif;
-    font-size: 1.5rem;
-    color: var(--heading);
-    white-space: nowrap;
-  }
-  .section-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
+:root{--bg:#111214;--bg2:#18191d;--surface:#1e2025;--surface2:#252830;--border:#2e3039;--border2:#3a3d48;--text:#b8bcc8;--text-dim:#6c7086;--heading:#e8eaf0;--white:#f4f5f7;--amber:#f5a623;--amber-dim:rgba(245,166,35,0.12);--green:#50d890;--green-dim:rgba(80,216,144,0.10);--blue:#5b9cf5;--blue-dim:rgba(91,156,245,0.10);--pink:#e878a0;--pink-dim:rgba(232,120,160,0.10);--cyan:#56d4c8;--cyan-dim:rgba(86,212,200,0.10);--red:#f06868;--red-dim:rgba(240,104,104,0.12);--purple:#a78bfa;--purple-dim:rgba(167,139,250,0.10);--code-bg:#14151a;--radius:10px;--radius-lg:14px}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;overflow-x:hidden}
+.header{padding:48px 32px 32px;text-align:center;position:relative;border-bottom:1px solid var(--border)}.header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 50% 0%,rgba(245,166,35,0.06),transparent),radial-gradient(ellipse 30% 50% at 75% 10%,rgba(80,216,144,0.04),transparent);pointer-events:none}.header h1{font-family:'Newsreader',serif;font-size:clamp(2.2rem,4.5vw,3.6rem);color:var(--heading);letter-spacing:-0.03em;position:relative}.header h1 em{font-style:italic;color:var(--amber);font-weight:400}.header p{font-size:0.95rem;color:var(--text-dim);margin-top:6px;position:relative}.header .jupyter-badge{display:inline-block;background:var(--green-dim);color:var(--green);font-size:0.75rem;font-weight:700;padding:4px 12px;border-radius:999px;margin-top:10px;letter-spacing:0.05em}
+.search-wrap{max-width:480px;margin:20px auto 0;position:relative}.search-wrap input{width:100%;padding:10px 16px 10px 40px;background:var(--surface);border:1px solid var(--border);border-radius:999px;color:var(--heading);font-family:'Outfit',sans-serif;font-size:0.88rem;outline:none;transition:border-color .2s}.search-wrap input:focus{border-color:var(--amber)}.search-wrap input::placeholder{color:var(--text-dim)}.search-wrap svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-dim);width:16px;height:16px}
+.nav{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;padding:16px 24px;position:sticky;top:0;z-index:100;background:rgba(17,18,20,0.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}.nav a{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;padding:5px 12px;border-radius:999px;text-decoration:none;color:var(--text-dim);border:1px solid transparent;transition:all .2s;white-space:nowrap}.nav a:hover,.nav a.active{color:var(--amber);border-color:rgba(245,166,35,0.3);background:var(--amber-dim)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:18px;padding:28px 24px 80px;max-width:1520px;margin:0 auto}
+.section-divider{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:24px 0 4px}.section-divider h2{font-family:'Newsreader',serif;font-size:1.6rem;color:var(--heading);white-space:nowrap;font-weight:600;letter-spacing:-0.02em}.section-divider .line{flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}.section-divider .badge{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:3px 10px;border-radius:6px;white-space:nowrap}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:border-color .25s,transform .2s,box-shadow .25s;animation:cardIn .45s ease both}.card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,0.25)}@keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}.card.wide{grid-column:span 2}
+.card-head{display:flex;align-items:center;gap:10px;padding:16px 18px 10px}.card-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;font-weight:600;flex-shrink:0}.card-head h3{font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:700;color:var(--heading);letter-spacing:-0.01em}.card-tag{margin-left:auto;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 8px;border-radius:5px;background:var(--green-dim);color:var(--green)}.card-body{padding:0 18px 18px}
+pre{background:var(--code-bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;overflow-x:auto;margin:6px 0;font-size:0.76rem;line-height:1.75}code{font-family:'IBM Plex Mono',monospace;font-size:inherit}pre code{color:var(--text)}
+.kw{color:var(--purple)}.fn{color:var(--green)}.st{color:var(--amber)}.cm{color:var(--text-dim);font-style:italic}.nb{color:var(--cyan)}.op{color:var(--pink)}.num{color:var(--blue)}.dc{color:var(--pink)}
+@media(max-width:880px){.grid{grid-template-columns:1fr;padding:18px 12px 60px}.card.wide{grid-column:span 1}.header{padding:32px 16px 24px}.nav{gap:4px;padding:12px 10px}}
+.card.hidden{display:none}.section-divider.hidden{display:none}
 </style>
 </head>
 <body>
-
-<div class="hero">
-  <h1>Python <span>Cheatsheet</span></h1>
-  <p>Essential reference for Python developers & data scientists</p>
-</div>
-
-<nav class="nav">
-  <a href="#core">Core</a>
-  <a href="#strings">Strings</a>
-  <a href="#data-structures">Data Structures</a>
-  <a href="#functions">Functions</a>
-  <a href="#oop">OOP</a>
-  <a href="#files">File I/O</a>
-  <a href="#comprehensions">Comprehensions</a>
-  <a href="#error">Error Handling</a>
-  <a href="#numpy">NumPy</a>
-  <a href="#pandas">Pandas</a>
-  <a href="#viz">Visualization</a>
-  <a href="#sklearn">Scikit-learn</a>
-  <a href="#tips">Pro Tips</a>
-</nav>
-
-<div class="grid">
-
-<!-- =================== CORE PYTHON =================== -->
-<div class="section-divider" id="core"><h3>Core Python</h3></div>
-
-<div class="card">
-  <div class="card-header">
-    <div class="card-icon" style="background:#6ee7b720;color:var(--accent);">V</div>
-    <h2>Variables & Data Types</h2>
-    <span class="tag">Basics</span>
-  </div>
-  <div class="card-body">
-<pre><code><span class="cm"># Dynamic typing</span>
-x = <span class="num">10</span>              <span class="cm"># int</span>
-pi = <span class="num">3.14</span>           <span class="cm"># float</span>
-name = <span class="st">"Alice"</span>      <span class="cm"># str</span>
-active = <span class="nb">True</span>       <span class="cm"># bool</span>
-nothing = <span class="nb">None</span>      <span class="cm"># NoneType</span>
-
-<span class="cm"># Type checking & conversion</span>
-<span class="fn">type</span>(x)              <span class="cm"># &lt;class 'int'&gt;</span>
-<span class="fn">isinstance</span>(x, <span class="nb">int</span>)  <span class="cm"># True</span>
-<span class="fn">int</span>(<span class="st">"42"</span>)            <span class="cm"># 42</span>
-<span class="fn">str</span>(<span class="num">3.14</span>)            <span class="cm"># "3.14"</span>
-<span class="fn">float</span>(<span class="st">"2.7"</span>)         <span class="cm"># 2.7</span>
-
-<span class="cm"># Multiple assignment</span>
-a, b, c = <span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>
-a, b = b, a          <span class="cm"># swap!</span>
-</code></pre>
+<div class="header">
+  <h1>Python <em>Cheatsheet</em></h1>
+  <p>Essential reference for Python developers &amp; data scientists</p>
+  <div class="jupyter-badge">✅ JUPYTER-READY — Every cell runs standalone</div>
+  <div class="search-wrap">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" id="search" placeholder="Search topics…" autocomplete="off">
   </div>
 </div>
+<nav class="nav" id="nav"><a href="#core-python">Core</a>
+<a href="#strings">Strings</a>
+<a href="#data-structures">Structures</a>
+<a href="#functions">Functions</a>
+<a href="#comprehensions">Comprehensions</a>
+<a href="#object-oriented-programming">OOP</a>
+<a href="#file-io">File I/O</a>
+<a href="#error-handling">Errors</a>
+<a href="#numpy">NumPy</a>
+<a href="#pandas">Pandas</a>
+<a href="#visualization">Plots</a>
+<a href="#scikit-learn">Sklearn</a>
+<a href="#pro-tips-and-patterns">Tips</a></nav>
+<div class="grid" id="grid">
+<div class="section-divider" id="core-python" data-section="core-python">
+  <h2>Core Python</h2>
+  <div class="line"></div>
+  <span class="badge" style="background:var(--amber-dim);color:var(--amber)">Fundamentals</span>
+</div>
 
-<div class="card">
-  <div class="card-header">
-    <div class="card-icon" style="background:#818cf820;color:var(--accent2);">F</div>
-    <h2>Control Flow</h2>
-    <span class="tag">Basics</span>
+<div class="card " data-tags="variables & data types">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--amber-dim);color:var(--amber)">Va</div>
+    <h3>Variables &amp; Data Types</h3>
+    <span class="card-tag">Jupyter ✅</span>
   </div>
   <div class="card-body">
-<pre><code><span class="cm"># Conditionals</span>
-<span class="kw">if</span> x > <span class="num">0</span>:
-    <span class="fn">print</span>(<span class="st">"positive"</span>)
-<span class="kw">elif</span> x == <span class="num">0</span>:
-    <span class="fn">print</span>(<span class="st">"zero"</span>)
+    <pre><code><span <span class="kw">class</span>="cm"># Dynamic typing</span>
+x = <span <span class="kw">class</span>="num">10</span>              <span <span class="kw">class</span>="cm"># <span class="fn">int</span></span>
+pi = <span <span class="kw">class</span>="num">3.14</span>           <span <span class="kw">class</span>="cm"># <span class="fn">float</span></span>
+name = <span <span class="kw">class</span>="st">&quot;Alice&quot;</span>      <span <span class="kw">class</span>="cm"># <span class="fn">str</span></span>
+active = <span class="kw">True</span>       <span <span class="kw">class</span>="cm"># bool</span>
+nothing = <span class="kw">None</span>      <span <span class="kw">class</span>="cm"># NoneType</span>
+
+<span <span class="kw">class</span>="cm"># Type checking &amp; conversion</span>
+<span class="fn">print</span>(<span class="fn">type</span>(x))              <span <span class="kw">class</span>="cm"># &lt;<span class="kw">class</span> <span <span class="kw">class</span>="st">&#x27;<span class="fn">int</span>&#x27;</span>&gt;</span>
+<span class="fn">print</span>(<span class="fn">isinstance</span>(x, <span class="fn">int</span>))   <span <span class="kw">class</span>="cm"># <span class="kw">True</span></span>
+<span class="fn">print</span>(<span class="fn">int</span>(<span <span class="kw">class</span>="st">&quot;<span <span class="kw">class</span>="num">42</span>&quot;</span>))             <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="num">42</span></span>
+<span class="fn">print</span>(<span class="fn">str</span>(<span <span class="kw">class</span>="num">3.14</span>))             <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="st">&quot;<span <span class="kw">class</span>="num">3.14</span>&quot;</span></span>
+<span class="fn">print</span>(<span class="fn">float</span>(<span <span class="kw">class</span>="st">&quot;<span <span class="kw">class</span>="num">2.7</span>&quot;</span>))          <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="num">2.7</span></span>
+
+<span <span class="kw">class</span>="cm"># Multiple assignment &amp; swap</span>
+a, b, c = <span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">3</span>
+a, b = b, a
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;a={a}, b={b}, c={c}&quot;</span>)  <span <span class="kw">class</span>="cm"># a=<span <span class="kw">class</span>="num">2</span>, b=<span <span class="kw">class</span>="num">1</span>, c=<span <span class="kw">class</span>="num">3</span></span></code></pre>
+  </div>
+</div>
+
+<div class="card wide" data-tags="control flow">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--amber-dim);color:var(--amber)">Co</div>
+    <h3>Control Flow</h3>
+    <span class="card-tag">Jupyter ✅</span>
+  </div>
+  <div class="card-body">
+    <pre><code>x = <span <span class="kw">class</span>="num">10</span>
+d = {<span <span class="kw">class</span>="st">&quot;name&quot;</span>: <span <span class="kw">class</span>="st">&quot;Alice&quot;</span>, <span <span class="kw">class</span>="st">&quot;age&quot;</span>: <span <span class="kw">class</span>="num">30</span>, <span <span class="kw">class</span>="st">&quot;city&quot;</span>: <span <span class="kw">class</span>="st">&quot;NYC&quot;</span>}
+
+<span <span class="kw">class</span>="cm"># Conditionals</span>
+<span class="kw">if</span> x &gt; <span <span class="kw">class</span>="num">0</span>:
+    <span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;positive&quot;</span>)
+<span class="kw">elif</span> x == <span <span class="kw">class</span>="num">0</span>:
+    <span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;zero&quot;</span>)
 <span class="kw">else</span>:
-    <span class="fn">print</span>(<span class="st">"negative"</span>)
+    <span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;negative&quot;</span>)
 
-<span class="cm"># Ternary</span>
-label = <span class="st">"even"</span> <span class="kw">if</span> x % <span class="num">2</span> == <span class="num">0</span> <span class="kw">else</span> <span class="st">"odd"</span>
+<span <span class="kw">class</span>="cm"># Ternary</span>
+label = <span <span class="kw">class</span>="st">&quot;even&quot;</span> <span class="kw">if</span> x % <span <span class="kw">class</span>="num">2</span> == <span <span class="kw">class</span>="num">0</span> <span class="kw">else</span> <span <span class="kw">class</span>="st">&quot;odd&quot;</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;x={x} <span class="kw">is</span> {label}&quot;</span>)
 
-<span class="cm"># Loops</span>
-<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>):        <span class="cm"># 0,1,2,3,4</span>
-<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">2</span>,<span class="num">10</span>,<span class="num">2</span>):  <span class="cm"># 2,4,6,8</span>
-<span class="kw">for</span> k, v <span class="kw">in</span> d.items():    <span class="cm"># dict iteration</span>
+<span <span class="kw">class</span>="cm"># Loops</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span <span class="kw">class</span>="num">5</span>):
+    <span class="fn">print</span>(i, end=<span <span class="kw">class</span>="st">&quot; &quot;</span>)           <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="num">0</span> <span <span class="kw">class</span>="num">1</span> <span <span class="kw">class</span>="num">2</span> <span <span class="kw">class</span>="num">3</span> <span <span class="kw">class</span>="num">4</span></span>
+<span class="fn">print</span>()
 
-<span class="cm"># While with break/continue</span>
-<span class="kw">while</span> <span class="nb">True</span>:
-    data = <span class="fn">fetch</span>()
-    <span class="kw">if</span> <span class="kw">not</span> data: <span class="kw">break</span>
-    <span class="kw">if</span> skip(data): <span class="kw">continue</span>
-    process(data)
-</code></pre>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">10</span>, <span <span class="kw">class</span>="num">2</span>):
+    <span class="fn">print</span>(i, end=<span <span class="kw">class</span>="st">&quot; &quot;</span>)           <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="num">2</span> <span <span class="kw">class</span>="num">4</span> <span <span class="kw">class</span>="num">6</span> <span <span class="kw">class</span>="num">8</span></span>
+<span class="fn">print</span>()
+
+<span class="kw">for</span> k, v <span class="kw">in</span> d.items():
+    <span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;{k}: {v}&quot;</span>)
+
+<span <span class="kw">class</span>="cm"># While <span class="kw">with</span> <span class="kw">break</span>/<span class="kw">continue</span></span>
+counter = <span <span class="kw">class</span>="num">0</span>
+<span class="kw">while</span> <span class="kw">True</span>:
+    counter += <span <span class="kw">class</span>="num">1</span>
+    <span class="kw">if</span> counter == <span <span class="kw">class</span>="num">3</span>:
+        <span class="kw">continue</span>
+    <span class="kw">if</span> counter &gt; <span <span class="kw">class</span>="num">5</span>:
+        <span class="kw">break</span>
+    <span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;counter={counter}&quot;</span>)</code></pre>
   </div>
 </div>
 
-<!-- STRINGS -->
-<div class="section-divider" id="strings"><h3>Strings</h3></div>
+<div class="section-divider" id="strings" data-section="strings">
+  <h2>Strings</h2>
+  <div class="line"></div>
+  
+</div>
 
-<div class="card wide">
-  <div class="card-header">
-    <div class="card-icon" style="background:#f9a8d420;color:var(--accent3);">S</div>
-    <h2>String Operations</h2>
-    <span class="tag">Essential</span>
+<div class="card " data-tags="string operations">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--pink-dim);color:var(--pink)">St</div>
+    <h3>String Operations</h3>
+    <span class="card-tag">Jupyter ✅</span>
   </div>
   <div class="card-body">
-<pre><code>s = <span class="st">"Hello, World!"</span>
+    <pre><code>s = <span <span class="kw">class</span>="st">&quot;Hello, World!&quot;</span>
 
-<span class="cm"># Slicing</span>
-s[<span class="num">0</span>:<span class="num">5</span>]        <span class="cm"># "Hello"</span>
-s[::<span class="num">-1</span>]        <span class="cm"># "!dlroW ,olleH" (reverse)</span>
+<span <span class="kw">class</span>="cm"># Slicing</span>
+<span class="fn">print</span>(s[<span <span class="kw">class</span>="num">0</span>:<span <span class="kw">class</span>="num">5</span>])        <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="st">&quot;Hello&quot;</span></span>
+<span class="fn">print</span>(s[::-<span <span class="kw">class</span>="num">1</span>])       <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="st">&quot;!dlroW ,olleH&quot;</span> (reverse)</span>
 
-<span class="cm"># Methods</span>
-s.<span class="fn">lower</span>() / s.<span class="fn">upper</span>() / s.<span class="fn">title</span>()
-s.<span class="fn">strip</span>()  / s.<span class="fn">lstrip</span>() / s.<span class="fn">rstrip</span>()
-s.<span class="fn">split</span>(<span class="st">","</span>)          <span class="cm"># ["Hello", " World!"]</span>
-<span class="st">"-"</span>.<span class="fn">join</span>([<span class="st">"a"</span>,<span class="st">"b"</span>])   <span class="cm"># "a-b"</span>
-s.<span class="fn">replace</span>(<span class="st">"World"</span>, <span class="st">"Python"</span>)
-s.<span class="fn">startswith</span>(<span class="st">"He"</span>) / s.<span class="fn">endswith</span>(<span class="st">"!"</span>)
-s.<span class="fn">find</span>(<span class="st">"World"</span>)       <span class="cm"># 7 (-1 if not found)</span>
-s.<span class="fn">count</span>(<span class="st">"l"</span>)          <span class="cm"># 3</span>
-s.<span class="fn">isdigit</span>() / s.<span class="fn">isalpha</span>() / s.<span class="fn">isalnum</span>()
+<span <span class="kw">class</span>="cm"># Methods</span>
+<span class="fn">print</span>(s.lower())     <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="st">&quot;hello, world!&quot;</span></span>
+<span class="fn">print</span>(s.upper())     <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="st">&quot;HELLO, WORLD!&quot;</span></span>
+<span class="fn">print</span>(s.title())     <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="st">&quot;Hello, World!&quot;</span></span>
+<span class="fn">print</span>(s.strip())     <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="st">&quot;Hello, World!&quot;</span></span>
+<span class="fn">print</span>(s.split(<span <span class="kw">class</span>="st">&quot;,&quot;</span>))  <span <span class="kw">class</span>="cm"># [<span <span class="kw">class</span>="st">&quot;Hello&quot;</span>, <span <span class="kw">class</span>="st">&quot; World!&quot;</span>]</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;-&quot;</span>.join([<span <span class="kw">class</span>="st">&quot;a&quot;</span>,<span <span class="kw">class</span>="st">&quot;b&quot;</span>,<span <span class="kw">class</span>="st">&quot;c&quot;</span>]))  <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="st">&quot;a-b-c&quot;</span></span>
+<span class="fn">print</span>(s.replace(<span <span class="kw">class</span>="st">&quot;World&quot;</span>, <span <span class="kw">class</span>="st">&quot;Python&quot;</span>))
+<span class="fn">print</span>(s.startswith(<span <span class="kw">class</span>="st">&quot;He&quot;</span>))  <span <span class="kw">class</span>="cm"># <span class="kw">True</span></span>
+<span class="fn">print</span>(s.endswith(<span <span class="kw">class</span>="st">&quot;!&quot;</span>))     <span <span class="kw">class</span>="cm"># <span class="kw">True</span></span>
+<span class="fn">print</span>(s.find(<span <span class="kw">class</span>="st">&quot;World&quot;</span>))    <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="num">7</span></span>
+<span class="fn">print</span>(s.count(<span <span class="kw">class</span>="st">&quot;l&quot;</span>))        <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="num">3</span></span>
+<span class="fn">print</span>(s.isdigit())         <span <span class="kw">class</span>="cm"># <span class="kw">False</span></span>
+<span class="fn">print</span>(s.isalpha())         <span <span class="kw">class</span>="cm"># <span class="kw">False</span></span>
 
-<span class="cm"># f-strings (Python 3.6+)</span>
-name, age = <span class="st">"Alice"</span>, <span class="num">30</span>
-<span class="st">f"</span><span class="st">{name} is {age} years old"</span>
-<span class="st">f"</span><span class="st">{3.14159:.2f}"</span>         <span class="cm"># "3.14"</span>
-<span class="st">f"</span><span class="st">{1000000:,}"</span>          <span class="cm"># "1,000,000"</span>
-<span class="st">f"</span><span class="st">{'hi':>10}"</span>           <span class="cm"># "        hi"</span>
-<span class="st">f"</span><span class="st">{x = }"</span>               <span class="cm"># "x = 42" (debug, 3.8+)</span>
-</code></pre>
+<span <span class="kw">class</span>="cm"># f-strings (Python <span <span class="kw">class</span>="num">3.6</span>+)</span>
+name, age = <span <span class="kw">class</span>="st">&quot;Alice&quot;</span>, <span <span class="kw">class</span>="num">30</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;{name} <span class="kw">is</span> {age} years old&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;{<span <span class="kw">class</span>="num">3.14159</span>:.2f}&quot;</span>)         <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="st">&quot;<span <span class="kw">class</span>="num">3.14</span>&quot;</span></span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;{<span <span class="kw">class</span>="num">1000000</span>:,}&quot;</span>)           <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="st">&quot;<span <span class="kw">class</span>="num">1</span>,<span <span class="kw">class</span>="num">000</span>,<span <span class="kw">class</span>="num">000</span>&quot;</span></span>
+<span class="fn">print</span>(f&quot;{&<span <span class="kw">class</span>="cm">#x27;hi&#x27;:&gt;<span <span class="kw">class</span>="num">10</span>}<span <span class="kw">class</span>="st">&quot;)            # &quot;</span>        hi<span <span class="kw">class</span>="st">&quot;</span>
+x = <span <span class="kw">class</span>="num">42</span>
+<span class="fn">print</span>(f&quot;</span>{x = }<span <span class="kw">class</span>="st">&quot;)                <span <span class="kw">class</span>="cm"># &quot;</span>x = <span <span class="kw">class</span>="num">42</span>&quot; (debug, <span <span class="kw">class</span>="num">3.8</span>+)</span></code></pre>
   </div>
 </div>
 
-<!-- DATA STRUCTURES -->
-<div class="section-divider" id="data-structures"><h3>Data Structures</h3></div>
+<div class="section-divider" id="data-structures" data-section="data-structures">
+  <h2>Data Structures</h2>
+  <div class="line"></div>
+  
+</div>
 
-<div class="card">
-  <div class="card-header">
-    <div class="card-icon" style="background:#6ee7b720;color:var(--accent);">L</div>
-    <h2>Lists</h2>
-    <span class="tag">Core</span>
+<div class="card wide" data-tags="lists">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--green-dim);color:var(--green)">Li</div>
+    <h3>Lists</h3>
+    <span class="card-tag">Jupyter ✅</span>
   </div>
   <div class="card-body">
-<pre><code>lst = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>]
+    <pre><code>lst = [<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="num">4</span>, <span <span class="kw">class</span>="num">5</span>]
 
-<span class="cm"># CRUD</span>
-lst.<span class="fn">append</span>(<span class="num">6</span>)          <span class="cm"># [1,2,3,4,5,6]</span>
-lst.<span class="fn">insert</span>(<span class="num">0</span>, <span class="num">0</span>)       <span class="cm"># [0,1,2,3,4,5,6]</span>
-lst.<span class="fn">extend</span>([<span class="num">7</span>,<span class="num">8</span>])      <span class="cm"># append multiple</span>
-lst.<span class="fn">pop</span>()               <span class="cm"># remove & return last</span>
-lst.<span class="fn">pop</span>(<span class="num">0</span>)              <span class="cm"># remove & return first</span>
-lst.<span class="fn">remove</span>(<span class="num">3</span>)           <span class="cm"># remove first 3</span>
-<span class="kw">del</span> lst[<span class="num">1</span>:<span class="num">3</span>]           <span class="cm"># remove slice</span>
+<span <span class="kw">class</span>="cm"># CRUD</span>
+lst.append(<span <span class="kw">class</span>="num">6</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;append:&quot;</span>, lst)          <span <span class="kw">class</span>="cm"># [<span <span class="kw">class</span>="num">1</span>,<span <span class="kw">class</span>="num">2</span>,<span <span class="kw">class</span>="num">3</span>,<span <span class="kw">class</span>="num">4</span>,<span <span class="kw">class</span>="num">5</span>,<span <span class="kw">class</span>="num">6</span>]</span>
 
-<span class="cm"># Searching & Sorting</span>
-<span class="num">3</span> <span class="kw">in</span> lst               <span class="cm"># True</span>
-lst.<span class="fn">index</span>(<span class="num">3</span>)           <span class="cm"># first index of 3</span>
-lst.<span class="fn">sort</span>()              <span class="cm"># in-place sort</span>
-lst.<span class="fn">sort</span>(key=<span class="kw">lambda</span> x: -x)
-<span class="fn">sorted</span>(lst)            <span class="cm"># returns new list</span>
+lst.insert(<span <span class="kw">class</span>="num">0</span>, <span <span class="kw">class</span>="num">0</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;insert:&quot;</span>, lst)          <span <span class="kw">class</span>="cm"># [<span <span class="kw">class</span>="num">0</span>,<span <span class="kw">class</span>="num">1</span>,<span <span class="kw">class</span>="num">2</span>,<span <span class="kw">class</span>="num">3</span>,<span <span class="kw">class</span>="num">4</span>,<span <span class="kw">class</span>="num">5</span>,<span <span class="kw">class</span>="num">6</span>]</span>
 
-<span class="cm"># Slicing</span>
-lst[<span class="num">1</span>:<span class="num">4</span>]     <span class="cm"># [2,3,4]</span>
-lst[::<span class="num">2</span>]      <span class="cm"># every 2nd item</span>
-lst[::<span class="num">-1</span>]     <span class="cm"># reversed copy</span>
+lst.extend([<span <span class="kw">class</span>="num">7</span>, <span <span class="kw">class</span>="num">8</span>])
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;extend:&quot;</span>, lst)          <span <span class="kw">class</span>="cm"># [<span <span class="kw">class</span>="num">0</span>,<span <span class="kw">class</span>="num">1</span>,<span <span class="kw">class</span>="num">2</span>,<span <span class="kw">class</span>="num">3</span>,<span <span class="kw">class</span>="num">4</span>,<span <span class="kw">class</span>="num">5</span>,<span <span class="kw">class</span>="num">6</span>,<span <span class="kw">class</span>="num">7</span>,<span <span class="kw">class</span>="num">8</span>]</span>
 
-<span class="cm"># Unpacking</span>
+popped = lst.pop()
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;pop last: {popped}, <span class="fn">list</span>: {lst}&quot;</span>)
+
+popped = lst.pop(<span <span class="kw">class</span>="num">0</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;pop first: {popped}, <span class="fn">list</span>: {lst}&quot;</span>)
+
+lst.remove(<span <span class="kw">class</span>="num">3</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;remove <span <span class="kw">class</span>="num">3</span>:&quot;</span>, lst)
+
+<span <span class="kw">class</span>="cm"># Searching &amp; Sorting</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="num">4</span> <span class="kw">in</span> lst)               <span <span class="kw">class</span>="cm"># <span class="kw">True</span></span>
+lst.sort()
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;<span class="fn">sorted</span>:&quot;</span>, lst)
+lst.sort(key=<span class="kw">lambda</span> x: -x)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;reverse <span class="fn">sorted</span>:&quot;</span>, lst)
+new_sorted = <span class="fn">sorted</span>(lst)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;<span class="fn">sorted</span> copy:&quot;</span>, new_sorted)
+
+<span <span class="kw">class</span>="cm"># Slicing</span>
+lst = [<span <span class="kw">class</span>="num">10</span>, <span <span class="kw">class</span>="num">20</span>, <span <span class="kw">class</span>="num">30</span>, <span <span class="kw">class</span>="num">40</span>, <span <span class="kw">class</span>="num">50</span>]
+<span class="fn">print</span>(lst[<span <span class="kw">class</span>="num">1</span>:<span <span class="kw">class</span>="num">4</span>])     <span <span class="kw">class</span>="cm"># [<span <span class="kw">class</span>="num">20</span>, <span <span class="kw">class</span>="num">30</span>, <span <span class="kw">class</span>="num">40</span>]</span>
+<span class="fn">print</span>(lst[::<span <span class="kw">class</span>="num">2</span>])     <span <span class="kw">class</span>="cm"># [<span <span class="kw">class</span>="num">10</span>, <span <span class="kw">class</span>="num">30</span>, <span <span class="kw">class</span>="num">50</span>]</span>
+<span class="fn">print</span>(lst[::-<span <span class="kw">class</span>="num">1</span>])    <span <span class="kw">class</span>="cm"># [<span <span class="kw">class</span>="num">50</span>, <span <span class="kw">class</span>="num">40</span>, <span <span class="kw">class</span>="num">30</span>, <span <span class="kw">class</span>="num">20</span>, <span <span class="kw">class</span>="num">10</span>]</span>
+
+<span <span class="kw">class</span>="cm"># Unpacking</span>
 first, *rest = lst
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;first={first}, rest={rest}&quot;</span>)
+
 a, b, *_ = lst
-</code></pre>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;a={a}, b={b}&quot;</span>)</code></pre>
   </div>
 </div>
 
-<div class="card">
-  <div class="card-header">
-    <div class="card-icon" style="background:#fbbf2420;color:var(--accent4);">D</div>
-    <h2>Dicts & Sets</h2>
-    <span class="tag">Core</span>
+<div class="card " data-tags="dictionaries">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--green-dim);color:var(--green)">Di</div>
+    <h3>Dictionaries</h3>
+    <span class="card-tag">Jupyter ✅</span>
   </div>
   <div class="card-body">
-<pre><code><span class="cm"># Dictionary</span>
-d = {<span class="st">"name"</span>: <span class="st">"Alice"</span>, <span class="st">"age"</span>: <span class="num">30</span>}
+    <pre><code>d = {<span <span class="kw">class</span>="st">&quot;name&quot;</span>: <span <span class="kw">class</span>="st">&quot;Alice&quot;</span>, <span <span class="kw">class</span>="st">&quot;age&quot;</span>: <span <span class="kw">class</span>="num">30</span>}
 
-d[<span class="st">"name"</span>]                 <span class="cm"># "Alice"</span>
-d.<span class="fn">get</span>(<span class="st">"email"</span>, <span class="st">"N/A"</span>)    <span class="cm"># safe access</span>
-d[<span class="st">"city"</span>] = <span class="st">"NYC"</span>        <span class="cm"># add/update</span>
-d.<span class="fn">update</span>({<span class="st">"age"</span>: <span class="num">31</span>})    <span class="cm"># merge</span>
-d | {<span class="st">"x"</span>: <span class="num">1</span>}             <span class="cm"># merge (3.9+)</span>
-d.<span class="fn">pop</span>(<span class="st">"age"</span>)              <span class="cm"># remove & return</span>
-d.<span class="fn">setdefault</span>(<span class="st">"k"</span>, [])    <span class="cm"># get or set default</span>
+<span class="fn">print</span>(d[<span <span class="kw">class</span>="st">&quot;name&quot;</span>])                  <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="st">&quot;Alice&quot;</span></span>
+<span class="fn">print</span>(d.get(<span <span class="kw">class</span>="st">&quot;email&quot;</span>, <span <span class="kw">class</span>="st">&quot;N/A&quot;</span>))     <span <span class="kw">class</span>="cm"># safe access: <span <span class="kw">class</span>="st">&quot;N/A&quot;</span></span>
 
-d.<span class="fn">keys</span>() / d.<span class="fn">values</span>() / d.<span class="fn">items</span>()
+d[<span <span class="kw">class</span>="st">&quot;city&quot;</span>] = <span <span class="kw">class</span>="st">&quot;NYC&quot;</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;after add:&quot;</span>, d)
 
-<span class="cm"># Set</span>
-s = {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>}
-s.<span class="fn">add</span>(<span class="num">4</span>) / s.<span class="fn">discard</span>(<span class="num">2</span>)
-s1 <span class="op">&</span> s2   <span class="cm"># intersection</span>
-s1 <span class="op">|</span> s2   <span class="cm"># union</span>
-s1 <span class="op">-</span> s2   <span class="cm"># difference</span>
-s1 <span class="op">^</span> s2   <span class="cm"># symmetric diff</span>
+d.update({<span <span class="kw">class</span>="st">&quot;age&quot;</span>: <span <span class="kw">class</span>="num">31</span>})
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;after update:&quot;</span>, d)
 
-<span class="cm"># Counter (from collections)</span>
-<span class="kw">from</span> collections <span class="kw">import</span> Counter
-Counter(<span class="st">"banana"</span>)
-<span class="cm"># Counter({'a':3, 'n':2, 'b':1})</span>
-</code></pre>
+merged = d | {<span <span class="kw">class</span>="st">&quot;x&quot;</span>: <span <span class="kw">class</span>="num">1</span>}            <span <span class="kw">class</span>="cm"># merge (<span <span class="kw">class</span>="num">3.9</span>+)</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;merged:&quot;</span>, merged)
+
+removed = d.pop(<span <span class="kw">class</span>="st">&quot;age&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;popped age={removed}, <span class="fn">dict</span>={d}&quot;</span>)
+
+d.setdefault(<span <span class="kw">class</span>="st">&quot;tags&quot;</span>, [])
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;setdefault:&quot;</span>, d)
+
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;keys:&quot;</span>, <span class="fn">list</span>(d.keys()))
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;values:&quot;</span>, <span class="fn">list</span>(d.values()))
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;items:&quot;</span>, <span class="fn">list</span>(d.items()))</code></pre>
   </div>
 </div>
 
-<!-- FUNCTIONS -->
-<div class="section-divider" id="functions"><h3>Functions</h3></div>
-
-<div class="card">
-  <div class="card-header">
-    <div class="card-icon" style="background:#818cf820;color:var(--accent2);">λ</div>
-    <h2>Functions & Lambdas</h2>
-    <span class="tag">Core</span>
+<div class="card " data-tags="sets">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--green-dim);color:var(--green)">Se</div>
+    <h3>Sets</h3>
+    <span class="card-tag">Jupyter ✅</span>
   </div>
   <div class="card-body">
-<pre><code><span class="cm"># Standard function</span>
-<span class="kw">def</span> <span class="fn">greet</span>(name, greeting=<span class="st">"Hello"</span>):
-    <span class="st">"""Docstring: describes function."""</span>
-    <span class="kw">return</span> <span class="st">f"</span><span class="st">{greeting}, {name}!"</span>
+    <pre><code>s1 = {<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="num">4</span>}
+s2 = {<span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="num">4</span>, <span <span class="kw">class</span>="num">5</span>, <span <span class="kw">class</span>="num">6</span>}
 
-<span class="cm"># *args and **kwargs</span>
-<span class="kw">def</span> <span class="fn">flex</span>(*args, **kwargs):
-    <span class="fn">print</span>(args)    <span class="cm"># tuple</span>
-    <span class="fn">print</span>(kwargs)  <span class="cm"># dict</span>
+s1.add(<span <span class="kw">class</span>="num">5</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;after add:&quot;</span>, s1)
 
-<span class="cm"># Lambda</span>
-square = <span class="kw">lambda</span> x: x ** <span class="num">2</span>
+s1.discard(<span <span class="kw">class</span>="num">5</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;after discard:&quot;</span>, s1)
 
-<span class="cm"># Higher-order functions</span>
-<span class="fn">map</span>(<span class="kw">lambda</span> x: x*<span class="num">2</span>, [<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>])  <span class="cm"># [2,4,6]</span>
-<span class="fn">filter</span>(<span class="kw">lambda</span> x: x><span class="num">2</span>, [<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>]) <span class="cm"># [3]</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;intersection:&quot;</span>, s1 &amp; s2)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;union:&quot;</span>, s1 | s2)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;difference:&quot;</span>, s1 - s2)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;symmetric diff:&quot;</span>, s1 ^ s2)</code></pre>
+  </div>
+</div>
+
+<div class="card " data-tags="counter">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--green-dim);color:var(--green)">Co</div>
+    <h3>Counter</h3>
+    <span class="card-tag">Jupyter ✅</span>
+  </div>
+  <div class="card-body">
+    <pre><code><span class="kw">from</span> collections <span class="kw">import</span> Counter
+
+c = Counter(<span <span class="kw">class</span>="st">&quot;banana&quot;</span>)
+<span class="fn">print</span>(c)                    <span <span class="kw">class</span>="cm"># Counter({<span <span class="kw">class</span>="st">&#x27;a&#x27;</span>: <span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="st">&#x27;n&#x27;</span>: <span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="st">&#x27;b&#x27;</span>: <span <span class="kw">class</span>="num">1</span>})</span>
+<span class="fn">print</span>(c.most_common(<span <span class="kw">class</span>="num">2</span>))    <span <span class="kw">class</span>="cm"># [(<span <span class="kw">class</span>="st">&#x27;a&#x27;</span>, <span <span class="kw">class</span>="num">3</span>), (<span <span class="kw">class</span>="st">&#x27;n&#x27;</span>, <span <span class="kw">class</span>="num">2</span>)]</span>
+
+words = [<span <span class="kw">class</span>="st">&quot;apple&quot;</span>, <span <span class="kw">class</span>="st">&quot;banana&quot;</span>, <span <span class="kw">class</span>="st">&quot;apple&quot;</span>, <span <span class="kw">class</span>="st">&quot;cherry&quot;</span>, <span <span class="kw">class</span>="st">&quot;banana&quot;</span>, <span <span class="kw">class</span>="st">&quot;apple&quot;</span>]
+word_counts = Counter(words)
+<span class="fn">print</span>(word_counts)</code></pre>
+  </div>
+</div>
+
+<div class="section-divider" id="functions" data-section="functions">
+  <h2>Functions</h2>
+  <div class="line"></div>
+  
+</div>
+
+<div class="card " data-tags="functions & lambdas">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--cyan-dim);color:var(--cyan)">Fu</div>
+    <h3>Functions &amp; Lambdas</h3>
+    <span class="card-tag">Jupyter ✅</span>
+  </div>
+  <div class="card-body">
+    <pre><code><span <span class="kw">class</span>="cm"># Standard function</span>
+<span class="kw">def</span> greet(name, greeting=<span <span class="kw">class</span>="st">&quot;Hello&quot;</span>):
+    <span <span class="kw">class</span>="st"><span <span class="kw">class</span>="st">&quot;&quot;</span><span <span class="kw">class</span>="st">&quot;Docstring: describes function.&quot;</span><span <span class="kw">class</span>="st">&quot;&quot;</span></span>
+    <span class="kw">return</span> <span <span class="kw">class</span>="st">f&quot;{greeting}, {name}!&quot;</span>
+
+<span class="fn">print</span>(greet(<span <span class="kw">class</span>="st">&quot;Alice&quot;</span>))
+<span class="fn">print</span>(greet(<span <span class="kw">class</span>="st">&quot;Bob&quot;</span>, <span <span class="kw">class</span>="st">&quot;Hi&quot;</span>))
+
+<span <span class="kw">class</span>="cm"># *args <span class="kw">and</span> **kwargs</span>
+<span class="kw">def</span> flex(*args, **kwargs):
+    <span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;args:&quot;</span>, args)
+    <span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;kwargs:&quot;</span>, kwargs)
+
+flex(<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">3</span>, x=<span <span class="kw">class</span>="num">10</span>, y=<span <span class="kw">class</span>="num">20</span>)
+
+<span <span class="kw">class</span>="cm"># Lambda</span>
+square = <span class="kw">lambda</span> x: x ** <span <span class="kw">class</span>="num">2</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;square(<span <span class="kw">class</span>="num">5</span>) = {square(<span <span class="kw">class</span>="num">5</span>)}&quot;</span>)
+
+<span <span class="kw">class</span>="cm"># Higher-order functions</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;<span class="fn">map</span>:&quot;</span>, <span class="fn">list</span>(<span class="fn">map</span>(<span class="kw">lambda</span> x: x*<span <span class="kw">class</span>="num">2</span>, [<span <span class="kw">class</span>="num">1</span>,<span <span class="kw">class</span>="num">2</span>,<span <span class="kw">class</span>="num">3</span>])))
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;<span class="fn">filter</span>:&quot;</span>, <span class="fn">list</span>(<span class="fn">filter</span>(<span class="kw">lambda</span> x: x&gt;<span <span class="kw">class</span>="num">2</span>, [<span <span class="kw">class</span>="num">1</span>,<span <span class="kw">class</span>="num">2</span>,<span <span class="kw">class</span>="num">3</span>,<span <span class="kw">class</span>="num">4</span>,<span <span class="kw">class</span>="num">5</span>])))
+
 <span class="kw">from</span> functools <span class="kw">import</span> reduce
-<span class="fn">reduce</span>(<span class="kw">lambda</span> a,b: a+b, [<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>])  <span class="cm"># 6</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;reduce:&quot;</span>, reduce(<span class="kw">lambda</span> a, b: a+b, [<span <span class="kw">class</span>="num">1</span>,<span <span class="kw">class</span>="num">2</span>,<span <span class="kw">class</span>="num">3</span>,<span <span class="kw">class</span>="num">4</span>]))  <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="num">10</span></span>
 
-<span class="cm"># Type hints (3.5+)</span>
-<span class="kw">def</span> <span class="fn">add</span>(a: <span class="nb">int</span>, b: <span class="nb">int</span>) -> <span class="nb">int</span>:
+<span <span class="kw">class</span>="cm"># Type hints (<span <span class="kw">class</span>="num">3.5</span>+)</span>
+<span class="kw">def</span> add(a: <span class="fn">int</span>, b: <span class="fn">int</span>) -&gt; <span class="fn">int</span>:
     <span class="kw">return</span> a + b
-</code></pre>
+
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;add(<span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="num">4</span>) = {add(<span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="num">4</span>)}&quot;</span>)</code></pre>
   </div>
 </div>
 
-<div class="card">
-  <div class="card-header">
-    <div class="card-icon" style="background:#67e8f920;color:var(--accent5);">@</div>
-    <h2>Decorators & Generators</h2>
-    <span class="tag">Intermediate</span>
+<div class="card " data-tags="decorators & generators">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--cyan-dim);color:var(--cyan)">De</div>
+    <h3>Decorators &amp; Generators</h3>
+    <span class="card-tag">Jupyter ✅</span>
   </div>
   <div class="card-body">
-<pre><code><span class="cm"># Decorator</span>
-<span class="kw">import</span> time
-<span class="kw">def</span> <span class="fn">timer</span>(func):
-    <span class="kw">def</span> <span class="fn">wrapper</span>(*args, **kw):
-        t0 = time.<span class="fn">time</span>()
-        result = <span class="fn">func</span>(*args, **kw)
-        <span class="fn">print</span>(<span class="st">f"</span><span class="st">{time.time()-t0:.3f}s"</span>)
+    <pre><code><span class="kw">import</span> time
+
+<span <span class="kw">class</span>="cm"># Decorator — timer</span>
+<span class="kw">def</span> timer(func):
+    <span class="kw">def</span> wrapper(*args, **kw):
+        t0 = time.time()
+        result = func(*args, **kw)
+        <span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;  ⏱ {func.__name__}: {time.time()-t0:.3f}s&quot;</span>)
         <span class="kw">return</span> result
     <span class="kw">return</span> wrapper
 
-<span class="kw">@timer</span>
-<span class="kw">def</span> <span class="fn">slow</span>(): time.<span class="fn">sleep</span>(<span class="num">1</span>)
+<span class="dc">@timer</span>
+<span class="kw">def</span> slow():
+    time.sleep(<span <span class="kw">class</span>="num">0.1</span>)
+    <span class="kw">return</span> <span <span class="kw">class</span>="st">&quot;done&quot;</span>
 
-<span class="cm"># Generator (lazy evaluation)</span>
-<span class="kw">def</span> <span class="fn">fibonacci</span>():
-    a, b = <span class="num">0</span>, <span class="num">1</span>
-    <span class="kw">while</span> <span class="nb">True</span>:
+<span class="fn">print</span>(slow())
+
+<span <span class="kw">class</span>="cm"># Generator (lazy evaluation)</span>
+<span class="kw">def</span> fibonacci(n):
+    a, b = <span <span class="kw">class</span>="num">0</span>, <span <span class="kw">class</span>="num">1</span>
+    <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(n):
         <span class="kw">yield</span> a
         a, b = b, a + b
 
-gen = <span class="fn">fibonacci</span>()
-<span class="fn">next</span>(gen)  <span class="cm"># 0</span>
-<span class="fn">next</span>(gen)  <span class="cm"># 1</span>
+gen = fibonacci(<span <span class="kw">class</span>="num">10</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;fibonacci:&quot;</span>, <span class="fn">list</span>(gen))
 
-<span class="cm"># Generator expression</span>
-squares = (x**<span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>))
-</code></pre>
+<span <span class="kw">class</span>="cm"># Generator expression</span>
+squares = (x**<span <span class="kw">class</span>="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span <span class="kw">class</span>="num">10</span>))
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;<span class="fn">sum</span> of squares:&quot;</span>, <span class="fn">sum</span>(squares))</code></pre>
   </div>
 </div>
 
-<!-- COMPREHENSIONS -->
-<div class="section-divider" id="comprehensions"><h3>Comprehensions</h3></div>
+<div class="section-divider" id="comprehensions" data-section="comprehensions">
+  <h2>Comprehensions</h2>
+  <div class="line"></div>
+  <span class="badge" style="background:var(--green-dim);color:var(--green)">Pythonic</span>
+</div>
 
-<div class="card wide">
-  <div class="card-header">
-    <div class="card-icon" style="background:#f9a8d420;color:var(--accent3);">C</div>
-    <h2>Comprehensions</h2>
-    <span class="tag">Pythonic</span>
+<div class="card wide" data-tags="comprehensions">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--green-dim);color:var(--green)">Co</div>
+    <h3>Comprehensions</h3>
+    <span class="card-tag">Jupyter ✅</span>
   </div>
   <div class="card-body">
-<pre><code><span class="cm"># List comprehension</span>
-squares = [x**<span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)]
-evens   = [x <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20</span>) <span class="kw">if</span> x % <span class="num">2</span> == <span class="num">0</span>]
+    <pre><code><span <span class="kw">class</span>="cm"># List comprehension</span>
+squares = [x**<span <span class="kw">class</span>="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span <span class="kw">class</span>="num">10</span>)]
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;squares:&quot;</span>, squares)
 
-<span class="cm"># Nested</span>
+evens = [x <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span <span class="kw">class</span>="num">20</span>) <span class="kw">if</span> x % <span <span class="kw">class</span>="num">2</span> == <span <span class="kw">class</span>="num">0</span>]
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;evens:&quot;</span>, evens)
+
+<span <span class="kw">class</span>="cm"># Nested — flatten</span>
+matrix = [[<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">3</span>], [<span <span class="kw">class</span>="num">4</span>, <span <span class="kw">class</span>="num">5</span>, <span <span class="kw">class</span>="num">6</span>], [<span <span class="kw">class</span>="num">7</span>, <span <span class="kw">class</span>="num">8</span>, <span <span class="kw">class</span>="num">9</span>]]
 flat = [x <span class="kw">for</span> row <span class="kw">in</span> matrix <span class="kw">for</span> x <span class="kw">in</span> row]
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;flat:&quot;</span>, flat)
 
-<span class="cm"># Dict comprehension</span>
-word_len = {w: <span class="fn">len</span>(w) <span class="kw">for</span> w <span class="kw">in</span> [<span class="st">"hello"</span>, <span class="st">"world"</span>]}
+<span <span class="kw">class</span>="cm"># Dict comprehension</span>
+word_len = {w: <span class="fn">len</span>(w) <span class="kw">for</span> w <span class="kw">in</span> [<span <span class="kw">class</span>="st">&quot;hello&quot;</span>, <span <span class="kw">class</span>="st">&quot;world&quot;</span>, <span <span class="kw">class</span>="st">&quot;python&quot;</span>]}
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;word_len:&quot;</span>, word_len)
 
-<span class="cm"># Set comprehension</span>
+<span <span class="kw">class</span>="cm"># Set comprehension</span>
+words = [<span <span class="kw">class</span>="st">&quot;hello&quot;</span>, <span <span class="kw">class</span>="st">&quot;world&quot;</span>, <span <span class="kw">class</span>="st">&quot;hi&quot;</span>, <span <span class="kw">class</span>="st">&quot;hey&quot;</span>, <span <span class="kw">class</span>="st">&quot;python&quot;</span>]
 unique_lengths = {<span class="fn">len</span>(w) <span class="kw">for</span> w <span class="kw">in</span> words}
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;unique_lengths:&quot;</span>, unique_lengths)
 
-<span class="cm"># Conditional expression in comprehension</span>
-labels = [<span class="st">"even"</span> <span class="kw">if</span> x%<span class="num">2</span>==<span class="num">0</span> <span class="kw">else</span> <span class="st">"odd"</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>)]
+<span <span class="kw">class</span>="cm"># Conditional expression <span class="kw">in</span> comprehension</span>
+labels = [<span <span class="kw">class</span>="st">&quot;even&quot;</span> <span class="kw">if</span> x%<span <span class="kw">class</span>="num">2</span>==<span <span class="kw">class</span>="num">0</span> <span class="kw">else</span> <span <span class="kw">class</span>="st">&quot;odd&quot;</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span <span class="kw">class</span>="num">6</span>)]
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;labels:&quot;</span>, labels)
 
-<span class="cm"># Walrus operator (3.8+)</span>
-results = [y <span class="kw">for</span> x <span class="kw">in</span> data <span class="kw">if</span> (y := <span class="fn">process</span>(x)) > <span class="num">0</span>]
-</code></pre>
+<span <span class="kw">class</span>="cm"># Walrus operator (<span <span class="kw">class</span>="num">3.8</span>+)</span>
+data = [<span <span class="kw">class</span>="num">1</span>, -<span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">3</span>, -<span <span class="kw">class</span>="num">4</span>, <span <span class="kw">class</span>="num">5</span>]
+<span class="kw">def</span> process(x):
+    <span class="kw">return</span> x * <span <span class="kw">class</span>="num">10</span> <span class="kw">if</span> x &gt; <span <span class="kw">class</span>="num">0</span> <span class="kw">else</span> <span class="kw">None</span>
+
+results = [y <span class="kw">for</span> x <span class="kw">in</span> data <span class="kw">if</span> (y := process(x)) <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>]
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;walrus results:&quot;</span>, results)</code></pre>
   </div>
 </div>
 
-<!-- OOP -->
-<div class="section-divider" id="oop"><h3>Object-Oriented Programming</h3></div>
+<div class="section-divider" id="object-oriented-programming" data-section="object-oriented-programming">
+  <h2>Object-Oriented Programming</h2>
+  <div class="line"></div>
+  <span class="badge" style="background:var(--purple-dim);color:var(--purple)">OOP</span>
+</div>
 
-<div class="card wide">
-  <div class="card-header">
-    <div class="card-icon" style="background:#818cf820;color:var(--accent2);">C</div>
-    <h2>Classes & Dataclasses</h2>
-    <span class="tag">OOP</span>
+<div class="card wide" data-tags="object-oriented programming">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--purple-dim);color:var(--purple)">Ob</div>
+    <h3>Object-Oriented Programming</h3>
+    <span class="card-tag">Jupyter ✅</span>
   </div>
   <div class="card-body">
-<pre><code><span class="cm"># Standard class</span>
-<span class="kw">class</span> <span class="fn">Animal</span>:
-    species_count = <span class="num">0</span>              <span class="cm"># class variable</span>
+    <pre><code><span <span class="kw">class</span>="cm"># Standard <span class="kw">class</span></span>
+<span class="kw">class</span> Animal:
+    species_count = <span <span class="kw">class</span>="num">0</span>
 
-    <span class="kw">def</span> <span class="fn">__init__</span>(self, name, sound):
-        self.name = name            <span class="cm"># instance variable</span>
+    <span class="kw">def</span> __init__(self, name, sound):
+        self.name = name
         self.sound = sound
-        Animal.species_count += <span class="num">1</span>
+        Animal.species_count += <span <span class="kw">class</span>="num">1</span>
 
-    <span class="kw">def</span> <span class="fn">speak</span>(self):
-        <span class="kw">return</span> <span class="st">f"</span><span class="st">{self.name} says {self.sound}!"</span>
+    <span class="kw">def</span> speak(self):
+        <span class="kw">return</span> <span <span class="kw">class</span>="st">f&quot;{self.name} says {self.sound}!&quot;</span>
 
-    <span class="kw">def</span> <span class="fn">__repr__</span>(self):
-        <span class="kw">return</span> <span class="st">f"</span><span class="st">Animal({self.name!r})"</span>
+    <span class="kw">def</span> __repr__(self):
+        <span class="kw">return</span> <span <span class="kw">class</span>="st">f&quot;Animal({self.name!r})&quot;</span>
 
-<span class="cm"># Inheritance</span>
-<span class="kw">class</span> <span class="fn">Dog</span>(Animal):
-    <span class="kw">def</span> <span class="fn">__init__</span>(self, name):
-        <span class="fn">super</span>().__init__(name, <span class="st">"Woof"</span>)
+<span <span class="kw">class</span>="cm"># Inheritance</span>
+<span class="kw">class</span> Dog(Animal):
+    <span class="kw">def</span> __init__(self, name):
+        <span class="fn">super</span>().__init__(name, <span <span class="kw">class</span>="st">&quot;Woof&quot;</span>)
 
-    <span class="kw">def</span> <span class="fn">fetch</span>(self, item):
-        <span class="kw">return</span> <span class="st">f"</span><span class="st">{self.name} fetches {item}"</span>
+    <span class="kw">def</span> fetch(self, item):
+        <span class="kw">return</span> <span <span class="kw">class</span>="st">f&quot;{self.name} fetches {item}&quot;</span>
 
-<span class="cm"># Dataclass (3.7+) — less boilerplate!</span>
+dog = Dog(<span <span class="kw">class</span>="st">&quot;Rex&quot;</span>)
+<span class="fn">print</span>(dog.speak())
+<span class="fn">print</span>(dog.fetch(<span <span class="kw">class</span>="st">&quot;ball&quot;</span>))
+<span class="fn">print</span>(<span class="fn">repr</span>(dog))
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;Species count: {Animal.species_count}&quot;</span>)
+
+<span <span class="kw">class</span>="cm"># Dataclass (<span <span class="kw">class</span>="num">3.7</span>+)</span>
 <span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass
 
-<span class="kw">@dataclass</span>
-<span class="kw">class</span> <span class="fn">Point</span>:
-    x: <span class="nb">float</span>
-    y: <span class="nb">float</span>
-    label: <span class="nb">str</span> = <span class="st">"origin"</span>
+<span class="dc">@dataclass</span>
+<span class="kw">class</span> Point:
+    x: <span class="fn">float</span>
+    y: <span class="fn">float</span>
+    label: <span class="fn">str</span> = <span <span class="kw">class</span>="st">&quot;origin&quot;</span>
 
-p = Point(<span class="num">1.0</span>, <span class="num">2.0</span>)   <span class="cm"># auto __init__, __repr__, __eq__</span>
-</code></pre>
+p = Point(<span <span class="kw">class</span>="num">1.0</span>, <span <span class="kw">class</span>="num">2.0</span>, <span <span class="kw">class</span>="st">&quot;A&quot;</span>)
+<span class="fn">print</span>(p)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;x={p.x}, y={p.y}&quot;</span>)
+<span class="fn">print</span>(p == Point(<span <span class="kw">class</span>="num">1.0</span>, <span <span class="kw">class</span>="num">2.0</span>, <span <span class="kw">class</span>="st">&quot;A&quot;</span>))  <span <span class="kw">class</span>="cm"># <span class="kw">True</span> — auto __eq__</span></code></pre>
   </div>
 </div>
 
-<!-- FILE I/O -->
-<div class="section-divider" id="files"><h3>File I/O</h3></div>
+<div class="section-divider" id="file-i/o" data-section="file-i/o">
+  <h2>File I/O</h2>
+  <div class="line"></div>
+  <span class="badge" style="background:var(--amber-dim);color:var(--amber)">I/O</span>
+</div>
 
-<div class="card">
-  <div class="card-header">
-    <div class="card-icon" style="background:#fbbf2420;color:var(--accent4);">F</div>
-    <h2>File Operations</h2>
-    <span class="tag">I/O</span>
+<div class="card wide" data-tags="file i/o">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--amber-dim);color:var(--amber)">Fi</div>
+    <h3>File I/O</h3>
+    <span class="card-tag">Jupyter ✅</span>
   </div>
   <div class="card-body">
-<pre><code><span class="cm"># Read</span>
-<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"file.txt"</span>) <span class="kw">as</span> f:
-    content = f.<span class="fn">read</span>()          <span class="cm"># whole file</span>
-    lines   = f.<span class="fn">readlines</span>()      <span class="cm"># list</span>
-
-<span class="cm"># Write</span>
-<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"out.txt"</span>, <span class="st">"w"</span>) <span class="kw">as</span> f:
-    f.<span class="fn">write</span>(<span class="st">"Hello\n"</span>)
-
-<span class="cm"># Append</span>
-<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"log.txt"</span>, <span class="st">"a"</span>) <span class="kw">as</span> f:
-    f.<span class="fn">write</span>(<span class="st">"new line\n"</span>)
-
-<span class="cm"># JSON</span>
-<span class="kw">import</span> json
-data = json.<span class="fn">loads</span>(json_str)
-json_str = json.<span class="fn">dumps</span>(data, indent=<span class="num">2</span>)
-
-<span class="cm"># CSV</span>
+    <pre><code><span class="kw">import</span> json
 <span class="kw">import</span> csv
-<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"data.csv"</span>) <span class="kw">as</span> f:
-    reader = csv.<span class="fn">DictReader</span>(f)
-    <span class="kw">for</span> row <span class="kw">in</span> reader:
-        <span class="fn">print</span>(row)
-
-<span class="cm"># pathlib (modern paths)</span>
+<span class="kw">import</span> os
 <span class="kw">from</span> pathlib <span class="kw">import</span> Path
-p = Path(<span class="st">"data"</span>) / <span class="st">"file.csv"</span>
-p.<span class="fn">exists</span>() / p.<span class="fn">read_text</span>()
-<span class="fn">list</span>(Path(<span class="st">"."</span>).<span class="fn">glob</span>(<span class="st">"*.py"</span>))
-</code></pre>
+
+<span <span class="kw">class</span>="cm"># Write a text file</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span <span class="kw">class</span>="st">&quot;demo_file.txt&quot;</span>, <span <span class="kw">class</span>="st">&quot;w&quot;</span>) <span class="kw">as</span> f:
+    f.write(<span <span class="kw">class</span>="st">&quot;Hello, Jupyter!\nSecond line\n&quot;</span>)
+
+<span <span class="kw">class</span>="cm"># Read it back</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span <span class="kw">class</span>="st">&quot;demo_file.txt&quot;</span>) <span class="kw">as</span> f:
+    content = f.read()
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;File content:&quot;</span>, <span class="fn">repr</span>(content))
+
+<span <span class="kw">class</span>="cm"># Append</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span <span class="kw">class</span>="st">&quot;demo_file.txt&quot;</span>, <span <span class="kw">class</span>="st">&quot;a&quot;</span>) <span class="kw">as</span> f:
+    f.write(<span <span class="kw">class</span>="st">&quot;Appended line\n&quot;</span>)
+
+<span class="kw">with</span> <span class="fn">open</span>(<span <span class="kw">class</span>="st">&quot;demo_file.txt&quot;</span>) <span class="kw">as</span> f:
+    lines = f.readlines()
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;Lines:&quot;</span>, lines)
+
+<span <span class="kw">class</span>="cm"># JSON</span>
+data = {<span <span class="kw">class</span>="st">&quot;name&quot;</span>: <span <span class="kw">class</span>="st">&quot;Alice&quot;</span>, <span <span class="kw">class</span>="st">&quot;scores&quot;</span>: [<span <span class="kw">class</span>="num">95</span>, <span <span class="kw">class</span>="num">87</span>, <span <span class="kw">class</span>="num">92</span>], <span <span class="kw">class</span>="st">&quot;active&quot;</span>: <span class="kw">True</span>}
+json_str = json.dumps(data, indent=<span <span class="kw">class</span>="num">2</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;JSON:\n&quot;</span>, json_str)
+
+parsed = json.loads(json_str)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;Parsed:&quot;</span>, parsed)
+
+<span <span class="kw">class</span>="cm"># Write/Read JSON file</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span <span class="kw">class</span>="st">&quot;demo.json&quot;</span>, <span <span class="kw">class</span>="st">&quot;w&quot;</span>) <span class="kw">as</span> f:
+    json.dump(data, f, indent=<span <span class="kw">class</span>="num">2</span>)
+<span class="kw">with</span> <span class="fn">open</span>(<span <span class="kw">class</span>="st">&quot;demo.json&quot;</span>) <span class="kw">as</span> f:
+    loaded = json.load(f)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;Loaded JSON:&quot;</span>, loaded)
+
+<span <span class="kw">class</span>="cm"># CSV</span>
+rows = [{<span <span class="kw">class</span>="st">&quot;name&quot;</span>: <span <span class="kw">class</span>="st">&quot;Alice&quot;</span>, <span <span class="kw">class</span>="st">&quot;age&quot;</span>: <span <span class="kw">class</span>="num">30</span>}, {<span <span class="kw">class</span>="st">&quot;name&quot;</span>: <span <span class="kw">class</span>="st">&quot;Bob&quot;</span>, <span <span class="kw">class</span>="st">&quot;age&quot;</span>: <span <span class="kw">class</span>="num">25</span>}]
+<span class="kw">with</span> <span class="fn">open</span>(<span <span class="kw">class</span>="st">&quot;demo.csv&quot;</span>, <span <span class="kw">class</span>="st">&quot;w&quot;</span>, newline=<span <span class="kw">class</span>="st">&quot;&quot;</span>) <span class="kw">as</span> f:
+    writer = csv.DictWriter(f, fieldnames=[<span <span class="kw">class</span>="st">&quot;name&quot;</span>, <span <span class="kw">class</span>="st">&quot;age&quot;</span>])
+    writer.writeheader()
+    writer.writerows(rows)
+
+<span class="kw">with</span> <span class="fn">open</span>(<span <span class="kw">class</span>="st">&quot;demo.csv&quot;</span>) <span class="kw">as</span> f:
+    <span class="kw">for</span> row <span class="kw">in</span> csv.DictReader(f):
+        <span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;CSV row:&quot;</span>, row)
+
+<span <span class="kw">class</span>="cm"># pathlib</span>
+p = Path(<span <span class="kw">class</span>="st">&quot;demo.csv&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;exists: {p.exists()}, suffix: {p.suffix}, stem: {p.stem}&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;glob .txt:&quot;</span>, <span class="fn">list</span>(Path(<span <span class="kw">class</span>="st">&quot;.&quot;</span>).glob(<span <span class="kw">class</span>="st">&quot;demo*&quot;</span>)))
+
+<span <span class="kw">class</span>="cm"># Cleanup</span>
+<span class="kw">for</span> f <span class="kw">in</span> [<span <span class="kw">class</span>="st">&quot;demo_file.txt&quot;</span>, <span <span class="kw">class</span>="st">&quot;demo.json&quot;</span>, <span <span class="kw">class</span>="st">&quot;demo.csv&quot;</span>]:
+    Path(f).unlink(missing_ok=<span class="kw">True</span>)</code></pre>
   </div>
 </div>
 
-<!-- ERROR HANDLING -->
-<div class="card" id="error">
-  <div class="card-header">
-    <div class="card-icon" style="background:#f9a8d420;color:var(--accent3);">!</div>
-    <h2>Error Handling</h2>
-    <span class="tag">Core</span>
+<div class="section-divider" id="error-handling" data-section="error-handling">
+  <h2>Error Handling</h2>
+  <div class="line"></div>
+  <span class="badge" style="background:var(--red-dim);color:var(--red)">Essential</span>
+</div>
+
+<div class="card wide" data-tags="error handling">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--red-dim);color:var(--red)">Er</div>
+    <h3>Error Handling</h3>
+    <span class="card-tag">Jupyter ✅</span>
   </div>
   <div class="card-body">
-<pre><code><span class="kw">try</span>:
-    result = <span class="num">10</span> / x
-    data = json.<span class="fn">loads</span>(raw)
-<span class="kw">except</span> ZeroDivisionError:
-    <span class="fn">print</span>(<span class="st">"Can't divide by zero"</span>)
-<span class="kw">except</span> (ValueError, KeyError) <span class="kw">as</span> e:
-    <span class="fn">print</span>(<span class="st">f"</span><span class="st">Error: {e}"</span>)
-<span class="kw">except</span> Exception <span class="kw">as</span> e:
-    <span class="fn">print</span>(<span class="st">f"</span><span class="st">Unexpected: {e}"</span>)
-    <span class="kw">raise</span>  <span class="cm"># re-raise</span>
-<span class="kw">else</span>:
-    <span class="fn">print</span>(<span class="st">"Success!"</span>)
-<span class="kw">finally</span>:
-    <span class="fn">cleanup</span>()
+    <pre><code><span class="kw">import</span> json
 
-<span class="cm"># Custom exception</span>
-<span class="kw">class</span> <span class="fn">ValidationError</span>(Exception):
-    <span class="kw">def</span> <span class="fn">__init__</span>(self, field, msg):
-        <span class="fn">super</span>().__init__(<span class="st">f"</span><span class="st">{field}: {msg}"</span>)
+<span <span class="kw">class</span>="cm"># Try/<span class="kw">except</span> <span class="kw">with</span> <span class="fn">all</span> clauses</span>
+x = <span <span class="kw">class</span>="num">2</span>
+raw = &<span <span class="kw">class</span>="cm">#x27;{<span <span class="kw">class</span>="st">&quot;key&quot;</span>: <span <span class="kw">class</span>="st">&quot;value&quot;</span>}&#x27;</span>
+
+<span class="kw">try</span>:
+    result = <span <span class="kw">class</span>="num">10</span> / x
+    data = json.loads(raw)
+<span class="kw">except</span> ZeroDivisionError:
+    <span class="fn">print</span>(&quot;Can&<span <span class="kw">class</span>="cm">#x27;t divide by zero<span <span class="kw">class</span>="st">&quot;)</span>
+<span class="kw">except</span> (ValueError, KeyError) <span class="kw">as</span> e:
+    <span class="fn">print</span>(f&quot;</span>Error: {e}<span <span class="kw">class</span>="st">&quot;)
+<span class="kw">except</span> Exception <span class="kw">as</span> e:
+    <span class="fn">print</span>(f&quot;</span>Unexpected: {e}<span <span class="kw">class</span>="st">&quot;)
+    <span class="kw">raise</span>
+<span class="kw">else</span>:
+    <span class="fn">print</span>(f&quot;</span>Success! result={result}, data={data}<span <span class="kw">class</span>="st">&quot;)
+<span class="kw">finally</span>:
+    <span class="fn">print</span>(&quot;</span>Finally block always runs<span <span class="kw">class</span>="st">&quot;)
+
+<span <span class="kw">class</span>="cm"># Custom exception</span>
+<span class="kw">class</span> ValidationError(Exception):
+    <span class="kw">def</span> __init__(self, field, msg):
+        <span class="fn">super</span>().__init__(f&quot;</span>{field}: {msg}<span <span class="kw">class</span>="st">&quot;)
         self.field = field
 
-<span class="cm"># Context manager</span>
+<span class="kw">try</span>:
+    <span class="kw">raise</span> ValidationError(&quot;</span>email<span <span class="kw">class</span>="st">&quot;, &quot;</span>invalid <span class="fn">format</span><span <span class="kw">class</span>="st">&quot;)
+<span class="kw">except</span> ValidationError <span class="kw">as</span> e:
+    <span class="fn">print</span>(f&quot;</span>Caught: {e}, field={e.field}<span <span class="kw">class</span>="st">&quot;)
+
+<span <span class="kw">class</span>="cm"># Context manager</span>
 <span class="kw">from</span> contextlib <span class="kw">import</span> contextmanager
-<span class="kw">@contextmanager</span>
-<span class="kw">def</span> <span class="fn">managed</span>(resource):
+
+<span class="dc">@contextmanager</span>
+<span class="kw">def</span> managed_resource(name):
+    <span class="fn">print</span>(f&quot;</span>  Opening {name}<span <span class="kw">class</span>="st">&quot;)
     <span class="kw">try</span>:
-        <span class="kw">yield</span> resource
+        <span class="kw">yield</span> name
     <span class="kw">finally</span>:
-        resource.<span class="fn">close</span>()
-</code></pre>
+        <span class="fn">print</span>(f&quot;</span>  Closing {name}<span <span class="kw">class</span>="st">&quot;)
+
+<span class="kw">with</span> managed_resource(&quot;</span>database<span <span class="kw">class</span>="st">&quot;) <span class="kw">as</span> r:
+    <span class="fn">print</span>(f&quot;</span>  Using {r}&quot;)</code></pre>
   </div>
 </div>
 
-<!-- =================== DATA SCIENCE =================== -->
-<div class="section-divider" id="numpy"><h3>NumPy</h3></div>
+<div class="section-divider" id="numpy" data-section="numpy">
+  <h2>NumPy</h2>
+  <div class="line"></div>
+  <span class="badge" style="background:var(--blue-dim);color:var(--blue)">Data Science</span>
+</div>
 
-<div class="card wide">
-  <div class="card-header">
-    <div class="card-icon" style="background:#6ee7b720;color:var(--accent);">np</div>
-    <h2>NumPy Essentials</h2>
-    <span class="tag">Data Science</span>
+<div class="card wide" data-tags="numpy">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--blue-dim);color:var(--blue)">Nu</div>
+    <h3>NumPy</h3>
+    <span class="card-tag">Jupyter ✅</span>
   </div>
   <div class="card-body">
-<pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+    <pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
 
-<span class="cm"># Creating arrays</span>
-a = np.<span class="fn">array</span>([<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>])
-np.<span class="fn">zeros</span>((<span class="num">3</span>,<span class="num">4</span>))  /  np.<span class="fn">ones</span>((<span class="num">2</span>,<span class="num">3</span>))  /  np.<span class="fn">eye</span>(<span class="num">3</span>)
-np.<span class="fn">arange</span>(<span class="num">0</span>, <span class="num">10</span>, <span class="num">0.5</span>)    <span class="cm"># like range, float</span>
-np.<span class="fn">linspace</span>(<span class="num">0</span>, <span class="num">1</span>, <span class="num">50</span>)    <span class="cm"># 50 evenly spaced</span>
-np.<span class="fn">random.randn</span>(<span class="num">3</span>,<span class="num">4</span>)     <span class="cm"># normal dist</span>
+<span <span class="kw">class</span>="cm"># Creating arrays</span>
+a = np.array([<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="num">4</span>, <span <span class="kw">class</span>="num">5</span>])
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;array:&quot;</span>, a)
 
-<span class="cm"># Shape & Reshape</span>
-a.<span class="fn">shape</span>  /  a.<span class="fn">reshape</span>(<span class="num">3</span>,<span class="num">1</span>)  /  a.<span class="fn">flatten</span>()  /  a.T
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;zeros:\n&quot;</span>, np.zeros((<span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">3</span>)))
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;ones:\n&quot;</span>, np.ones((<span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">3</span>)))
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;eye:\n&quot;</span>, np.eye(<span <span class="kw">class</span>="num">3</span>))
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;arange:&quot;</span>, np.arange(<span <span class="kw">class</span>="num">0</span>, <span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">0.5</span>))
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;linspace:&quot;</span>, np.linspace(<span <span class="kw">class</span>="num">0</span>, <span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">5</span>))
 
-<span class="cm"># Indexing</span>
-a[a > <span class="num">2</span>]                   <span class="cm"># boolean mask</span>
-a[np.<span class="fn">where</span>(a > <span class="num">2</span>, a, <span class="num">0</span>)]  <span class="cm"># conditional</span>
-a[<span class="num">0</span>, :]  /  a[:, <span class="num">1</span>]        <span class="cm"># row / column</span>
+np.random.seed(<span <span class="kw">class</span>="num">42</span>)
+rand_arr = np.random.randn(<span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="num">4</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;random:\n&quot;</span>, rand_arr)
 
-<span class="cm"># Vectorized operations (fast!)</span>
-a + b  /  a * b  /  a @ b   <span class="cm"># elementwise & matrix mult</span>
-np.<span class="fn">dot</span>(a, b)  /  np.<span class="fn">sum</span>(a, axis=<span class="num">0</span>)
+<span <span class="kw">class</span>="cm"># Shape &amp; Reshape</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;shape: {rand_arr.shape}&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;reshaped:\n&quot;</span>, np.arange(<span <span class="kw">class</span>="num">12</span>).reshape(<span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="num">4</span>))
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;flattened:&quot;</span>, np.arange(<span <span class="kw">class</span>="num">12</span>).reshape(<span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="num">4</span>).flatten())
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;transposed:\n&quot;</span>, np.arange(<span <span class="kw">class</span>="num">6</span>).reshape(<span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">3</span>).T)
 
-<span class="cm"># Statistics</span>
-a.<span class="fn">mean</span>()  /  a.<span class="fn">std</span>()  /  a.<span class="fn">min</span>()  /  a.<span class="fn">max</span>()
-np.<span class="fn">percentile</span>(a, <span class="num">75</span>)
-np.<span class="fn">corrcoef</span>(x, y)
+<span <span class="kw">class</span>="cm"># Indexing</span>
+arr = np.array([<span <span class="kw">class</span>="num">10</span>, <span <span class="kw">class</span>="num">20</span>, <span <span class="kw">class</span>="num">30</span>, <span <span class="kw">class</span>="num">40</span>, <span <span class="kw">class</span>="num">50</span>])
+<span class="fn">print</span>(&quot;boolean mask (&gt;<span <span class="kw">class</span>="num">25</span>):&quot;, arr[arr &gt; <span <span class="kw">class</span>="num">25</span>])
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;where:&quot;</span>, np.where(arr &gt; <span <span class="kw">class</span>="num">25</span>, arr, <span <span class="kw">class</span>="num">0</span>))
 
-<span class="cm"># Stacking</span>
-np.<span class="fn">vstack</span>([a, b])  /  np.<span class="fn">hstack</span>([a, b])
-np.<span class="fn">concatenate</span>([a, b], axis=<span class="num">0</span>)
-</code></pre>
+mat = np.arange(<span <span class="kw">class</span>="num">12</span>).reshape(<span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="num">4</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;row <span <span class="kw">class</span>="num">0</span>:&quot;</span>, mat[<span <span class="kw">class</span>="num">0</span>, :])
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;col <span <span class="kw">class</span>="num">1</span>:&quot;</span>, mat[:, <span <span class="kw">class</span>="num">1</span>])
+
+<span <span class="kw">class</span>="cm"># Vectorized operations</span>
+a = np.array([<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">3</span>])
+b = np.array([<span <span class="kw">class</span>="num">4</span>, <span <span class="kw">class</span>="num">5</span>, <span <span class="kw">class</span>="num">6</span>])
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;a + b:&quot;</span>, a + b)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;a * b:&quot;</span>, a * b)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;dot:&quot;</span>, np.dot(a, b))
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;<span class="fn">sum</span> axis=<span <span class="kw">class</span>="num">0</span>:&quot;</span>, np.<span class="fn">sum</span>(mat, axis=<span <span class="kw">class</span>="num">0</span>))
+
+<span <span class="kw">class</span>="cm"># Statistics</span>
+data = np.random.randn(<span <span class="kw">class</span>="num">1000</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;mean={data.mean():.3f}, std={data.std():.3f}&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;<span class="fn">min</span>={data.<span class="fn">min</span>():.3f}, <span class="fn">max</span>={data.<span class="fn">max</span>():.3f}&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;75th percentile={np.percentile(data, <span <span class="kw">class</span>="num">75</span>):.3f}&quot;</span>)
+
+x = np.random.randn(<span <span class="kw">class</span>="num">100</span>)
+y = x * <span <span class="kw">class</span>="num">2</span> + np.random.randn(<span <span class="kw">class</span>="num">100</span>) * <span <span class="kw">class</span>="num">0.5</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;correlation:\n{np.corrcoef(x, y)}&quot;</span>)
+
+<span <span class="kw">class</span>="cm"># Stacking</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;vstack:\n&quot;</span>, np.vstack([a, b]))
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;hstack:&quot;</span>, np.hstack([a, b]))</code></pre>
   </div>
 </div>
 
-<!-- PANDAS -->
-<div class="section-divider" id="pandas"><h3>Pandas</h3></div>
+<div class="section-divider" id="pandas" data-section="pandas">
+  <h2>Pandas</h2>
+  <div class="line"></div>
+  <span class="badge" style="background:var(--blue-dim);color:var(--blue)">Data Science</span>
+</div>
 
-<div class="card">
-  <div class="card-header">
-    <div class="card-icon" style="background:#818cf820;color:var(--accent2);">pd</div>
-    <h2>DataFrames — Create & Inspect</h2>
-    <span class="tag">Data Science</span>
+<div class="card " data-tags="dataframes — create & inspect">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--blue-dim);color:var(--blue)">Da</div>
+    <h3>DataFrames — Create &amp; Inspect</h3>
+    <span class="card-tag">Jupyter ✅</span>
   </div>
   <div class="card-body">
-<pre><code><span class="kw">import</span> pandas <span class="kw">as</span> pd
+    <pre><code><span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> numpy <span class="kw">as</span> np
 
-<span class="cm"># Read data</span>
-df = pd.<span class="fn">read_csv</span>(<span class="st">"data.csv"</span>)
-df = pd.<span class="fn">read_excel</span>(<span class="st">"data.xlsx"</span>)
-df = pd.<span class="fn">read_json</span>(<span class="st">"data.json"</span>)
-df = pd.<span class="fn">read_sql</span>(query, conn)
+<span <span class="kw">class</span>="cm"># From <span class="fn">dict</span> (standalone — no files needed)</span>
+np.random.seed(<span <span class="kw">class</span>="num">42</span>)
+df = pd.DataFrame({
+    <span <span class="kw">class</span>="st">&quot;name&quot;</span>: [<span <span class="kw">class</span>="st">&quot;Alice&quot;</span>, <span <span class="kw">class</span>="st">&quot;Bob&quot;</span>, <span <span class="kw">class</span>="st">&quot;Charlie&quot;</span>, <span <span class="kw">class</span>="st">&quot;Diana&quot;</span>, <span <span class="kw">class</span>="st">&quot;Eve&quot;</span>],
+    <span <span class="kw">class</span>="st">&quot;age&quot;</span>: [<span <span class="kw">class</span>="num">30</span>, <span <span class="kw">class</span>="num">25</span>, <span <span class="kw">class</span>="num">35</span>, <span <span class="kw">class</span>="num">28</span>, <span <span class="kw">class</span>="num">32</span>],
+    <span <span class="kw">class</span>="st">&quot;city&quot;</span>: [<span <span class="kw">class</span>="st">&quot;NYC&quot;</span>, <span <span class="kw">class</span>="st">&quot;LA&quot;</span>, <span <span class="kw">class</span>="st">&quot;NYC&quot;</span>, <span <span class="kw">class</span>="st">&quot;Chicago&quot;</span>, <span <span class="kw">class</span>="st">&quot;LA&quot;</span>],
+    <span <span class="kw">class</span>="st">&quot;score&quot;</span>: [<span <span class="kw">class</span>="num">85.5</span>, <span <span class="kw">class</span>="num">92.3</span>, <span <span class="kw">class</span>="num">78.1</span>, <span <span class="kw">class</span>="num">95.0</span>, <span <span class="kw">class</span>="num">88.7</span>],
+    <span <span class="kw">class</span>="st">&quot;revenue&quot;</span>: [<span <span class="kw">class</span>="num">1200</span>, <span <span class="kw">class</span>="num">1800</span>, <span <span class="kw">class</span>="num">950</span>, <span <span class="kw">class</span>="num">2100</span>, <span <span class="kw">class</span>="num">1600</span>],
+    <span <span class="kw">class</span>="st">&quot;dept&quot;</span>: [<span <span class="kw">class</span>="st">&quot;Engineering&quot;</span>, <span <span class="kw">class</span>="st">&quot;Marketing&quot;</span>, <span <span class="kw">class</span>="st">&quot;Engineering&quot;</span>, <span <span class="kw">class</span>="st">&quot;Sales&quot;</span>, <span <span class="kw">class</span>="st">&quot;Marketing&quot;</span>],
+})
+<span class="fn">print</span>(df)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;\nShape: {df.shape}&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;\nDtypes:\n{df.dtypes}&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;\nDescribe:\n{df.describe()}&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;\nNull counts:\n{df.isnull().<span class="fn">sum</span>()}&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;\nUnique counts:\n{df.nunique()}&quot;</span>)</code></pre>
+  </div>
+</div>
 
-<span class="cm"># From dict</span>
-df = pd.<span class="fn">DataFrame</span>({
-    <span class="st">"name"</span>: [<span class="st">"Alice"</span>,<span class="st">"Bob"</span>],
-    <span class="st">"age"</span>:  [<span class="num">30</span>, <span class="num">25</span>]
+<div class="card wide" data-tags="dataframes — select & filter">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--blue-dim);color:var(--blue)">Da</div>
+    <h3>DataFrames — Select &amp; Filter</h3>
+    <span class="card-tag">Jupyter ✅</span>
+  </div>
+  <div class="card-body">
+    <pre><code><span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+np.random.seed(<span <span class="kw">class</span>="num">42</span>)
+df = pd.DataFrame({
+    <span <span class="kw">class</span>="st">&quot;name&quot;</span>: [<span <span class="kw">class</span>="st">&quot;Alice&quot;</span>, <span <span class="kw">class</span>="st">&quot;Bob&quot;</span>, <span <span class="kw">class</span>="st">&quot;Charlie&quot;</span>, <span <span class="kw">class</span>="st">&quot;Diana&quot;</span>, <span <span class="kw">class</span>="st">&quot;Eve&quot;</span>, <span <span class="kw">class</span>="st">&quot;Frank&quot;</span>],
+    <span <span class="kw">class</span>="st">&quot;age&quot;</span>: [<span <span class="kw">class</span>="num">30</span>, <span <span class="kw">class</span>="num">25</span>, <span <span class="kw">class</span>="num">35</span>, <span <span class="kw">class</span>="num">28</span>, <span <span class="kw">class</span>="num">32</span>, <span <span class="kw">class</span>="num">22</span>],
+    <span <span class="kw">class</span>="st">&quot;city&quot;</span>: [<span <span class="kw">class</span>="st">&quot;NYC&quot;</span>, <span <span class="kw">class</span>="st">&quot;LA&quot;</span>, <span <span class="kw">class</span>="st">&quot;NYC&quot;</span>, <span <span class="kw">class</span>="st">&quot;Chicago&quot;</span>, <span <span class="kw">class</span>="st">&quot;LA&quot;</span>, <span <span class="kw">class</span>="st">&quot;NYC&quot;</span>],
+    <span <span class="kw">class</span>="st">&quot;score&quot;</span>: [<span <span class="kw">class</span>="num">85.5</span>, <span <span class="kw">class</span>="num">92.3</span>, <span <span class="kw">class</span>="num">78.1</span>, <span <span class="kw">class</span>="num">95.0</span>, <span <span class="kw">class</span>="num">88.7</span>, <span <span class="kw">class</span>="num">70.2</span>],
+    <span <span class="kw">class</span>="st">&quot;weight&quot;</span>: [<span <span class="kw">class</span>="num">65</span>, <span <span class="kw">class</span>="num">80</span>, <span <span class="kw">class</span>="num">75</span>, <span <span class="kw">class</span>="num">55</span>, <span <span class="kw">class</span>="num">68</span>, <span <span class="kw">class</span>="num">90</span>],
+    <span <span class="kw">class</span>="st">&quot;height&quot;</span>: [<span <span class="kw">class</span>="num">1.65</span>, <span <span class="kw">class</span>="num">1.80</span>, <span <span class="kw">class</span>="num">1.75</span>, <span <span class="kw">class</span>="num">1.60</span>, <span <span class="kw">class</span>="num">1.70</span>, <span <span class="kw">class</span>="num">1.85</span>],
 })
 
-<span class="cm"># Inspect</span>
-df.<span class="fn">head</span>(<span class="num">10</span>)   /  df.<span class="fn">tail</span>()
-df.<span class="fn">shape</span>     /  df.<span class="fn">dtypes</span>
-df.<span class="fn">info</span>()    /  df.<span class="fn">describe</span>()
-df.<span class="fn">columns</span>   /  df.<span class="fn">index</span>
-df.<span class="fn">nunique</span>() /  df.<span class="fn">value_counts</span>()
-df.<span class="fn">isnull</span>().<span class="fn">sum</span>()
-</code></pre>
+<span <span class="kw">class</span>="cm"># Selecting</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;Single column:\n&quot;</span>, df[<span <span class="kw">class</span>="st">&quot;name&quot;</span>])
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;\nMultiple columns:\n&quot;</span>, df[[<span <span class="kw">class</span>="st">&quot;name&quot;</span>, <span <span class="kw">class</span>="st">&quot;age&quot;</span>]])
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;\nloc:\n&quot;</span>, df.loc[<span <span class="kw">class</span>="num">0</span>:<span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="st">&quot;name&quot;</span>])
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;\niloc:\n&quot;</span>, df.iloc[<span <span class="kw">class</span>="num">0</span>:<span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="num">0</span>:<span <span class="kw">class</span>="num">2</span>])
+
+<span <span class="kw">class</span>="cm"># Filtering</span>
+<span class="fn">print</span>(&quot;\nage &gt; <span <span class="kw">class</span>="num">28</span>:\n<span <span class="kw">class</span>="st">&quot;, df[df[&quot;</span>age&quot;] &gt; <span <span class="kw">class</span>="num">28</span>])
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;\nisin:\n&quot;</span>, df[df[<span <span class="kw">class</span>="st">&quot;name&quot;</span>].isin([<span <span class="kw">class</span>="st">&quot;Alice&quot;</span>, <span <span class="kw">class</span>="st">&quot;Bob&quot;</span>])])
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;\nquery:\n&quot;</span>, df.query(&quot;age &gt; <span <span class="kw">class</span>="num">25</span> <span class="kw">and</span> city == &<span <span class="kw">class</span>="cm">#x27;NYC&#x27;<span <span class="kw">class</span>="st">&quot;))</span>
+
+<span <span class="kw">class</span>="cm"># Sorting</span>
+<span class="fn">print</span>(&quot;</span>\nsorted by age desc:\n<span <span class="kw">class</span>="st">&quot;, df.sort_values(&quot;</span>age<span <span class="kw">class</span>="st">&quot;, ascending=<span class="kw">False</span>))
+<span class="fn">print</span>(&quot;</span>\ntop <span <span class="kw">class</span>="num">3</span> scores:\n<span <span class="kw">class</span>="st">&quot;, df.nlargest(<span <span class="kw">class</span>="num">3</span>, &quot;</span>score<span <span class="kw">class</span>="st">&quot;))
+
+<span <span class="kw">class</span>="cm"># New columns</span>
+df[&quot;</span>bmi<span <span class="kw">class</span>="st">&quot;] = df[&quot;</span>weight<span <span class="kw">class</span>="st">&quot;] / df[&quot;</span>height<span <span class="kw">class</span>="st">&quot;]**<span <span class="kw">class</span>="num">2</span>
+df[&quot;</span>grade<span <span class="kw">class</span>="st">&quot;] = pd.cut(df[&quot;</span>score<span <span class="kw">class</span>="st">&quot;], bins=[<span <span class="kw">class</span>="num">0</span>, <span <span class="kw">class</span>="num">60</span>, <span <span class="kw">class</span>="num">80</span>, <span <span class="kw">class</span>="num">100</span>], labels=[&quot;</span>C<span <span class="kw">class</span>="st">&quot;, &quot;</span>B<span <span class="kw">class</span>="st">&quot;, &quot;</span>A<span <span class="kw">class</span>="st">&quot;])
+df[&quot;</span>flag<span <span class="kw">class</span>="st">&quot;] = np.where(df[&quot;</span>score&quot;] &gt; <span <span class="kw">class</span>="num">85</span>, <span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">0</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;\nWith new columns:\n&quot;</span>, df[[<span <span class="kw">class</span>="st">&quot;name&quot;</span>, <span <span class="kw">class</span>="st">&quot;bmi&quot;</span>, <span <span class="kw">class</span>="st">&quot;grade&quot;</span>, <span <span class="kw">class</span>="st">&quot;flag&quot;</span>]])
+
+<span <span class="kw">class</span>="cm"># Apply</span>
+df[<span <span class="kw">class</span>="st">&quot;name_upper&quot;</span>] = df[<span <span class="kw">class</span>="st">&quot;name&quot;</span>].apply(<span class="kw">lambda</span> x: x.upper())
+df[<span <span class="kw">class</span>="st">&quot;row_sum&quot;</span>] = df[[<span <span class="kw">class</span>="st">&quot;age&quot;</span>, <span <span class="kw">class</span>="st">&quot;score&quot;</span>]].apply(<span class="kw">lambda</span> row: row.<span class="fn">sum</span>(), axis=<span <span class="kw">class</span>="num">1</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;\nApply results:\n&quot;</span>, df[[<span <span class="kw">class</span>="st">&quot;name_upper&quot;</span>, <span <span class="kw">class</span>="st">&quot;row_sum&quot;</span>]])</code></pre>
   </div>
 </div>
 
-<div class="card">
-  <div class="card-header">
-    <div class="card-icon" style="background:#f9a8d420;color:var(--accent3);">pd</div>
-    <h2>DataFrames — Select & Filter</h2>
-    <span class="tag">Data Science</span>
+<div class="card wide" data-tags="dataframes — group, merge & clean">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--blue-dim);color:var(--blue)">Da</div>
+    <h3>DataFrames — Group, Merge &amp; Clean</h3>
+    <span class="card-tag">Jupyter ✅</span>
   </div>
   <div class="card-body">
-<pre><code><span class="cm"># Selecting</span>
-df[<span class="st">"col"</span>]               <span class="cm"># Series</span>
-df[[<span class="st">"col1"</span>,<span class="st">"col2"</span>]]     <span class="cm"># DataFrame</span>
-df.<span class="fn">loc</span>[<span class="num">0</span>:<span class="num">5</span>, <span class="st">"name"</span>]     <span class="cm"># label-based</span>
-df.<span class="fn">iloc</span>[<span class="num">0</span>:<span class="num">5</span>, <span class="num">0</span>:<span class="num">2</span>]      <span class="cm"># position-based</span>
+    <pre><code><span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> numpy <span class="kw">as</span> np
 
-<span class="cm"># Filtering</span>
-df[df[<span class="st">"age"</span>] > <span class="num">25</span>]
-df[df[<span class="st">"name"</span>].<span class="fn">isin</span>([<span class="st">"Alice"</span>,<span class="st">"Bob"</span>])]
-df.<span class="fn">query</span>(<span class="st">"age > 25 and city == 'NYC'"</span>)
-
-<span class="cm"># Sorting</span>
-df.<span class="fn">sort_values</span>(<span class="st">"age"</span>, ascending=<span class="nb">False</span>)
-df.<span class="fn">nlargest</span>(<span class="num">10</span>, <span class="st">"revenue"</span>)
-
-<span class="cm"># New columns</span>
-df[<span class="st">"bmi"</span>] = df[<span class="st">"weight"</span>] / df[<span class="st">"height"</span>]**<span class="num">2</span>
-df[<span class="st">"grade"</span>] = pd.<span class="fn">cut</span>(df[<span class="st">"score"</span>],
-    bins=[<span class="num">0</span>,<span class="num">60</span>,<span class="num">80</span>,<span class="num">100</span>],
-    labels=[<span class="st">"C"</span>,<span class="st">"B"</span>,<span class="st">"A"</span>])
-df[<span class="st">"flag"</span>] = np.<span class="fn">where</span>(df[<span class="st">"x"</span>]><span class="num">0</span>, <span class="num">1</span>, <span class="num">0</span>)
-
-<span class="cm"># Apply</span>
-df[<span class="st">"name"</span>].<span class="fn">apply</span>(<span class="kw">lambda</span> x: x.<span class="fn">upper</span>())
-df.<span class="fn">apply</span>(<span class="kw">lambda</span> row: row.<span class="fn">sum</span>(), axis=<span class="num">1</span>)
-</code></pre>
-  </div>
-</div>
-
-<div class="card wide">
-  <div class="card-header">
-    <div class="card-icon" style="background:#67e8f920;color:var(--accent5);">pd</div>
-    <h2>DataFrames — Group, Merge & Clean</h2>
-    <span class="tag">Data Science</span>
-  </div>
-  <div class="card-body">
-<pre><code><span class="cm"># GroupBy</span>
-df.<span class="fn">groupby</span>(<span class="st">"city"</span>)[<span class="st">"revenue"</span>].<span class="fn">mean</span>()
-df.<span class="fn">groupby</span>(<span class="st">"city"</span>).<span class="fn">agg</span>({
-    <span class="st">"revenue"</span>: [<span class="st">"sum"</span>, <span class="st">"mean"</span>],
-    <span class="st">"users"</span>: <span class="st">"count"</span>
+np.random.seed(<span <span class="kw">class</span>="num">42</span>)
+df = pd.DataFrame({
+    <span <span class="kw">class</span>="st">&quot;name&quot;</span>: [<span <span class="kw">class</span>="st">&quot;Alice&quot;</span>, <span <span class="kw">class</span>="st">&quot;Bob&quot;</span>, <span <span class="kw">class</span>="st">&quot;Charlie&quot;</span>, <span <span class="kw">class</span>="st">&quot;Diana&quot;</span>, <span <span class="kw">class</span>="st">&quot;Eve&quot;</span>, <span <span class="kw">class</span>="st">&quot;Frank&quot;</span>],
+    <span <span class="kw">class</span>="st">&quot;city&quot;</span>: [<span <span class="kw">class</span>="st">&quot;NYC&quot;</span>, <span <span class="kw">class</span>="st">&quot;LA&quot;</span>, <span <span class="kw">class</span>="st">&quot;NYC&quot;</span>, <span <span class="kw">class</span>="st">&quot;Chicago&quot;</span>, <span <span class="kw">class</span>="st">&quot;LA&quot;</span>, <span <span class="kw">class</span>="st">&quot;NYC&quot;</span>],
+    <span <span class="kw">class</span>="st">&quot;dept&quot;</span>: [<span <span class="kw">class</span>="st">&quot;Eng&quot;</span>, <span <span class="kw">class</span>="st">&quot;Mkt&quot;</span>, <span <span class="kw">class</span>="st">&quot;Eng&quot;</span>, <span <span class="kw">class</span>="st">&quot;Sales&quot;</span>, <span <span class="kw">class</span>="st">&quot;Mkt&quot;</span>, <span <span class="kw">class</span>="st">&quot;Eng&quot;</span>],
+    <span <span class="kw">class</span>="st">&quot;revenue&quot;</span>: [<span <span class="kw">class</span>="num">1200</span>, <span <span class="kw">class</span>="num">1800</span>, <span <span class="kw">class</span>="num">950</span>, <span <span class="kw">class</span>="num">2100</span>, <span <span class="kw">class</span>="num">1600</span>, <span <span class="kw">class</span>="num">1100</span>],
+    <span <span class="kw">class</span>="st">&quot;salary&quot;</span>: [<span <span class="kw">class</span>="num">90000</span>, <span <span class="kw">class</span>="num">75000</span>, <span <span class="kw">class</span>="num">95000</span>, <span <span class="kw">class</span>="num">80000</span>, <span <span class="kw">class</span>="num">72000</span>, <span <span class="kw">class</span>="num">88000</span>],
+    <span <span class="kw">class</span>="st">&quot;region&quot;</span>: [<span <span class="kw">class</span>="st">&quot;East&quot;</span>, <span <span class="kw">class</span>="st">&quot;West&quot;</span>, <span <span class="kw">class</span>="st">&quot;East&quot;</span>, <span <span class="kw">class</span>="st">&quot;Central&quot;</span>, <span <span class="kw">class</span>="st">&quot;West&quot;</span>, <span <span class="kw">class</span>="st">&quot;East&quot;</span>],
+    <span <span class="kw">class</span>="st">&quot;quarter&quot;</span>: [<span <span class="kw">class</span>="st">&quot;Q1&quot;</span>, <span <span class="kw">class</span>="st">&quot;Q1&quot;</span>, <span <span class="kw">class</span>="st">&quot;Q2&quot;</span>, <span <span class="kw">class</span>="st">&quot;Q2&quot;</span>, <span <span class="kw">class</span>="st">&quot;Q1&quot;</span>, <span <span class="kw">class</span>="st">&quot;Q2&quot;</span>],
+    <span <span class="kw">class</span>="st">&quot;sales&quot;</span>: [<span <span class="kw">class</span>="num">100</span>, <span <span class="kw">class</span>="num">150</span>, <span <span class="kw">class</span>="num">120</span>, <span <span class="kw">class</span>="num">200</span>, <span <span class="kw">class</span>="num">130</span>, <span <span class="kw">class</span>="num">110</span>],
 })
-df.<span class="fn">groupby</span>(<span class="st">"dept"</span>)[<span class="st">"salary"</span>].<span class="fn">transform</span>(<span class="st">"mean"</span>)  <span class="cm"># broadcast back</span>
 
-<span class="cm"># Pivot table</span>
-pd.<span class="fn">pivot_table</span>(df, values=<span class="st">"sales"</span>, index=<span class="st">"region"</span>,
-               columns=<span class="st">"quarter"</span>, aggfunc=<span class="st">"sum"</span>)
+<span <span class="kw">class</span>="cm"># GroupBy</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;=== GroupBy ===&quot;</span>)
+<span class="fn">print</span>(df.groupby(<span <span class="kw">class</span>="st">&quot;city&quot;</span>)[<span <span class="kw">class</span>="st">&quot;revenue&quot;</span>].mean())
+<span class="fn">print</span>()
+<span class="fn">print</span>(df.groupby(<span <span class="kw">class</span>="st">&quot;city&quot;</span>).agg({
+    <span <span class="kw">class</span>="st">&quot;revenue&quot;</span>: [<span <span class="kw">class</span>="st">&quot;<span class="fn">sum</span>&quot;</span>, <span <span class="kw">class</span>="st">&quot;mean&quot;</span>],
+    <span <span class="kw">class</span>="st">&quot;salary&quot;</span>: <span <span class="kw">class</span>="st">&quot;count&quot;</span>
+}))
 
-<span class="cm"># Merge / Join</span>
-pd.<span class="fn">merge</span>(df1, df2, on=<span class="st">"id"</span>, how=<span class="st">"left"</span>)   <span class="cm"># left, right, inner, outer</span>
-pd.<span class="fn">concat</span>([df1, df2], ignore_index=<span class="nb">True</span>)  <span class="cm"># stack vertically</span>
+<span <span class="kw">class</span>="cm"># Transform — broadcast aggregation back</span>
+df[<span <span class="kw">class</span>="st">&quot;dept_avg_salary&quot;</span>] = df.groupby(<span <span class="kw">class</span>="st">&quot;dept&quot;</span>)[<span <span class="kw">class</span>="st">&quot;salary&quot;</span>].transform(<span <span class="kw">class</span>="st">&quot;mean&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;\nTransform:\n&quot;</span>, df[[<span <span class="kw">class</span>="st">&quot;name&quot;</span>, <span <span class="kw">class</span>="st">&quot;dept&quot;</span>, <span <span class="kw">class</span>="st">&quot;salary&quot;</span>, <span <span class="kw">class</span>="st">&quot;dept_avg_salary&quot;</span>]])
 
-<span class="cm"># Cleaning</span>
-df.<span class="fn">dropna</span>()  /  df.<span class="fn">fillna</span>(<span class="num">0</span>)  /  df.<span class="fn">fillna</span>(method=<span class="st">"ffill"</span>)
-df.<span class="fn">drop_duplicates</span>(subset=[<span class="st">"col1"</span>])
-df.<span class="fn">rename</span>(columns={<span class="st">"old"</span>: <span class="st">"new"</span>})
-df[<span class="st">"date"</span>] = pd.<span class="fn">to_datetime</span>(df[<span class="st">"date"</span>])
-df.<span class="fn">astype</span>({<span class="st">"age"</span>: <span class="nb">int</span>, <span class="st">"name"</span>: <span class="st">"category"</span>})
+<span <span class="kw">class</span>="cm"># Pivot table</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;\n=== Pivot Table ===&quot;</span>)
+<span class="fn">print</span>(pd.pivot_table(df, values=<span <span class="kw">class</span>="st">&quot;sales&quot;</span>, index=<span <span class="kw">class</span>="st">&quot;region&quot;</span>, columns=<span <span class="kw">class</span>="st">&quot;quarter&quot;</span>, aggfunc=<span <span class="kw">class</span>="st">&quot;<span class="fn">sum</span>&quot;</span>))
 
-<span class="cm"># Save</span>
-df.<span class="fn">to_csv</span>(<span class="st">"out.csv"</span>, index=<span class="nb">False</span>)
-df.<span class="fn">to_parquet</span>(<span class="st">"out.parquet"</span>)
-</code></pre>
+<span <span class="kw">class</span>="cm"># Merge / Join</span>
+df1 = pd.DataFrame({<span <span class="kw">class</span>="st">&quot;<span class="fn">id</span>&quot;</span>: [<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">3</span>], <span <span class="kw">class</span>="st">&quot;name&quot;</span>: [<span <span class="kw">class</span>="st">&quot;Alice&quot;</span>, <span <span class="kw">class</span>="st">&quot;Bob&quot;</span>, <span <span class="kw">class</span>="st">&quot;Charlie&quot;</span>]})
+df2 = pd.DataFrame({<span <span class="kw">class</span>="st">&quot;<span class="fn">id</span>&quot;</span>: [<span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="num">4</span>], <span <span class="kw">class</span>="st">&quot;score&quot;</span>: [<span <span class="kw">class</span>="num">85</span>, <span <span class="kw">class</span>="num">92</span>, <span <span class="kw">class</span>="num">78</span>]})
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;\n=== Merge (left) ===&quot;</span>)
+<span class="fn">print</span>(pd.merge(df1, df2, on=<span <span class="kw">class</span>="st">&quot;<span class="fn">id</span>&quot;</span>, how=<span <span class="kw">class</span>="st">&quot;left&quot;</span>))
+
+<span <span class="kw">class</span>="cm"># Concat</span>
+df_a = pd.DataFrame({<span <span class="kw">class</span>="st">&quot;x&quot;</span>: [<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">2</span>], <span <span class="kw">class</span>="st">&quot;y&quot;</span>: [<span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="num">4</span>]})
+df_b = pd.DataFrame({<span <span class="kw">class</span>="st">&quot;x&quot;</span>: [<span <span class="kw">class</span>="num">5</span>, <span <span class="kw">class</span>="num">6</span>], <span <span class="kw">class</span>="st">&quot;y&quot;</span>: [<span <span class="kw">class</span>="num">7</span>, <span <span class="kw">class</span>="num">8</span>]})
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;\n=== Concat ===&quot;</span>)
+<span class="fn">print</span>(pd.concat([df_a, df_b], ignore_index=<span class="kw">True</span>))
+
+<span <span class="kw">class</span>="cm"># Cleaning</span>
+dirty = pd.DataFrame({
+    <span <span class="kw">class</span>="st">&quot;name&quot;</span>: [<span <span class="kw">class</span>="st">&quot;Alice&quot;</span>, <span <span class="kw">class</span>="st">&quot;Bob&quot;</span>, <span class="kw">None</span>, <span <span class="kw">class</span>="st">&quot;Alice&quot;</span>, <span <span class="kw">class</span>="st">&quot;Eve&quot;</span>],
+    <span <span class="kw">class</span>="st">&quot;age&quot;</span>: [<span <span class="kw">class</span>="num">30</span>, <span class="kw">None</span>, <span <span class="kw">class</span>="num">35</span>, <span <span class="kw">class</span>="num">30</span>, <span <span class="kw">class</span>="num">28</span>],
+    <span <span class="kw">class</span>="st">&quot;date&quot;</span>: [<span <span class="kw">class</span>="st">&quot;<span <span class="kw">class</span>="num">2024</span>-<span <span class="kw">class</span>="num">01</span>-<span <span class="kw">class</span>="num">15</span>&quot;</span>, <span <span class="kw">class</span>="st">&quot;<span <span class="kw">class</span>="num">2024</span>-<span <span class="kw">class</span>="num">02</span>-<span <span class="kw">class</span>="num">20</span>&quot;</span>, <span <span class="kw">class</span>="st">&quot;<span <span class="kw">class</span>="num">2024</span>-<span <span class="kw">class</span>="num">03</span>-<span <span class="kw">class</span>="num">10</span>&quot;</span>, <span <span class="kw">class</span>="st">&quot;<span <span class="kw">class</span>="num">2024</span>-<span <span class="kw">class</span>="num">01</span>-<span <span class="kw">class</span>="num">15</span>&quot;</span>, <span <span class="kw">class</span>="st">&quot;<span <span class="kw">class</span>="num">2024</span>-<span <span class="kw">class</span>="num">04</span>-<span <span class="kw">class</span>="num">05</span>&quot;</span>]
+})
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;\n=== Cleaning ===&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;dropna:&quot;</span>, dirty.dropna().shape)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;fillna:\n&quot;</span>, dirty.fillna({<span <span class="kw">class</span>="st">&quot;name&quot;</span>: <span <span class="kw">class</span>="st">&quot;Unknown&quot;</span>, <span <span class="kw">class</span>="st">&quot;age&quot;</span>: <span <span class="kw">class</span>="num">0</span>}))
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;drop_duplicates:\n&quot;</span>, dirty.drop_duplicates(subset=[<span <span class="kw">class</span>="st">&quot;name&quot;</span>]))
+
+dirty[<span <span class="kw">class</span>="st">&quot;date&quot;</span>] = pd.to_datetime(dirty[<span <span class="kw">class</span>="st">&quot;date&quot;</span>])
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;\nDtypes after conversion:\n&quot;</span>, dirty.dtypes)
+
+<span <span class="kw">class</span>="cm"># Save/load demo</span>
+df.to_csv(<span <span class="kw">class</span>="st">&quot;demo_output.csv&quot;</span>, index=<span class="kw">False</span>)
+loaded = pd.read_csv(<span <span class="kw">class</span>="st">&quot;demo_output.csv&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;\nSaved <span class="kw">and</span> loaded: {loaded.shape}&quot;</span>)
+<span class="kw">import</span> os; os.remove(<span <span class="kw">class</span>="st">&quot;demo_output.csv&quot;</span>)</code></pre>
   </div>
 </div>
 
-<!-- VISUALIZATION -->
-<div class="section-divider" id="viz"><h3>Visualization</h3></div>
+<div class="section-divider" id="visualization" data-section="visualization">
+  <h2>Visualization</h2>
+  <div class="line"></div>
+  <span class="badge" style="background:var(--pink-dim);color:var(--pink)">Plots</span>
+</div>
 
-<div class="card wide">
-  <div class="card-header">
-    <div class="card-icon" style="background:#fbbf2420;color:var(--accent4);">📊</div>
-    <h2>Matplotlib & Seaborn</h2>
-    <span class="tag">Visualization</span>
+<div class="card " data-tags="matplotlib & seaborn">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--pink-dim);color:var(--pink)">Ma</div>
+    <h3>Matplotlib &amp; Seaborn</h3>
+    <span class="card-tag">Jupyter ✅</span>
   </div>
   <div class="card-body">
-<pre><code><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+    <pre><code><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
 <span class="kw">import</span> seaborn <span class="kw">as</span> sns
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> numpy <span class="kw">as</span> np
 
-<span class="cm"># Matplotlib basics</span>
-fig, axes = plt.<span class="fn">subplots</span>(<span class="num">1</span>, <span class="num">2</span>, figsize=(<span class="num">12</span>,<span class="num">5</span>))
-axes[<span class="num">0</span>].<span class="fn">plot</span>(x, y, <span class="st">'b-o'</span>, label=<span class="st">"data"</span>)
-axes[<span class="num">0</span>].<span class="fn">set_title</span>(<span class="st">"Line Plot"</span>)
-axes[<span class="num">0</span>].<span class="fn">legend</span>()
-axes[<span class="num">1</span>].<span class="fn">bar</span>(categories, values)
-plt.<span class="fn">tight_layout</span>()
-plt.<span class="fn">savefig</span>(<span class="st">"plot.png"</span>, dpi=<span class="num">150</span>)
-plt.<span class="fn">show</span>()
+np.random.seed(<span <span class="kw">class</span>="num">42</span>)
 
-<span class="cm"># Seaborn (statistical plots)</span>
-sns.<span class="fn">set_theme</span>(style=<span class="st">"whitegrid"</span>)
-sns.<span class="fn">histplot</span>(df[<span class="st">"age"</span>], kde=<span class="nb">True</span>)
-sns.<span class="fn">boxplot</span>(data=df, x=<span class="st">"dept"</span>, y=<span class="st">"salary"</span>)
-sns.<span class="fn">scatterplot</span>(data=df, x=<span class="st">"x"</span>, y=<span class="st">"y"</span>, hue=<span class="st">"label"</span>)
-sns.<span class="fn">heatmap</span>(df.<span class="fn">corr</span>(), annot=<span class="nb">True</span>, cmap=<span class="st">"coolwarm"</span>)
-sns.<span class="fn">pairplot</span>(df, hue=<span class="st">"species"</span>)
+<span <span class="kw">class</span>="cm"># === Matplotlib basics ===</span>
+fig, axes = plt.subplots(<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">2</span>, figsize=(<span <span class="kw">class</span>="num">12</span>, <span <span class="kw">class</span>="num">4</span>))
 
-<span class="cm"># Pandas quick plots</span>
-df[<span class="st">"col"</span>].<span class="fn">plot</span>(kind=<span class="st">"hist"</span>, bins=<span class="num">30</span>)
-df.<span class="fn">plot</span>.<span class="fn">scatter</span>(x=<span class="st">"a"</span>, y=<span class="st">"b"</span>, c=<span class="st">"label"</span>, colormap=<span class="st">"viridis"</span>)
-</code></pre>
+<span <span class="kw">class</span>="cm"># Line plot</span>
+x = np.linspace(<span <span class="kw">class</span>="num">0</span>, <span <span class="kw">class</span>="num">10</span>, <span <span class="kw">class</span>="num">50</span>)
+y = np.sin(x)
+axes[<span <span class="kw">class</span>="num">0</span>].plot(x, y, &<span <span class="kw">class</span>="cm">#x27;b-o&#x27;, markersize=<span <span class="kw">class</span>="num">3</span>, label=<span <span class="kw">class</span>="st">&quot;sin(x)&quot;</span>)</span>
+axes[<span <span class="kw">class</span>="num">0</span>].plot(x, np.cos(x), &<span <span class="kw">class</span>="cm">#x27;r--&#x27;, label=<span <span class="kw">class</span>="st">&quot;cos(x)&quot;</span>)</span>
+axes[<span <span class="kw">class</span>="num">0</span>].set_title(<span <span class="kw">class</span>="st">&quot;Line Plot&quot;</span>)
+axes[<span <span class="kw">class</span>="num">0</span>].legend()
+axes[<span <span class="kw">class</span>="num">0</span>].set_xlabel(<span <span class="kw">class</span>="st">&quot;x&quot;</span>)
+
+<span <span class="kw">class</span>="cm"># Bar chart</span>
+categories = [<span <span class="kw">class</span>="st">&quot;A&quot;</span>, <span <span class="kw">class</span>="st">&quot;B&quot;</span>, <span <span class="kw">class</span>="st">&quot;C&quot;</span>, <span <span class="kw">class</span>="st">&quot;D&quot;</span>]
+values = [<span <span class="kw">class</span>="num">23</span>, <span <span class="kw">class</span>="num">45</span>, <span <span class="kw">class</span>="num">12</span>, <span <span class="kw">class</span>="num">67</span>]
+axes[<span <span class="kw">class</span>="num">1</span>].bar(categories, values, color=[<span <span class="kw">class</span>="st">&quot;<span <span class="kw">class</span>="cm">#4CAF50&quot;</span>, <span <span class="kw">class</span>="st">&quot;#2196F3&quot;</span>, <span <span class="kw">class</span>="st">&quot;#FF9800&quot;</span>, <span <span class="kw">class</span>="st">&quot;#9C27B0&quot;</span>])</span>
+axes[<span <span class="kw">class</span>="num">1</span>].set_title(<span <span class="kw">class</span>="st">&quot;Bar Chart&quot;</span>)
+plt.tight_layout()
+plt.show()</code></pre>
   </div>
 </div>
 
-<!-- SCIKIT-LEARN -->
-<div class="section-divider" id="sklearn"><h3>Scikit-learn</h3></div>
-
-<div class="card wide">
-  <div class="card-header">
-    <div class="card-icon" style="background:#6ee7b720;color:var(--accent);">sk</div>
-    <h2>Machine Learning Pipeline</h2>
-    <span class="tag">ML</span>
+<div class="card wide" data-tags="matplotlib & seaborn">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--pink-dim);color:var(--pink)">Ma</div>
+    <h3>Matplotlib &amp; Seaborn</h3>
+    <span class="card-tag">Jupyter ✅</span>
   </div>
   <div class="card-body">
-<pre><code><span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> train_test_split, cross_val_score
-<span class="kw">from</span> sklearn.preprocessing <span class="kw">import</span> StandardScaler, LabelEncoder
+    <pre><code><span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+<span class="kw">import</span> seaborn <span class="kw">as</span> sns
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+np.random.seed(<span <span class="kw">class</span>="num">42</span>)
+
+<span <span class="kw">class</span>="cm"># === Seaborn statistical plots ===</span>
+df = pd.DataFrame({
+    <span <span class="kw">class</span>="st">&quot;age&quot;</span>: np.random.normal(<span <span class="kw">class</span>="num">35</span>, <span <span class="kw">class</span>="num">10</span>, <span <span class="kw">class</span>="num">200</span>).astype(<span class="fn">int</span>),
+    <span <span class="kw">class</span>="st">&quot;salary&quot;</span>: np.random.normal(<span <span class="kw">class</span>="num">70000</span>, <span <span class="kw">class</span>="num">15000</span>, <span <span class="kw">class</span>="num">200</span>),
+    <span <span class="kw">class</span>="st">&quot;dept&quot;</span>: np.random.choice([<span <span class="kw">class</span>="st">&quot;Engineering&quot;</span>, <span <span class="kw">class</span>="st">&quot;Marketing&quot;</span>, <span <span class="kw">class</span>="st">&quot;Sales&quot;</span>], <span <span class="kw">class</span>="num">200</span>),
+    <span <span class="kw">class</span>="st">&quot;score&quot;</span>: np.random.uniform(<span <span class="kw">class</span>="num">50</span>, <span <span class="kw">class</span>="num">100</span>, <span <span class="kw">class</span>="num">200</span>),
+    <span <span class="kw">class</span>="st">&quot;experience&quot;</span>: np.random.uniform(<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">20</span>, <span <span class="kw">class</span>="num">200</span>),
+})
+df[<span <span class="kw">class</span>="st">&quot;salary&quot;</span>] = df[<span <span class="kw">class</span>="st">&quot;salary&quot;</span>] + df[<span <span class="kw">class</span>="st">&quot;experience&quot;</span>] * <span <span class="kw">class</span>="num">2000</span>  <span <span class="kw">class</span>="cm"># add correlation</span>
+
+sns.set_theme(style=<span <span class="kw">class</span>="st">&quot;whitegrid&quot;</span>)
+fig, axes = plt.subplots(<span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">2</span>, figsize=(<span <span class="kw">class</span>="num">12</span>, <span <span class="kw">class</span>="num">10</span>))
+
+sns.histplot(df[<span <span class="kw">class</span>="st">&quot;age&quot;</span>], kde=<span class="kw">True</span>, ax=axes[<span <span class="kw">class</span>="num">0</span>, <span <span class="kw">class</span>="num">0</span>])
+axes[<span <span class="kw">class</span>="num">0</span>, <span <span class="kw">class</span>="num">0</span>].set_title(<span <span class="kw">class</span>="st">&quot;Age Distribution&quot;</span>)
+
+sns.boxplot(data=df, x=<span <span class="kw">class</span>="st">&quot;dept&quot;</span>, y=<span <span class="kw">class</span>="st">&quot;salary&quot;</span>, ax=axes[<span <span class="kw">class</span>="num">0</span>, <span <span class="kw">class</span>="num">1</span>])
+axes[<span <span class="kw">class</span>="num">0</span>, <span <span class="kw">class</span>="num">1</span>].set_title(<span <span class="kw">class</span>="st">&quot;Salary by Department&quot;</span>)
+
+sns.scatterplot(data=df, x=<span <span class="kw">class</span>="st">&quot;experience&quot;</span>, y=<span <span class="kw">class</span>="st">&quot;salary&quot;</span>, hue=<span <span class="kw">class</span>="st">&quot;dept&quot;</span>, ax=axes[<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">0</span>])
+axes[<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">0</span>].set_title(<span <span class="kw">class</span>="st">&quot;Experience vs Salary&quot;</span>)
+
+corr_cols = df[[<span <span class="kw">class</span>="st">&quot;age&quot;</span>, <span <span class="kw">class</span>="st">&quot;salary&quot;</span>, <span <span class="kw">class</span>="st">&quot;score&quot;</span>, <span <span class="kw">class</span>="st">&quot;experience&quot;</span>]].corr()
+sns.heatmap(corr_cols, annot=<span class="kw">True</span>, cmap=<span <span class="kw">class</span>="st">&quot;coolwarm&quot;</span>, ax=axes[<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">1</span>])
+axes[<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">1</span>].set_title(<span <span class="kw">class</span>="st">&quot;Correlation Heatmap&quot;</span>)
+
+plt.tight_layout()
+plt.show()</code></pre>
+  </div>
+</div>
+
+<div class="card " data-tags="matplotlib & seaborn">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--pink-dim);color:var(--pink)">Ma</div>
+    <h3>Matplotlib &amp; Seaborn</h3>
+    <span class="card-tag">Jupyter ✅</span>
+  </div>
+  <div class="card-body">
+    <pre><code><span class="kw">import</span> seaborn <span class="kw">as</span> sns
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span <span class="kw">class</span>="cm"># Pairplot</span>
+np.random.seed(<span <span class="kw">class</span>="num">42</span>)
+iris_like = pd.DataFrame({
+    <span <span class="kw">class</span>="st">&quot;sepal_length&quot;</span>: np.concatenate([np.random.normal(<span <span class="kw">class</span>="num">5.0</span>, <span <span class="kw">class</span>="num">0.4</span>, <span <span class="kw">class</span>="num">50</span>), np.random.normal(<span <span class="kw">class</span>="num">6.5</span>, <span <span class="kw">class</span>="num">0.5</span>, <span <span class="kw">class</span>="num">50</span>)]),
+    <span <span class="kw">class</span>="st">&quot;sepal_width&quot;</span>: np.concatenate([np.random.normal(<span <span class="kw">class</span>="num">3.4</span>, <span <span class="kw">class</span>="num">0.4</span>, <span <span class="kw">class</span>="num">50</span>), np.random.normal(<span <span class="kw">class</span>="num">2.8</span>, <span <span class="kw">class</span>="num">0.3</span>, <span <span class="kw">class</span>="num">50</span>)]),
+    <span <span class="kw">class</span>="st">&quot;petal_length&quot;</span>: np.concatenate([np.random.normal(<span <span class="kw">class</span>="num">1.5</span>, <span <span class="kw">class</span>="num">0.2</span>, <span <span class="kw">class</span>="num">50</span>), np.random.normal(<span <span class="kw">class</span>="num">5.0</span>, <span <span class="kw">class</span>="num">0.5</span>, <span <span class="kw">class</span>="num">50</span>)]),
+    <span <span class="kw">class</span>="st">&quot;species&quot;</span>: [<span <span class="kw">class</span>="st">&quot;setosa&quot;</span>]*<span <span class="kw">class</span>="num">50</span> + [<span <span class="kw">class</span>="st">&quot;virginica&quot;</span>]*<span <span class="kw">class</span>="num">50</span>,
+})
+sns.pairplot(iris_like, hue=<span <span class="kw">class</span>="st">&quot;species&quot;</span>)</code></pre>
+  </div>
+</div>
+
+<div class="section-divider" id="scikit-learn" data-section="scikit-learn">
+  <h2>Scikit-learn</h2>
+  <div class="line"></div>
+  <span class="badge" style="background:var(--green-dim);color:var(--green)">ML</span>
+</div>
+
+<div class="card wide" data-tags="machine learning pipeline">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--green-dim);color:var(--green)">Ma</div>
+    <h3>Machine Learning Pipeline</h3>
+    <span class="card-tag">Jupyter ✅</span>
+  </div>
+  <div class="card-body">
+    <pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> train_test_split, cross_val_score
+<span class="kw">from</span> sklearn.preprocessing <span class="kw">import</span> StandardScaler
 <span class="kw">from</span> sklearn.pipeline <span class="kw">import</span> Pipeline
 <span class="kw">from</span> sklearn.metrics <span class="kw">import</span> accuracy_score, classification_report
 <span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> RandomForestClassifier
-<span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> LinearRegression, LogisticRegression
 
-<span class="cm"># 1. Prepare data</span>
-X = df[[<span class="st">"feat1"</span>, <span class="st">"feat2"</span>, <span class="st">"feat3"</span>]]
-y = df[<span class="st">"target"</span>]
-X_train, X_test, y_train, y_test = <span class="fn">train_test_split</span>(
-    X, y, test_size=<span class="num">0.2</span>, random_state=<span class="num">42</span>, stratify=y)
+<span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="num">1</span>. Create sample dataset</span>
+np.random.seed(<span <span class="kw">class</span>="num">42</span>)
+n = <span <span class="kw">class</span>="num">300</span>
+df = pd.DataFrame({
+    <span <span class="kw">class</span>="st">&quot;feat1&quot;</span>: np.random.randn(n),
+    <span <span class="kw">class</span>="st">&quot;feat2&quot;</span>: np.random.randn(n),
+    <span <span class="kw">class</span>="st">&quot;feat3&quot;</span>: np.random.randn(n),
+})
+<span <span class="kw">class</span>="cm"># Target: <span <span class="kw">class</span>="num">1</span> <span class="kw">if</span> feat1 + feat2 &gt; <span <span class="kw">class</span>="num">0</span>, <span class="kw">else</span> <span <span class="kw">class</span>="num">0</span> (<span class="kw">with</span> noise)</span>
+df[<span <span class="kw">class</span>="st">&quot;target&quot;</span>] = ((df[<span <span class="kw">class</span>="st">&quot;feat1&quot;</span>] + df[<span <span class="kw">class</span>="st">&quot;feat2&quot;</span>] + np.random.randn(n)*<span <span class="kw">class</span>="num">0.3</span>) &gt; <span <span class="kw">class</span>="num">0</span>).astype(<span class="fn">int</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;Dataset shape: {df.shape}&quot;</span>)
+<span class="fn">print</span>(f&quot;Target distribution:\n{df[&<span <span class="kw">class</span>="cm">#x27;target&#x27;].value_counts()}\n<span <span class="kw">class</span>="st">&quot;)</span>
 
-<span class="cm"># 2. Build pipeline</span>
-pipe = <span class="fn">Pipeline</span>([
-    (<span class="st">"scaler"</span>, <span class="fn">StandardScaler</span>()),
-    (<span class="st">"model"</span>,  <span class="fn">RandomForestClassifier</span>(n_estimators=<span class="num">100</span>))
+<span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="num">2</span>. Prepare data</span>
+X = df[[&quot;</span>feat1<span <span class="kw">class</span>="st">&quot;, &quot;</span>feat2<span <span class="kw">class</span>="st">&quot;, &quot;</span>feat3<span <span class="kw">class</span>="st">&quot;]]
+y = df[&quot;</span>target<span <span class="kw">class</span>="st">&quot;]
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=<span <span class="kw">class</span>="num">0.2</span>, random_state=<span <span class="kw">class</span>="num">42</span>, stratify=y)
+<span class="fn">print</span>(f&quot;</span>Train: {X_train.shape}, Test: {X_test.shape}\n<span <span class="kw">class</span>="st">&quot;)
+
+<span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="num">3</span>. Build pipeline</span>
+pipe = Pipeline([
+    (&quot;</span>scale<span <span class="kw">class</span>="st">r&quot;, StandardScaler()),
+    (&quot;</span>model&quot;,  RandomForestClassifier(n_estimators=<span <span class="kw">class</span>="num">100</span>, random_state=<span <span class="kw">class</span>="num">42</span>))
 ])
 
-<span class="cm"># 3. Train & Evaluate</span>
-pipe.<span class="fn">fit</span>(X_train, y_train)
-y_pred = pipe.<span class="fn">predict</span>(X_test)
-<span class="fn">print</span>(<span class="fn">classification_report</span>(y_test, y_pred))
+<span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="num">4</span>. Train &amp; Evaluate</span>
+pipe.fit(X_train, y_train)
+y_pred = pipe.predict(X_test)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;=== Classification Report ===&quot;</span>)
+<span class="fn">print</span>(classification_report(y_test, y_pred))
 
-<span class="cm"># Cross-validation</span>
-scores = <span class="fn">cross_val_score</span>(pipe, X, y, cv=<span class="num">5</span>, scoring=<span class="st">"accuracy"</span>)
-<span class="fn">print</span>(<span class="st">f"</span><span class="st">CV Accuracy: {scores.mean():.3f} ± {scores.std():.3f}"</span>)
+<span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="num">5</span>. Cross-validation</span>
+scores = cross_val_score(pipe, X, y, cv=<span <span class="kw">class</span>="num">5</span>, scoring=<span <span class="kw">class</span>="st">&quot;accuracy&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;CV Accuracy: {scores.mean():.3f} ± {scores.std():.3f}&quot;</span>)
 
-<span class="cm"># Feature importance (tree models)</span>
-importances = pipe[<span class="st">"model"</span>].feature_importances_
-feat_imp = pd.<span class="fn">Series</span>(importances, index=X.columns).<span class="fn">sort_values</span>()
-feat_imp.<span class="fn">plot</span>.<span class="fn">barh</span>()
-</code></pre>
+<span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="num">6</span>. Feature importance</span>
+importances = pipe[<span <span class="kw">class</span>="st">&quot;model&quot;</span>].feature_importances_
+feat_imp = pd.Series(importances, index=X.columns).sort_values()
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;\nFeature Importance:\n{feat_imp}&quot;</span>)
+
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+feat_imp.plot.barh(title=<span <span class="kw">class</span>="st">&quot;Feature Importance&quot;</span>)
+plt.tight_layout()
+plt.show()</code></pre>
   </div>
 </div>
 
-<!-- USEFUL PATTERNS -->
-<div class="section-divider" id="tips"><h3>Pro Tips & Patterns</h3></div>
+<div class="section-divider" id="pro-tips-and-patterns" data-section="pro-tips-and-patterns">
+  <h2>Pro Tips & Patterns</h2>
+  <div class="line"></div>
+  <span class="badge" style="background:var(--amber-dim);color:var(--amber)">Essential</span>
+</div>
 
-<div class="card">
-  <div class="card-header">
-    <div class="card-icon" style="background:#67e8f920;color:var(--accent5);">⚡</div>
-    <h2>Built-in Superpowers</h2>
-    <span class="tag">Tips</span>
+<div class="card wide" data-tags="built-in superpowers">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--amber-dim);color:var(--amber)">Bu</div>
+    <h3>Built-in Superpowers</h3>
+    <span class="card-tag">Jupyter ✅</span>
   </div>
   <div class="card-body">
-<pre><code><span class="cm"># enumerate — index + value</span>
-<span class="kw">for</span> i, val <span class="kw">in</span> <span class="fn">enumerate</span>(items, start=<span class="num">1</span>):
-    <span class="fn">print</span>(i, val)
+    <pre><code><span <span class="kw">class</span>="cm"># <span class="fn">enumerate</span> — index + value</span>
+items = [<span <span class="kw">class</span>="st">&quot;apple&quot;</span>, <span <span class="kw">class</span>="st">&quot;banana&quot;</span>, <span <span class="kw">class</span>="st">&quot;cherry&quot;</span>]
+<span class="kw">for</span> i, val <span class="kw">in</span> <span class="fn">enumerate</span>(items, start=<span <span class="kw">class</span>="num">1</span>):
+    <span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;{i}. {val}&quot;</span>)
 
-<span class="cm"># zip — parallel iteration</span>
+<span <span class="kw">class</span>="cm"># <span class="fn">zip</span> — parallel iteration</span>
+names = [<span <span class="kw">class</span>="st">&quot;Alice&quot;</span>, <span <span class="kw">class</span>="st">&quot;Bob&quot;</span>, <span <span class="kw">class</span>="st">&quot;Charlie&quot;</span>]
+scores = [<span <span class="kw">class</span>="num">95</span>, <span <span class="kw">class</span>="num">87</span>, <span <span class="kw">class</span>="num">92</span>]
 <span class="kw">for</span> name, score <span class="kw">in</span> <span class="fn">zip</span>(names, scores):
-    <span class="fn">print</span>(<span class="st">f"</span><span class="st">{name}: {score}"</span>)
+    <span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;{name}: {score}&quot;</span>)
 
-<span class="cm"># dict(zip(...)) — two lists → dict</span>
-<span class="fn">dict</span>(<span class="fn">zip</span>(keys, values))
+<span <span class="kw">class</span>="cm"># <span class="fn">dict</span>(<span class="fn">zip</span>(...)) — two lists → <span class="fn">dict</span></span>
+keys = [<span <span class="kw">class</span>="st">&quot;a&quot;</span>, <span <span class="kw">class</span>="st">&quot;b&quot;</span>, <span <span class="kw">class</span>="st">&quot;c&quot;</span>]
+values = [<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">3</span>]
+d = <span class="fn">dict</span>(<span class="fn">zip</span>(keys, values))
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;<span class="fn">dict</span> <span class="kw">from</span> <span class="fn">zip</span>:&quot;</span>, d)
 
-<span class="cm"># any / all</span>
-<span class="fn">any</span>(x > <span class="num">10</span> <span class="kw">for</span> x <span class="kw">in</span> nums)
-<span class="fn">all</span>(x > <span class="num">0</span> <span class="kw">for</span> x <span class="kw">in</span> nums)
+<span <span class="kw">class</span>="cm"># <span class="fn">any</span> / <span class="fn">all</span></span>
+nums = [<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">5</span>, <span <span class="kw">class</span>="num">12</span>, <span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="num">8</span>]
+<span class="fn">print</span>(f&quot;<span class="fn">any</span> &gt; <span <span class="kw">class</span>="num">10</span>: {<span class="fn">any</span>(x &gt; <span <span class="kw">class</span>="num">10</span> <span class="kw">for</span> x <span class="kw">in</span> nums)}<span <span class="kw">class</span>="st">&quot;)
+<span class="fn">print</span>(f&quot;</span><span class="fn">all</span> &gt; <span <span class="kw">class</span>="num">0</span>: {<span class="fn">all</span>(x &gt; <span <span class="kw">class</span>="num">0</span> <span class="kw">for</span> x <span class="kw">in</span> nums)}<span <span class="kw">class</span>="st">&quot;)
 
-<span class="cm"># sorted with key</span>
-<span class="fn">sorted</span>(users, key=<span class="kw">lambda</span> u: u[<span class="st">"age"</span>])
-<span class="fn">sorted</span>(words, key=<span class="fn">len</span>, reverse=<span class="nb">True</span>)
+<span <span class="kw">class</span>="cm"># <span class="fn">sorted</span> <span class="kw">with</span> key</span>
+users = [{&quot;</span>name<span <span class="kw">class</span>="st">&quot;: &quot;</span>Bob<span <span class="kw">class</span>="st">&quot;, &quot;</span>age<span <span class="kw">class</span>="st">&quot;: <span <span class="kw">class</span>="num">25</span>}, {&quot;</span>name<span <span class="kw">class</span>="st">&quot;: &quot;</span>Alice<span <span class="kw">class</span>="st">&quot;, &quot;</span>age<span <span class="kw">class</span>="st">&quot;: <span <span class="kw">class</span>="num">30</span>}, {&quot;</span>name<span <span class="kw">class</span>="st">&quot;: &quot;</span>Charlie<span <span class="kw">class</span>="st">&quot;, &quot;</span>age<span <span class="kw">class</span>="st">&quot;: <span <span class="kw">class</span>="num">22</span>}]
+sorted_users = <span class="fn">sorted</span>(users, key=<span class="kw">lambda</span> u: u[&quot;</span>age<span <span class="kw">class</span>="st">&quot;])
+<span class="fn">print</span>(&quot;</span><span class="fn">sorted</span> by age:<span <span class="kw">class</span>="st">&quot;, [u[&quot;</span>name<span <span class="kw">class</span>="st">&quot;] <span class="kw">for</span> u <span class="kw">in</span> sorted_users])
 
-<span class="cm"># collections goodies</span>
+words = [&quot;</span>python<span <span class="kw">class</span>="st">&quot;, &quot;</span>hi<span <span class="kw">class</span>="st">&quot;, &quot;</span>jupyte<span <span class="kw">class</span>="st">r&quot;, &quot;</span>code<span <span class="kw">class</span>="st">&quot;]
+<span class="fn">print</span>(&quot;</span><span class="fn">sorted</span> by length:<span <span class="kw">class</span>="st">&quot;, <span class="fn">sorted</span>(words, key=<span class="fn">len</span>, reverse=<span class="kw">True</span>))
+
+<span <span class="kw">class</span>="cm"># collections goodies</span>
 <span class="kw">from</span> collections <span class="kw">import</span> defaultdict, Counter, deque
-dd = <span class="fn">defaultdict</span>(<span class="nb">list</span>)
-dd[<span class="st">"key"</span>].<span class="fn">append</span>(<span class="num">1</span>)  <span class="cm"># no KeyError!</span>
+dd = defaultdict(<span class="fn">list</span>)
+dd[&quot;</span>fruits<span <span class="kw">class</span>="st">&quot;].append(&quot;</span>apple<span <span class="kw">class</span>="st">&quot;)
+dd[&quot;</span>fruits<span <span class="kw">class</span>="st">&quot;].append(&quot;</span>banana<span <span class="kw">class</span>="st">&quot;)
+dd[&quot;</span>veggies<span <span class="kw">class</span>="st">&quot;].append(&quot;</span>carrot<span <span class="kw">class</span>="st">&quot;)
+<span class="fn">print</span>(&quot;</span>defaultdict:<span <span class="kw">class</span>="st">&quot;, <span class="fn">dict</span>(dd))
 
-<span class="cm"># itertools</span>
-<span class="kw">from</span> itertools <span class="kw">import</span> chain, product, groupby
-<span class="fn">list</span>(<span class="fn">chain</span>([<span class="num">1</span>,<span class="num">2</span>], [<span class="num">3</span>,<span class="num">4</span>]))  <span class="cm"># [1,2,3,4]</span>
-</code></pre>
+<span <span class="kw">class</span>="cm"># itertools</span>
+<span class="kw">from</span> itertools <span class="kw">import</span> chain, product
+<span class="fn">print</span>(&quot;</span>chain:<span <span class="kw">class</span>="st">&quot;, <span class="fn">list</span>(chain([<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">2</span>], [<span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="num">4</span>], [<span <span class="kw">class</span>="num">5</span>])))
+<span class="fn">print</span>(&quot;</span>product:<span <span class="kw">class</span>="st">&quot;, <span class="fn">list</span>(product(&quot;</span>AB&quot;, [<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">2</span>])))</code></pre>
   </div>
 </div>
 
-<div class="card">
-  <div class="card-header">
-    <div class="card-icon" style="background:#f9a8d420;color:var(--accent3);">🧠</div>
-    <h2>One-Liners & Tricks</h2>
-    <span class="tag">Tips</span>
+<div class="card wide" data-tags="one-liners & tricks">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--amber-dim);color:var(--amber)">On</div>
+    <h3>One-Liners &amp; Tricks</h3>
+    <span class="card-tag">Jupyter ✅</span>
   </div>
   <div class="card-body">
-<pre><code><span class="cm"># Flatten nested list</span>
+    <pre><code><span <span class="kw">class</span>="cm"># Flatten nested <span class="fn">list</span></span>
+nested = [[<span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">2</span>], [<span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="num">4</span>], [<span <span class="kw">class</span>="num">5</span>, <span <span class="kw">class</span>="num">6</span>, <span <span class="kw">class</span>="num">7</span>]]
 flat = [x <span class="kw">for</span> sub <span class="kw">in</span> nested <span class="kw">for</span> x <span class="kw">in</span> sub]
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;flatten:&quot;</span>, flat)
 
-<span class="cm"># Remove duplicates, preserve order</span>
+<span <span class="kw">class</span>="cm"># Remove duplicates, preserve order</span>
+lst = [<span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">4</span>, <span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="num">5</span>, <span <span class="kw">class</span>="num">9</span>, <span <span class="kw">class</span>="num">2</span>, <span <span class="kw">class</span>="num">6</span>, <span <span class="kw">class</span>="num">5</span>, <span <span class="kw">class</span>="num">3</span>]
 seen = <span class="fn">set</span>()
-uniq = [x <span class="kw">for</span> x <span class="kw">in</span> lst
-        <span class="kw">if</span> x <span class="kw">not</span> <span class="kw">in</span> seen
-        <span class="kw">and not</span> seen.<span class="fn">add</span>(x)]
+uniq = [x <span class="kw">for</span> x <span class="kw">in</span> lst <span class="kw">if</span> x <span class="kw">not</span> <span class="kw">in</span> seen <span class="kw">and</span> <span class="kw">not</span> seen.add(x)]
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;deduplicated:&quot;</span>, uniq)
 
-<span class="cm"># Frequency count</span>
-{x: lst.<span class="fn">count</span>(x) <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">set</span>(lst)}
+<span <span class="kw">class</span>="cm"># Frequency count</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;frequency:&quot;</span>, {x: lst.count(x) <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">set</span>(lst)})
 
-<span class="cm"># Merge dicts (3.9+)</span>
+<span <span class="kw">class</span>="cm"># Merge dicts (<span <span class="kw">class</span>="num">3.9</span>+)</span>
+d1 = {<span <span class="kw">class</span>="st">&quot;a&quot;</span>: <span <span class="kw">class</span>="num">1</span>, <span <span class="kw">class</span>="st">&quot;b&quot;</span>: <span <span class="kw">class</span>="num">2</span>}
+d2 = {<span <span class="kw">class</span>="st">&quot;b&quot;</span>: <span <span class="kw">class</span>="num">3</span>, <span <span class="kw">class</span>="st">&quot;c&quot;</span>: <span <span class="kw">class</span>="num">4</span>}
 merged = d1 | d2
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;merged dicts:&quot;</span>, merged)
 
-<span class="cm"># Safe dict access chain</span>
-val = d.<span class="fn">get</span>(<span class="st">"a"</span>, {}).<span class="fn">get</span>(<span class="st">"b"</span>, {}).<span class="fn">get</span>(<span class="st">"c"</span>)
+<span <span class="kw">class</span>="cm"># Safe <span class="fn">dict</span> access chain</span>
+d = {<span <span class="kw">class</span>="st">&quot;a&quot;</span>: {<span <span class="kw">class</span>="st">&quot;b&quot;</span>: {<span <span class="kw">class</span>="st">&quot;c&quot;</span>: <span <span class="kw">class</span>="num">42</span>}}}
+val = d.get(<span <span class="kw">class</span>="st">&quot;a&quot;</span>, {}).get(<span <span class="kw">class</span>="st">&quot;b&quot;</span>, {}).get(<span <span class="kw">class</span>="st">&quot;c&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;nested access:&quot;</span>, val)
 
-<span class="cm"># Timing code</span>
+<span <span class="kw">class</span>="cm"># Timing code</span>
 <span class="kw">from</span> time <span class="kw">import</span> perf_counter
-t0 = <span class="fn">perf_counter</span>()
-<span class="cm"># ... code ...</span>
-<span class="fn">print</span>(<span class="st">f"</span><span class="st">{perf_counter()-t0:.4f}s"</span>)
+t0 = perf_counter()
+total = <span class="fn">sum</span>(<span class="fn">range</span>(<span <span class="kw">class</span>="num">1_000_000</span>))
+elapsed = perf_counter() - t0
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;<span class="fn">sum</span> = {total}, time = {elapsed:.4f}s&quot;</span>)
 
-<span class="cm"># Quick HTTP request</span>
-<span class="kw">import</span> requests
-r = requests.<span class="fn">get</span>(<span class="st">"https://api.example.com"</span>)
-data = r.<span class="fn">json</span>()
-
-<span class="cm"># Regex</span>
+<span <span class="kw">class</span>="cm"># Regex</span>
 <span class="kw">import</span> re
-emails = re.<span class="fn">findall</span>(r<span class="st">'\S+@\S+'</span>, text)
-clean  = re.<span class="fn">sub</span>(r<span class="st">'[^\w\s]'</span>, <span class="st">''</span>, text)
-</code></pre>
+text = <span <span class="kw">class</span>="st">&quot;Contact alice<span class="dc">@example</span>.com <span class="kw">or</span> bob<span class="dc">@test</span>.org <span class="kw">for</span> info on <span <span class="kw">class</span>="num">2024</span>-<span <span class="kw">class</span>="num">01</span>-<span <span class="kw">class</span>="num">15</span> <span class="kw">and</span> <span <span class="kw">class</span>="num">2024</span>-<span <span class="kw">class</span>="num">06</span>-<span <span class="kw">class</span>="num">30</span>&quot;</span>
+emails = re.findall(r&<span <span class="kw">class</span>="cm">#x27;\S+@\S+&#x27;, text)</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;emails:&quot;</span>, emails)
+
+dates = re.findall(r&<span <span class="kw">class</span>="cm">#x27;\d{<span <span class="kw">class</span>="num">4</span>}-\d{<span <span class="kw">class</span>="num">2</span>}-\d{<span <span class="kw">class</span>="num">2</span>}&#x27;, text)</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;dates:&quot;</span>, dates)
+
+clean = re.sub(r&<span <span class="kw">class</span>="cm">#x27;[^\w\s]<span <span class="kw">class</span>="st">&#x27;, &#x27;</span>&#x27;, &quot;Hello, World! How&#x27;s it going?<span <span class="kw">class</span>="st">&quot;)</span>
+<span class="fn">print</span>(&quot;</span>cleaned:&quot;, clean)</code></pre>
   </div>
 </div>
 
-<div class="card wide">
-  <div class="card-header">
-    <div class="card-icon" style="background:#fbbf2420;color:var(--accent4);">⌨</div>
-    <h2>Quick Reference Table</h2>
-    <span class="tag">Reference</span>
-  </div>
-  <div class="card-body">
-    <table class="mini-table">
-      <thead>
-        <tr><th>Operation</th><th>Syntax</th><th>Note</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Virtual env</td><td><code>python -m venv .venv && source .venv/bin/activate</code></td><td>Isolate deps</td></tr>
-        <tr><td>Install pkg</td><td><code>pip install pandas && pip freeze > requirements.txt</code></td><td>Pin versions</td></tr>
-        <tr><td>Debugger</td><td><code>breakpoint()</code></td><td>Built-in (3.7+)</td></tr>
-        <tr><td>Profile</td><td><code>python -m cProfile script.py</code></td><td>Find bottlenecks</td></tr>
-        <tr><td>Jupyter magic</td><td><code>%timeit  /  %%time  /  %who  /  %matplotlib inline</code></td><td>Notebook utils</td></tr>
-        <tr><td>Type check</td><td><code>mypy script.py</code></td><td>Static analysis</td></tr>
-        <tr><td>Format</td><td><code>black script.py  /  ruff check .</code></td><td>Auto-format</td></tr>
-        <tr><td>Pickle</td><td><code>import pickle; pickle.dump(obj, open('f.pkl','wb'))</code></td><td>Serialize objects</td></tr>
-      </tbody>
-    </table>
-  </div>
+<div class="section-divider" id="quick-reference-table" data-section="quick-reference-table">
+  <h2>Quick Reference Table</h2>
+  <div class="line"></div>
+  
 </div>
-
-</div><!-- /grid -->
-
-</body>
-</html>
+</div>
+<script>
+const input=document.getElementById('search'),cards=document.querySelectorAll('.card'),dividers=document.querySelectorAll('.section-divider');
+input.addEventListener('input',()=>{const q=input.value.toLowerCase().trim();cards.forEach(c=>{const t=(c.dataset.tags||'').toLowerCase(),x=c.textContent.toLowerCase();c.classList.toggle('hidden',q&&!t.includes(q)&&!x.includes(q))});dividers.forEach(d=>{let n=d.nextElementSibling,v=false;while(n&&!n.classList.contains('section-divider')){if(n.classList.contains('card')&&!n.classList.contains('hidden'))v=true;n=n.nextElementSibling}d.classList.toggle('hidden',!v)});});
+const secs=document.querySelectorAll('.section-divider[id]'),navs=document.querySelectorAll('.nav a');
+secs.forEach(s=>new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){navs.forEach(a=>a.classList.remove('active'));const l=document.querySelector('.nav a[href="#'+e.target.id+'"]');if(l)l.classList.add('active')}})},{rootMargin:'-100px 0px -70% 0px'}).observe(s));
+</script>
+</body></html>
