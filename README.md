@@ -644,6 +644,7 @@ PEP 8 is the Python Enhancement Proposal which provides guidelines and best prac
 - drawio.com , https://get.diagrams.net/
 - Excalidraw (excalidraw.com) - Free, browser-based, feels like drawing with a pen. Super intuitive and fast.
 - tldraw - Similar hand-drawn style, very responsive
+- https://excalidraw.com/ for **whiteboarding**
 
 ## what is devops
 - https://www.geeksforgeeks.org/devops/devops-lifecycle/
