@@ -119,3 +119,7 @@
 - NEVER ignore TypeScript/compiler errors with `@ts-ignore` or `// @ts-nocheck`.
 - NEVER write empty catch blocks.
 - NEVER use synchronous I/O in async contexts.
+
+## youtube video
+- https://www.youtube.com/watch?v=eMZmDH3T2bY
+- curl -fsSL https://claude.ai/install.sh | bash
