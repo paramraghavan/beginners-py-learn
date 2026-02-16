@@ -192,6 +192,78 @@ r = Record(1, "sensor_a", 42.5)
 print(f"namedtuple: {r.name} = {r.value}")
 ```
 
+### Tuples — Immutable Sequences
+
+```python
+# Creating tuples
+t = (1, 2, 3, 4, 5)
+single = (42,)            # trailing comma required for single-element tuple
+empty = ()
+from_list = tuple([1, 2, 3])
+
+print(f"tuple: {t}, single: {single}, empty: {empty}")
+
+# Indexing & slicing (same as lists)
+print(t[0])       # 1
+print(t[-1])      # 5
+print(t[1:4])     # (2, 3, 4)
+print(t[::-1])    # (5, 4, 3, 2, 1)
+
+# Unpacking
+a, b, *rest = t
+print(f"a={a}, b={b}, rest={rest}")  # a=1, b=2, rest=[3, 4, 5]
+
+# Swap idiom uses tuples under the hood
+x, y = 10, 20
+x, y = y, x
+print(f"swapped: x={x}, y={y}")
+
+# Tuple methods (only 2!)
+print(t.count(3))   # 1
+print(t.index(4))   # 3
+
+# Tuples as dict keys (immutable = hashable)
+location_cache = {(40.7, -74.0): "NYC", (34.1, -118.2): "LA"}
+print(location_cache[(40.7, -74.0)])  # "NYC"
+
+# Tuples as return values
+def min_max(data):
+    return min(data), max(data)
+
+lo, hi = min_max([5, 2, 8, 1, 9])
+print(f"min={lo}, max={hi}")
+
+# Tuple vs list: immutability
+try:
+    t[0] = 99
+except TypeError as e:
+    print(f"Can't mutate tuple: {e}")
+
+# Nested tuples (inner mutables CAN change)
+nested = ([1, 2], [3, 4])
+nested[0].append(99)
+print(f"nested with mutated inner list: {nested}")
+
+# Named tuples — lightweight records
+from collections import namedtuple
+Record = namedtuple("Record", ["id", "name", "value"])
+r = Record(1, "sensor_a", 42.5)
+print(f"namedtuple: {r.name} = {r.value}")
+print(f"as dict: {r._asdict()}")
+print(f"replace: {r._replace(value=99.9)}")
+
+# typing.NamedTuple (modern alternative)
+from typing import NamedTuple
+
+class PipelineResult(NamedTuple):
+    rows_processed: int
+    errors: int
+    duration_sec: float
+
+result = PipelineResult(1500, 3, 12.5)
+print(f"result: {result}, rows={result.rows_processed}")
+```
+
 ---
 
 ## Functions
@@ -1271,6 +1343,346 @@ checksum = hashlib.md5(data).hexdigest()
 print(f"MD5 checksum: {checksum}")
 sha = hashlib.sha256(data).hexdigest()
 print(f"SHA256: {sha}")
+```
+
+---
+
+## Dunder (Magic) Methods
+
+```python
+# Dunders = "double underscore" methods that Python calls implicitly
+# They let your classes integrate with Python's built-in operations
+
+class DataBatch:
+    """A custom container that demonstrates key dunders."""
+
+    def __init__(self, name, records):
+        self.name = name
+        self.records = list(records)
+
+    # String representations
+    def __repr__(self):
+        """For developers — unambiguous. Called by repr() and in REPL."""
+        return f"DataBatch(name={self.name!r}, size={len(self.records)})"
+
+    def __str__(self):
+        """For users — readable. Called by str() and print()."""
+        return f"Batch '{self.name}' ({len(self.records)} records)"
+
+    # Container protocol
+    def __len__(self):
+        """Called by len()."""
+        return len(self.records)
+
+    def __getitem__(self, index):
+        """Called by batch[i] — enables indexing and iteration."""
+        return self.records[index]
+
+    def __contains__(self, item):
+        """Called by 'in' operator."""
+        return item in self.records
+
+    def __iter__(self):
+        """Called by for loop, list(), etc."""
+        return iter(self.records)
+
+    # Comparison
+    def __eq__(self, other):
+        """Called by ==."""
+        return isinstance(other, DataBatch) and self.records == other.records
+
+    def __lt__(self, other):
+        """Called by <. Enables sorting."""
+        return len(self.records) < len(other.records)
+
+    # Arithmetic — combine batches
+    def __add__(self, other):
+        """Called by +."""
+        return DataBatch(f"{self.name}+{other.name}", self.records + other.records)
+
+    # Context manager protocol
+    def __enter__(self):
+        """Called on 'with' entry."""
+        print(f"  Opening batch '{self.name}'")
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Called on 'with' exit."""
+        print(f"  Closing batch '{self.name}' (error={exc_type is not None})")
+        return False  # don't suppress exceptions
+
+    # Callable
+    def __call__(self, transform_fn):
+        """Called when instance is used as a function: batch(fn)."""
+        return DataBatch(self.name, [transform_fn(r) for r in self.records])
+
+    # Boolean
+    def __bool__(self):
+        """Called by bool(), if, while."""
+        return len(self.records) > 0
+
+    # Hash (needed if used as dict key or in sets)
+    def __hash__(self):
+        return hash((self.name, tuple(self.records)))
+
+# Demo all dunders
+batch1 = DataBatch("users", [{"id": 1}, {"id": 2}, {"id": 3}])
+batch2 = DataBatch("orders", [{"oid": 10}, {"oid": 20}])
+
+print(repr(batch1))                    # __repr__
+print(str(batch1))                     # __str__
+print(f"len: {len(batch1)}")           # __len__
+print(f"batch1[0]: {batch1[0]}")       # __getitem__
+print(f"contains: {{'id': 1} in batch1}: {{'id': 1} in batch1}")  # __contains__
+print(f"bool(batch1): {bool(batch1)}") # __bool__
+
+# Iteration (__iter__)
+for rec in batch1:
+    print(f"  iterating: {rec}")
+
+# Arithmetic (__add__)
+combined = batch1 + batch2
+print(f"combined: {combined}")
+
+# Sorting (__lt__)
+batches = [combined, batch2, batch1]
+print(f"sorted sizes: {[len(b) for b in sorted(batches)]}")
+
+# Callable (__call__)
+upper_batch = DataBatch("names", ["alice", "bob"])
+result = upper_batch(str.upper)
+print(f"callable result: {list(result)}")
+
+# Context manager (__enter__ / __exit__)
+with batch1 as b:
+    print(f"  working with {len(b)} records")
+```
+
+```python
+# Other important dunders — quick reference
+
+class SmartRecord:
+    def __init__(self, data):
+        self._data = data
+
+    # Attribute access
+    def __getattr__(self, name):
+        """Called when normal attribute lookup fails."""
+        return self._data.get(name, f"<no {name}>")
+
+    # Dict-like access
+    def __setitem__(self, key, value):
+        self._data[key] = value
+
+    def __delitem__(self, key):
+        del self._data[key]
+
+    # Format
+    def __format__(self, spec):
+        """Called by f-strings and format()."""
+        if spec == "short":
+            return str(list(self._data.keys()))
+        return str(self._data)
+
+    def __sizeof__(self):
+        """Called by sys.getsizeof()."""
+        import sys
+        return sys.getsizeof(self._data)
+
+r = SmartRecord({"name": "Alice", "age": 30})
+print(r.name)              # __getattr__ → "Alice"
+print(r.email)             # __getattr__ → "<no email>"
+r["city"] = "NYC"          # __setitem__
+print(f"{r:short}")        # __format__
+print(f"{r}")              # __format__ (default)
+
+# __slots__ — memory optimization (no __dict__)
+class OptimizedRecord:
+    __slots__ = ["id", "value"]  # only these attributes allowed
+    def __init__(self, id, value):
+        self.id = id
+        self.value = value
+
+rec = OptimizedRecord(1, 42)
+print(f"slots: id={rec.id}, value={rec.value}")
+try:
+    rec.extra = "nope"
+except AttributeError as e:
+    print(f"__slots__ prevents: {e}")
+```
+
+---
+
+## Common Python Interview Questions (Data Engineering)
+
+```python
+# === Q1: Difference between list, tuple, and set? ===
+# List: ordered, mutable, allows duplicates, uses []
+# Tuple: ordered, immutable, allows duplicates, uses ()
+# Set: unordered, mutable, NO duplicates, uses {}
+
+lst = [1, 2, 2, 3]      # duplicates OK
+tup = (1, 2, 2, 3)      # duplicates OK, immutable
+st  = {1, 2, 2, 3}      # duplicates removed → {1, 2, 3}
+print(f"list={lst}, tuple={tup}, set={st}")
+
+
+# === Q2: Deep copy vs shallow copy ===
+import copy
+original = [[1, 2], [3, 4]]
+shallow = copy.copy(original)       # new list, same inner lists
+deep = copy.deepcopy(original)      # new list, new inner lists
+
+original[0].append(99)
+print(f"original: {original}")
+print(f"shallow (affected): {shallow}")
+print(f"deep (not affected): {deep}")
+
+
+# === Q3: What is a generator? Why use it? ===
+# Generators yield values lazily — one at a time — saving memory.
+# Critical for processing large files/streams that don't fit in memory.
+def read_large_file(lines):
+    for line in lines:
+        yield line.strip().upper()
+
+data = ["  hello  ", "  world  ", "  python  "]
+for processed in read_large_file(data):
+    print(f"  gen: {processed}")
+
+# Memory comparison
+import sys
+list_comp = [x**2 for x in range(10000)]
+gen_exp   = (x**2 for x in range(10000))
+print(f"list size: {sys.getsizeof(list_comp):,} bytes")
+print(f"gen size:  {sys.getsizeof(gen_exp):,} bytes")
+
+
+# === Q4: *args vs **kwargs ===
+def example(*args, **kwargs):
+    print(f"positional: {args}, keyword: {kwargs}")
+
+example(1, 2, 3, x=10, y=20)
+
+# Unpacking into function calls
+def add(a, b, c):
+    return a + b + c
+
+print(add(*[1, 2, 3]))           # unpack list
+print(add(**{"a": 1, "b": 2, "c": 3}))  # unpack dict
+
+
+# === Q5: GIL (Global Interpreter Lock) ===
+# The GIL allows only one thread to execute Python bytecode at a time.
+# Impact: threading does NOT speed up CPU-bound work.
+# Solutions:
+#   - CPU-bound → use multiprocessing (separate processes, separate GILs)
+#   - I/O-bound → threading or asyncio works fine (GIL released during I/O)
+print("GIL: use multiprocessing for CPU, threading/asyncio for I/O")
+
+
+# === Q6: Mutable default argument trap ===
+def bad_append(item, lst=[]):     # BUG: default list shared across calls!
+    lst.append(item)
+    return lst
+
+print(bad_append(1))  # [1]
+print(bad_append(2))  # [1, 2] — unexpected!
+
+def good_append(item, lst=None):  # FIX: use None as sentinel
+    lst = lst or []
+    lst.append(item)
+    return lst
+
+print(good_append(1))  # [1]
+print(good_append(2))  # [2] — correct!
+
+
+# === Q7: What does `if __name__ == "__main__"` do? ===
+# It ensures code runs only when the file is executed directly,
+# not when imported as a module.
+# __name__ == "__main__" when running the script directly
+# __name__ == "module_name" when imported
+print(f"__name__ = {__name__}")
+
+
+# === Q8: How do you handle large datasets in Python? ===
+# 1. Generators / iterators — process row by row
+# 2. pandas chunked reading — pd.read_csv(..., chunksize=10000)
+# 3. Use columnar formats — Parquet, ORC (read only needed columns)
+# 4. Use Dask or PySpark for distributed processing
+# 5. Optimize dtypes — category, int32 vs int64
+import pandas as pd
+import numpy as np
+df = pd.DataFrame({"status": np.random.choice(["A", "B", "C"], 10000)})
+print(f"object dtype:   {df['status'].memory_usage(deep=True):,} bytes")
+df["status"] = df["status"].astype("category")
+print(f"category dtype: {df['status'].memory_usage(deep=True):,} bytes")
+
+
+# === Q9: Difference between == and 'is'? ===
+a = [1, 2, 3]
+b = [1, 2, 3]
+c = a
+print(f"a == b: {a == b}")   # True — same VALUE
+print(f"a is b: {a is b}")   # False — different OBJECTS
+print(f"a is c: {a is c}")   # True — same object (alias)
+# Use 'is' only for None, True, False: `if x is None`
+
+
+# === Q10: What are decorators? ===
+# A decorator wraps a function to add behavior without modifying its code.
+import time
+from functools import wraps
+
+def log_calls(func):
+    @wraps(func)  # preserves original function's name & docstring
+    def wrapper(*args, **kwargs):
+        print(f"  Calling {func.__name__}")
+        result = func(*args, **kwargs)
+        print(f"  {func.__name__} returned {result}")
+        return result
+    return wrapper
+
+@log_calls
+def multiply(a, b):
+    """Multiply two numbers."""
+    return a * b
+
+print(multiply(3, 4))
+print(f"name preserved: {multiply.__name__}")
+print(f"docstring preserved: {multiply.__doc__}")
+
+
+# === Q11: List comprehension vs map/filter ===
+nums = [1, 2, 3, 4, 5]
+
+# Comprehension (preferred — more Pythonic & readable)
+squares = [x**2 for x in nums if x > 2]
+
+# map/filter equivalent
+squares2 = list(map(lambda x: x**2, filter(lambda x: x > 2, nums)))
+
+print(f"comprehension: {squares}")
+print(f"map/filter:    {squares2}")
+
+
+# === Q12: Explain Python's method resolution order (MRO) ===
+class A:
+    def who(self): return "A"
+
+class B(A):
+    def who(self): return "B"
+
+class C(A):
+    def who(self): return "C"
+
+class D(B, C):
+    pass
+
+d = D()
+print(f"MRO: {[cls.__name__ for cls in D.__mro__]}")
+print(f"d.who() = {d.who()}")  # "B" — follows MRO: D → B → C → A
 ```
 
 ---

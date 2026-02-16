@@ -43,6 +43,9 @@ pre{background:var(--code-bg);border:1px solid var(--border);border-radius:var(-
 <a href="#pandas">Pandas</a>
 <a href="#visualization">Plots</a>
 <a href="#scikit-learn">Sklearn</a>
+<a href="#tuples">Tuples</a>
+<a href="#dunder-methods">Dunders</a>
+<a href="#interview-questions">Interview</a>
 <a href="#pro-tips-and-patterns">Tips</a></nav>
 <div class="grid" id="grid">
 <div class="section-divider" id="core-python" data-section="core-python">
@@ -300,6 +303,79 @@ c = Counter(<span <span class="kw">class</span>="st">&quot;banana&quot;</span>)
 words = [<span <span class="kw">class</span>="st">&quot;apple&quot;</span>, <span <span class="kw">class</span>="st">&quot;banana&quot;</span>, <span <span class="kw">class</span>="st">&quot;apple&quot;</span>, <span <span class="kw">class</span>="st">&quot;cherry&quot;</span>, <span <span class="kw">class</span>="st">&quot;banana&quot;</span>, <span <span class="kw">class</span>="st">&quot;apple&quot;</span>]
 word_counts = Counter(words)
 <span class="fn">print</span>(word_counts)</code></pre>
+  </div>
+</div>
+
+
+<div class="section-divider" id="tuples" data-section="tuples">
+  <h2>Tuples</h2>
+  <div class="line"></div>
+  <span class="badge" style="background:var(--cyan-dim);color:var(--cyan)">Immutable</span>
+</div>
+
+<div class="card wide" data-tags="tuples immutable namedtuple">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--cyan-dim);color:var(--cyan)">Tu</div>
+    <h3>Tuples — Immutable Sequences</h3>
+    <span class="card-tag">Jupyter ✅</span>
+  </div>
+  <div class="card-body">
+    <pre><code><span <span class="kw">class</span>="cm"># Creating tuples</span>
+t = (<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>)
+single = (<span class="num">42</span>,)            <span <span class="kw">class</span>="cm"># trailing comma <span class="kw">for</span> single-element</span>
+empty = ()
+from_list = <span class="fn">tuple</span>([<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>])
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;tuple: {t}, single: {single}, empty: {empty}&quot;</span>)
+
+<span <span class="kw">class</span>="cm"># Indexing &amp; slicing</span>
+<span class="fn">print</span>(t[<span class="num">0</span>])       <span <span class="kw">class</span>="cm"># <span class="num">1</span></span>
+<span class="fn">print</span>(t[-<span class="num">1</span>])      <span <span class="kw">class</span>="cm"># <span class="num">5</span></span>
+<span class="fn">print</span>(t[<span class="num">1</span>:<span class="num">4</span>])     <span <span class="kw">class</span>="cm"># (<span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>)</span>
+
+<span <span class="kw">class</span>="cm"># Unpacking</span>
+a, b, *rest = t
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;a={a}, b={b}, rest={rest}&quot;</span>)
+
+<span <span class="kw">class</span>="cm"># Swap idiom</span>
+x, y = <span class="num">10</span>, <span class="num">20</span>
+x, y = y, x
+
+<span <span class="kw">class</span>="cm"># Only <span class="num">2</span> methods</span>
+<span class="fn">print</span>(t.count(<span class="num">3</span>))   <span <span class="kw">class</span>="cm"># <span class="num">1</span></span>
+<span class="fn">print</span>(t.index(<span class="num">4</span>))   <span <span class="kw">class</span>="cm"># <span class="num">3</span></span>
+
+<span <span class="kw">class</span>="cm"># Tuples <span class="kw">as</span> dict keys (hashable)</span>
+coords = {(<span class="num">0</span>, <span class="num">0</span>): <span <span class="kw">class</span>="st">&quot;origin&quot;</span>, (<span class="num">1</span>, <span class="num">1</span>): <span <span class="kw">class</span>="st">&quot;diagonal&quot;</span>}
+<span class="fn">print</span>(coords[(<span class="num">0</span>, <span class="num">0</span>)])
+
+<span <span class="kw">class</span>="cm"># Returning multiple values</span>
+<span class="kw">def</span> stats(data):
+    <span class="kw">return</span> <span class="fn">min</span>(data), <span class="fn">max</span>(data), <span class="fn">sum</span>(data)/<span class="fn">len</span>(data)
+
+lo, hi, avg = stats([<span class="num">5</span>, <span class="num">2</span>, <span class="num">8</span>, <span class="num">1</span>, <span class="num">9</span>])
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;min={lo}, max={hi}, avg={avg}&quot;</span>)
+
+<span <span class="kw">class</span>="cm"># Immutability</span>
+<span class="kw">try</span>:
+    t[<span class="num">0</span>] = <span class="num">99</span>
+<span class="kw">except</span> TypeError <span class="kw">as</span> e:
+    <span class="fn">print</span>(f&quot;Can&<span <span class="kw">class</span>="cm">#x27;t mutate: {e}<span <span class="kw">class</span>="st">&quot;)</span>
+
+<span <span class="kw">class</span>="cm"># Named tuples</span>
+<span class="kw">from</span> collections <span class="kw">import</span> namedtuple
+Point = namedtuple(&quot;</span>Point<span <span class="kw">class</span>="st">&quot;, [&quot;</span>x<span <span class="kw">class</span>="st">&quot;, &quot;</span>y<span <span class="kw">class</span>="st">&quot;])
+p = Point(<span class="num">3.0</span>, <span class="num">4.0</span>)
+<span class="fn">print</span>(f&quot;</span>Point: {p}, x={p.x}, as_dict={p._asdict()}<span <span class="kw">class</span>="st">&quot;)
+
+<span <span class="kw">class</span>="cm"># typing.NamedTuple (modern)</span>
+<span class="kw">from</span> typing <span class="kw">import</span> NamedTuple
+<span class="kw">class</span> ModelResult(NamedTuple):
+    accuracy: float
+    precision: float
+    recall: float
+
+r = ModelResult(<span class="num">0.95</span>, <span class="num">0.93</span>, <span class="num">0.91</span>)
+<span class="fn">print</span>(f&quot;</span>result: {r}, accuracy={r.accuracy}&quot;)</code></pre>
   </div>
 </div>
 
@@ -1141,6 +1217,261 @@ dates = re.findall(r&<span <span class="kw">class</span>="cm">#x27;\d{<span <spa
 
 clean = re.sub(r&<span <span class="kw">class</span>="cm">#x27;[^\w\s]<span <span class="kw">class</span>="st">&#x27;, &#x27;</span>&#x27;, &quot;Hello, World! How&#x27;s it going?<span <span class="kw">class</span>="st">&quot;)</span>
 <span class="fn">print</span>(&quot;</span>cleaned:&quot;, clean)</code></pre>
+  </div>
+</div>
+
+
+<div class="section-divider" id="dunder-methods" data-section="dunder-methods">
+  <h2>Dunder (Magic) Methods</h2>
+  <div class="line"></div>
+  <span class="badge" style="background:var(--purple-dim);color:var(--purple)">OOP</span>
+</div>
+
+<div class="card wide" data-tags="dunder magic methods">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--purple-dim);color:var(--purple)">Du</div>
+    <h3>Dunder Methods — Core Protocol</h3>
+    <span class="card-tag">Jupyter ✅</span>
+  </div>
+  <div class="card-body">
+    <pre><code><span <span class="kw">class</span>="cm"># Dunders = <span <span class="kw">class</span>="st">&quot;double underscore&quot;</span> methods Python calls implicitly</span>
+<span <span class="kw">class</span>="cm"># They let your classes integrate <span class="kw">with</span> built-<span class="kw">in</span> operations</span>
+
+<span class="kw">class</span> DataBatch:
+    <span class="kw">def</span> __init__(self, name, records):
+        self.name = name
+        self.records = <span class="fn">list</span>(records)
+
+    <span class="kw">def</span> __repr__(self):       <span <span class="kw">class</span>="cm"># <span class="fn">repr</span>() <span class="kw">and</span> REPL</span>
+        <span class="kw">return</span> <span <span class="kw">class</span>="st">f&quot;DataBatch(name={self.name!r}, size={<span class="fn">len</span>(self.records)})&quot;</span>
+
+    <span class="kw">def</span> __str__(self):        <span <span class="kw">class</span>="cm"># <span class="fn">str</span>() <span class="kw">and</span> <span class="fn">print</span>()</span>
+        <span class="kw">return</span> f&quot;Batch &<span <span class="kw">class</span>="cm">#x27;{self.name}&#x27; ({<span class="fn">len</span>(self.records)} records)&quot;</span>
+
+    <span class="kw">def</span> __len__(self):        <span <span class="kw">class</span>="cm"># <span class="fn">len</span>()</span>
+        <span class="kw">return</span> <span class="fn">len</span>(self.records)
+
+    <span class="kw">def</span> __getitem__(self, index):  <span <span class="kw">class</span>="cm"># batch[i], enables iteration</span>
+        <span class="kw">return</span> self.records[index]
+
+    <span class="kw">def</span> __contains__(self, item):  <span <span class="kw">class</span>="cm"># <span <span class="kw">class</span>="st">&#x27;<span class="kw">in</span>&#x27;</span> operator</span>
+        <span class="kw">return</span> item <span class="kw">in</span> self.records
+
+    <span class="kw">def</span> __iter__(self):       <span <span class="kw">class</span>="cm"># <span class="kw">for</span> loop, <span class="fn">list</span>()</span>
+        <span class="kw">return</span> <span class="fn">iter</span>(self.records)
+
+    <span class="kw">def</span> __eq__(self, other):  <span <span class="kw">class</span>="cm"># ==</span>
+        <span class="kw">return</span> <span class="fn">isinstance</span>(other, DataBatch) <span class="kw">and</span> self.records == other.records
+
+    <span class="kw">def</span> __lt__(self, other):  <span <span class="kw">class</span>="cm"># &lt; enables sorting</span>
+        <span class="kw">return</span> <span class="fn">len</span>(self.records) &lt; <span class="fn">len</span>(other.records)
+
+    <span class="kw">def</span> __add__(self, other): <span <span class="kw">class</span>="cm"># + combine batches</span>
+        <span class="kw">return</span> DataBatch(<span <span class="kw">class</span>="st">f&quot;{self.name}+{other.name}&quot;</span>, self.records + other.records)
+
+    <span class="kw">def</span> __enter__(self):      <span <span class="kw">class</span>="cm"># <span class="kw">with</span> statement entry</span>
+        <span class="fn">print</span>(f&quot;  Opening batch &<span <span class="kw">class</span>="cm">#x27;{self.name}&#x27;<span <span class="kw">class</span>="st">&quot;)</span>
+        <span class="kw">return</span> self
+
+    <span class="kw">def</span> __exit__(self, exc_type, exc_val, exc_tb):  <span <span class="kw">class</span>="cm"># <span class="kw">with</span> exit</span>
+        <span class="fn">print</span>(f&quot;</span>  Closing batch &<span <span class="kw">class</span>="cm">#x27;{self.name}&#x27;&quot;)</span>
+        <span class="kw">return</span> <span class="kw">False</span>
+
+    <span class="kw">def</span> __call__(self, fn):   <span <span class="kw">class</span>="cm"># batch(fn) — callable</span>
+        <span class="kw">return</span> DataBatch(self.name, [fn(r) <span class="kw">for</span> r <span class="kw">in</span> self.records])
+
+    <span class="kw">def</span> __bool__(self):       <span <span class="kw">class</span>="cm"># <span class="fn">bool</span>(), <span class="kw">if</span>, <span class="kw">while</span></span>
+        <span class="kw">return</span> <span class="fn">len</span>(self.records) &gt; <span class="num">0</span>
+
+<span <span class="kw">class</span>="cm"># Demo</span>
+batch1 = DataBatch(<span <span class="kw">class</span>="st">&quot;users&quot;</span>, [{<span <span class="kw">class</span>="st">&quot;id&quot;</span>: <span class="num">1</span>}, {<span <span class="kw">class</span>="st">&quot;id&quot;</span>: <span class="num">2</span>}, {<span <span class="kw">class</span>="st">&quot;id&quot;</span>: <span class="num">3</span>}])
+batch2 = DataBatch(<span <span class="kw">class</span>="st">&quot;orders&quot;</span>, [{<span <span class="kw">class</span>="st">&quot;oid&quot;</span>: <span class="num">10</span>}, {<span <span class="kw">class</span>="st">&quot;oid&quot;</span>: <span class="num">20</span>}])
+
+<span class="fn">print</span>(<span class="fn">repr</span>(batch1))                    <span <span class="kw">class</span>="cm"># __repr__</span>
+<span class="fn">print</span>(<span class="fn">str</span>(batch1))                     <span <span class="kw">class</span>="cm"># __str__</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;len: {<span class="fn">len</span>(batch1)}&quot;</span>)           <span <span class="kw">class</span>="cm"># __len__</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;batch1[<span class="num">0</span>]: {batch1[<span class="num">0</span>]}&quot;</span>)       <span <span class="kw">class</span>="cm"># __getitem__</span>
+
+combined = batch1 + batch2             <span <span class="kw">class</span>="cm"># __add__</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;combined: {combined}&quot;</span>)
+
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;sorted sizes: {[<span class="fn">len</span>(b) <span class="kw">for</span> b <span class="kw">in</span> <span class="fn">sorted</span>([combined, batch2, batch1])]}&quot;</span>)
+
+<span class="kw">with</span> batch1 <span class="kw">as</span> b:                      <span <span class="kw">class</span>="cm"># __enter__ / __exit__</span>
+    <span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;  working <span class="kw">with</span> {<span class="fn">len</span>(b)} records&quot;</span>)</code></pre>
+  </div>
+</div>
+
+<div class="card" data-tags="dunder __slots__ __getattr__">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--purple-dim);color:var(--purple)">Du</div>
+    <h3>Dunder Methods — Advanced</h3>
+    <span class="card-tag">Jupyter ✅</span>
+  </div>
+  <div class="card-body">
+    <pre><code><span <span class="kw">class</span>="cm"># More dunders: attribute access, __slots__, __format__</span>
+
+<span class="kw">class</span> SmartRecord:
+    <span class="kw">def</span> __init__(self, data):
+        self._data = data
+
+    <span class="kw">def</span> __getattr__(self, name):     <span <span class="kw">class</span>="cm"># fallback attribute access</span>
+        <span class="kw">return</span> self._data.get(name, f&quot;&lt;no {name}&gt;<span <span class="kw">class</span>="st">&quot;)
+
+    <span class="kw">def</span> __setitem__(self, key, value):  <span <span class="kw">class</span>="cm"># r[&quot;</span>key<span <span class="kw">class</span>="st">&quot;] = val</span>
+        self._data[key] = value
+
+    <span class="kw">def</span> __delitem__(self, key):
+        <span class="kw">del</span> self._data[key]
+
+    <span class="kw">def</span> __format__(self, spec):       <span <span class="kw">class</span>="cm"># f-strings, format()</span>
+        <span class="kw">if</span> spec == &quot;</span>short<span <span class="kw">class</span>="st">&quot;:
+            <span class="kw">return</span> <span class="fn">str</span>(<span class="fn">list</span>(self._data.keys()))
+        <span class="kw">return</span> <span class="fn">str</span>(self._data)
+
+r = SmartRecord({&quot;</span>name<span <span class="kw">class</span>="st">&quot;: &quot;</span>Alice<span <span class="kw">class</span>="st">&quot;, &quot;</span>age<span <span class="kw">class</span>="st">&quot;: <span class="num">30</span>})
+<span class="fn">print</span>(r.name)              <span <span class="kw">class</span>="cm"># __getattr__</span>
+<span class="fn">print</span>(r.email)             <span <span class="kw">class</span>="cm"># __getattr__ fallback</span>
+r[&quot;</span>city<span <span class="kw">class</span>="st">&quot;] = &quot;</span>NYC<span <span class="kw">class</span>="st">&quot;          <span <span class="kw">class</span>="cm"># __setitem__</span>
+<span class="fn">print</span>(f&quot;</span>{r:short}<span <span class="kw">class</span>="st">&quot;)        <span <span class="kw">class</span>="cm"># __format__</span>
+
+<span <span class="kw">class</span>="cm"># __slots__ — memory optimization (no __dict__)</span>
+<span class="kw">class</span> OptimizedRecord:
+    __slots__ = [&quot;</span>id<span <span class="kw">class</span>="st">&quot;, &quot;</span>value<span <span class="kw">class</span>="st">&quot;]
+    <span class="kw">def</span> __init__(self, id, value):
+        self.id = id
+        self.value = value
+
+rec = OptimizedRecord(<span class="num">1</span>, <span class="num">42</span>)
+<span class="fn">print</span>(f&quot;</span>slots: id={rec.id}, value={rec.value}<span <span class="kw">class</span>="st">&quot;)
+<span class="kw">try</span>:
+    rec.extra = &quot;</span>nope<span <span class="kw">class</span>="st">&quot;
+<span class="kw">except</span> AttributeError <span class="kw">as</span> e:
+    <span class="fn">print</span>(f&quot;</span>__slots__ prevents: {e}&quot;)</code></pre>
+  </div>
+</div>
+
+
+<div class="section-divider" id="interview-questions" data-section="interview-questions">
+  <h2>Common Interview Questions</h2>
+  <div class="line"></div>
+  <span class="badge" style="background:var(--pink-dim);color:var(--pink)">Career</span>
+</div>
+
+<div class="card wide" data-tags="interview questions python">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--pink-dim);color:var(--pink)">IQ</div>
+    <h3>Interview Q1-Q6</h3>
+    <span class="card-tag">Jupyter ✅</span>
+  </div>
+  <div class="card-body">
+    <pre><code><span <span class="kw">class</span>="cm"># Q1: list vs tuple vs set</span>
+lst = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">2</span>, <span class="num">3</span>]      <span <span class="kw">class</span>="cm"># ordered, mutable, dups OK</span>
+tup = (<span class="num">1</span>, <span class="num">2</span>, <span class="num">2</span>, <span class="num">3</span>)      <span <span class="kw">class</span>="cm"># ordered, immutable, dups OK</span>
+st  = {<span class="num">1</span>, <span class="num">2</span>, <span class="num">2</span>, <span class="num">3</span>}      <span <span class="kw">class</span>="cm"># unordered, no dups -&gt; {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>}</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;list={lst}, tuple={tup}, set={st}&quot;</span>)
+
+<span <span class="kw">class</span>="cm"># Q2: Deep copy vs shallow copy</span>
+<span class="kw">import</span> copy
+original = [[<span class="num">1</span>, <span class="num">2</span>], [<span class="num">3</span>, <span class="num">4</span>]]
+shallow = copy.copy(original)
+deep = copy.deepcopy(original)
+original[<span class="num">0</span>].append(<span class="num">99</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;shallow (affected): {shallow}&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;deep (<span class="kw">not</span> affected): {deep}&quot;</span>)
+
+<span <span class="kw">class</span>="cm"># Q3: Generators — lazy, memory-efficient</span>
+<span class="kw">import</span> sys
+list_comp = [x**<span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10000</span>)]
+gen_exp   = (x**<span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10000</span>))
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;list: {sys.getsizeof(list_comp):,} bytes&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;gen:  {sys.getsizeof(gen_exp):,} bytes&quot;</span>)
+
+<span <span class="kw">class</span>="cm"># Q4: *args vs **kwargs</span>
+<span class="kw">def</span> flexible(*args, **kwargs):
+    <span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;positional: {args}, keyword: {kwargs}&quot;</span>)
+flexible(<span class="num">1</span>, <span class="num">2</span>, x=<span class="num">10</span>)
+
+<span <span class="kw">class</span>="cm"># Q5: GIL — one thread runs bytecode at a time</span>
+<span <span class="kw">class</span>="cm"># CPU-bound -&gt; multiprocessing | I/O-bound -&gt; threading/asyncio</span>
+
+<span <span class="kw">class</span>="cm"># Q6: Mutable default argument trap</span>
+<span class="kw">def</span> bad(item, lst=[]):
+    lst.append(item)
+    <span class="kw">return</span> lst
+<span class="fn">print</span>(bad(<span class="num">1</span>))  <span <span class="kw">class</span>="cm"># [<span class="num">1</span>]</span>
+<span class="fn">print</span>(bad(<span class="num">2</span>))  <span <span class="kw">class</span>="cm"># [<span class="num">1</span>, <span class="num">2</span>] — BUG! shared default</span>
+
+<span class="kw">def</span> good(item, lst=<span class="kw">None</span>):
+    lst = lst <span class="kw">or</span> []
+    lst.append(item)
+    <span class="kw">return</span> lst
+<span class="fn">print</span>(good(<span class="num">1</span>), good(<span class="num">2</span>))  <span <span class="kw">class</span>="cm"># [<span class="num">1</span>] [<span class="num">2</span>] — correct</span></code></pre>
+  </div>
+</div>
+
+<div class="card wide" data-tags="interview questions decorators pandas">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--pink-dim);color:var(--pink)">IQ</div>
+    <h3>Interview Q7-Q13</h3>
+    <span class="card-tag">Jupyter ✅</span>
+  </div>
+  <div class="card-body">
+    <pre><code><span <span class="kw">class</span>="cm"># Q7: == vs <span <span class="kw">class</span>="st">&#x27;<span class="kw">is</span>&#x27;</span></span>
+a = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]; b = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]; c = a
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;a == b: {a == b}&quot;</span>)  <span <span class="kw">class</span>="cm"># <span class="kw">True</span> (value)</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;a <span class="kw">is</span> b: {a <span class="kw">is</span> b}&quot;</span>)  <span <span class="kw">class</span>="cm"># <span class="kw">False</span> (identity)</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;a <span class="kw">is</span> c: {a <span class="kw">is</span> c}&quot;</span>)  <span <span class="kw">class</span>="cm"># <span class="kw">True</span> (same object)</span>
+
+<span <span class="kw">class</span>="cm"># Q8: Decorators wrap functions</span>
+<span class="kw">from</span> functools <span class="kw">import</span> wraps
+<span class="kw">def</span> log_calls(func):
+    @wraps(func)
+    <span class="kw">def</span> wrapper(*args, **kwargs):
+        <span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;  Calling {func.__name__}&quot;</span>)
+        <span class="kw">return</span> func(*args, **kwargs)
+    <span class="kw">return</span> wrapper
+
+@log_calls
+<span class="kw">def</span> square(x):
+    <span class="kw">return</span> x ** <span class="num">2</span>
+<span class="fn">print</span>(square(<span class="num">5</span>))
+
+<span <span class="kw">class</span>="cm"># Q9: Comprehension vs map/filter</span>
+nums = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>]
+comp = [x**<span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> nums <span class="kw">if</span> x &gt; <span class="num">2</span>]
+mapped = <span class="fn">list</span>(<span class="fn">map</span>(<span class="kw">lambda</span> x: x**<span class="num">2</span>, <span class="fn">filter</span>(<span class="kw">lambda</span> x: x &gt; <span class="num">2</span>, nums)))
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;comp: {comp}, map: {mapped}&quot;</span>)
+
+<span <span class="kw">class</span>="cm"># Q10: Handling missing data <span class="kw">in</span> pandas</span>
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+df = pd.DataFrame({<span <span class="kw">class</span>="st">&quot;A&quot;</span>: [<span class="num">1</span>, np.nan, <span class="num">3</span>], <span <span class="kw">class</span>="st">&quot;B&quot;</span>: [np.nan, <span class="num">5</span>, <span class="num">6</span>]})
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;dropna:&quot;</span>, df.dropna().shape)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;fillna(<span class="num">0</span>):&quot;</span>, df.fillna(<span class="num">0</span>).values.tolist())
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;fillna(mean):&quot;</span>, df.fillna(df.mean()).values.tolist())
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">&quot;interpolate:&quot;</span>, df.interpolate().values.tolist())
+
+<span <span class="kw">class</span>="cm"># Q11: Bias-variance tradeoff</span>
+<span <span class="kw">class</span>="cm"># High bias = underfitting (too simple)</span>
+<span <span class="kw">class</span>="cm"># High variance = overfitting (too complex)</span>
+<span <span class="kw">class</span>="cm"># Use cross-validation, regularization, ensembles</span>
+
+<span <span class="kw">class</span>="cm"># Q12: MRO (Method Resolution Order)</span>
+<span class="kw">class</span> A:
+    <span class="kw">def</span> who(self): <span class="kw">return</span> <span <span class="kw">class</span>="st">&quot;A&quot;</span>
+<span class="kw">class</span> B(A):
+    <span class="kw">def</span> who(self): <span class="kw">return</span> <span <span class="kw">class</span>="st">&quot;B&quot;</span>
+<span class="kw">class</span> C(A):
+    <span class="kw">def</span> who(self): <span class="kw">return</span> <span <span class="kw">class</span>="st">&quot;C&quot;</span>
+<span class="kw">class</span> D(B, C):
+    <span class="kw">pass</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;MRO: {[c.__name__ <span class="kw">for</span> c <span class="kw">in</span> D.__mro__]}&quot;</span>)
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;D().who() = {D().who()}&quot;</span>)  <span <span class="kw">class</span>="cm"># D-&gt;B-&gt;C-&gt;A</span>
+
+<span <span class="kw">class</span>="cm"># Q13: <span class="kw">if</span> __name__ == <span <span class="kw">class</span>="st">&quot;__main__&quot;</span></span>
+<span <span class="kw">class</span>="cm"># Runs code only when executed directly, <span class="kw">not</span> imported</span>
+<span class="fn">print</span>(<span <span class="kw">class</span>="st">f&quot;__name__ = {__name__}&quot;</span>)</code></pre>
   </div>
 </div>
 

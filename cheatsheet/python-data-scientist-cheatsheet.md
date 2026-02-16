@@ -219,6 +219,70 @@ word_counts = Counter(words)
 print(word_counts)
 ```
 
+### Tuples — Immutable Sequences
+
+```python
+# Creating tuples
+t = (1, 2, 3, 4, 5)
+single = (42,)            # trailing comma for single-element
+empty = ()
+from_list = tuple([1, 2, 3])
+print(f"tuple: {t}, single: {single}, empty: {empty}")
+
+# Indexing & slicing
+print(t[0])       # 1
+print(t[-1])      # 5
+print(t[1:4])     # (2, 3, 4)
+print(t[::-1])    # (5, 4, 3, 2, 1)
+
+# Unpacking
+a, b, *rest = t
+print(f"a={a}, b={b}, rest={rest}")
+
+# Swap idiom
+x, y = 10, 20
+x, y = y, x
+print(f"swapped: x={x}, y={y}")
+
+# Only 2 methods
+print(t.count(3))   # 1
+print(t.index(4))   # 3
+
+# Tuples as dict keys (hashable)
+coords = {(0, 0): "origin", (1, 1): "diagonal"}
+print(coords[(0, 0)])
+
+# Returning multiple values
+def stats(data):
+    return min(data), max(data), sum(data)/len(data)
+
+lo, hi, avg = stats([5, 2, 8, 1, 9])
+print(f"min={lo}, max={hi}, avg={avg}")
+
+# Immutability
+try:
+    t[0] = 99
+except TypeError as e:
+    print(f"Can't mutate: {e}")
+
+# Named tuples
+from collections import namedtuple
+Point = namedtuple("Point", ["x", "y"])
+p = Point(3.0, 4.0)
+print(f"Point: {p}, x={p.x}, as_dict={p._asdict()}")
+
+# typing.NamedTuple (modern)
+from typing import NamedTuple
+
+class ModelResult(NamedTuple):
+    accuracy: float
+    precision: float
+    recall: float
+
+r = ModelResult(0.95, 0.93, 0.91)
+print(f"result: {r}, accuracy={r.accuracy}")
+```
+
 ---
 
 ## Functions
@@ -944,6 +1008,308 @@ print("dates:", dates)
 
 clean = re.sub(r'[^\w\s]', '', "Hello, World! How's it going?")
 print("cleaned:", clean)
+```
+
+---
+
+## Dunder (Magic) Methods
+
+```python
+# Dunders = "double underscore" methods Python calls implicitly
+# They let your classes work with built-in operators and functions
+
+class Dataset:
+    """Custom container demonstrating key dunders."""
+
+    def __init__(self, name, data):
+        self.name = name
+        self.data = list(data)
+
+    # String representations
+    def __repr__(self):
+        """For developers — unambiguous."""
+        return f"Dataset(name={self.name!r}, size={len(self.data)})"
+
+    def __str__(self):
+        """For users — readable."""
+        return f"Dataset '{self.name}' ({len(self.data)} rows)"
+
+    # Container protocol
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, index):
+        """Enables ds[i], slicing, and iteration."""
+        return self.data[index]
+
+    def __contains__(self, item):
+        """Enables 'in' operator."""
+        return item in self.data
+
+    def __iter__(self):
+        return iter(self.data)
+
+    # Comparison
+    def __eq__(self, other):
+        return isinstance(other, Dataset) and self.data == other.data
+
+    def __lt__(self, other):
+        """Enables sorting datasets by size."""
+        return len(self.data) < len(other.data)
+
+    # Arithmetic — combine datasets
+    def __add__(self, other):
+        return Dataset(f"{self.name}+{other.name}", self.data + other.data)
+
+    # Context manager
+    def __enter__(self):
+        print(f"  Loading '{self.name}'")
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        print(f"  Released '{self.name}'")
+        return False
+
+    # Callable — apply transform
+    def __call__(self, fn):
+        return Dataset(self.name, [fn(x) for x in self.data])
+
+    # Boolean
+    def __bool__(self):
+        return len(self.data) > 0
+
+# Demo
+ds1 = Dataset("train", [1, 2, 3, 4, 5])
+ds2 = Dataset("test", [6, 7, 8])
+
+print(repr(ds1))                       # __repr__
+print(str(ds1))                        # __str__
+print(f"len: {len(ds1)}")             # __len__
+print(f"ds1[0]: {ds1[0]}")           # __getitem__
+print(f"slice: {ds1[1:3]}")          # __getitem__ with slice
+print(f"3 in ds1: {3 in ds1}")       # __contains__
+
+for val in ds2:                        # __iter__
+    print(f"  iter: {val}")
+
+combined = ds1 + ds2                   # __add__
+print(f"combined: {combined}")
+
+# Sorting (__lt__)
+print(f"sorted sizes: {[len(d) for d in sorted([combined, ds2, ds1])]}")
+
+# Callable (__call__)
+doubled = ds2(lambda x: x * 2)
+print(f"doubled: {list(doubled)}")
+
+# Context manager
+with ds1 as d:
+    print(f"  working with {len(d)} items")
+```
+
+```python
+# More dunders — quick reference
+
+class SmartArray:
+    def __init__(self, data):
+        self._data = list(data)
+
+    # Attribute access fallback
+    def __getattr__(self, name):
+        if name == "mean":
+            return sum(self._data) / len(self._data)
+        raise AttributeError(f"no attribute '{name}'")
+
+    # Dict-like access
+    def __setitem__(self, idx, val):
+        self._data[idx] = val
+
+    def __delitem__(self, idx):
+        del self._data[idx]
+
+    # Format
+    def __format__(self, spec):
+        if spec == "summary":
+            return f"n={len(self._data)}, mean={sum(self._data)/len(self._data):.2f}"
+        return str(self._data)
+
+    def __repr__(self):
+        return f"SmartArray({self._data})"
+
+arr = SmartArray([10, 20, 30])
+print(arr.mean)                # __getattr__
+arr[0] = 99                    # __setitem__
+print(f"{arr:summary}")        # __format__
+print(f"{arr}")                # __format__ (default)
+
+# __slots__ — memory optimization
+class OptimizedPoint:
+    __slots__ = ["x", "y"]
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+p = OptimizedPoint(1.0, 2.0)
+print(f"slots: x={p.x}, y={p.y}")
+try:
+    p.z = 3.0  # fails — not in __slots__
+except AttributeError as e:
+    print(f"__slots__ prevents: {e}")
+```
+
+---
+
+## Common Python Interview Questions (Data Science)
+
+```python
+# === Q1: Difference between list, tuple, and set? ===
+# List: ordered, mutable, allows duplicates
+# Tuple: ordered, immutable, allows duplicates
+# Set: unordered, mutable, NO duplicates
+lst = [1, 2, 2, 3]
+tup = (1, 2, 2, 3)
+st  = {1, 2, 2, 3}       # → {1, 2, 3}
+print(f"list={lst}, tuple={tup}, set={st}")
+
+
+# === Q2: Deep copy vs shallow copy ===
+import copy
+original = [[1, 2], [3, 4]]
+shallow = copy.copy(original)
+deep = copy.deepcopy(original)
+
+original[0].append(99)
+print(f"original: {original}")
+print(f"shallow (affected): {shallow}")
+print(f"deep (not affected): {deep}")
+
+
+# === Q3: What is a generator? Why use it? ===
+# Generators yield values lazily — saving memory for large datasets.
+def batch_reader(data, size=3):
+    for i in range(0, len(data), size):
+        yield data[i:i+size]
+
+for batch in batch_reader(list(range(10))):
+    print(f"  batch: {batch}")
+
+import sys
+list_comp = [x**2 for x in range(10000)]
+gen_exp   = (x**2 for x in range(10000))
+print(f"list: {sys.getsizeof(list_comp):,} bytes vs gen: {sys.getsizeof(gen_exp):,} bytes")
+
+
+# === Q4: *args vs **kwargs ===
+def flexible(*args, **kwargs):
+    print(f"positional: {args}, keyword: {kwargs}")
+
+flexible(1, 2, 3, x=10, y=20)
+
+def add(a, b, c): return a + b + c
+print(add(*[1, 2, 3]))                      # unpack list
+print(add(**{"a": 1, "b": 2, "c": 3}))     # unpack dict
+
+
+# === Q5: GIL (Global Interpreter Lock) ===
+# Only one thread executes Python bytecode at a time.
+# CPU-bound → use multiprocessing
+# I/O-bound → threading/asyncio works fine
+print("GIL: multiprocessing for CPU, threading/asyncio for I/O")
+
+
+# === Q6: Mutable default argument trap ===
+def bad(item, lst=[]):
+    lst.append(item)
+    return lst
+
+print(bad(1))  # [1]
+print(bad(2))  # [1, 2] — bug!
+
+def good(item, lst=None):
+    lst = lst or []
+    lst.append(item)
+    return lst
+
+print(good(1))  # [1]
+print(good(2))  # [2] — correct
+
+
+# === Q7: What does `if __name__ == "__main__"` do? ===
+# Runs code only when file is executed directly, not imported.
+print(f"__name__ = {__name__}")
+
+
+# === Q8: == vs 'is' ===
+a = [1, 2, 3]
+b = [1, 2, 3]
+c = a
+print(f"a == b: {a == b}")   # True — same value
+print(f"a is b: {a is b}")   # False — different objects
+print(f"a is c: {a is c}")   # True — same object
+# Rule: use 'is' only for None/True/False
+
+
+# === Q9: What are decorators? ===
+from functools import wraps
+def log_calls(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        print(f"  Calling {func.__name__}")
+        return func(*args, **kwargs)
+    return wrapper
+
+@log_calls
+def square(x):
+    """Square a number."""
+    return x ** 2
+
+print(square(5))
+print(f"name: {square.__name__}, doc: {square.__doc__}")
+
+
+# === Q10: List comprehension vs map/filter ===
+nums = [1, 2, 3, 4, 5]
+comp   = [x**2 for x in nums if x > 2]
+mapped = list(map(lambda x: x**2, filter(lambda x: x > 2, nums)))
+print(f"comprehension: {comp}")
+print(f"map/filter: {mapped}")
+
+
+# === Q11: How do you handle missing data in pandas? ===
+import pandas as pd
+import numpy as np
+
+df = pd.DataFrame({"A": [1, np.nan, 3], "B": [np.nan, 5, 6]})
+print("Original:\n", df)
+print("\ndropna:\n", df.dropna())
+print("\nfillna(0):\n", df.fillna(0))
+print("\nfillna(mean):\n", df.fillna(df.mean()))
+print("\ninterpolate:\n", df.interpolate())
+print("\nisnull sum:\n", df.isnull().sum())
+
+
+# === Q12: Explain bias-variance tradeoff ===
+# Bias: error from wrong assumptions (underfitting). High bias = too simple.
+# Variance: error from sensitivity to training data (overfitting). High variance = too complex.
+# Goal: find the sweet spot — regularization, cross-validation, ensemble methods.
+print("Bias-Variance: underfitting ←→ overfitting. Use CV to find balance.")
+
+
+# === Q13: Method Resolution Order (MRO) ===
+class A:
+    def who(self): return "A"
+
+class B(A):
+    def who(self): return "B"
+
+class C(A):
+    def who(self): return "C"
+
+class D(B, C):
+    pass
+
+print(f"MRO: {[cls.__name__ for cls in D.__mro__]}")
+print(f"d.who() = {D().who()}")  # "B" — D → B → C → A
 ```
 
 ---
