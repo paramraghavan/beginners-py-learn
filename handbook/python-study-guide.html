@@ -6,7 +6,7 @@
 <title>The Complete Python Study Guide</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,wght@0,400;0,600;1,400&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#ffffff;--bg2:#f8f9fa;--surface:#f1f3f5;--surface2:#e9ecef;--border:#dee2e6;--border2:#ced4da;--text:#343a40;--text-dim:#6c757d;--heading:#212529;--white:#ffffff;--amber:#d97706;--amber-dim:rgba(217,119,6,0.08);--green:#059669;--green-dim:rgba(5,150,105,0.08);--blue:#2563eb;--blue-dim:rgba(37,99,235,0.08);--pink:#db2777;--pink-dim:rgba(219,39,119,0.08);--cyan:#0891b2;--cyan-dim:rgba(8,145,178,0.08);--red:#dc2626;--red-dim:rgba(220,38,38,0.08);--purple:#7c3aed;--purple-dim:rgba(124,58,237,0.08);--code-bg:#f8f9fa;--radius:10px;--radius-lg:14px}
+:root{--bg:#111214;--bg2:#18191d;--surface:#1e2025;--surface2:#252830;--border:#2e3039;--border2:#3a3d48;--text:#b8bcc8;--text-dim:#6c7086;--heading:#e8eaf0;--white:#f4f5f7;--amber:#f5a623;--amber-dim:rgba(245,166,35,0.12);--green:#50d890;--green-dim:rgba(80,216,144,0.10);--blue:#5b9cf5;--blue-dim:rgba(91,156,245,0.10);--pink:#e878a0;--pink-dim:rgba(232,120,160,0.10);--cyan:#56d4c8;--cyan-dim:rgba(86,212,200,0.10);--red:#f06868;--red-dim:rgba(240,104,104,0.12);--purple:#a78bfa;--purple-dim:rgba(167,139,250,0.10);--code-bg:#14151a;--radius:10px;--radius-lg:14px}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh;overflow-x:hidden}
@@ -16,7 +16,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);line
 
 /* Header */
 .header{padding:56px 32px 36px;text-align:center;position:relative;border-bottom:1px solid var(--border)}
-.header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 50% 0%,rgba(37,99,235,0.05),transparent),radial-gradient(ellipse 30% 50% at 75% 10%,rgba(5,150,105,0.04),transparent);pointer-events:none}
+.header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 50% 0%,rgba(245,166,35,0.06),transparent),radial-gradient(ellipse 30% 50% at 75% 10%,rgba(80,216,144,0.04),transparent);pointer-events:none}
 .header h1{font-family:'Newsreader',serif;font-size:clamp(2.2rem,4.5vw,3.6rem);color:var(--heading);letter-spacing:-0.03em;position:relative}
 .header h1 em{font-style:italic;color:var(--amber);font-weight:400}
 .header p{font-size:0.95rem;color:var(--text-dim);margin-top:6px;position:relative}
@@ -30,7 +30,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);line
 .search-wrap svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-dim);width:16px;height:16px}
 
 /* Nav */
-.nav{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;padding:16px 24px;position:sticky;top:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.nav{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;padding:16px 24px;position:sticky;top:0;z-index:100;background:rgba(17,18,20,0.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
 .nav a{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;padding:5px 12px;border-radius:999px;text-decoration:none;color:var(--text-dim);border:1px solid transparent;transition:all .2s;white-space:nowrap}
 .nav a:hover,.nav a.active{color:var(--amber);border-color:rgba(245,166,35,0.3);background:var(--amber-dim)}
 
@@ -51,11 +51,11 @@ h5,h6{font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:600;color:var
 /* Code */
 pre{background:var(--code-bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;overflow-x:auto;margin:10px 0;font-size:0.76rem;line-height:1.75}
 code{font-family:'IBM Plex Mono',monospace;font-size:inherit}
-pre code{color:#1e293b}
+pre code{color:var(--text)}
 code.inline{background:var(--surface2);color:var(--cyan);padding:2px 6px;border-radius:4px;font-size:0.82rem}
 
 /* Syntax colors */
-.kw{color:#7c3aed}.fn{color:#059669}.st{color:#b45309}.cm{color:#9ca3af;font-style:italic}.nb{color:#0891b2}.op{color:#db2777}.num{color:#2563eb}.dc{color:#db2777}
+.kw{color:var(--purple)}.fn{color:var(--green)}.st{color:var(--amber)}.cm{color:var(--text-dim);font-style:italic}.nb{color:var(--cyan)}.op{color:var(--pink)}.num{color:var(--blue)}.dc{color:var(--pink)}
 
 /* Paragraphs */
 p{margin:8px 0;line-height:1.7}
@@ -97,7 +97,7 @@ hr{border:none;height:1px;background:var(--border);margin:24px 0}
 strong{color:var(--heading);font-weight:600}
 
 /* Back to top */
-#back-top{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--surface);border:1px solid var(--border);color:var(--amber);font-size:1.2rem;cursor:pointer;display:none;align-items:center;justify-content:center;transition:all .2s;z-index:50;box-shadow:0 4px 16px rgba(0,0,0,0.1)}
+#back-top{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:50%;background:var(--surface);border:1px solid var(--border);color:var(--amber);font-size:1.2rem;cursor:pointer;display:none;align-items:center;justify-content:center;transition:all .2s;z-index:50;box-shadow:0 4px 16px rgba(0,0,0,0.3)}
 #back-top:hover{background:var(--amber-dim);border-color:var(--amber);transform:translateY(-2px)}
 
 /* Animations */
@@ -109,8 +109,18 @@ mark{background:var(--amber-dim);color:var(--amber);padding:1px 3px;border-radiu
 
 /* Print */
 @media print{
+  body{background:#fff;color:#222}
+  .header::before{display:none}
   .nav,#back-top,#progress,.search-wrap{display:none!important}
+  pre{background:#f5f5f5;border-color:#ddd;color:#222}
+  .section-divider h2{color:#111}
+  h3,h4,strong{color:#111}
+  a{color:#0066cc}
   .content{max-width:100%;padding:0}
+  blockquote{border-left-color:#999;background:#f9f9f9}
+  th{background:#eee;color:#111}
+  td{color:#222}
+  .kw,.fn,.st,.cm,.nb,.op,.num,.dc{color:#333}
 }
 
 /* Mobile */
