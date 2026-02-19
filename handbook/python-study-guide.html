@@ -1,0 +1,4512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Complete Python Study Guide</title>
+<style>
+:root {
+    --bg: #0d1117;
+    --bg-card: #161b22;
+    --bg-code: #1c2128;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --accent3: #d2a8ff;
+    --accent4: #f97583;
+    --yellow: #e3b341;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+.container { max-width: 960px; margin: 0 auto; padding: 20px 30px 80px; }
+
+h1 { color: var(--accent); font-size: 2.2em; margin: 40px 0 10px; text-align: center; }
+h2 { color: var(--accent); font-size: 1.7em; margin: 50px 0 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+h3 { color: var(--accent3); font-size: 1.3em; margin: 30px 0 15px; }
+h4 { color: var(--accent2); font-size: 1.1em; margin: 20px 0 10px; }
+
+p { margin: 12px 0; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+ul, ol { margin: 10px 0 10px 25px; }
+li { margin: 4px 0; }
+
+blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 10px 20px;
+    margin: 15px 0;
+    background: var(--bg-card);
+    border-radius: 0 6px 6px 0;
+    color: var(--text-muted);
+}
+
+pre {
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    margin: 15px 0;
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+code {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    font-size: 0.9em;
+}
+p code, li code {
+    background: var(--bg-code);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--accent4);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 0.95em;
+}
+th {
+    background: var(--bg-card);
+    color: var(--accent);
+    padding: 10px 12px;
+    text-align: left;
+    border: 1px solid var(--border);
+}
+td {
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+}
+tr:nth-child(even) { background: var(--bg-card); }
+
+details {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 18px;
+    margin: 10px 0;
+}
+summary {
+    cursor: pointer;
+    color: var(--accent2);
+    font-weight: 600;
+}
+
+hr { border: none; border-top: 1px solid var(--border); margin: 30px 0; }
+
+strong { color: var(--yellow); }
+em { color: var(--text-muted); }
+
+/* Back to top */
+.back-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--accent);
+    color: var(--bg);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1.4em;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    z-index: 100;
+}
+.back-top:hover { transform: scale(1.1); text-decoration: none; }
+
+/* Syntax highlighting - basic keyword coloring */
+.kw { color: var(--accent4); }
+.fn { color: var(--accent3); }
+.st { color: var(--accent2); }
+.cm { color: var(--text-muted); }
+
+@media (max-width: 768px) {
+    .container { padding: 10px 15px 60px; }
+    h1 { font-size: 1.6em; }
+    h2 { font-size: 1.4em; }
+    pre { padding: 12px; font-size: 0.85em; }
+}
+
+/* Print styles */
+@media print {
+    body { background: white; color: black; }
+    pre { border: 1px solid #ccc; background: #f5f5f5; }
+    h2 { page-break-before: always; }
+    .back-top { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1 id="the-complete-python-study-guide">The Complete Python Study Guide</h1>
+<h3 id="from-basics-to-advanced-interview-ready-for-developers-data-scientists-data-engineers">From Basics to Advanced | Interview Ready | For Developers, Data Scientists &amp; Data Engineers</h3>
+<blockquote>
+<p>Built from the <a href="https://github.com/paramraghavan/beginners-py-learn">beginners-py-learn</a> repository.
+Every code example can be run in the sandbox (see Chapter 1).</p>
+</blockquote>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#chapter-1-setting-up-your-sandbox">Chapter 1: Setting Up Your Sandbox</a></li>
+<li><a href="#chapter-2-python-basics">Chapter 2: Python Basics</a></li>
+<li><a href="#chapter-3-data-structures">Chapter 3: Data Structures</a></li>
+<li><a href="#chapter-4-functions--functional-programming">Chapter 4: Functions &amp; Functional Programming</a></li>
+<li><a href="#chapter-5-object-oriented-programming">Chapter 5: Object-Oriented Programming</a></li>
+<li><a href="#chapter-6-error-handling--exceptions">Chapter 6: Error Handling &amp; Exceptions</a></li>
+<li><a href="#chapter-7-file-io--serialization">Chapter 7: File I/O &amp; Serialization</a></li>
+<li><a href="#chapter-8-modules-packages--imports">Chapter 8: Modules, Packages &amp; Imports</a></li>
+<li><a href="#chapter-9-python-environment-pip--dependency-management">Chapter 9: Python Environment, pip &amp; Dependency Management</a></li>
+<li><a href="#chapter-10-debugging--profiling">Chapter 10: Debugging &amp; Profiling</a></li>
+<li><a href="#chapter-11-intermediate-python">Chapter 11: Intermediate Python</a></li>
+<li><a href="#chapter-12-advanced-python">Chapter 12: Advanced Python</a></li>
+<li><a href="#chapter-13-concurrency--parallelism">Chapter 13: Concurrency &amp; Parallelism</a></li>
+<li><a href="#chapter-14-design-patterns">Chapter 14: Design Patterns</a></li>
+<li><a href="#chapter-15-data-science-with-python">Chapter 15: Data Science with Python</a></li>
+<li><a href="#chapter-16-data-engineering-with-python">Chapter 16: Data Engineering with Python</a></li>
+<li><a href="#chapter-17-testing--code-quality">Chapter 17: Testing &amp; Code Quality</a></li>
+<li><a href="#chapter-18-data-structures--algorithms">Chapter 18: Data Structures &amp; Algorithms</a></li>
+<li><a href="#chapter-19-interview-questions--answers">Chapter 19: Interview Questions &amp; Answers</a></li>
+<li><a href="#appendix-a-quick-reference--cheatsheet">Appendix A: Quick Reference / Cheatsheet</a></li>
+<li><a href="#appendix-b-resources--references">Appendix B: Resources &amp; References</a></li>
+</ul>
+<hr />
+<h2 id="chapter-1-setting-up-your-sandbox">Chapter 1: Setting Up Your Sandbox</h2>
+<p>A sandbox is your safe playground to experiment with Python code. You can test examples, break things, and learn without any risk.</p>
+<h3 id="11-what-you-need">1.1 What You Need</h3>
+<p>Before anything, you need Python installed on your machine. Let's check if you already have it:</p>
+<pre><code class="language-bash"># Open Terminal (Mac/Linux) or Command Prompt (Windows)
+python --version
+# or
+python3 --version
+</code></pre>
+<p>If you see something like <code>Python 3.10.x</code> or higher, you're good. If not, download Python from <a href="https://python.org">python.org</a>.</p>
+<p><strong>Windows users</strong>: During installation, <strong>check the box "Add Python to PATH"</strong>. This is the #1 mistake beginners make. Without this, your terminal won't find Python.</p>
+<h3 id="12-jupyter-notebook-setup-recommended-sandbox">1.2 Jupyter Notebook Setup (Recommended Sandbox)</h3>
+<p>Jupyter Notebook lets you write and run Python code in your browser, one block at a time. It's perfect for learning because you can see results immediately.</p>
+<p><strong>Step 1: Create a virtual environment</strong> (this isolates your project's packages from the system):</p>
+<pre><code class="language-bash"># Navigate to where you want your project
+cd ~/my-python-learning
+
+# Create a virtual environment named .venv
+python -m venv .venv
+</code></pre>
+<p><strong>Step 2: Activate the virtual environment:</strong></p>
+<pre><code class="language-bash"># Mac/Linux:
+source .venv/bin/activate
+
+# Windows:
+.venv\Scripts\activate
+
+# You should see (.venv) at the beginning of your terminal prompt
+# That means you're inside the virtual environment
+</code></pre>
+<p><strong>Step 3: Install Jupyter:</strong></p>
+<pre><code class="language-bash">python -m pip install --upgrade pip
+python -m pip install notebook
+</code></pre>
+<p><strong>Step 4: Launch Jupyter:</strong></p>
+<pre><code class="language-bash">jupyter notebook
+</code></pre>
+<p>Your browser will open automatically. You'll see a file browser. Click <strong>New &gt; Python 3</strong> to create a new notebook.</p>
+<p><strong>Step 5: Try it out:</strong></p>
+<p>In the first cell, type:</p>
+<pre><code class="language-python">print(&quot;Hello, World!&quot;)
+</code></pre>
+<p>Press <strong>Shift + Enter</strong> to run the cell. You should see <code>Hello, World!</code> printed below.</p>
+<p><strong>Step 6: Try a few more cells:</strong></p>
+<pre><code class="language-python"># Cell 2: Math
+2 + 2
+</code></pre>
+<p>(Output: <code>4</code>)</p>
+<pre><code class="language-python"># Cell 3: Variables
+name = &quot;Alice&quot;
+age = 30
+print(f&quot;My name is {name} and I am {age} years old.&quot;)
+</code></pre>
+<p>(Output: <code>My name is Alice and I am 30 years old.</code>)</p>
+<h3 id="13-jupyter-tips">1.3 Jupyter Tips</h3>
+<table>
+<thead>
+<tr>
+<th>What you want to do</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run a cell</td>
+<td><strong>Shift + Enter</strong></td>
+</tr>
+<tr>
+<td>Run cell, stay in same cell</td>
+<td><strong>Ctrl + Enter</strong></td>
+</tr>
+<tr>
+<td>Add a cell above</td>
+<td>Press <strong>A</strong> (when not editing)</td>
+</tr>
+<tr>
+<td>Add a cell below</td>
+<td>Press <strong>B</strong> (when not editing)</td>
+</tr>
+<tr>
+<td>Delete a cell</td>
+<td>Press <strong>DD</strong> (double D, when not editing)</td>
+</tr>
+<tr>
+<td>Undo delete</td>
+<td><strong>Z</strong></td>
+</tr>
+<tr>
+<td>Switch to Markdown</td>
+<td>Press <strong>M</strong></td>
+</tr>
+<tr>
+<td>Switch to Code</td>
+<td>Press <strong>Y</strong></td>
+</tr>
+<tr>
+<td>Time an expression</td>
+<td><code>%timeit [x**2 for x in range(1000)]</code></td>
+</tr>
+<tr>
+<td>Time a whole cell</td>
+<td>Put <code>%%time</code> as the first line</td>
+</tr>
+<tr>
+<td>List all variables</td>
+<td><code>%who</code> or <code>%whos</code> for details</td>
+</tr>
+<tr>
+<td>Run a shell command</td>
+<td><code>!pip install pandas</code></td>
+</tr>
+<tr>
+<td>Load a Python file into a cell</td>
+<td><code>%load filename.py</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="14-alternative-anaconda-batteries-included">1.4 Alternative: Anaconda (Batteries Included)</h3>
+<p>If you want everything pre-installed (Jupyter, pandas, numpy, matplotlib, etc.):</p>
+<ol>
+<li>Download Anaconda from <a href="https://www.anaconda.com/">anaconda.com</a></li>
+<li>Install with defaults</li>
+<li>Open <strong>Anaconda Navigator</strong> or run <code>jupyter notebook</code> from Anaconda Prompt</li>
+</ol>
+<h3 id="15-ide-setup-for-larger-projects">1.5 IDE Setup (For Larger Projects)</h3>
+<p>Once you move beyond experiments, you'll want an IDE:</p>
+<table>
+<thead>
+<tr>
+<th>IDE</th>
+<th>Best For</th>
+<th>Cost</th>
+<th>Setup</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VS Code</strong></td>
+<td>General Python, lightweight</td>
+<td>Free</td>
+<td>Install Python extension, Ctrl+Shift+P &gt; "Python: Select Interpreter"</td>
+</tr>
+<tr>
+<td><strong>PyCharm CE</strong></td>
+<td>Large projects, great debugger</td>
+<td>Free</td>
+<td>Community Edition has built-in venv support</td>
+</tr>
+<tr>
+<td><strong>Spyder</strong></td>
+<td>Data science (MATLAB-like)</td>
+<td>Free</td>
+<td>Comes with Anaconda, has variable explorer</td>
+</tr>
+</tbody>
+</table>
+<h3 id="16-troubleshooting-common-setup-issues">1.6 Troubleshooting Common Setup Issues</h3>
+<p><strong>"jupyter: command not found":</strong></p>
+<pre><code class="language-bash"># Use python -m instead:
+python -m notebook
+
+# Or for Python 3 specifically:
+python3 -m notebook
+</code></pre>
+<p><strong>"python: command not found" on Mac:</strong></p>
+<pre><code class="language-bash"># macOS often uses python3 instead of python
+python3 --version
+python3 -m venv .venv
+</code></pre>
+<p><strong>Multiple Python versions causing confusion:</strong></p>
+<pre><code class="language-bash"># See exactly which Python you're using:
+which python       # Mac/Linux
+where python       # Windows
+
+# See the full path:
+python -c &quot;import sys; print(sys.executable)&quot;
+</code></pre>
+<h3 id="exercise-11-verify-your-setup">Exercise 1.1: Verify Your Setup</h3>
+<p>Create a Jupyter notebook and run these cells to verify everything works:</p>
+<pre><code class="language-python"># Cell 1
+import sys
+print(f&quot;Python version: {sys.version}&quot;)
+print(f&quot;Python location: {sys.executable}&quot;)
+
+# Cell 2
+print(&quot;Hello from Jupyter!&quot;)
+2 + 2  # Should show 4
+
+# Cell 3
+# Test that you can install packages
+!pip install requests
+import requests
+print(f&quot;Requests version: {requests.__version__}&quot;)
+</code></pre>
+<hr />
+<h2 id="chapter-2-python-basics">Chapter 2: Python Basics</h2>
+<h3 id="21-variables-and-data-types">2.1 Variables and Data Types</h3>
+<p>In Python, you don't declare variable types. Python figures it out automatically:</p>
+<pre><code class="language-python"># Numbers
+age = 25              # This is an integer (int) - whole numbers
+price = 19.99         # This is a float - decimal numbers
+complex_num = 3 + 4j  # This is a complex number (used in math/engineering)
+
+# Strings - text enclosed in quotes (single or double, both work)
+name = &quot;Alice&quot;
+greeting = 'Hello'
+multiline = &quot;&quot;&quot;This is a
+multi-line string.
+It preserves line breaks.&quot;&quot;&quot;
+
+# Boolean - True or False (note the capital T and F)
+is_active = True
+is_empty = False
+
+# None - represents &quot;no value&quot; or &quot;nothing&quot;
+result = None
+
+# Check what type a variable is:
+print(type(age))       # &lt;class 'int'&gt;
+print(type(price))     # &lt;class 'float'&gt;
+print(type(name))      # &lt;class 'str'&gt;
+print(type(is_active)) # &lt;class 'bool'&gt;
+print(type(result))    # &lt;class 'NoneType'&gt;
+</code></pre>
+<p><strong>Type conversion</strong> - changing one type to another:</p>
+<pre><code class="language-python"># String to number
+x = int(&quot;42&quot;)       # x is now the integer 42
+y = float(&quot;3.14&quot;)   # y is now the float 3.14
+
+# Number to string
+z = str(100)         # z is now the string &quot;100&quot;
+
+# This is important because you can't mix types carelessly:
+age = 25
+# print(&quot;I am &quot; + age + &quot; years old&quot;)  # ERROR! Can't add int to str
+print(&quot;I am &quot; + str(age) + &quot; years old&quot;)  # OK: convert int to str first
+print(f&quot;I am {age} years old&quot;)             # Better: f-strings handle it
+</code></pre>
+<p><strong>Quick reference - Python data types:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Mutable?</th>
+<th>Ordered?</th>
+<th>Duplicates?</th>
+<th>Example</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int</code></td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td><code>42</code></td>
+<td>Counting, indexing</td>
+</tr>
+<tr>
+<td><code>float</code></td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+<td><code>3.14</code></td>
+<td>Measurements, money</td>
+</tr>
+<tr>
+<td><code>str</code></td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+<td><code>"hello"</code></td>
+<td>Text</td>
+</tr>
+<tr>
+<td><code>list</code></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td><code>[1, 2, 3]</code></td>
+<td>Ordered collection that changes</td>
+</tr>
+<tr>
+<td><code>tuple</code></td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+<td><code>(1, 2, 3)</code></td>
+<td>Fixed data (coordinates, records)</td>
+</tr>
+<tr>
+<td><code>set</code></td>
+<td>Yes</td>
+<td>No</td>
+<td>No</td>
+<td><code>{1, 2, 3}</code></td>
+<td>Unique items, membership testing</td>
+</tr>
+<tr>
+<td><code>dict</code></td>
+<td>Yes</td>
+<td>Yes*</td>
+<td>Keys: No</td>
+<td><code>{"a": 1}</code></td>
+<td>Key-value mappings</td>
+</tr>
+<tr>
+<td><code>bool</code></td>
+<td>No</td>
+<td>N/A</td>
+<td>N/A</td>
+<td><code>True</code></td>
+<td>Conditions</td>
+</tr>
+</tbody>
+</table>
+<p>*Dicts are insertion-ordered since Python 3.7</p>
+<h3 id="22-operators">2.2 Operators</h3>
+<p><strong>Arithmetic operators</strong> - the basics of math:</p>
+<pre><code class="language-python">print(10 + 3)    # 13     Addition
+print(10 - 3)    # 7      Subtraction
+print(10 * 3)    # 30     Multiplication
+print(10 / 3)    # 3.333  Float division (always returns float)
+print(10 // 3)   # 3      Floor division (drops the decimal)
+print(10 % 3)    # 1      Modulo (remainder after division)
+print(10 ** 3)   # 1000   Power (10 to the 3rd)
+
+# Floor division is useful for things like:
+total_minutes = 135
+hours = total_minutes // 60    # 2 hours
+minutes = total_minutes % 60   # 15 minutes
+print(f&quot;{hours}h {minutes}m&quot;)  # 2h 15m
+</code></pre>
+<p><strong>Comparison operators</strong> - return True or False:</p>
+<pre><code class="language-python">print(5 == 5)    # True   Equal to
+print(5 != 3)    # True   Not equal to
+print(5 &gt; 3)     # True   Greater than
+print(5 &gt;= 5)    # True   Greater than or equal
+print(5 &lt; 3)     # False  Less than
+print(5 &lt;= 5)    # True   Less than or equal
+</code></pre>
+<p><strong>Logical operators</strong> - combine conditions:</p>
+<pre><code class="language-python">age = 25
+income = 50000
+
+# 'and' - BOTH must be true
+if age &gt;= 18 and income &gt;= 30000:
+    print(&quot;Eligible for loan&quot;)  # This prints
+
+# 'or' - AT LEAST ONE must be true
+has_degree = False
+has_experience = True
+if has_degree or has_experience:
+    print(&quot;Can apply for job&quot;)  # This prints
+
+# 'not' - flips True to False and vice versa
+is_banned = False
+if not is_banned:
+    print(&quot;Welcome!&quot;)  # This prints
+</code></pre>
+<p><strong>Identity operators</strong> - <code>is</code> vs <code>==</code>:</p>
+<pre><code class="language-python"># == checks if VALUES are the same
+# is checks if they're the SAME OBJECT in memory
+
+a = [1, 2, 3]
+b = [1, 2, 3]
+c = a
+
+print(a == b)    # True  - same values
+print(a is b)    # False - different objects (two separate lists)
+print(a is c)    # True  - c points to the same list as a
+
+# RULE: Only use 'is' for None, True, False
+if result is None:
+    print(&quot;No result yet&quot;)
+</code></pre>
+<p><strong>Membership operators</strong> - check if something is "in" a collection:</p>
+<pre><code class="language-python">fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
+print(&quot;banana&quot; in fruits)      # True
+print(&quot;grape&quot; not in fruits)   # True
+
+message = &quot;Hello, World!&quot;
+print(&quot;World&quot; in message)      # True
+</code></pre>
+<p><strong>Walrus operator</strong> <code>:=</code> (Python 3.8+) - assign and use in one expression:</p>
+<pre><code class="language-python"># Without walrus:
+data = [1, 5, 12, 3, 8]
+n = len(data)
+if n &gt; 3:
+    print(f&quot;List has {n} elements&quot;)
+
+# With walrus - more concise:
+if (n := len(data)) &gt; 3:
+    print(f&quot;List has {n} elements&quot;)
+
+# Useful in while loops:
+while (line := input(&quot;Enter text (q to quit): &quot;)) != &quot;q&quot;:
+    print(f&quot;You typed: {line}&quot;)
+</code></pre>
+<h3 id="23-strings-in-depth">2.3 Strings In Depth</h3>
+<p>Strings are one of the most-used types. Let's cover them thoroughly.</p>
+<p><strong>Indexing and slicing:</strong></p>
+<pre><code class="language-python">s = &quot;Hello, World!&quot;
+#    H e l l o ,   W o r  l  d  !
+#    0 1 2 3 4 5 6 7 8 9 10 11 12    &lt;- positive index
+#  -13      ...           -2 -1      &lt;- negative index
+
+# Single character
+print(s[0])       # 'H' - first character
+print(s[-1])      # '!' - last character
+
+# Slicing: s[start:stop]  (start included, stop excluded)
+print(s[0:5])     # 'Hello'
+print(s[7:12])    # 'World'
+print(s[:5])      # 'Hello' (from beginning)
+print(s[7:])      # 'World!' (to end)
+
+# Step: s[start:stop:step]
+print(s[::2])     # 'Hlo ol!' - every 2nd character
+print(s[::-1])    # '!dlroW ,olleH' - reversed
+</code></pre>
+<p><strong>Common string methods:</strong></p>
+<pre><code class="language-python">s = &quot;  Hello, World!  &quot;
+
+# Cleaning
+print(s.strip())          # &quot;Hello, World!&quot; - remove whitespace from both ends
+print(s.lstrip())         # &quot;Hello, World!  &quot; - left strip only
+print(s.rstrip())         # &quot;  Hello, World!&quot; - right strip only
+
+# Case
+print(s.strip().upper())  # &quot;HELLO, WORLD!&quot;
+print(s.strip().lower())  # &quot;hello, world!&quot;
+print(&quot;hello world&quot;.title())  # &quot;Hello World&quot;
+print(&quot;hello world&quot;.capitalize())  # &quot;Hello world&quot;
+
+# Searching
+print(s.strip().find(&quot;World&quot;))    # 7 (index where found)
+print(s.strip().find(&quot;Python&quot;))   # -1 (not found)
+print(s.strip().count(&quot;l&quot;))       # 3
+
+# Checking
+print(&quot;hello123&quot;.isalnum())       # True - letters and numbers only
+print(&quot;hello&quot;.isalpha())          # True - letters only
+print(&quot;123&quot;.isdigit())            # True - digits only
+print(&quot;hello&quot;.startswith(&quot;hel&quot;))  # True
+print(&quot;hello&quot;.endswith(&quot;llo&quot;))    # True
+
+# Splitting and joining
+csv_line = &quot;Alice,30,NYC&quot;
+parts = csv_line.split(&quot;,&quot;)       # ['Alice', '30', 'NYC']
+print(parts[0])                   # 'Alice'
+
+words = [&quot;Python&quot;, &quot;is&quot;, &quot;great&quot;]
+sentence = &quot; &quot;.join(words)        # &quot;Python is great&quot;
+path = &quot;/&quot;.join([&quot;home&quot;, &quot;user&quot;, &quot;docs&quot;])  # &quot;home/user/docs&quot;
+
+# Replacing
+text = &quot;Hello, World!&quot;
+new_text = text.replace(&quot;World&quot;, &quot;Python&quot;)  # &quot;Hello, Python!&quot;
+</code></pre>
+<p><strong>f-strings</strong> (Python 3.6+) - the best way to format strings:</p>
+<pre><code class="language-python">name = &quot;Alice&quot;
+age = 30
+salary = 75000.50
+
+# Basic interpolation
+print(f&quot;Name: {name}, Age: {age}&quot;)
+
+# Expressions inside braces
+print(f&quot;Next year: {age + 1}&quot;)
+print(f&quot;Name in caps: {name.upper()}&quot;)
+
+# Number formatting
+print(f&quot;Salary: ${salary:,.2f}&quot;)       # Salary: $75,000.50
+print(f&quot;Big number: {1000000:,}&quot;)      # Big number: 1,000,000
+print(f&quot;Percentage: {0.856:.1%}&quot;)      # Percentage: 85.6%
+print(f&quot;Binary: {42:b}&quot;)              # Binary: 101010
+print(f&quot;Hex: {255:x}&quot;)               # Hex: ff
+
+# Alignment and padding
+print(f&quot;{'left':&lt;20}|&quot;)     # 'left                |'
+print(f&quot;{'right':&gt;20}|&quot;)    # '               right|'
+print(f&quot;{'center':^20}|&quot;)   # '       center       |'
+print(f&quot;{'padded':*^20}&quot;)   # '*******padded*******'
+
+# Multi-line f-strings
+message = (
+    f&quot;User Report\n&quot;
+    f&quot;{'='*30}\n&quot;
+    f&quot;Name:   {name}\n&quot;
+    f&quot;Age:    {age}\n&quot;
+    f&quot;Salary: ${salary:,.2f}\n&quot;
+)
+print(message)
+</code></pre>
+<p><strong>IMPORTANT: String concatenation performance:</strong></p>
+<pre><code class="language-python"># BAD - O(n^2) because strings are immutable, each += creates a new string
+result = &quot;&quot;
+for i in range(10000):
+    result += str(i)  # SLOW for large loops
+
+# GOOD - O(n) using join
+parts = []
+for i in range(10000):
+    parts.append(str(i))
+result = &quot;&quot;.join(parts)  # FAST
+
+# BEST - use list comprehension + join
+result = &quot;&quot;.join(str(i) for i in range(10000))
+</code></pre>
+<h3 id="24-control-flow-ifelifelse">2.4 Control Flow: if/elif/else</h3>
+<pre><code class="language-python"># Basic if/elif/else
+score = 85
+
+if score &gt;= 90:
+    grade = &quot;A&quot;
+elif score &gt;= 80:
+    grade = &quot;B&quot;
+elif score &gt;= 70:
+    grade = &quot;C&quot;
+elif score &gt;= 60:
+    grade = &quot;D&quot;
+else:
+    grade = &quot;F&quot;
+
+print(f&quot;Score: {score}, Grade: {grade}&quot;)  # Score: 85, Grade: B
+</code></pre>
+<p><strong>Ternary expression</strong> - one-line if/else:</p>
+<pre><code class="language-python">age = 20
+status = &quot;adult&quot; if age &gt;= 18 else &quot;minor&quot;
+print(status)  # &quot;adult&quot;
+
+# Useful in f-strings
+print(f&quot;You are {'old enough' if age &gt;= 21 else 'too young'} to drink&quot;)
+</code></pre>
+<p><strong>Match statement</strong> (Python 3.10+) - like switch/case:</p>
+<pre><code class="language-python">command = &quot;start&quot;
+
+match command:
+    case &quot;start&quot;:
+        print(&quot;Starting the engine...&quot;)
+    case &quot;stop&quot; | &quot;quit&quot; | &quot;exit&quot;:   # Multiple values
+        print(&quot;Shutting down...&quot;)
+    case str(s) if s.startswith(&quot;go &quot;):  # Guard clause
+        destination = s[3:]
+        print(f&quot;Going to {destination}&quot;)
+    case _:                              # Default (like else)
+        print(f&quot;Unknown command: {command}&quot;)
+</code></pre>
+<p><strong>Truthy and Falsy values</strong> - what counts as True/False:</p>
+<pre><code class="language-python"># These are all FALSY (treated as False):
+# None, False, 0, 0.0, &quot;&quot;, [], {}, set(), ()
+
+# Everything else is TRUTHY (treated as True)
+
+# This is useful for checking if something is empty:
+my_list = []
+if my_list:
+    print(&quot;List has items&quot;)
+else:
+    print(&quot;List is empty&quot;)  # This prints
+
+my_name = &quot;Alice&quot;
+if my_name:
+    print(f&quot;Hello, {my_name}&quot;)  # This prints
+
+# Common pattern: use 'or' for defaults
+username = &quot;&quot;  # empty string is falsy
+display_name = username or &quot;Anonymous&quot;
+print(display_name)  # &quot;Anonymous&quot;
+</code></pre>
+<h3 id="25-loops">2.5 Loops</h3>
+<p><strong>for loops:</strong></p>
+<pre><code class="language-python"># Loop through a range of numbers
+for i in range(5):        # 0, 1, 2, 3, 4
+    print(i)
+
+for i in range(2, 10):    # 2, 3, 4, 5, 6, 7, 8, 9
+    print(i)
+
+for i in range(0, 20, 3): # 0, 3, 6, 9, 12, 15, 18
+    print(i)
+
+# Loop through a list
+fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
+for fruit in fruits:
+    print(f&quot;I like {fruit}&quot;)
+
+# Loop with index using enumerate
+for index, fruit in enumerate(fruits):
+    print(f&quot;{index}: {fruit}&quot;)
+# Output:
+# 0: apple
+# 1: banana
+# 2: cherry
+
+# Start enumerate at 1
+for num, fruit in enumerate(fruits, start=1):
+    print(f&quot;{num}. {fruit}&quot;)
+# Output:
+# 1. apple
+# 2. banana
+# 3. cherry
+
+# Loop through two lists simultaneously with zip
+names = [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Charlie&quot;]
+scores = [95, 87, 92]
+for name, score in zip(names, scores):
+    print(f&quot;{name}: {score}&quot;)
+
+# Loop through dictionary
+person = {&quot;name&quot;: &quot;Alice&quot;, &quot;age&quot;: 30, &quot;city&quot;: &quot;NYC&quot;}
+for key, value in person.items():
+    print(f&quot;{key}: {value}&quot;)
+</code></pre>
+<p><strong>while loops:</strong></p>
+<pre><code class="language-python"># Basic while loop
+count = 0
+while count &lt; 5:
+    print(f&quot;Count is {count}&quot;)
+    count += 1
+
+# While with user input
+while True:
+    answer = input(&quot;Type 'quit' to exit: &quot;)
+    if answer.lower() == 'quit':
+        break
+    print(f&quot;You said: {answer}&quot;)
+</code></pre>
+<p><strong>break, continue, and for/else:</strong></p>
+<pre><code class="language-python"># break - exit the loop immediately
+for i in range(10):
+    if i == 5:
+        print(&quot;Found 5, stopping!&quot;)
+        break
+    print(i)
+# Output: 0, 1, 2, 3, 4, Found 5, stopping!
+
+# continue - skip the rest of this iteration
+for i in range(10):
+    if i % 2 == 0:
+        continue  # Skip even numbers
+    print(i)
+# Output: 1, 3, 5, 7, 9
+
+# for/else - the else block runs if the loop completed WITHOUT break
+def find_prime(n):
+    &quot;&quot;&quot;Check if n is prime.&quot;&quot;&quot;
+    if n &lt; 2:
+        return False
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            return False  # Not prime, divisible by i
+    return True  # No divisor found, it's prime
+
+for n in range(2, 20):
+    if find_prime(n):
+        print(f&quot;{n} is prime&quot;)
+</code></pre>
+<h3 id="26-list-comprehensions">2.6 List Comprehensions</h3>
+<p>List comprehensions are a concise way to create lists. They're very Pythonic and you'll see them everywhere.</p>
+<pre><code class="language-python"># Instead of this:
+squares = []
+for x in range(10):
+    squares.append(x ** 2)
+
+# Write this:
+squares = [x**2 for x in range(10)]
+# [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+
+# With a condition (filter):
+# Only even numbers squared
+even_squares = [x**2 for x in range(10) if x % 2 == 0]
+# [0, 4, 16, 36, 64]
+
+# With if/else (transform):
+labels = [&quot;even&quot; if x % 2 == 0 else &quot;odd&quot; for x in range(5)]
+# ['even', 'odd', 'even', 'odd', 'even']
+
+# Nested: flatten a 2D list
+matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+flat = [num for row in matrix for num in row]
+# [1, 2, 3, 4, 5, 6, 7, 8, 9]
+# Read as: &quot;for each row, for each num in that row, give me num&quot;
+
+# Dict comprehension
+words = [&quot;hello&quot;, &quot;world&quot;, &quot;python&quot;]
+word_lengths = {word: len(word) for word in words}
+# {'hello': 5, 'world': 5, 'python': 6}
+
+# Set comprehension (unique values)
+numbers = [1, 2, 2, 3, 3, 3, 4]
+unique_doubles = {x * 2 for x in numbers}
+# {2, 4, 6, 8}
+
+# Generator expression - like list comp but LAZY (memory efficient)
+# Use () instead of []
+total = sum(x**2 for x in range(1000000))  # Doesn't create a list in memory
+</code></pre>
+<h3 id="exercise-21-find-the-mode">Exercise 2.1: Find the Mode</h3>
+<p>Given a string of space-separated numbers, find the most frequent value:</p>
+<pre><code class="language-python">data = '13 13 13 13 14 16 18 21'
+# Your code here...
+# Expected output: Mode: 13
+
+# Hint: split the string, count with a dictionary or collections.Counter
+</code></pre>
+<details>
+<summary>Solution</summary>
+
+
+<pre><code class="language-python">from collections import Counter
+
+data = '13 13 13 13 14 16 18 21'
+numbers = data.split()  # Split into list of strings
+counts = Counter(numbers)
+mode = counts.most_common(1)[0][0]
+print(f&quot;Mode: {mode}&quot;)  # Mode: 13
+</code></pre>
+
+</details>
+
+<h3 id="exercise-22-fizzbuzz">Exercise 2.2: FizzBuzz</h3>
+<p>Print numbers 1-30. For multiples of 3 print "Fizz", multiples of 5 print "Buzz", multiples of both print "FizzBuzz".</p>
+<details>
+<summary>Solution</summary>
+
+
+<pre><code class="language-python">for i in range(1, 31):
+    if i % 15 == 0:
+        print(&quot;FizzBuzz&quot;)
+    elif i % 3 == 0:
+        print(&quot;Fizz&quot;)
+    elif i % 5 == 0:
+        print(&quot;Buzz&quot;)
+    else:
+        print(i)
+</code></pre>
+
+</details>
+
+<h3 id="exercise-23-string-processing">Exercise 2.3: String Processing</h3>
+<p>Given a sentence, count the number of words, find the longest word, and reverse the word order.</p>
+<details>
+<summary>Solution</summary>
+
+
+<pre><code class="language-python">sentence = &quot;the quick brown fox jumps over the lazy dog&quot;
+words = sentence.split()
+print(f&quot;Word count: {len(words)}&quot;)
+print(f&quot;Longest word: {max(words, key=len)}&quot;)
+print(f&quot;Reversed: {' '.join(reversed(words))}&quot;)
+</code></pre>
+
+</details>
+
+<hr />
+<h2 id="chapter-3-data-structures">Chapter 3: Data Structures</h2>
+<h3 id="31-lists">3.1 Lists</h3>
+<p>Lists are the most commonly used data structure. They're ordered, changeable, and allow duplicates.</p>
+<pre><code class="language-python"># Creating lists
+empty = []
+numbers = [1, 2, 3, 4, 5]
+mixed = [1, &quot;hello&quot;, True, 3.14, None]  # Can mix types
+nested = [[1, 2], [3, 4], [5, 6]]       # List of lists
+
+# Accessing elements
+fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;, &quot;date&quot;, &quot;elderberry&quot;]
+print(fruits[0])      # &quot;apple&quot; (first item)
+print(fruits[-1])     # &quot;elderberry&quot; (last item)
+print(fruits[1:3])    # [&quot;banana&quot;, &quot;cherry&quot;] (slice: index 1 to 2)
+print(fruits[:3])     # [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;] (first 3)
+print(fruits[2:])     # [&quot;cherry&quot;, &quot;date&quot;, &quot;elderberry&quot;] (from index 2 onwards)
+print(fruits[::2])    # [&quot;apple&quot;, &quot;cherry&quot;, &quot;elderberry&quot;] (every 2nd)
+print(fruits[::-1])   # reversed list
+</code></pre>
+<p><strong>Modifying lists:</strong></p>
+<pre><code class="language-python">fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
+
+# Add items
+fruits.append(&quot;date&quot;)         # Add to end: [&quot;apple&quot;,&quot;banana&quot;,&quot;cherry&quot;,&quot;date&quot;]
+fruits.insert(1, &quot;blueberry&quot;) # Insert at index 1: [&quot;apple&quot;,&quot;blueberry&quot;,&quot;banana&quot;,&quot;cherry&quot;,&quot;date&quot;]
+fruits.extend([&quot;fig&quot;, &quot;grape&quot;])  # Add multiple to end
+
+# Remove items
+fruits.remove(&quot;banana&quot;)       # Remove first occurrence of &quot;banana&quot;
+last = fruits.pop()           # Remove and return last item
+second = fruits.pop(1)        # Remove and return item at index 1
+del fruits[0]                 # Delete item at index 0
+
+# Modify items
+fruits[0] = &quot;avocado&quot;         # Replace first item
+
+# Other operations
+numbers = [3, 1, 4, 1, 5, 9, 2, 6]
+numbers.sort()                 # Sort in place: [1, 1, 2, 3, 4, 5, 6, 9]
+numbers.sort(reverse=True)     # Sort descending: [9, 6, 5, 4, 3, 2, 1, 1]
+numbers.reverse()              # Reverse in place
+print(numbers.count(1))        # 2 (how many times 1 appears)
+print(numbers.index(5))        # Index of first 5
+
+# IMPORTANT: sort() vs sorted()
+original = [3, 1, 4, 1, 5]
+new_sorted = sorted(original)  # Returns NEW sorted list, original unchanged
+original.sort()                # Sorts IN PLACE, returns None
+</code></pre>
+<p><strong>Sorting with custom keys:</strong></p>
+<pre><code class="language-python"># Sort strings by length
+words = [&quot;python&quot;, &quot;hi&quot;, &quot;jupyter&quot;, &quot;code&quot;]
+print(sorted(words, key=len))
+# ['hi', 'code', 'python', 'jupyter']
+
+# Sort list of tuples by second element
+students = [(&quot;Alice&quot;, 85), (&quot;Bob&quot;, 92), (&quot;Charlie&quot;, 78)]
+students.sort(key=lambda s: s[1], reverse=True)
+# [('Bob', 92), ('Alice', 85), ('Charlie', 78)]
+
+# Sort dicts by a value
+people = [
+    {&quot;name&quot;: &quot;Alice&quot;, &quot;age&quot;: 30},
+    {&quot;name&quot;: &quot;Bob&quot;, &quot;age&quot;: 25},
+    {&quot;name&quot;: &quot;Charlie&quot;, &quot;age&quot;: 35},
+]
+by_age = sorted(people, key=lambda p: p[&quot;age&quot;])
+</code></pre>
+<p><strong>Useful built-in functions with lists:</strong></p>
+<pre><code class="language-python">nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+print(len(nums))       # 10 - number of items
+print(sum(nums))       # 55 - sum of all items
+print(min(nums))       # 1  - smallest
+print(max(nums))       # 10 - largest
+
+# any() and all() - super useful with conditions
+print(any(x &gt; 8 for x in nums))   # True - at least one is &gt; 8
+print(all(x &gt; 0 for x in nums))   # True - ALL are &gt; 0
+print(all(x &gt; 5 for x in nums))   # False - not all are &gt; 5
+</code></pre>
+<h3 id="32-tuples">3.2 Tuples</h3>
+<p>Tuples are like lists but <strong>immutable</strong> (can't be changed after creation). Use them for data that shouldn't change.</p>
+<pre><code class="language-python"># Creating tuples
+point = (3, 4)
+rgb = (255, 128, 0)
+single = (42,)     # Note: comma is needed for single-element tuple!
+empty = ()
+
+# NOT a tuple:
+not_a_tuple = (42)  # This is just the integer 42 with parentheses
+
+# Accessing (same as lists)
+print(point[0])    # 3
+print(point[1])    # 4
+
+# You CANNOT modify tuples:
+# point[0] = 5     # TypeError: 'tuple' object does not support item assignment
+</code></pre>
+<p><strong>Tuple unpacking</strong> - very useful!</p>
+<pre><code class="language-python"># Basic unpacking
+point = (3, 4)
+x, y = point
+print(f&quot;x={x}, y={y}&quot;)  # x=3, y=4
+
+# Swap variables (Pythonic way)
+a, b = 1, 2
+a, b = b, a       # Now a=2, b=1
+
+# Unpack in a loop
+students = [(&quot;Alice&quot;, 85), (&quot;Bob&quot;, 92), (&quot;Charlie&quot;, 78)]
+for name, score in students:
+    print(f&quot;{name}: {score}&quot;)
+
+# Star unpacking
+first, *rest = [1, 2, 3, 4, 5]
+print(first)   # 1
+print(rest)    # [2, 3, 4, 5]
+
+*beginning, last = [1, 2, 3, 4, 5]
+print(beginning)  # [1, 2, 3, 4]
+print(last)       # 5
+</code></pre>
+<p><strong>Named tuples</strong> - tuples with field names:</p>
+<pre><code class="language-python">from collections import namedtuple
+
+# Define a named tuple type
+Point = namedtuple('Point', ['x', 'y'])
+Color = namedtuple('Color', ['red', 'green', 'blue'])
+
+p = Point(3, 4)
+print(p.x)     # 3 (access by name, much more readable)
+print(p[0])    # 3 (also works by index)
+
+c = Color(255, 128, 0)
+print(f&quot;Red: {c.red}&quot;)
+
+# Why tuples?
+# 1. Immutable = safe to use as dict keys or set elements
+locations = {(40.7, -74.0): &quot;New York&quot;, (34.0, -118.2): &quot;Los Angeles&quot;}
+
+# 2. Slightly faster and less memory than lists
+# 3. Signals intent: &quot;this data is fixed&quot;
+</code></pre>
+<h3 id="33-sets">3.3 Sets</h3>
+<p>Sets are <strong>unordered</strong> collections of <strong>unique</strong> elements. They're great for removing duplicates and membership testing (very fast O(1) lookup).</p>
+<pre><code class="language-python"># Creating sets
+fruits = {&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;}
+numbers = {1, 2, 2, 3, 3, 3}   # Duplicates removed: {1, 2, 3}
+empty_set = set()                # NOT {} - that creates an empty dict!
+
+# Add and remove
+fruits.add(&quot;date&quot;)
+fruits.discard(&quot;banana&quot;)   # Remove (no error if missing)
+# fruits.remove(&quot;banana&quot;)  # Remove (KeyError if missing!)
+
+# Membership testing (very fast!)
+print(&quot;apple&quot; in fruits)    # True
+print(&quot;grape&quot; in fruits)    # False
+</code></pre>
+<p><strong>Set operations</strong> - mathematical set operations:</p>
+<pre><code class="language-python">a = {1, 2, 3, 4, 5}
+b = {4, 5, 6, 7, 8}
+
+# Union - items in EITHER set
+print(a | b)        # {1, 2, 3, 4, 5, 6, 7, 8}
+print(a.union(b))   # Same thing
+
+# Intersection - items in BOTH sets
+print(a &amp; b)             # {4, 5}
+print(a.intersection(b)) # Same thing
+
+# Difference - items in a but NOT in b
+print(a - b)              # {1, 2, 3}
+print(a.difference(b))    # Same thing
+
+# Symmetric difference - items in EITHER but NOT BOTH
+print(a ^ b)                       # {1, 2, 3, 6, 7, 8}
+print(a.symmetric_difference(b))   # Same thing
+
+# Subset / superset
+small = {1, 2}
+print(small &lt;= a)    # True - small is a subset of a
+print(a &gt;= small)    # True - a is a superset of small
+</code></pre>
+<p><strong>Common use: removing duplicates while preserving order:</strong></p>
+<pre><code class="language-python"># Method 1: Using dict.fromkeys() (Python 3.7+ preserves insertion order)
+items = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3]
+unique = list(dict.fromkeys(items))
+print(unique)  # [3, 1, 4, 5, 9, 2, 6]
+
+# Method 2: Manual with set
+seen = set()
+unique = []
+for item in items:
+    if item not in seen:
+        seen.add(item)
+        unique.append(item)
+
+# Method 3: One-liner (clever but less readable)
+seen = set()
+unique = [x for x in items if x not in seen and not seen.add(x)]
+</code></pre>
+<h3 id="34-dictionaries">3.4 Dictionaries</h3>
+<p>Dictionaries store <strong>key-value pairs</strong>. They're one of Python's most powerful and frequently used data structures.</p>
+<pre><code class="language-python"># Creating dictionaries
+person = {
+    &quot;name&quot;: &quot;Alice&quot;,
+    &quot;age&quot;: 30,
+    &quot;city&quot;: &quot;NYC&quot;,
+    &quot;hobbies&quot;: [&quot;reading&quot;, &quot;coding&quot;]
+}
+
+# Accessing values
+print(person[&quot;name&quot;])               # &quot;Alice&quot;
+# print(person[&quot;phone&quot;])            # KeyError! Key doesn't exist
+
+# Safe access with .get()
+print(person.get(&quot;phone&quot;))          # None (no error)
+print(person.get(&quot;phone&quot;, &quot;N/A&quot;))   # &quot;N/A&quot; (custom default)
+
+# Adding / updating
+person[&quot;email&quot;] = &quot;alice@example.com&quot;   # Add new key
+person[&quot;age&quot;] = 31                      # Update existing key
+
+# Removing
+del person[&quot;city&quot;]                 # Delete (KeyError if missing)
+age = person.pop(&quot;age&quot;)           # Remove and return value
+last = person.popitem()           # Remove and return last key-value pair
+
+# Check if key exists
+if &quot;name&quot; in person:
+    print(f&quot;Name is {person['name']}&quot;)
+</code></pre>
+<p><strong>Iterating over dictionaries:</strong></p>
+<pre><code class="language-python">person = {&quot;name&quot;: &quot;Alice&quot;, &quot;age&quot;: 30, &quot;city&quot;: &quot;NYC&quot;}
+
+# Loop through keys
+for key in person:
+    print(key)  # name, age, city
+
+# Loop through values
+for value in person.values():
+    print(value)  # Alice, 30, NYC
+
+# Loop through key-value pairs (most common)
+for key, value in person.items():
+    print(f&quot;{key}: {value}&quot;)
+</code></pre>
+<p><strong>Useful dictionary patterns:</strong></p>
+<pre><code class="language-python"># Word frequency counter
+text = &quot;the cat sat on the mat the cat&quot;
+word_count = {}
+for word in text.split():
+    word_count[word] = word_count.get(word, 0) + 1
+print(word_count)
+# {'the': 3, 'cat': 2, 'sat': 1, 'on': 1, 'mat': 1}
+
+# Merge dictionaries
+defaults = {&quot;color&quot;: &quot;red&quot;, &quot;size&quot;: &quot;medium&quot;, &quot;shape&quot;: &quot;circle&quot;}
+custom = {&quot;color&quot;: &quot;blue&quot;, &quot;weight&quot;: 5}
+
+# Method 1: update() (modifies in place)
+config = defaults.copy()   # Don't modify original!
+config.update(custom)
+
+# Method 2: Merge operator (Python 3.9+)
+config = defaults | custom
+# {'color': 'blue', 'size': 'medium', 'shape': 'circle', 'weight': 5}
+
+# Method 3: Unpacking (Python 3.5+)
+config = {**defaults, **custom}
+</code></pre>
+<p><strong>defaultdict</strong> - auto-creates default values for missing keys:</p>
+<pre><code class="language-python">from collections import defaultdict
+
+# Without defaultdict - tedious
+groups = {}
+students = [(&quot;Alice&quot;, &quot;Math&quot;), (&quot;Bob&quot;, &quot;Science&quot;), (&quot;Charlie&quot;, &quot;Math&quot;), (&quot;Diana&quot;, &quot;Science&quot;)]
+for name, subject in students:
+    if subject not in groups:
+        groups[subject] = []
+    groups[subject].append(name)
+
+# With defaultdict - clean
+groups = defaultdict(list)  # Missing keys auto-create empty lists
+for name, subject in students:
+    groups[subject].append(name)
+print(dict(groups))
+# {'Math': ['Alice', 'Charlie'], 'Science': ['Bob', 'Diana']}
+
+# Other default types:
+counter = defaultdict(int)     # Missing keys default to 0
+counter[&quot;apples&quot;] += 1
+counter[&quot;apples&quot;] += 1
+counter[&quot;bananas&quot;] += 1
+print(dict(counter))  # {'apples': 2, 'bananas': 1}
+</code></pre>
+<p><strong>Counter</strong> - count occurrences:</p>
+<pre><code class="language-python">from collections import Counter
+
+# Count anything iterable
+words = &quot;the cat sat on the mat the cat&quot;.split()
+counts = Counter(words)
+print(counts)
+# Counter({'the': 3, 'cat': 2, 'sat': 1, 'on': 1, 'mat': 1})
+
+print(counts.most_common(2))   # [('the', 3), ('cat', 2)]
+print(counts[&quot;the&quot;])           # 3
+print(counts[&quot;dog&quot;])           # 0 (missing keys return 0, not KeyError!)
+
+# You can also count characters in a string
+print(Counter(&quot;abracadabra&quot;))
+# Counter({'a': 5, 'b': 2, 'r': 2, 'c': 1, 'd': 1})
+</code></pre>
+<p><strong>deque</strong> (double-ended queue) - efficient append/pop from both ends:</p>
+<pre><code class="language-python">from collections import deque
+
+# Lists are slow for insert(0, x) and pop(0) - O(n)
+# deque is fast for both ends - O(1)
+
+dq = deque([1, 2, 3])
+dq.appendleft(0)     # [0, 1, 2, 3]
+dq.append(4)         # [0, 1, 2, 3, 4]
+dq.popleft()          # Returns 0, deque is [1, 2, 3, 4]
+dq.pop()              # Returns 4, deque is [1, 2, 3]
+
+# Fixed-size deque - automatically drops oldest items
+recent_logs = deque(maxlen=5)
+for i in range(10):
+    recent_logs.append(f&quot;log-{i}&quot;)
+print(list(recent_logs))
+# ['log-5', 'log-6', 'log-7', 'log-8', 'log-9']
+</code></pre>
+<h3 id="exercise-31-group-students-by-city">Exercise 3.1: Group Students by City</h3>
+<pre><code class="language-python">students = [
+    {&quot;name&quot;: &quot;Alice&quot;, &quot;city&quot;: &quot;NYC&quot;},
+    {&quot;name&quot;: &quot;Bob&quot;, &quot;city&quot;: &quot;LA&quot;},
+    {&quot;name&quot;: &quot;Charlie&quot;, &quot;city&quot;: &quot;NYC&quot;},
+    {&quot;name&quot;: &quot;Diana&quot;, &quot;city&quot;: &quot;Chicago&quot;},
+    {&quot;name&quot;: &quot;Eve&quot;, &quot;city&quot;: &quot;LA&quot;},
+]
+# Group them by city. Expected output:
+# {'NYC': ['Alice', 'Charlie'], 'LA': ['Bob', 'Eve'], 'Chicago': ['Diana']}
+</code></pre>
+<details>
+<summary>Solution</summary>
+
+
+<pre><code class="language-python">from collections import defaultdict
+
+groups = defaultdict(list)
+for student in students:
+    groups[student[&quot;city&quot;]].append(student[&quot;name&quot;])
+print(dict(groups))
+</code></pre>
+
+</details>
+
+<h3 id="exercise-32-sort-a-dictionary-by-values">Exercise 3.2: Sort a Dictionary by Values</h3>
+<pre><code class="language-python">scores = {&quot;Alice&quot;: 85, &quot;Bob&quot;: 92, &quot;Charlie&quot;: 78, &quot;Diana&quot;: 95, &quot;Eve&quot;: 88}
+# Sort by score descending and print as: &quot;1. Diana: 95&quot;, &quot;2. Bob: 92&quot;, etc.
+</code></pre>
+<details>
+<summary>Solution</summary>
+
+
+<pre><code class="language-python">sorted_scores = sorted(scores.items(), key=lambda item: item[1], reverse=True)
+for rank, (name, score) in enumerate(sorted_scores, 1):
+    print(f&quot;{rank}. {name}: {score}&quot;)
+</code></pre>
+
+</details>
+
+<hr />
+<h2 id="chapter-4-functions-functional-programming">Chapter 4: Functions &amp; Functional Programming</h2>
+<h3 id="41-functions">4.1 Functions</h3>
+<p>Functions let you organize code into reusable blocks.</p>
+<pre><code class="language-python"># Basic function
+def greet(name):
+    &quot;&quot;&quot;Greet a person by name.&quot;&quot;&quot;  # This is a docstring - documents the function
+    return f&quot;Hello, {name}!&quot;
+
+print(greet(&quot;Alice&quot;))  # &quot;Hello, Alice!&quot;
+
+# Function with default arguments
+def power(base, exponent=2):
+    &quot;&quot;&quot;Raise base to exponent. Defaults to squaring.&quot;&quot;&quot;
+    return base ** exponent
+
+print(power(3))      # 9   (uses default exponent=2)
+print(power(3, 3))   # 27  (exponent=3)
+print(power(2, 10))  # 1024
+
+# Function with multiple return values
+def min_max(numbers):
+    return min(numbers), max(numbers)
+
+low, high = min_max([3, 1, 4, 1, 5, 9])
+print(f&quot;Min: {low}, Max: {high}&quot;)  # Min: 1, Max: 9
+
+# Type hints (optional but recommended for documentation)
+def calculate_area(length: float, width: float) -&gt; float:
+    &quot;&quot;&quot;Calculate rectangle area.&quot;&quot;&quot;
+    return length * width
+</code></pre>
+<p><strong><code>*args</code> and <code>**kwargs</code></strong> - accept any number of arguments:</p>
+<pre><code class="language-python"># *args collects extra POSITIONAL arguments as a tuple
+def add_all(*args):
+    print(f&quot;Received: {args}&quot;)  # args is a tuple
+    return sum(args)
+
+print(add_all(1, 2, 3))       # Received: (1, 2, 3) -&gt; 6
+print(add_all(10, 20, 30, 40)) # Received: (10, 20, 30, 40) -&gt; 100
+
+# **kwargs collects extra KEYWORD arguments as a dictionary
+def create_profile(**kwargs):
+    print(f&quot;Received: {kwargs}&quot;)  # kwargs is a dict
+    for key, value in kwargs.items():
+        print(f&quot;  {key}: {value}&quot;)
+
+create_profile(name=&quot;Alice&quot;, age=30, city=&quot;NYC&quot;)
+# Received: {'name': 'Alice', 'age': 30, 'city': 'NYC'}
+#   name: Alice
+#   age: 30
+#   city: NYC
+
+# Combining both
+def flexible(required, *args, **kwargs):
+    print(f&quot;Required: {required}&quot;)
+    print(f&quot;Extra positional: {args}&quot;)
+    print(f&quot;Extra keyword: {kwargs}&quot;)
+
+flexible(&quot;hello&quot;, 1, 2, 3, x=10, y=20)
+# Required: hello
+# Extra positional: (1, 2, 3)
+# Extra keyword: {'x': 10, 'y': 20}
+</code></pre>
+<p><strong>Unpacking arguments</strong> - the reverse of <em>args/</em>*kwargs:</p>
+<pre><code class="language-python">def add(a, b, c):
+    return a + b + c
+
+# Unpack a list into positional arguments
+numbers = [1, 2, 3]
+print(add(*numbers))  # Same as add(1, 2, 3) -&gt; 6
+
+# Unpack a dict into keyword arguments
+params = {&quot;a&quot;: 10, &quot;b&quot;: 20, &quot;c&quot;: 30}
+print(add(**params))  # Same as add(a=10, b=20, c=30) -&gt; 60
+</code></pre>
+<p><strong>Functions are first-class objects</strong> - you can pass them around like variables:</p>
+<pre><code class="language-python">def apply(func, value):
+    &quot;&quot;&quot;Apply a function to a value.&quot;&quot;&quot;
+    return func(value)
+
+print(apply(str.upper, &quot;hello&quot;))  # &quot;HELLO&quot;
+print(apply(len, [1, 2, 3]))     # 3
+print(apply(abs, -42))            # 42
+
+# Store functions in a list
+operations = [str.upper, str.lower, str.title]
+text = &quot;hello world&quot;
+for op in operations:
+    print(op(text))
+# HELLO WORLD
+# hello world
+# Hello World
+</code></pre>
+<h3 id="42-lambda-functions">4.2 Lambda Functions</h3>
+<p>Lambdas are small anonymous functions (one expression only):</p>
+<pre><code class="language-python"># Regular function
+def square(x):
+    return x ** 2
+
+# Same thing as a lambda
+square = lambda x: x ** 2
+
+# Multiple arguments
+add = lambda x, y: x + y
+print(add(3, 4))  # 7
+
+# Most commonly used with sort, map, filter:
+
+# Sort by second element of tuple
+students = [(&quot;Alice&quot;, 85), (&quot;Bob&quot;, 92), (&quot;Charlie&quot;, 78)]
+students.sort(key=lambda s: s[1])
+# [('Charlie', 78), ('Alice', 85), ('Bob', 92)]
+
+# Sort strings by last character
+words = [&quot;banana&quot;, &quot;apple&quot;, &quot;cherry&quot;]
+print(sorted(words, key=lambda w: w[-1]))
+# ['banana', 'apple', 'cherry'] (sorted by a, e, y)
+</code></pre>
+<h3 id="43-map-filter-reduce">4.3 Map, Filter, Reduce</h3>
+<p>These are functional programming tools for transforming data:</p>
+<pre><code class="language-python"># map() - apply a function to every element
+numbers = [1, 2, 3, 4, 5]
+
+# Square each number
+squared = list(map(lambda x: x ** 2, numbers))
+print(squared)  # [1, 4, 9, 16, 25]
+
+# Convert all strings to integers
+str_numbers = [&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;]
+int_numbers = list(map(int, str_numbers))
+print(int_numbers)  # [1, 2, 3, 4]
+
+# Clean up a list of strings
+names = [&quot;  alice  &quot;, &quot; BOB  &quot;, &quot;  Charlie  &quot;]
+cleaned = list(map(str.strip, names))
+print(cleaned)  # ['alice', 'BOB', 'Charlie']
+
+# filter() - keep elements that pass a test
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+# Keep only even numbers
+evens = list(filter(lambda x: x % 2 == 0, numbers))
+print(evens)  # [2, 4, 6, 8, 10]
+
+# Keep non-empty strings
+strings = [&quot;hello&quot;, &quot;&quot;, &quot;world&quot;, &quot;&quot;, &quot;python&quot;]
+non_empty = list(filter(None, strings))  # None removes falsy values
+print(non_empty)  # ['hello', 'world', 'python']
+
+# reduce() - accumulate a result
+from functools import reduce
+
+# Sum all numbers
+total = reduce(lambda acc, x: acc + x, numbers)
+print(total)  # 55
+
+# Product of all numbers
+product = reduce(lambda acc, x: acc * x, numbers)
+print(product)  # 3628800
+
+# NOTE: List comprehensions are usually preferred (more Pythonic):
+squared = [x**2 for x in numbers]           # Instead of map
+evens = [x for x in numbers if x % 2 == 0]  # Instead of filter
+
+# But map/filter are nice when you already have a function:
+cleaned = list(map(str.strip, names))  # Cleaner than comprehension
+</code></pre>
+<h3 id="44-closures">4.4 Closures</h3>
+<p>A closure is a function that "remembers" variables from the scope where it was created:</p>
+<pre><code class="language-python"># Basic closure
+def make_multiplier(factor):
+    &quot;&quot;&quot;Returns a function that multiplies by factor.&quot;&quot;&quot;
+    def multiply(x):
+        return x * factor  # 'factor' is remembered from the outer function
+    return multiply
+
+double = make_multiplier(2)
+triple = make_multiplier(3)
+
+print(double(5))   # 10
+print(triple(5))   # 15
+print(double(100)) # 200
+
+# Practical example: configurable logger
+def make_logger(prefix):
+    &quot;&quot;&quot;Returns a logging function with a fixed prefix.&quot;&quot;&quot;
+    def log(message):
+        print(f&quot;[{prefix}] {message}&quot;)
+    return log
+
+info = make_logger(&quot;INFO&quot;)
+error = make_logger(&quot;ERROR&quot;)
+debug = make_logger(&quot;DEBUG&quot;)
+
+info(&quot;Server started&quot;)     # [INFO] Server started
+error(&quot;Connection lost&quot;)   # [ERROR] Connection lost
+debug(&quot;x = 42&quot;)           # [DEBUG] x = 42
+
+# Another example: counter
+def make_counter(start=0):
+    count = [start]  # Using list because we need to modify it
+    def increment():
+        count[0] += 1
+        return count[0]
+    return increment
+
+counter = make_counter()
+print(counter())  # 1
+print(counter())  # 2
+print(counter())  # 3
+</code></pre>
+<h3 id="45-generators">4.5 Generators</h3>
+<p>Generators produce values <strong>lazily</strong> (one at a time, on demand). They're memory-efficient for large datasets.</p>
+<pre><code class="language-python"># Regular function: creates entire list in memory
+def get_squares_list(n):
+    result = []
+    for i in range(n):
+        result.append(i ** 2)
+    return result
+
+# Generator function: yields one value at a time
+def get_squares_gen(n):
+    for i in range(n):
+        yield i ** 2  # 'yield' instead of 'return'
+
+# Using them looks the same:
+for sq in get_squares_gen(5):
+    print(sq)  # 0, 1, 4, 9, 16
+
+# But the memory difference is huge:
+import sys
+list_version = get_squares_list(10000)
+gen_version = get_squares_gen(10000)
+print(f&quot;List: {sys.getsizeof(list_version):,} bytes&quot;)  # ~85,000 bytes
+print(f&quot;Generator: {sys.getsizeof(gen_version):,} bytes&quot;)  # ~200 bytes
+
+# Real-world example: Fibonacci sequence
+def fibonacci():
+    &quot;&quot;&quot;Infinite Fibonacci generator.&quot;&quot;&quot;
+    a, b = 0, 1
+    while True:  # Infinite! But only produces values on demand
+        yield a
+        a, b = b, a + b
+
+# Get first 10 Fibonacci numbers
+fib = fibonacci()
+for _ in range(10):
+    print(next(fib), end=&quot; &quot;)
+# 0 1 1 2 3 5 8 13 21 34
+
+# Batch processing - process large data in chunks
+def batch_reader(data, batch_size=3):
+    &quot;&quot;&quot;Yield data in batches.&quot;&quot;&quot;
+    for i in range(0, len(data), batch_size):
+        yield data[i:i + batch_size]
+
+data = list(range(10))
+for batch in batch_reader(data, 3):
+    print(f&quot;Processing batch: {batch}&quot;)
+# Processing batch: [0, 1, 2]
+# Processing batch: [3, 4, 5]
+# Processing batch: [6, 7, 8]
+# Processing batch: [9]
+
+# Generator expression (like list comprehension but lazy)
+gen = (x**2 for x in range(1000000))  # No memory used yet
+total = sum(gen)  # Values computed one at a time
+</code></pre>
+<h3 id="exercise-41-make-a-greeting-factory">Exercise 4.1: Make a Greeting Factory</h3>
+<p>Write a closure <code>make_greeter(greeting)</code> that returns a function which greets people:</p>
+<pre><code class="language-python">hello = make_greeter(&quot;Hello&quot;)
+hi = make_greeter(&quot;Hi there&quot;)
+print(hello(&quot;Alice&quot;))   # &quot;Hello, Alice!&quot;
+print(hi(&quot;Bob&quot;))        # &quot;Hi there, Bob!&quot;
+</code></pre>
+<details>
+<summary>Solution</summary>
+
+
+<pre><code class="language-python">def make_greeter(greeting):
+    def greet(name):
+        return f&quot;{greeting}, {name}!&quot;
+    return greet
+
+hello = make_greeter(&quot;Hello&quot;)
+hi = make_greeter(&quot;Hi there&quot;)
+print(hello(&quot;Alice&quot;))   # &quot;Hello, Alice!&quot;
+print(hi(&quot;Bob&quot;))        # &quot;Hi there, Bob!&quot;
+</code></pre>
+
+</details>
+
+<h3 id="exercise-42-process-large-data-with-a-generator">Exercise 4.2: Process Large Data with a Generator</h3>
+<p>Write a generator <code>read_large_file(filepath)</code> that yields one line at a time. Then use it to count lines and find the longest line without loading the entire file into memory.</p>
+<details>
+<summary>Solution</summary>
+
+
+<pre><code class="language-python">def read_large_file(filepath):
+    &quot;&quot;&quot;Yield lines one at a time - works for any file size.&quot;&quot;&quot;
+    with open(filepath, 'r') as f:
+        for line in f:
+            yield line.rstrip('\n')
+
+# Usage:
+line_count = 0
+longest = &quot;&quot;
+for line in read_large_file(&quot;some_file.txt&quot;):
+    line_count += 1
+    if len(line) &gt; len(longest):
+        longest = line
+
+print(f&quot;Total lines: {line_count}&quot;)
+print(f&quot;Longest line ({len(longest)} chars): {longest[:50]}...&quot;)
+</code></pre>
+
+</details>
+
+<hr />
+<h2 id="chapter-5-object-oriented-programming">Chapter 5: Object-Oriented Programming</h2>
+<h3 id="51-classes-and-objects">5.1 Classes and Objects</h3>
+<p>A <strong>class</strong> is a blueprint. An <strong>object</strong> is an instance of that blueprint.</p>
+<pre><code class="language-python">class Dog:
+    # Class variable (shared by ALL dogs)
+    species = &quot;Canis familiaris&quot;
+
+    def __init__(self, name, age, breed):
+        &quot;&quot;&quot;Constructor - called when you create a new Dog.&quot;&quot;&quot;
+        # Instance variables (unique to EACH dog)
+        self.name = name
+        self.age = age
+        self.breed = breed
+
+    def bark(self):
+        &quot;&quot;&quot;Instance method - needs self to access instance data.&quot;&quot;&quot;
+        return f&quot;{self.name} says Woof!&quot;
+
+    def description(self):
+        return f&quot;{self.name} is a {self.age}-year-old {self.breed}&quot;
+
+    def birthday(self):
+        self.age += 1
+        return f&quot;Happy birthday {self.name}! Now {self.age} years old.&quot;
+
+# Creating objects (instances)
+buddy = Dog(&quot;Buddy&quot;, 5, &quot;Golden Retriever&quot;)
+max_dog = Dog(&quot;Max&quot;, 3, &quot;German Shepherd&quot;)
+
+print(buddy.bark())           # &quot;Buddy says Woof!&quot;
+print(max_dog.description())  # &quot;Max is a 3-year-old German Shepherd&quot;
+print(buddy.birthday())       # &quot;Happy birthday Buddy! Now 6 years old.&quot;
+
+# Class variable is shared
+print(buddy.species)     # &quot;Canis familiaris&quot;
+print(max_dog.species)   # &quot;Canis familiaris&quot;
+</code></pre>
+<h3 id="52-the-__init__-method">5.2 The <code>__init__</code> Method</h3>
+<p><code>__init__</code> is Python's constructor. It's called automatically when you create an object:</p>
+<pre><code class="language-python">class BankAccount:
+    def __init__(self, owner, balance=0):
+        &quot;&quot;&quot;
+        Initialize a bank account.
+
+        Args:
+            owner: Account owner's name
+            balance: Starting balance (default 0)
+        &quot;&quot;&quot;
+        self.owner = owner
+        self.balance = balance
+        self.transactions = []  # Track all transactions
+
+    def deposit(self, amount):
+        if amount &lt;= 0:
+            raise ValueError(&quot;Deposit amount must be positive&quot;)
+        self.balance += amount
+        self.transactions.append(f&quot;+${amount:.2f}&quot;)
+        return self.balance
+
+    def withdraw(self, amount):
+        if amount &lt;= 0:
+            raise ValueError(&quot;Withdrawal amount must be positive&quot;)
+        if amount &gt; self.balance:
+            raise ValueError(&quot;Insufficient funds&quot;)
+        self.balance -= amount
+        self.transactions.append(f&quot;-${amount:.2f}&quot;)
+        return self.balance
+
+    def get_statement(self):
+        print(f&quot;\nAccount: {self.owner}&quot;)
+        print(f&quot;Balance: ${self.balance:.2f}&quot;)
+        print(f&quot;Transactions: {', '.join(self.transactions)}&quot;)
+
+# Usage
+account = BankAccount(&quot;Alice&quot;, 1000)
+account.deposit(500)
+account.withdraw(200)
+account.get_statement()
+# Account: Alice
+# Balance: $1300.00
+# Transactions: +$500.00, -$200.00
+</code></pre>
+<h3 id="53-inheritance">5.3 Inheritance</h3>
+<p>A class can inherit attributes and methods from another class:</p>
+<pre><code class="language-python">class Animal:
+    def __init__(self, name, sound):
+        self.name = name
+        self.sound = sound
+
+    def speak(self):
+        return f&quot;{self.name} says {self.sound}!&quot;
+
+    def __str__(self):
+        return f&quot;{self.name} the {self.__class__.__name__}&quot;
+
+# Dog inherits from Animal
+class Dog(Animal):
+    def __init__(self, name, breed):
+        super().__init__(name, &quot;Woof&quot;)  # Call parent's __init__
+        self.breed = breed
+
+    def fetch(self, item):
+        return f&quot;{self.name} fetches the {item}!&quot;
+
+class Cat(Animal):
+    def __init__(self, name, indoor=True):
+        super().__init__(name, &quot;Meow&quot;)
+        self.indoor = indoor
+
+    def purr(self):
+        return f&quot;{self.name} purrs...&quot;
+
+# Usage
+dog = Dog(&quot;Rex&quot;, &quot;Labrador&quot;)
+cat = Cat(&quot;Whiskers&quot;)
+
+print(dog.speak())     # &quot;Rex says Woof!&quot; (inherited from Animal)
+print(dog.fetch(&quot;ball&quot;))  # &quot;Rex fetches the ball!&quot; (Dog-only method)
+print(cat.speak())     # &quot;Whiskers says Meow!&quot;
+print(cat.purr())      # &quot;Whiskers purrs...&quot;
+
+# Polymorphism - same method, different behavior
+animals = [Dog(&quot;Rex&quot;, &quot;Lab&quot;), Cat(&quot;Whiskers&quot;), Dog(&quot;Max&quot;, &quot;Poodle&quot;)]
+for animal in animals:
+    print(animal.speak())  # Each animal speaks differently
+</code></pre>
+<h3 id="54-abstract-base-classes">5.4 Abstract Base Classes</h3>
+<p>ABCs define a contract that subclasses must follow:</p>
+<pre><code class="language-python">from abc import ABC, abstractmethod
+
+class Shape(ABC):
+    &quot;&quot;&quot;All shapes MUST implement area() and perimeter().&quot;&quot;&quot;
+
+    @abstractmethod
+    def area(self) -&gt; float:
+        pass
+
+    @abstractmethod
+    def perimeter(self) -&gt; float:
+        pass
+
+    def description(self):
+        &quot;&quot;&quot;Concrete method - available to all subclasses.&quot;&quot;&quot;
+        return f&quot;{self.__class__.__name__}: area={self.area():.2f}&quot;
+
+# You CANNOT create a Shape directly:
+# shape = Shape()  # TypeError: Can't instantiate abstract class
+
+class Rectangle(Shape):
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
+    def area(self):
+        return self.width * self.height
+
+    def perimeter(self):
+        return 2 * (self.width + self.height)
+
+class Circle(Shape):
+    def __init__(self, radius):
+        self.radius = radius
+
+    def area(self):
+        import math
+        return math.pi * self.radius ** 2
+
+    def perimeter(self):
+        import math
+        return 2 * math.pi * self.radius
+
+# Usage
+shapes = [Rectangle(5, 3), Circle(4)]
+for shape in shapes:
+    print(shape.description())
+# Rectangle: area=15.00
+# Circle: area=50.27
+</code></pre>
+<h3 id="55-access-control">5.5 Access Control</h3>
+<p>Python uses naming conventions (not enforcement) for access control:</p>
+<pre><code class="language-python">class Account:
+    def __init__(self, owner, balance):
+        self.owner = owner          # Public - access from anywhere
+        self._bank = &quot;MyBank&quot;       # Protected - &quot;internal use&quot; convention
+        self.__balance = balance    # Private - name mangling makes it harder to access
+
+    def get_balance(self):
+        &quot;&quot;&quot;Public method to access private data.&quot;&quot;&quot;
+        return self.__balance
+
+    def _internal_method(self):
+        &quot;&quot;&quot;Protected method - meant for class and subclasses only.&quot;&quot;&quot;
+        pass
+
+acc = Account(&quot;Alice&quot;, 1000)
+print(acc.owner)            # OK - public
+print(acc._bank)            # Works but discouraged - protected
+# print(acc.__balance)      # AttributeError! - private (name-mangled)
+print(acc._Account__balance)  # Works via name mangling - but DON'T do this
+print(acc.get_balance())    # Correct way: use the public method
+</code></pre>
+<h3 id="56-properties">5.6 Properties</h3>
+<p>Properties let you control access to attributes with getter/setter logic:</p>
+<pre><code class="language-python">class Temperature:
+    def __init__(self, celsius=0):
+        self.celsius = celsius  # This calls the setter!
+
+    @property
+    def celsius(self):
+        &quot;&quot;&quot;Getter - called when you read .celsius&quot;&quot;&quot;
+        return self._celsius
+
+    @celsius.setter
+    def celsius(self, value):
+        &quot;&quot;&quot;Setter - called when you assign to .celsius&quot;&quot;&quot;
+        if value &lt; -273.15:
+            raise ValueError(&quot;Temperature below absolute zero!&quot;)
+        self._celsius = value
+
+    @property
+    def fahrenheit(self):
+        &quot;&quot;&quot;Read-only computed property.&quot;&quot;&quot;
+        return self._celsius * 9/5 + 32
+
+# Usage - looks like normal attributes, but validation happens automatically
+temp = Temperature(100)
+print(temp.celsius)      # 100
+print(temp.fahrenheit)   # 212.0
+
+temp.celsius = 0
+print(temp.fahrenheit)   # 32.0
+
+# temp.celsius = -300    # ValueError: Temperature below absolute zero!
+# temp.fahrenheit = 100  # AttributeError: can't set (read-only property)
+</code></pre>
+<h3 id="57-class-methods-vs-static-methods">5.7 Class Methods vs Static Methods</h3>
+<pre><code class="language-python">class DateUtil:
+    def __init__(self, year, month, day):
+        self.year = year
+        self.month = month
+        self.day = day
+
+    def __str__(self):
+        return f&quot;{self.year}-{self.month:02d}-{self.day:02d}&quot;
+
+    @classmethod
+    def from_string(cls, date_str):
+        &quot;&quot;&quot;Alternative constructor - creates a DateUtil from a string.
+
+        @classmethod receives the CLASS as first argument (cls),
+        so it can create new instances.
+        &quot;&quot;&quot;
+        year, month, day = map(int, date_str.split(&quot;-&quot;))
+        return cls(year, month, day)  # Same as DateUtil(year, month, day)
+
+    @classmethod
+    def today(cls):
+        &quot;&quot;&quot;Another alternative constructor.&quot;&quot;&quot;
+        from datetime import date
+        d = date.today()
+        return cls(d.year, d.month, d.day)
+
+    @staticmethod
+    def is_valid_date(date_str):
+        &quot;&quot;&quot;Utility function that doesn't need class or instance.
+
+        @staticmethod doesn't receive self or cls.
+        It's just a function that lives inside the class namespace.
+        &quot;&quot;&quot;
+        try:
+            parts = date_str.split(&quot;-&quot;)
+            if len(parts) != 3:
+                return False
+            y, m, d = map(int, parts)
+            return 1 &lt;= m &lt;= 12 and 1 &lt;= d &lt;= 31
+        except ValueError:
+            return False
+
+# Usage
+d1 = DateUtil(2024, 3, 15)            # Normal constructor
+d2 = DateUtil.from_string(&quot;2024-06-20&quot;)  # Alternative constructor
+d3 = DateUtil.today()                     # Another alternative
+
+print(d1)  # 2024-03-15
+print(d2)  # 2024-06-20
+
+print(DateUtil.is_valid_date(&quot;2024-13-01&quot;))  # False (month 13)
+print(DateUtil.is_valid_date(&quot;2024-06-15&quot;))  # True
+</code></pre>
+<h3 id="58-dunder-magic-methods">5.8 Dunder (Magic) Methods</h3>
+<p>Dunder methods (double underscore) let your objects work with Python's built-in operators and functions:</p>
+<pre><code class="language-python">class Vector:
+    &quot;&quot;&quot;A 2D vector that works with +, -, *, abs(), len(), ==, print(), etc.&quot;&quot;&quot;
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    # String representations
+    def __repr__(self):
+        &quot;&quot;&quot;For developers - unambiguous. Called by repr() and in debugger.&quot;&quot;&quot;
+        return f&quot;Vector({self.x}, {self.y})&quot;
+
+    def __str__(self):
+        &quot;&quot;&quot;For users - readable. Called by str() and print().&quot;&quot;&quot;
+        return f&quot;({self.x}, {self.y})&quot;
+
+    # Arithmetic
+    def __add__(self, other):
+        &quot;&quot;&quot;Enables: v1 + v2&quot;&quot;&quot;
+        return Vector(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):
+        &quot;&quot;&quot;Enables: v1 - v2&quot;&quot;&quot;
+        return Vector(self.x - other.x, self.y - other.y)
+
+    def __mul__(self, scalar):
+        &quot;&quot;&quot;Enables: v * 3&quot;&quot;&quot;
+        return Vector(self.x * scalar, self.y * scalar)
+
+    # Built-in functions
+    def __abs__(self):
+        &quot;&quot;&quot;Enables: abs(v) - returns vector magnitude.&quot;&quot;&quot;
+        return (self.x**2 + self.y**2) ** 0.5
+
+    def __len__(self):
+        &quot;&quot;&quot;Enables: len(v) - returns number of dimensions.&quot;&quot;&quot;
+        return 2
+
+    # Comparison
+    def __eq__(self, other):
+        &quot;&quot;&quot;Enables: v1 == v2&quot;&quot;&quot;
+        return self.x == other.x and self.y == other.y
+
+    # Container behavior
+    def __getitem__(self, index):
+        &quot;&quot;&quot;Enables: v[0], v[1]&quot;&quot;&quot;
+        return (self.x, self.y)[index]
+
+    # Boolean
+    def __bool__(self):
+        &quot;&quot;&quot;Enables: if v:  (True if non-zero vector)&quot;&quot;&quot;
+        return self.x != 0 or self.y != 0
+
+# Try it out:
+v1 = Vector(3, 4)
+v2 = Vector(1, 2)
+
+print(v1)            # (3, 4)           -&gt; __str__
+print(repr(v1))      # Vector(3, 4)     -&gt; __repr__
+print(v1 + v2)       # (4, 6)           -&gt; __add__
+print(v1 - v2)       # (2, 2)           -&gt; __sub__
+print(v1 * 3)        # (9, 12)          -&gt; __mul__
+print(abs(v1))       # 5.0              -&gt; __abs__
+print(len(v1))       # 2                -&gt; __len__
+print(v1 == Vector(3, 4))  # True       -&gt; __eq__
+print(v1[0])         # 3                -&gt; __getitem__
+
+if v1:               # True (non-zero)  -&gt; __bool__
+    print(&quot;Non-zero vector&quot;)
+</code></pre>
+<p><strong>Key dunder methods reference:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Triggered By</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__init__(self, ...)</code></td>
+<td><code>obj = Class()</code></td>
+<td>Constructor</td>
+</tr>
+<tr>
+<td><code>__repr__(self)</code></td>
+<td><code>repr(obj)</code>, debugger</td>
+<td>Developer string</td>
+</tr>
+<tr>
+<td><code>__str__(self)</code></td>
+<td><code>str(obj)</code>, <code>print(obj)</code></td>
+<td>User-friendly string</td>
+</tr>
+<tr>
+<td><code>__len__(self)</code></td>
+<td><code>len(obj)</code></td>
+<td>Return length</td>
+</tr>
+<tr>
+<td><code>__getitem__(self, key)</code></td>
+<td><code>obj[key]</code>, <code>obj[1:3]</code></td>
+<td>Index/slice access</td>
+</tr>
+<tr>
+<td><code>__setitem__(self, key, val)</code></td>
+<td><code>obj[key] = val</code></td>
+<td>Set by index</td>
+</tr>
+<tr>
+<td><code>__contains__(self, item)</code></td>
+<td><code>item in obj</code></td>
+<td>Membership test</td>
+</tr>
+<tr>
+<td><code>__iter__(self)</code></td>
+<td><code>for x in obj</code></td>
+<td>Make iterable</td>
+</tr>
+<tr>
+<td><code>__next__(self)</code></td>
+<td><code>next(obj)</code></td>
+<td>Next value in iteration</td>
+</tr>
+<tr>
+<td><code>__add__(self, other)</code></td>
+<td><code>obj + other</code></td>
+<td>Addition</td>
+</tr>
+<tr>
+<td><code>__sub__(self, other)</code></td>
+<td><code>obj - other</code></td>
+<td>Subtraction</td>
+</tr>
+<tr>
+<td><code>__mul__(self, other)</code></td>
+<td><code>obj * other</code></td>
+<td>Multiplication</td>
+</tr>
+<tr>
+<td><code>__eq__(self, other)</code></td>
+<td><code>obj == other</code></td>
+<td>Equality</td>
+</tr>
+<tr>
+<td><code>__lt__(self, other)</code></td>
+<td><code>obj &lt; other</code></td>
+<td>Less than</td>
+</tr>
+<tr>
+<td><code>__call__(self, ...)</code></td>
+<td><code>obj()</code></td>
+<td>Make callable</td>
+</tr>
+<tr>
+<td><code>__enter__</code>/<code>__exit__</code></td>
+<td><code>with obj:</code></td>
+<td>Context manager</td>
+</tr>
+<tr>
+<td><code>__bool__(self)</code></td>
+<td><code>bool(obj)</code>, <code>if obj:</code></td>
+<td>Truthiness</td>
+</tr>
+<tr>
+<td><code>__hash__(self)</code></td>
+<td><code>hash(obj)</code></td>
+<td>For sets/dict keys</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exercise-51-create-a-money-class">Exercise 5.1: Create a Money Class</h3>
+<p>Create a <code>Money</code> class with <code>amount</code> and <code>currency</code>. Implement <code>__add__</code> (raise error if currencies differ), <code>__str__</code>, <code>__repr__</code>, <code>__eq__</code>, and <code>__lt__</code>.</p>
+<details>
+<summary>Solution</summary>
+
+
+<pre><code class="language-python">class Money:
+    def __init__(self, amount, currency=&quot;USD&quot;):
+        self.amount = round(amount, 2)
+        self.currency = currency
+
+    def __repr__(self):
+        return f&quot;Money({self.amount}, '{self.currency}')&quot;
+
+    def __str__(self):
+        return f&quot;{self.currency} {self.amount:.2f}&quot;
+
+    def __add__(self, other):
+        if self.currency != other.currency:
+            raise ValueError(f&quot;Cannot add {self.currency} and {other.currency}&quot;)
+        return Money(self.amount + other.amount, self.currency)
+
+    def __eq__(self, other):
+        return self.amount == other.amount and self.currency == other.currency
+
+    def __lt__(self, other):
+        if self.currency != other.currency:
+            raise ValueError(f&quot;Cannot compare {self.currency} and {other.currency}&quot;)
+        return self.amount &lt; other.amount
+
+m1 = Money(10.50)
+m2 = Money(20.75)
+print(m1 + m2)      # USD 31.25
+print(m1 &lt; m2)      # True
+print(m1 == Money(10.50))  # True
+</code></pre>
+
+</details>
+
+<hr />
+<p><em>Continued in Part 2 (Chapters 6-19)...</em></p>
+<p>The remaining chapters continue in the same detailed, example-rich style. See the companion file for the complete guide.</p>
+<h2 id="chapter-6-error-handling-exceptions">Chapter 6: Error Handling &amp; Exceptions</h2>
+<h3 id="61-why-error-handling-matters">6.1 Why Error Handling Matters</h3>
+<p>Without error handling, your program crashes the moment something goes wrong. With it, you can gracefully handle problems and keep running.</p>
+<pre><code class="language-python"># Without error handling - program crashes
+user_input = &quot;not a number&quot;
+number = int(user_input)  # ValueError: invalid literal for int()
+print(&quot;This never executes&quot;)
+
+# With error handling - program continues
+try:
+    number = int(user_input)
+    print(f&quot;You entered: {number}&quot;)
+except ValueError:
+    print(&quot;That's not a valid number!&quot;)
+print(&quot;Program continues running...&quot;)
+</code></pre>
+<h3 id="62-try-except-else-finally">6.2 try / except / else / finally</h3>
+<p>Here's the full anatomy:</p>
+<pre><code class="language-python">def divide(a, b):
+    try:
+        # Code that MIGHT raise an exception
+        result = a / b
+
+    except ZeroDivisionError:
+        # Handle specific exception
+        print(&quot;Error: Cannot divide by zero!&quot;)
+        return None
+
+    except TypeError as e:
+        # Catch the exception object to see the error message
+        print(f&quot;Error: Wrong types - {e}&quot;)
+        return None
+
+    except (ValueError, ArithmeticError) as e:
+        # Catch multiple exception types
+        print(f&quot;Math error: {e}&quot;)
+        return None
+
+    except Exception as e:
+        # Catch ANY exception (use as last resort)
+        print(f&quot;Unexpected error: {e}&quot;)
+        return None
+
+    else:
+        # Runs ONLY if NO exception occurred
+        # This is the &quot;happy path&quot;
+        print(f&quot;Success! {a} / {b} = {result}&quot;)
+        return result
+
+    finally:
+        # ALWAYS runs, whether there was an exception or not
+        # Use for cleanup (closing files, database connections, etc.)
+        print(&quot;Division operation complete.&quot;)
+
+# Test it:
+divide(10, 3)     # Success! 10 / 3 = 3.333... / Division operation complete.
+divide(10, 0)     # Error: Cannot divide by zero! / Division operation complete.
+divide(&quot;10&quot;, 3)   # Error: Wrong types... / Division operation complete.
+</code></pre>
+<p><strong>When to use each block:</strong>
+- <code>try</code>: Code that might fail
+- <code>except</code>: Handle specific errors
+- <code>else</code>: Code that should run only on success (keeps try block minimal)
+- <code>finally</code>: Cleanup that must always happen (closing files, connections)</p>
+<h3 id="63-common-built-in-exceptions">6.3 Common Built-in Exceptions</h3>
+<pre><code class="language-python"># ValueError - wrong value for the type
+int(&quot;hello&quot;)              # ValueError
+
+# TypeError - wrong type
+&quot;hello&quot; + 42              # TypeError
+
+# KeyError - dict key not found
+d = {&quot;a&quot;: 1}
+d[&quot;b&quot;]                    # KeyError
+
+# IndexError - list index out of range
+lst = [1, 2, 3]
+lst[10]                   # IndexError
+
+# AttributeError - object doesn't have that attribute
+&quot;hello&quot;.nonexistent()     # AttributeError
+
+# FileNotFoundError - file doesn't exist
+open(&quot;nonexistent.txt&quot;)   # FileNotFoundError
+
+# ImportError - can't import module
+import nonexistent_module  # ModuleNotFoundError (subclass of ImportError)
+
+# ZeroDivisionError
+10 / 0                    # ZeroDivisionError
+
+# NameError - variable not defined
+print(undefined_variable)  # NameError
+</code></pre>
+<h3 id="64-custom-exceptions">6.4 Custom Exceptions</h3>
+<p>Create your own exceptions for your application's specific errors:</p>
+<pre><code class="language-python">class ValidationError(Exception):
+    &quot;&quot;&quot;Raised when input validation fails.&quot;&quot;&quot;
+    def __init__(self, field, message, value=None):
+        self.field = field
+        self.message = message
+        self.value = value
+        super().__init__(f&quot;Validation failed for '{field}': {message}&quot;)
+
+class NotFoundError(Exception):
+    &quot;&quot;&quot;Raised when a resource is not found.&quot;&quot;&quot;
+    def __init__(self, resource_type, resource_id):
+        self.resource_type = resource_type
+        self.resource_id = resource_id
+        super().__init__(f&quot;{resource_type} with id '{resource_id}' not found&quot;)
+
+class InsufficientFundsError(Exception):
+    &quot;&quot;&quot;Raised when account balance is too low.&quot;&quot;&quot;
+    pass
+
+# Usage
+def validate_age(age):
+    if not isinstance(age, int):
+        raise ValidationError(&quot;age&quot;, &quot;must be an integer&quot;, age)
+    if age &lt; 0:
+        raise ValidationError(&quot;age&quot;, &quot;cannot be negative&quot;, age)
+    if age &gt; 150:
+        raise ValidationError(&quot;age&quot;, f&quot;unrealistic value: {age}&quot;, age)
+    return age
+
+def get_user(user_id):
+    users = {&quot;1&quot;: &quot;Alice&quot;, &quot;2&quot;: &quot;Bob&quot;}
+    if user_id not in users:
+        raise NotFoundError(&quot;User&quot;, user_id)
+    return users[user_id]
+
+# Using them:
+try:
+    validate_age(-5)
+except ValidationError as e:
+    print(f&quot;Caught: {e}&quot;)
+    print(f&quot;  Field: {e.field}&quot;)
+    print(f&quot;  Value: {e.value}&quot;)
+# Caught: Validation failed for 'age': cannot be negative
+#   Field: age
+#   Value: -5
+
+try:
+    get_user(&quot;999&quot;)
+except NotFoundError as e:
+    print(f&quot;Caught: {e}&quot;)
+    print(f&quot;  Type: {e.resource_type}, ID: {e.resource_id}&quot;)
+</code></pre>
+<h3 id="65-exception-handling-with-logging-production-pattern">6.5 Exception Handling with Logging (Production Pattern)</h3>
+<pre><code class="language-python">import logging
+import traceback
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def process_data(data):
+    &quot;&quot;&quot;Production-grade error handling pattern.&quot;&quot;&quot;
+    try:
+        # Validate input
+        if not data:
+            raise ValueError(&quot;Data cannot be empty&quot;)
+
+        # Process
+        result = transform(data)
+        logger.info(f&quot;Successfully processed {len(data)} items&quot;)
+        return result
+
+    except ValueError as e:
+        # Known, expected errors - log as warning
+        logger.warning(f&quot;Invalid input: {e}&quot;)
+        return None
+
+    except ConnectionError as e:
+        # Transient errors - might want to retry
+        logger.error(f&quot;Connection failed: {e}&quot;)
+        raise  # Re-raise so caller can decide to retry
+
+    except Exception:
+        # Unknown errors - log full traceback for debugging
+        logger.error(f&quot;Unexpected error processing data:\n{traceback.format_exc()}&quot;)
+        raise  # Re-raise unknown errors (don't swallow them!)
+</code></pre>
+<h3 id="66-exception-handling-decorator-reusable-pattern">6.6 Exception Handling Decorator (Reusable Pattern)</h3>
+<pre><code class="language-python">import time
+from functools import wraps
+
+def retry(max_attempts=3, delay=1, exceptions=(Exception,)):
+    &quot;&quot;&quot;Retry decorator - retries function on failure.
+
+    Args:
+        max_attempts: Maximum number of tries
+        delay: Seconds between retries
+        exceptions: Tuple of exception types to catch
+
+    Usage:
+        @retry(max_attempts=3, delay=2)
+        def flaky_api_call():
+            ...
+    &quot;&quot;&quot;
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            last_exception = None
+            for attempt in range(1, max_attempts + 1):
+                try:
+                    return func(*args, **kwargs)
+                except exceptions as e:
+                    last_exception = e
+                    if attempt &lt; max_attempts:
+                        print(f&quot;  Attempt {attempt}/{max_attempts} failed: {e}&quot;)
+                        print(f&quot;  Retrying in {delay}s...&quot;)
+                        time.sleep(delay)
+                    else:
+                        print(f&quot;  All {max_attempts} attempts failed!&quot;)
+            raise last_exception
+        return wrapper
+    return decorator
+
+# Usage:
+import random
+
+@retry(max_attempts=3, delay=1)
+def unreliable_api_call():
+    &quot;&quot;&quot;Simulates a flaky API that fails randomly.&quot;&quot;&quot;
+    if random.random() &lt; 0.7:  # 70% chance of failure
+        raise ConnectionError(&quot;Server unavailable&quot;)
+    return {&quot;status&quot;: &quot;success&quot;, &quot;data&quot;: [1, 2, 3]}
+
+# This will retry up to 3 times:
+try:
+    result = unreliable_api_call()
+    print(f&quot;Got result: {result}&quot;)
+except ConnectionError:
+    print(&quot;API is down, giving up.&quot;)
+</code></pre>
+<h3 id="exercise-61-build-a-robust-input-validator">Exercise 6.1: Build a Robust Input Validator</h3>
+<p>Write a function <code>get_valid_number()</code> that keeps asking the user for input until they enter a valid number between 1 and 100.</p>
+<details>
+<summary>Solution</summary>
+
+
+<pre><code class="language-python">def get_valid_number(prompt=&quot;Enter a number (1-100): &quot;):
+    while True:
+        try:
+            value = int(input(prompt))
+            if 1 &lt;= value &lt;= 100:
+                return value
+            else:
+                print(f&quot;  {value} is out of range. Must be 1-100.&quot;)
+        except ValueError:
+            print(&quot;  That's not a valid number. Try again.&quot;)
+        except KeyboardInterrupt:
+            print(&quot;\n  Cancelled.&quot;)
+            return None
+
+number = get_valid_number()
+if number:
+    print(f&quot;You chose: {number}&quot;)
+</code></pre>
+
+</details>
+
+<hr />
+<h2 id="chapter-7-file-io-serialization">Chapter 7: File I/O &amp; Serialization</h2>
+<h3 id="71-reading-and-writing-text-files">7.1 Reading and Writing Text Files</h3>
+<pre><code class="language-python"># ===== WRITING =====
+
+# Write (creates file or OVERWRITES existing)
+with open(&quot;output.txt&quot;, &quot;w&quot;) as f:
+    f.write(&quot;Line 1\n&quot;)
+    f.write(&quot;Line 2\n&quot;)
+
+# Write multiple lines
+lines = [&quot;Hello\n&quot;, &quot;World\n&quot;, &quot;Python\n&quot;]
+with open(&quot;output.txt&quot;, &quot;w&quot;) as f:
+    f.writelines(lines)
+
+# Append (adds to end of file)
+with open(&quot;output.txt&quot;, &quot;a&quot;) as f:
+    f.write(&quot;Appended line\n&quot;)
+
+# ===== READING =====
+
+# Read entire file as one string
+with open(&quot;output.txt&quot;, &quot;r&quot;) as f:
+    content = f.read()
+    print(content)
+
+# Read all lines into a list
+with open(&quot;output.txt&quot;, &quot;r&quot;) as f:
+    lines = f.readlines()  # Each line includes \n
+    for line in lines:
+        print(line.strip())  # strip() removes \n
+
+# Read line by line (memory efficient for large files)
+with open(&quot;output.txt&quot;, &quot;r&quot;) as f:
+    for line in f:  # f is an iterator - reads one line at a time
+        print(line.strip())
+
+# Read first N lines
+with open(&quot;output.txt&quot;, &quot;r&quot;) as f:
+    for i, line in enumerate(f):
+        if i &gt;= 5:  # Read only first 5 lines
+            break
+        print(line.strip())
+</code></pre>
+<p><strong>The <code>with</code> statement</strong> - why you should always use it:</p>
+<pre><code class="language-python"># WITHOUT with (bad - you might forget to close)
+f = open(&quot;file.txt&quot;, &quot;r&quot;)
+content = f.read()
+f.close()  # Easy to forget, especially if an error occurs above
+
+# WITH with (good - auto-closes even if error occurs)
+with open(&quot;file.txt&quot;, &quot;r&quot;) as f:
+    content = f.read()
+# File is automatically closed here, even if an exception happened
+</code></pre>
+<h3 id="72-pathlib-modern-file-operations">7.2 pathlib - Modern File Operations</h3>
+<p><code>pathlib</code> is the modern, Pythonic way to work with file paths:</p>
+<pre><code class="language-python">from pathlib import Path
+
+# Create path objects
+p = Path(&quot;data/output.txt&quot;)
+home = Path.home()           # /Users/username (Mac) or C:\Users\username (Win)
+cwd = Path.cwd()             # Current working directory
+
+# Path properties
+print(p.name)       # &quot;output.txt&quot;
+print(p.stem)       # &quot;output&quot;
+print(p.suffix)     # &quot;.txt&quot;
+print(p.parent)     # &quot;data&quot;
+print(p.exists())   # True or False
+print(p.is_file())  # True if it's a file
+print(p.is_dir())   # True if it's a directory
+
+# Create directories
+Path(&quot;data/processed&quot;).mkdir(parents=True, exist_ok=True)
+# parents=True: create parent dirs too
+# exist_ok=True: don't error if already exists
+
+# Read and write (simple!)
+p = Path(&quot;data/output.txt&quot;)
+p.parent.mkdir(parents=True, exist_ok=True)
+p.write_text(&quot;Hello from pathlib!&quot;)
+content = p.read_text()
+print(content)
+
+# Find files
+for py_file in Path(&quot;.&quot;).rglob(&quot;*.py&quot;):       # Recursive glob
+    print(py_file)
+
+for txt_file in Path(&quot;data&quot;).glob(&quot;*.txt&quot;):    # Non-recursive
+    print(txt_file)
+
+# Join paths (works across OS)
+config_path = Path.home() / &quot;.config&quot; / &quot;myapp&quot; / &quot;settings.json&quot;
+</code></pre>
+<h3 id="73-json">7.3 JSON</h3>
+<p>JSON is the most common format for data exchange:</p>
+<pre><code class="language-python">import json
+
+# ===== Python dict &lt;-&gt; JSON string =====
+
+data = {
+    &quot;name&quot;: &quot;Alice&quot;,
+    &quot;age&quot;: 30,
+    &quot;hobbies&quot;: [&quot;reading&quot;, &quot;coding&quot;],
+    &quot;address&quot;: {
+        &quot;city&quot;: &quot;NYC&quot;,
+        &quot;state&quot;: &quot;NY&quot;
+    }
+}
+
+# Python -&gt; JSON string
+json_str = json.dumps(data)
+print(json_str)
+# {&quot;name&quot;: &quot;Alice&quot;, &quot;age&quot;: 30, &quot;hobbies&quot;: [&quot;reading&quot;, &quot;coding&quot;], ...}
+
+# Pretty-printed JSON
+json_pretty = json.dumps(data, indent=2)
+print(json_pretty)
+
+# JSON string -&gt; Python dict
+parsed = json.loads(json_str)
+print(parsed[&quot;name&quot;])   # &quot;Alice&quot;
+print(parsed[&quot;hobbies&quot;][0])  # &quot;reading&quot;
+
+# ===== JSON files =====
+
+# Write to file
+with open(&quot;data.json&quot;, &quot;w&quot;) as f:
+    json.dump(data, f, indent=2)
+
+# Read from file
+with open(&quot;data.json&quot;, &quot;r&quot;) as f:
+    loaded = json.load(f)
+</code></pre>
+<h3 id="74-csv">7.4 CSV</h3>
+<pre><code class="language-python">import csv
+
+# ===== Writing CSV =====
+with open(&quot;students.csv&quot;, &quot;w&quot;, newline=&quot;&quot;) as f:
+    writer = csv.writer(f)
+    writer.writerow([&quot;Name&quot;, &quot;Age&quot;, &quot;Grade&quot;])   # Header
+    writer.writerow([&quot;Alice&quot;, 30, &quot;A&quot;])
+    writer.writerow([&quot;Bob&quot;, 25, &quot;B&quot;])
+    writer.writerow([&quot;Charlie&quot;, 35, &quot;A&quot;])
+
+# ===== Reading CSV =====
+with open(&quot;students.csv&quot;, &quot;r&quot;) as f:
+    reader = csv.reader(f)
+    header = next(reader)     # Read header row
+    print(f&quot;Columns: {header}&quot;)
+    for row in reader:
+        print(f&quot;  {row[0]}, age {row[1]}, grade {row[2]}&quot;)
+
+# ===== DictReader (much nicer - access by column name) =====
+with open(&quot;students.csv&quot;, &quot;r&quot;) as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        print(f&quot;  {row['Name']}: {row['Grade']}&quot;)
+</code></pre>
+<h3 id="75-yaml">7.5 YAML</h3>
+<pre><code class="language-python"># pip install pyyaml
+import yaml
+
+# Read YAML
+with open(&quot;config.yaml&quot;, &quot;r&quot;) as f:
+    config = yaml.safe_load(f)  # Always use safe_load!
+
+# Write YAML
+with open(&quot;output.yaml&quot;, &quot;w&quot;) as f:
+    yaml.dump(config, f, default_flow_style=False)
+
+# Example YAML file (config.yaml):
+# database:
+#   host: localhost
+#   port: 5432
+#   name: mydb
+# features:
+#   - logging
+#   - caching
+</code></pre>
+<h3 id="76-pickle-python-object-serialization">7.6 Pickle (Python Object Serialization)</h3>
+<pre><code class="language-python">import pickle
+
+# Pickle can serialize ANY Python object
+data = {
+    &quot;model_weights&quot;: [0.5, 0.3, 0.2],
+    &quot;metadata&quot;: {&quot;version&quot;: &quot;1.0&quot;, &quot;created&quot;: &quot;2024-01-15&quot;},
+    &quot;history&quot;: [(1, 0.9), (2, 0.95), (3, 0.97)]
+}
+
+# Save
+with open(&quot;model.pkl&quot;, &quot;wb&quot;) as f:  # 'wb' = write binary
+    pickle.dump(data, f)
+
+# Load
+with open(&quot;model.pkl&quot;, &quot;rb&quot;) as f:  # 'rb' = read binary
+    loaded = pickle.load(f)
+
+print(loaded[&quot;model_weights&quot;])  # [0.5, 0.3, 0.2]
+</code></pre>
+<blockquote>
+<p><strong>SECURITY WARNING</strong>: Never unpickle data from untrusted sources! Pickle can execute arbitrary code. Use JSON for data exchange between systems.</p>
+</blockquote>
+<h3 id="exercise-71-csv-to-json-converter">Exercise 7.1: CSV to JSON Converter</h3>
+<p>Read a CSV file, transform the data, and write to JSON:</p>
+<details>
+<summary>Solution</summary>
+
+
+<pre><code class="language-python">import csv
+import json
+
+def csv_to_json(csv_path, json_path):
+    records = []
+    with open(csv_path, &quot;r&quot;) as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            records.append(row)
+
+    with open(json_path, &quot;w&quot;) as f:
+        json.dump(records, f, indent=2)
+
+    print(f&quot;Converted {len(records)} records from {csv_path} to {json_path}&quot;)
+
+csv_to_json(&quot;students.csv&quot;, &quot;students.json&quot;)
+</code></pre>
+
+</details>
+
+<hr />
+<h2 id="chapter-8-modules-packages-imports">Chapter 8: Modules, Packages &amp; Imports</h2>
+<h3 id="81-what-are-modules-and-packages">8.1 What Are Modules and Packages?</h3>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>What it is</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Module</strong></td>
+<td>A single <code>.py</code> file</td>
+<td><code>math.py</code>, <code>utils.py</code></td>
+</tr>
+<tr>
+<td><strong>Package</strong></td>
+<td>A folder with <code>__init__.py</code> containing modules</td>
+<td><code>requests/</code>, <code>pandas/</code></td>
+</tr>
+<tr>
+<td><strong>Library</strong></td>
+<td>A collection of packages (installed via pip)</td>
+<td><code>pandas</code>, <code>flask</code></td>
+</tr>
+<tr>
+<td><strong>Framework</strong></td>
+<td>An opinionated library that controls the structure</td>
+<td><code>Django</code>, <code>FastAPI</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="82-import-styles">8.2 Import Styles</h3>
+<pre><code class="language-python"># Import the entire module
+import os
+print(os.path.exists(&quot;/tmp&quot;))
+
+# Import specific things from a module
+from pathlib import Path
+from collections import defaultdict, Counter
+
+# Import with an alias (common for data science)
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Import everything (AVOID - clutters namespace)
+# from os import *  # Don't do this in production code
+</code></pre>
+<h3 id="83-creating-your-own-package">8.3 Creating Your Own Package</h3>
+<pre><code>myproject/
+├── mypackage/
+│   ├── __init__.py       # Makes this directory a package
+│   ├── utils.py
+│   ├── models.py
+│   └── subpackage/
+│       ├── __init__.py
+│       └── helpers.py
+├── main.py
+└── tests/
+    └── test_utils.py
+</code></pre>
+<pre><code class="language-python"># mypackage/__init__.py
+&quot;&quot;&quot;My package - does amazing things.&quot;&quot;&quot;
+
+# Control what gets imported with &quot;from mypackage import *&quot;
+__all__ = [&quot;utils&quot;, &quot;models&quot;]
+
+# Convenience imports (so users can do: from mypackage import MyClass)
+from .utils import useful_function
+from .models import MyModel
+
+__version__ = &quot;1.0.0&quot;
+</code></pre>
+<pre><code class="language-python"># mypackage/utils.py
+def useful_function(x):
+    return x * 2
+</code></pre>
+<pre><code class="language-python"># main.py
+from mypackage import useful_function
+from mypackage.models import MyModel
+</code></pre>
+<h3 id="84-__name__-and-__main__">8.4 <code>__name__</code> and <code>__main__</code></h3>
+<p>Every Python file has a special variable <code>__name__</code>:
+- When run directly: <code>__name__</code> is <code>"__main__"</code>
+- When imported: <code>__name__</code> is the module's name</p>
+<pre><code class="language-python"># mymodule.py
+def main():
+    print(&quot;Running as main program&quot;)
+
+def helper():
+    print(&quot;I'm a helper function&quot;)
+
+# This block only runs when the file is executed directly
+# NOT when imported by another module
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+<pre><code class="language-python"># another_file.py
+import mymodule          # Does NOT run main()
+mymodule.helper()       # Can use the functions
+</code></pre>
+<h3 id="85-import-order-pep-8">8.5 Import Order (PEP 8)</h3>
+<pre><code class="language-python"># 1. Standard library imports
+import os
+import sys
+from pathlib import Path
+
+# 2. Third-party imports (installed via pip)
+import pandas as pd
+import numpy as np
+import requests
+
+# 3. Local application imports
+from mypackage import utils
+from mypackage.models import UserModel
+</code></pre>
+<hr />
+<h2 id="chapter-9-python-environment-pip-dependency-management">Chapter 9: Python Environment, pip &amp; Dependency Management</h2>
+<h3 id="91-virtual-environments-why-and-how">9.1 Virtual Environments: Why and How</h3>
+<p><strong>Why</strong>: Without virtual environments, all projects share the same Python packages. Project A might need <code>requests==2.28</code> while Project B needs <code>requests==2.31</code>. Virtual environments isolate each project's dependencies.</p>
+<pre><code class="language-bash"># CREATE a virtual environment
+python -m venv .venv
+
+# ACTIVATE it
+# Mac/Linux:
+source .venv/bin/activate
+# Windows:
+.venv\Scripts\activate
+
+# Your prompt changes to show (.venv):
+# (.venv) $ python --version
+
+# INSTALL packages (only affects this virtual environment)
+pip install requests pandas
+
+# DEACTIVATE when done
+deactivate
+</code></pre>
+<h3 id="92-pip-python-package-manager">9.2 pip - Python Package Manager</h3>
+<pre><code class="language-bash"># Install a package
+pip install requests
+
+# Install a specific version
+pip install requests==2.28.0
+
+# Install a version range
+pip install &quot;requests&gt;=2.28,&lt;3.0&quot;
+
+# pip install vs python -m pip install
+# IMPORTANT: Always prefer python -m pip install
+# This ensures you're using the pip for YOUR Python, not some other one
+python -m pip install requests
+
+# Upgrade a package
+pip install --upgrade requests
+
+# See what's installed
+pip list
+pip show requests    # Detailed info about one package
+
+# Save your project's dependencies
+pip freeze &gt; requirements.txt
+
+# Install from requirements file (reproduce environment)
+pip install -r requirements.txt
+
+# Uninstall
+pip uninstall requests
+</code></pre>
+<h3 id="93-common-pip-issues-how-to-fix-them">9.3 Common pip Issues &amp; How to Fix Them</h3>
+<p><strong>Issue: "pip: command not found"</strong></p>
+<pre><code class="language-bash"># Use python -m pip instead:
+python -m pip install package_name
+# Or upgrade pip:
+python -m pip install --upgrade pip
+</code></pre>
+<p><strong>Issue: Permission denied</strong></p>
+<pre><code class="language-bash"># Option 1: Use --user (installs just for your user)
+pip install --user package_name
+
+# Option 2 (RECOMMENDED): Use a virtual environment
+python -m venv .venv
+source .venv/bin/activate
+pip install package_name
+</code></pre>
+<p><strong>Issue: SSL certificate error (common behind corporate firewalls)</strong></p>
+<pre><code class="language-bash">pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org package_name
+</code></pre>
+<p><strong>Issue: Wrong package installed (e.g., <code>jwt</code> vs <code>PyJWT</code>)</strong></p>
+<pre><code class="language-bash"># Diagnose: check what you actually have
+python -c &quot;import jwt; print(jwt.__file__); print(dir(jwt))&quot;
+
+# Fix: remove wrong package, install correct one
+pip uninstall jwt PyJWT
+pip install PyJWT
+</code></pre>
+<p><strong>Issue: Dependency conflict</strong></p>
+<pre><code class="language-bash"># Force reinstall one package (ignoring dependencies)
+pip install --force-reinstall --no-deps package_name
+
+# Nuclear option: reinstall everything
+pip install --force-reinstall package_name
+</code></pre>
+<p><strong>Issue: "externally-managed-environment" (newer Ubuntu/macOS)</strong></p>
+<pre><code class="language-bash"># This means your OS protects system Python. ALWAYS use virtual envs:
+python -m venv .venv
+source .venv/bin/activate
+pip install package_name
+</code></pre>
+<h3 id="94-pipenv-better-dependency-management">9.4 Pipenv (Better Dependency Management)</h3>
+<p>Pipenv combines <code>pip</code> + <code>virtualenv</code> into one tool:</p>
+<pre><code class="language-bash"># Install pipenv
+pip install pipenv
+
+# Start a new project (creates Pipfile + virtual env)
+pipenv install requests
+
+# Install dev-only packages
+pipenv install pytest --dev
+
+# Activate the virtual environment
+pipenv shell
+
+# Run a command in the virtual env (without activating)
+pipenv run python script.py
+pipenv run pytest tests/
+
+# Lock dependencies for reproducible builds
+pipenv lock
+
+# Install everything from Pipfile.lock
+pipenv install
+
+# Convert existing requirements.txt to Pipfile
+pipenv install -r requirements.txt
+
+# Remove virtual environment
+pipenv --rm
+</code></pre>
+<hr />
+<h2 id="chapter-10-debugging-profiling">Chapter 10: Debugging &amp; Profiling</h2>
+<p>This is one of the most important skills for any developer. Let's cover every technique from simple to advanced.</p>
+<h3 id="101-print-debugging-the-basics">10.1 Print Debugging (The Basics)</h3>
+<p>The simplest debugging technique. Good for quick checks, but remove before committing:</p>
+<pre><code class="language-python">def calculate_total(items):
+    print(f&quot;DEBUG: items received = {items}&quot;)  # What did we get?
+
+    total = 0
+    for item in items:
+        print(f&quot;DEBUG: processing item = {item}&quot;)  # What are we processing?
+        price = item[&quot;price&quot;] * item[&quot;quantity&quot;]
+        print(f&quot;DEBUG: price for {item['name']} = {price}&quot;)  # Intermediate result
+        total += price
+
+    print(f&quot;DEBUG: final total = {total}&quot;)  # Final result
+    return total
+
+# Better: use f-strings with variable names
+x = 42
+print(f&quot;{x = }&quot;)  # Output: x = 42  (Python 3.8+)
+
+items = [1, 2, 3]
+print(f&quot;{len(items) = }&quot;)  # Output: len(items) = 3
+</code></pre>
+<h3 id="102-pdb-python-debugger-step-by-step-guide">10.2 pdb - Python Debugger (Step-by-Step Guide)</h3>
+<p>pdb lets you pause your program and inspect everything interactively. This is <strong>much more powerful</strong> than print debugging.</p>
+<p><strong>How to start pdb:</strong></p>
+<pre><code class="language-python"># Method 1: Add breakpoint() where you want to pause (Python 3.7+)
+def calculate_discount(price, discount_pct):
+    breakpoint()  # Program pauses here
+    discount = price * discount_pct / 100
+    final_price = price - discount
+    return final_price
+
+result = calculate_discount(100, 20)
+</code></pre>
+<pre><code class="language-python"># Method 2: Old style (works on all Python 3 versions)
+import pdb
+
+def calculate_discount(price, discount_pct):
+    pdb.set_trace()  # Same effect as breakpoint()
+    discount = price * discount_pct / 100
+    final_price = price - discount
+    return final_price
+</code></pre>
+<p><strong>When you run this, you'll see the pdb prompt:</strong></p>
+<pre><code>&gt; /path/to/script.py(3)calculate_discount()
+-&gt; discount = price * discount_pct / 100
+(Pdb)
+</code></pre>
+<p><strong>Now you can type commands. Here's a complete walkthrough:</strong></p>
+<pre><code>(Pdb) p price            # PRINT a variable's value
+100
+(Pdb) p discount_pct     # Print another variable
+20
+(Pdb) p price * discount_pct / 100    # Print ANY expression
+20.0
+(Pdb) pp locals()        # PRETTY-PRINT all local variables
+{'discount_pct': 20, 'price': 100}
+
+(Pdb) n                  # NEXT - execute current line, move to next
+&gt; /path/to/script.py(4)calculate_discount()
+-&gt; final_price = price - discount
+
+(Pdb) p discount         # Now 'discount' exists
+20.0
+
+(Pdb) n                  # Execute this line too
+&gt; /path/to/script.py(5)calculate_discount()
+-&gt; return final_price
+
+(Pdb) p final_price      # Check the result
+80.0
+
+(Pdb) c                  # CONTINUE - run until next breakpoint or end
+</code></pre>
+<p><strong>Complete pdb command reference:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Short</th>
+<th>What it does</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>print(expr)</code></td>
+<td><code>p expr</code></td>
+<td>Print a value</td>
+<td><code>p my_variable</code></td>
+</tr>
+<tr>
+<td><code>pp expr</code></td>
+<td></td>
+<td>Pretty-print (for dicts, lists)</td>
+<td><code>pp my_dict</code></td>
+</tr>
+<tr>
+<td><code>next</code></td>
+<td><code>n</code></td>
+<td>Execute current line, go to next</td>
+<td></td>
+</tr>
+<tr>
+<td><code>step</code></td>
+<td><code>s</code></td>
+<td>Step INTO a function call</td>
+<td></td>
+</tr>
+<tr>
+<td><code>continue</code></td>
+<td><code>c</code></td>
+<td>Run until next breakpoint</td>
+<td></td>
+</tr>
+<tr>
+<td><code>list</code></td>
+<td><code>l</code></td>
+<td>Show code around current line</td>
+<td><code>l 1, 20</code> (lines 1-20)</td>
+</tr>
+<tr>
+<td><code>longlist</code></td>
+<td><code>ll</code></td>
+<td>Show entire current function</td>
+<td></td>
+</tr>
+<tr>
+<td><code>where</code></td>
+<td><code>w</code></td>
+<td>Show call stack (who called what)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>up</code></td>
+<td><code>u</code></td>
+<td>Go UP one level in call stack</td>
+<td></td>
+</tr>
+<tr>
+<td><code>down</code></td>
+<td><code>d</code></td>
+<td>Go DOWN one level in call stack</td>
+<td></td>
+</tr>
+<tr>
+<td><code>break</code></td>
+<td><code>b</code></td>
+<td>Set a breakpoint</td>
+<td><code>b 42</code> (line 42), <code>b my_func</code></td>
+</tr>
+<tr>
+<td><code>clear</code></td>
+<td><code>cl</code></td>
+<td>Remove breakpoints</td>
+<td><code>cl 1</code> (breakpoint #1)</td>
+</tr>
+<tr>
+<td><code>return</code></td>
+<td><code>r</code></td>
+<td>Run until current function returns</td>
+<td></td>
+</tr>
+<tr>
+<td><code>quit</code></td>
+<td><code>q</code></td>
+<td>Quit debugger</td>
+<td></td>
+</tr>
+<tr>
+<td><code>!statement</code></td>
+<td></td>
+<td>Execute Python statement</td>
+<td><code>!x = 42</code></td>
+</tr>
+<tr>
+<td><code>whatis expr</code></td>
+<td></td>
+<td>Show type of expression</td>
+<td><code>whatis my_var</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Real debugging session example:</strong></p>
+<p>Say you have a bug - the function returns wrong results:</p>
+<pre><code class="language-python">def find_average(numbers):
+    total = 0
+    for i in range(len(numbers)):
+        total += numbers[i]
+    average = total / len(numbers) + 1  # Bug! The +1 is wrong
+    return average
+
+# Let's debug:
+def find_average(numbers):
+    breakpoint()  # ADD THIS
+    total = 0
+    for i in range(len(numbers)):
+        total += numbers[i]
+    average = total / len(numbers) + 1
+    return average
+
+result = find_average([10, 20, 30])
+print(f&quot;Average: {result}&quot;)  # Prints 21.0, but should be 20.0
+</code></pre>
+<pre><code># Run the script, pdb starts:
+
+(Pdb) n                    # Skip past total = 0
+(Pdb) n                    # Enter the for loop
+(Pdb) n                    # Execute total += numbers[i]
+(Pdb) p total              # Check total after first iteration
+10
+(Pdb) c                    # Continue (but we want to see more...)
+
+# Better approach - set a breakpoint AFTER the loop:
+(Pdb) b 6                 # Set breakpoint at line 6 (the average line)
+(Pdb) c                    # Continue to that breakpoint
+(Pdb) p total              # Check total
+60
+(Pdb) p len(numbers)       # Check count
+3
+(Pdb) p total / len(numbers)  # What should average be?
+20.0
+(Pdb) p total / len(numbers) + 1  # What IS the average (with bug)?
+21.0
+# AHA! The + 1 is the bug!
+</code></pre>
+<p><strong>Step vs Next - the important difference:</strong></p>
+<pre><code class="language-python">def helper(x):
+    return x * 2
+
+def main():
+    breakpoint()
+    result = helper(5)  # Line we're about to execute
+    print(result)
+</code></pre>
+<pre><code># At the breakpoint:
+(Pdb) n    # NEXT: executes helper(5) completely, stops at print(result)
+           # You DON'T go inside helper()
+
+(Pdb) s    # STEP: goes INSIDE helper(5), stops at &quot;return x * 2&quot;
+           # You CAN inspect x inside helper
+</code></pre>
+<p><strong>Post-mortem debugging</strong> - debug AFTER a crash:</p>
+<pre><code class="language-bash"># Run with -m pdb to auto-enter debugger on crash:
+python -m pdb my_script.py
+
+# When it crashes, you're dropped into pdb at the crash site
+# You can inspect all variables to understand what went wrong
+</code></pre>
+<h3 id="103-logging-production-grade-debugging">10.3 Logging (Production-Grade Debugging)</h3>
+<p>Print statements get removed before deployment. Logging is permanent and configurable.</p>
+<p><strong>Basic logging:</strong></p>
+<pre><code class="language-python">import logging
+
+# Configure logging (do this ONCE, at the top of your main script)
+logging.basicConfig(
+    level=logging.DEBUG,       # Show all messages DEBUG and above
+    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+
+# Create a logger for this module
+logger = logging.getLogger(__name__)
+
+# Log at different levels:
+logger.debug(&quot;Detailed info for diagnosing problems&quot;)
+logger.info(&quot;General operational info&quot;)
+logger.warning(&quot;Something unexpected but not fatal&quot;)
+logger.error(&quot;Something failed!&quot;)
+logger.critical(&quot;System is unusable!&quot;)
+
+# Output:
+# 2024-03-15 14:30:00 [DEBUG] __main__: Detailed info for diagnosing problems
+# 2024-03-15 14:30:00 [INFO] __main__: General operational info
+# ...
+</code></pre>
+<p><strong>Log levels (from least to most severe):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>When to use</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DEBUG</code></td>
+<td>Detailed diagnostic info</td>
+<td><code>logger.debug(f"Processing item {i}: {item}")</code></td>
+</tr>
+<tr>
+<td><code>INFO</code></td>
+<td>General operational events</td>
+<td><code>logger.info("Server started on port 8080")</code></td>
+</tr>
+<tr>
+<td><code>WARNING</code></td>
+<td>Something unexpected</td>
+<td><code>logger.warning("Disk space below 10%")</code></td>
+</tr>
+<tr>
+<td><code>ERROR</code></td>
+<td>Something failed</td>
+<td><code>logger.error("Failed to connect to database")</code></td>
+</tr>
+<tr>
+<td><code>CRITICAL</code></td>
+<td>System is unusable</td>
+<td><code>logger.critical("Out of memory!")</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Production logging setup</strong> (log to file + console):</p>
+<pre><code class="language-python">import logging
+import logging.handlers
+
+def setup_logging(log_file=&quot;app.log&quot;, level=logging.INFO):
+    &quot;&quot;&quot;Set up production-grade logging.&quot;&quot;&quot;
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)  # Capture everything
+
+    # Format
+    formatter = logging.Formatter(
+        '%(asctime)s [%(levelname)-8s] %(name)s:%(lineno)d - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+
+    # Console handler - show INFO and above
+    console = logging.StreamHandler()
+    console.setLevel(level)
+    console.setFormatter(formatter)
+    logger.addHandler(console)
+
+    # File handler - log EVERYTHING, rotate at 10MB, keep 5 backups
+    file_handler = logging.handlers.RotatingFileHandler(
+        log_file, maxBytes=10*1024*1024, backupCount=5
+    )
+    file_handler.setLevel(logging.DEBUG)
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+
+    return logger
+
+# Usage
+logger = setup_logging()
+logger.info(&quot;Application started&quot;)
+</code></pre>
+<h3 id="104-decorator-for-logging-and-timing">10.4 Decorator for Logging and Timing</h3>
+<p>This is a pattern used extensively in production Python code:</p>
+<pre><code class="language-python">import time
+import logging
+from functools import wraps
+
+logger = logging.getLogger(__name__)
+
+def log_calls(func):
+    &quot;&quot;&quot;Decorator that logs function calls, return values, and execution time.
+
+    Usage:
+        @log_calls
+        def my_function(x, y):
+            return x + y
+
+    When you call my_function(3, 4), it logs:
+        CALL my_function(args=(3, 4), kwargs={})
+        RETURN my_function -&gt; 7 [0.0001s]
+    &quot;&quot;&quot;
+    @wraps(func)  # Preserves function name and docstring
+    def wrapper(*args, **kwargs):
+        # Log the call
+        args_repr = [repr(a) for a in args]
+        kwargs_repr = [f&quot;{k}={v!r}&quot; for k, v in kwargs.items()]
+        signature = &quot;, &quot;.join(args_repr + kwargs_repr)
+        logger.info(f&quot;CALL {func.__name__}({signature})&quot;)
+
+        # Execute and time
+        start = time.perf_counter()
+        try:
+            result = func(*args, **kwargs)
+            elapsed = time.perf_counter() - start
+            logger.info(f&quot;RETURN {func.__name__} -&gt; {result!r} [{elapsed:.4f}s]&quot;)
+            return result
+        except Exception as e:
+            elapsed = time.perf_counter() - start
+            logger.error(f&quot;ERROR {func.__name__} raised {type(e).__name__}: {e} [{elapsed:.4f}s]&quot;)
+            raise
+
+    return wrapper
+
+# Usage:
+@log_calls
+def calculate_tax(amount, rate=0.08):
+    return round(amount * rate, 2)
+
+@log_calls
+def process_order(items):
+    total = sum(item[&quot;price&quot;] for item in items)
+    tax = calculate_tax(total)
+    return total + tax
+
+# When you call:
+result = process_order([{&quot;price&quot;: 10}, {&quot;price&quot;: 20}])
+# You see in the logs:
+# CALL process_order([{'price': 10}, {'price': 20}])
+# CALL calculate_tax(30, rate=0.08)
+# RETURN calculate_tax -&gt; 2.4 [0.0000s]
+# RETURN process_order -&gt; 32.4 [0.0001s]
+</code></pre>
+<h3 id="105-who-called-me-call-stack-inspection">10.5 Who Called Me? (Call Stack Inspection)</h3>
+<p>When debugging, it's useful to know WHO called a function:</p>
+<pre><code class="language-python">import inspect
+
+def who_called_me():
+    &quot;&quot;&quot;Print information about the caller.&quot;&quot;&quot;
+    frame = inspect.currentframe().f_back  # Go up one level
+    caller_name = frame.f_code.co_name
+    caller_file = frame.f_code.co_filename
+    caller_line = frame.f_lineno
+    print(f&quot;Called by: {caller_name}() at {caller_file}:{caller_line}&quot;)
+
+def my_function():
+    who_called_me()
+
+def another_function():
+    my_function()
+
+# Run it:
+another_function()
+# Output: Called by: my_function() at script.py:12
+
+# See the full call stack:
+def show_call_stack():
+    &quot;&quot;&quot;Print the entire call stack.&quot;&quot;&quot;
+    print(&quot;Call stack (most recent call last):&quot;)
+    for i, frame_info in enumerate(inspect.stack()):
+        frame = frame_info[0]
+        print(f&quot;  {i}: {frame.f_code.co_name}() &quot;
+              f&quot;at {frame.f_code.co_filename}:{frame.f_lineno}&quot;)
+</code></pre>
+<h3 id="106-python-trace-module">10.6 Python trace Module</h3>
+<p>The <code>trace</code> module shows every line of code as it executes:</p>
+<pre><code class="language-bash"># Trace every line executed in your script
+python -m trace --trace script.py
+
+# Example output:
+#  --- modulename: script, funcname: calculate
+# script.py(3):     total = 0
+# script.py(4):     for i in range(len(numbers)):
+# script.py(5):         total += numbers[i]
+# script.py(4):     for i in range(len(numbers)):
+# script.py(5):         total += numbers[i]
+# ...
+
+# Show which functions were called (less verbose)
+python -m trace --listfuncs script.py
+
+# Count how many times each line was executed
+python -m trace --count script.py
+
+# Verbose import tracing (see which modules are loaded)
+python -v script.py
+</code></pre>
+<p><strong>Using trace programmatically:</strong></p>
+<pre><code class="language-python">import sys
+
+def trace_calls(frame, event, arg):
+    &quot;&quot;&quot;Custom tracer that shows function calls.&quot;&quot;&quot;
+    if event == 'call':
+        filename = frame.f_code.co_filename
+        funcname = frame.f_code.co_name
+        lineno = frame.f_lineno
+        # Only trace our own code (not library code)
+        if 'site-packages' not in filename:
+            print(f&quot;CALL: {funcname}() at {filename}:{lineno}&quot;)
+    return trace_calls
+
+# Enable tracing
+sys.settrace(trace_calls)
+
+# Your code here...
+def hello(name):
+    return f&quot;Hello, {name}!&quot;
+
+result = hello(&quot;World&quot;)
+
+# Disable tracing
+sys.settrace(None)
+</code></pre>
+<h3 id="107-strace-dtrace-system-level-debugging">10.7 strace / dtrace (System-Level Debugging)</h3>
+<p>When Python-level debugging isn't enough, you can trace system calls (file opens, network connections, etc.):</p>
+<pre><code class="language-bash"># Linux: see what files Python opens
+strace -e trace=open,openat python script.py
+
+# Linux: see network activity
+strace -e trace=network python script.py
+
+# macOS: use dtruss
+sudo dtruss python script.py
+
+# Useful for:
+# - &quot;Why can't Python find my module?&quot; -&gt; see which paths it searches
+# - &quot;Why is this script slow?&quot; -&gt; see unexpected disk or network I/O
+# - &quot;Permission denied errors&quot; -&gt; see which files it's trying to access
+</code></pre>
+<h3 id="108-visual-code-tracer-from-this-repository">10.8 Visual Code Tracer (From This Repository)</h3>
+<p>This repository includes a powerful visual tracing tool that shows function calls in a web browser:</p>
+<pre><code class="language-python"># Copy visual_tracer.py from quick101/debugging/visual_code_tracer/
+# Then in your code:
+
+from visual_tracer import trace
+
+# Basic - trace everything
+trace()
+
+# Now write your code normally:
+def fibonacci(n):
+    if n &lt; 2:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+result = fibonacci(10)
+print(result)
+
+# A browser window opens at http://localhost:5050 showing:
+# - Every function call in real-time
+# - Call duration (how long each function took)
+# - Call depth (how deep in the call stack)
+# - Source code viewing (click to see code)
+</code></pre>
+<p><strong>Filtering (so you don't get overwhelmed):</strong></p>
+<pre><code class="language-python"># Only trace your code (skip third-party libraries)
+trace(only_user_code=True)
+
+# Only trace specific modules
+trace(include_modules=[&quot;myapp.utils&quot;, &quot;myapp.api&quot;])
+
+# Trace all modules starting with &quot;myapp&quot;
+trace(include_modules=[&quot;myapp.*&quot;])
+
+# Skip test modules
+trace(exclude_modules=[&quot;*.tests&quot;, &quot;*.test_*&quot;])
+
+# Only show slow calls (&gt;100ms)
+trace(min_duration_ms=100)
+
+# Combine filters
+trace(
+    include_modules=[&quot;myapp.*&quot;],
+    exclude_modules=[&quot;myapp.tests.*&quot;],
+    only_user_code=True,
+    min_duration_ms=10
+)
+</code></pre>
+<h3 id="109-profiling-finding-performance-bottlenecks">10.9 Profiling (Finding Performance Bottlenecks)</h3>
+<p><strong>cProfile</strong> - find which functions are slow:</p>
+<pre><code class="language-python">import cProfile
+import pstats
+
+# Method 1: Profile a function call
+cProfile.run('my_slow_function()')
+
+# Method 2: Profile a block of code
+profiler = cProfile.Profile()
+profiler.enable()
+
+# ... your code here ...
+result = process_large_dataset(data)
+
+profiler.disable()
+
+# Print the top 10 slowest functions
+stats = pstats.Stats(profiler)
+stats.sort_stats('cumulative')  # Sort by total time
+stats.print_stats(10)           # Show top 10
+
+# Output looks like:
+#    ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+#         1    0.000    0.000    0.056    0.056 script.py:28(big_loop)
+#    120002    0.039    0.000    0.039    0.000 script.py:33(&lt;genexpr&gt;)
+#         2    0.016    0.008    0.055    0.028 {method 'join' of 'str'}
+#
+# Columns:
+#   ncalls:  how many times the function was called
+#   tottime: time spent IN this function (not counting sub-calls)
+#   cumtime: time spent in this function INCLUDING sub-calls
+</code></pre>
+<p><strong>Command-line profiling:</strong></p>
+<pre><code class="language-bash"># Save profile data
+python -m cProfile -o profile.pstats script.py
+
+# Visualize with snakeviz (interactive browser UI)
+pip install snakeviz
+snakeviz profile.pstats
+
+# Visualize with gprof2dot (generates an image)
+pip install gprof2dot
+brew install graphviz  # macOS
+gprof2dot -f pstats profile.pstats | dot -Tpng -o profile.png
+
+# Timeline profiling with viztracer
+pip install viztracer
+viztracer script.py
+vizviewer result.json
+</code></pre>
+<p><strong>Quick timing</strong> - measure how long something takes:</p>
+<pre><code class="language-python">from time import perf_counter
+
+# Time a block of code
+start = perf_counter()
+result = sum(range(1_000_000))
+elapsed = perf_counter() - start
+print(f&quot;Took {elapsed:.4f} seconds&quot;)
+
+# In Jupyter notebooks:
+# %timeit [x**2 for x in range(1000)]     # Time one expression (runs many times)
+# %%time                                    # Time an entire cell (runs once)
+# slow_function()
+</code></pre>
+<h3 id="1010-debugging-cheat-sheet">10.10 Debugging Cheat Sheet</h3>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Tool</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quick value check</td>
+<td>Print</td>
+<td><code>print(f"{var = }")</code></td>
+</tr>
+<tr>
+<td>Step through code</td>
+<td>pdb</td>
+<td><code>breakpoint()</code> then <code>n</code>, <code>s</code>, <code>c</code></td>
+</tr>
+<tr>
+<td>Inspect after crash</td>
+<td>pdb post-mortem</td>
+<td><code>python -m pdb script.py</code></td>
+</tr>
+<tr>
+<td>See every line executed</td>
+<td>trace</td>
+<td><code>python -m trace --trace script.py</code></td>
+</tr>
+<tr>
+<td>Find slow functions</td>
+<td>cProfile</td>
+<td><code>python -m cProfile script.py</code></td>
+</tr>
+<tr>
+<td>Visual slow-function analysis</td>
+<td>snakeviz</td>
+<td><code>snakeviz profile.pstats</code></td>
+</tr>
+<tr>
+<td>See system calls</td>
+<td>strace/dtruss</td>
+<td><code>strace python script.py</code></td>
+</tr>
+<tr>
+<td>Visual live tracing</td>
+<td>visual_tracer</td>
+<td><code>trace(only_user_code=True)</code></td>
+</tr>
+<tr>
+<td>Production debugging</td>
+<td>logging</td>
+<td><code>logger.debug(f"x={x}")</code></td>
+</tr>
+<tr>
+<td>Find who called a function</td>
+<td>inspect</td>
+<td><code>inspect.stack()</code></td>
+</tr>
+<tr>
+<td>Module loading issues</td>
+<td>verbose</td>
+<td><code>python -v script.py</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="exercise-101-debug-this-function">Exercise 10.1: Debug This Function</h3>
+<p>This function has a bug. Use <code>breakpoint()</code> and pdb to find it:</p>
+<pre><code class="language-python">def calculate_average_grade(students):
+    &quot;&quot;&quot;Calculate the average grade for all students.&quot;&quot;&quot;
+    total = 0
+    count = 0
+    for student in students:
+        if student[&quot;grade&quot;] is not None:
+            total += student[&quot;grade&quot;]
+    count += 1  # BUG: this is outside the if block!
+    return total / count if count &gt; 0 else 0
+
+students = [
+    {&quot;name&quot;: &quot;Alice&quot;, &quot;grade&quot;: 90},
+    {&quot;name&quot;: &quot;Bob&quot;, &quot;grade&quot;: 80},
+    {&quot;name&quot;: &quot;Charlie&quot;, &quot;grade&quot;: None},
+    {&quot;name&quot;: &quot;Diana&quot;, &quot;grade&quot;: 85},
+]
+
+print(calculate_average_grade(students))  # Should be 85, but isn't!
+</code></pre>
+<details>
+<summary>Solution</summary>
+
+The bug is that `count += 1` is outside the `if` block and outside the `for` loop. It should be inside both:
+
+
+<pre><code class="language-python">def calculate_average_grade(students):
+    total = 0
+    count = 0
+    for student in students:
+        if student[&quot;grade&quot;] is not None:
+            total += student[&quot;grade&quot;]
+            count += 1  # FIXED: now inside the if block AND the for loop
+    return total / count if count &gt; 0 else 0
+</code></pre>
+
+
+Using pdb to find the bug:
+1. Add `breakpoint()` before the return
+2. Check `total` (255) and `count` (1 - wrong, should be 3!)
+3. Realize count is only incremented once because it's outside the loop
+</details>
+
+<h3 id="exercise-102-profile-and-optimize">Exercise 10.2: Profile and Optimize</h3>
+<p>Profile this code, find the bottleneck, and optimize it:</p>
+<pre><code class="language-python">def slow_search(data, target):
+    &quot;&quot;&quot;Find all indices where target appears.&quot;&quot;&quot;
+    indices = []
+    for i in range(len(data)):
+        for j in range(len(data)):  # BUG: why are we scanning the whole list again?
+            if data[i] == target:
+                indices.append(i)
+                break
+    return indices
+
+import random
+data = [random.randint(0, 100) for _ in range(10000)]
+result = slow_search(data, 42)
+</code></pre>
+<details>
+<summary>Solution</summary>
+
+
+<pre><code class="language-python"># Optimized: single pass O(n)
+def fast_search(data, target):
+    return [i for i, val in enumerate(data) if val == target]
+
+# Or even simpler for just counting:
+# count = data.count(42)
+</code></pre>
+
+</details>
+<h2 id="chapter-11-intermediate-python">Chapter 11: Intermediate Python</h2>
+<h3 id="111-decorators">11.1 Decorators</h3>
+<p>A decorator is a function that takes another function and extends its behavior without modifying it.</p>
+<p><strong>Step-by-step: How decorators work:</strong></p>
+<pre><code class="language-python"># Step 1: Functions can be passed as arguments
+def shout(text):
+    return text.upper()
+
+def whisper(text):
+    return text.lower()
+
+def greet(func):
+    &quot;&quot;&quot;Takes a function, calls it, prints result.&quot;&quot;&quot;
+    result = func(&quot;Hello, World&quot;)
+    print(result)
+
+greet(shout)    # HELLO, WORLD
+greet(whisper)  # hello, world
+</code></pre>
+<pre><code class="language-python"># Step 2: Functions can return other functions
+def create_greeting(style):
+    def formal(name):
+        return f&quot;Good day, {name}. How do you do?&quot;
+    def casual(name):
+        return f&quot;Hey {name}! What's up?&quot;
+
+    if style == &quot;formal&quot;:
+        return formal
+    else:
+        return casual
+
+greet = create_greeting(&quot;casual&quot;)
+print(greet(&quot;Alice&quot;))  # Hey Alice! What's up?
+</code></pre>
+<pre><code class="language-python"># Step 3: A decorator combines both concepts
+from functools import wraps
+
+def timer(func):
+    &quot;&quot;&quot;Decorator that measures execution time.&quot;&quot;&quot;
+    @wraps(func)  # Preserves the original function's name and docstring
+    def wrapper(*args, **kwargs):
+        import time
+        start = time.perf_counter()
+        result = func(*args, **kwargs)  # Call the original function
+        elapsed = time.perf_counter() - start
+        print(f&quot;{func.__name__}() took {elapsed:.4f}s&quot;)
+        return result
+    return wrapper
+
+# Using the decorator:
+@timer
+def slow_function():
+    &quot;&quot;&quot;This function is slow.&quot;&quot;&quot;
+    import time
+    time.sleep(1)
+    return &quot;done&quot;
+
+result = slow_function()
+# Output: slow_function() took 1.0012s
+
+# @timer is syntactic sugar for:
+# slow_function = timer(slow_function)
+</code></pre>
+<p><strong>Decorator with parameters:</strong></p>
+<pre><code class="language-python">from functools import wraps
+import time
+
+def retry(max_attempts=3, delay=1, exceptions=(Exception,)):
+    &quot;&quot;&quot;Decorator factory - returns a decorator configured with parameters.&quot;&quot;&quot;
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            for attempt in range(1, max_attempts + 1):
+                try:
+                    return func(*args, **kwargs)
+                except exceptions as e:
+                    if attempt == max_attempts:
+                        print(f&quot;All {max_attempts} attempts failed for {func.__name__}&quot;)
+                        raise
+                    print(f&quot;Attempt {attempt} failed: {e}. Retrying in {delay}s...&quot;)
+                    time.sleep(delay)
+        return wrapper
+    return decorator
+
+@retry(max_attempts=3, delay=2)
+def fetch_data(url):
+    import random
+    if random.random() &lt; 0.7:
+        raise ConnectionError(&quot;Server down&quot;)
+    return {&quot;data&quot;: &quot;success&quot;}
+
+# Stacking decorators (applied bottom to top):
+@timer          # 2nd: wraps the retry-wrapped function
+@retry(max_attempts=3)  # 1st: wraps fetch_data
+def api_call():
+    pass
+</code></pre>
+<h3 id="112-context-managers">11.2 Context Managers</h3>
+<p>Context managers handle setup and cleanup automatically (files, connections, locks, etc.):</p>
+<pre><code class="language-python"># You've already used one:
+with open(&quot;file.txt&quot;) as f:
+    content = f.read()
+# File is automatically closed here
+
+# Creating your own context manager - Method 1: class-based
+class Timer:
+    &quot;&quot;&quot;Context manager that measures execution time.&quot;&quot;&quot;
+    def __enter__(self):
+        import time
+        self.start = time.perf_counter()
+        print(&quot;Timer started&quot;)
+        return self  # This becomes the 'as' variable
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        import time
+        self.elapsed = time.perf_counter() - self.start
+        print(f&quot;Timer stopped: {self.elapsed:.4f}s&quot;)
+        return False  # Don't suppress exceptions
+
+# Usage:
+with Timer() as t:
+    total = sum(range(1_000_000))
+print(f&quot;Elapsed: {t.elapsed:.4f}s&quot;)
+
+# Method 2: contextlib (simpler for most cases)
+from contextlib import contextmanager
+
+@contextmanager
+def timer():
+    import time
+    start = time.perf_counter()
+    yield  # Everything before yield is __enter__, after is __exit__
+    elapsed = time.perf_counter() - start
+    print(f&quot;Elapsed: {elapsed:.4f}s&quot;)
+
+with timer():
+    total = sum(range(1_000_000))
+
+# Practical example: temporary directory change
+import os
+from contextlib import contextmanager
+
+@contextmanager
+def change_directory(path):
+    &quot;&quot;&quot;Temporarily change to a directory, then restore.&quot;&quot;&quot;
+    original = os.getcwd()
+    try:
+        os.chdir(path)
+        yield path
+    finally:
+        os.chdir(original)
+
+with change_directory(&quot;/tmp&quot;):
+    print(f&quot;Now in: {os.getcwd()}&quot;)  # /tmp
+print(f&quot;Back in: {os.getcwd()}&quot;)     # original directory
+</code></pre>
+<h3 id="113-dataclasses">11.3 Dataclasses</h3>
+<p>Dataclasses auto-generate <code>__init__</code>, <code>__repr__</code>, <code>__eq__</code>, and more:</p>
+<pre><code class="language-python">from dataclasses import dataclass, field
+from typing import List, Optional
+
+@dataclass
+class Employee:
+    name: str
+    age: int
+    department: str
+    salary: float = 50000.0                    # Default value
+    skills: List[str] = field(default_factory=list)  # Mutable default
+
+    @property
+    def is_senior(self):
+        return self.age &gt;= 40
+
+# Auto-generated __init__:
+emp = Employee(&quot;Alice&quot;, 35, &quot;Engineering&quot;, 95000, [&quot;Python&quot;, &quot;SQL&quot;])
+
+# Auto-generated __repr__:
+print(emp)
+# Employee(name='Alice', age=35, department='Engineering', salary=95000, skills=['Python', 'SQL'])
+
+# Auto-generated __eq__:
+emp2 = Employee(&quot;Alice&quot;, 35, &quot;Engineering&quot;, 95000, [&quot;Python&quot;, &quot;SQL&quot;])
+print(emp == emp2)  # True
+
+# Frozen (immutable) dataclass:
+@dataclass(frozen=True)
+class Point:
+    x: float
+    y: float
+# Can be used as dict key or in sets
+
+# Ordered dataclass (enables sorting):
+@dataclass(order=True)
+class Priority:
+    priority: int
+    name: str = field(compare=False)  # Excluded from comparison
+
+tasks = [Priority(3, &quot;low&quot;), Priority(1, &quot;high&quot;), Priority(2, &quot;med&quot;)]
+print(sorted(tasks))  # Sorted by priority
+</code></pre>
+<h3 id="114-regular-expressions">11.4 Regular Expressions</h3>
+<pre><code class="language-python">import re
+
+text = &quot;Contact alice@example.com or bob@test.org. Call 555-123-4567 on 2024-01-15.&quot;
+
+# findall - find ALL matches
+emails = re.findall(r'[\w.+-]+@[\w-]+\.[\w.]+', text)
+print(emails)  # ['alice@example.com', 'bob@test.org']
+
+dates = re.findall(r'\d{4}-\d{2}-\d{2}', text)
+print(dates)  # ['2024-01-15']
+
+phones = re.findall(r'\d{3}-\d{3}-\d{4}', text)
+print(phones)  # ['555-123-4567']
+
+# search - find FIRST match
+match = re.search(r'(\w+)@([\w.]+)', text)
+if match:
+    print(match.group(0))  # 'alice@example.com' (full match)
+    print(match.group(1))  # 'alice' (first group)
+    print(match.group(2))  # 'example.com' (second group)
+
+# sub - replace matches
+cleaned = re.sub(r'\d{3}-\d{3}-\d{4}', '[PHONE REDACTED]', text)
+print(cleaned)
+
+# compile - pre-compile for reuse (faster in loops)
+email_pattern = re.compile(r'[\w.+-]+@[\w-]+\.[\w.]+')
+matches = email_pattern.findall(some_large_text)
+</code></pre>
+<h3 id="115-date-and-time">11.5 Date and Time</h3>
+<pre><code class="language-python">from datetime import datetime, date, timedelta, timezone
+
+# Current date/time
+now = datetime.now()
+today = date.today()
+utc_now = datetime.now(timezone.utc)
+
+print(now)          # 2024-03-15 14:30:45.123456
+print(today)        # 2024-03-15
+
+# Formatting (datetime -&gt; string)
+print(now.strftime(&quot;%Y-%m-%d&quot;))          # 2024-03-15
+print(now.strftime(&quot;%B %d, %Y&quot;))         # March 15, 2024
+print(now.strftime(&quot;%I:%M %p&quot;))          # 02:30 PM
+
+# Parsing (string -&gt; datetime)
+dt = datetime.strptime(&quot;2024-03-15 14:30:00&quot;, &quot;%Y-%m-%d %H:%M:%S&quot;)
+
+# Arithmetic
+tomorrow = now + timedelta(days=1)
+next_week = now + timedelta(weeks=1)
+two_hours_later = now + timedelta(hours=2)
+
+# Difference between dates
+diff = datetime(2024, 12, 31) - datetime(2024, 1, 1)
+print(f&quot;{diff.days} days&quot;)  # 365 days
+
+# Timezones (pip install pytz)
+import pytz
+est = pytz.timezone('US/Eastern')
+now_est = datetime.now(est)
+print(f&quot;EST: {now_est.strftime('%Y-%m-%d %H:%M %Z')}&quot;)
+</code></pre>
+<hr />
+<h2 id="chapter-12-advanced-python">Chapter 12: Advanced Python</h2>
+<h3 id="121-metaclasses">12.1 Metaclasses</h3>
+<p>A metaclass is a "class of a class" - it controls how classes themselves are created:</p>
+<pre><code class="language-python"># Every class is an instance of 'type':
+print(type(int))    # &lt;class 'type'&gt;
+print(type(str))    # &lt;class 'type'&gt;
+
+# Custom metaclass for Singleton pattern
+class SingletonMeta(type):
+    &quot;&quot;&quot;Metaclass that ensures only one instance of a class exists.&quot;&quot;&quot;
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super().__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+class Database(metaclass=SingletonMeta):
+    def __init__(self):
+        self.connection = &quot;connected&quot;
+        print(&quot;Database initialized&quot;)
+
+# Usage:
+db1 = Database()  # Prints &quot;Database initialized&quot;
+db2 = Database()  # Does NOT print again - returns same instance
+print(db1 is db2)  # True
+</code></pre>
+<h3 id="122-the-gil-global-interpreter-lock">12.2 The GIL (Global Interpreter Lock)</h3>
+<p>The GIL is a mutex that allows only one thread to execute Python bytecode at a time:</p>
+<pre><code class="language-python"># CPU-bound: GIL is a bottleneck -&gt; use multiprocessing
+# I/O-bound: GIL is released during I/O -&gt; threading works fine
+
+# Example: CPU-bound (GIL hurts performance)
+import time
+from threading import Thread
+from multiprocessing import Process
+
+def cpu_heavy(n):
+    total = sum(i * i for i in range(n))
+    return total
+
+# Threading: NOT faster for CPU work (GIL blocks parallel execution)
+start = time.perf_counter()
+threads = [Thread(target=cpu_heavy, args=(5_000_000,)) for _ in range(4)]
+for t in threads: t.start()
+for t in threads: t.join()
+print(f&quot;Threads: {time.perf_counter() - start:.2f}s&quot;)  # ~4s (serial!)
+
+# Multiprocessing: FASTER (each process has its own GIL)
+start = time.perf_counter()
+processes = [Process(target=cpu_heavy, args=(5_000_000,)) for _ in range(4)]
+for p in processes: p.start()
+for p in processes: p.join()
+print(f&quot;Processes: {time.perf_counter() - start:.2f}s&quot;)  # ~1s (parallel!)
+</code></pre>
+<h3 id="123-__slots__-memory-optimization">12.3 <code>__slots__</code> (Memory Optimization)</h3>
+<pre><code class="language-python">import sys
+
+class RegularPoint:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+class SlottedPoint:
+    __slots__ = ['x', 'y']  # No __dict__, saves memory
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+# Memory comparison (for millions of instances, this matters):
+regular = RegularPoint(1, 2)
+slotted = SlottedPoint(1, 2)
+print(sys.getsizeof(regular.__dict__))  # ~104 bytes per instance
+# slotted has no __dict__ - saves ~50% memory
+
+# Tradeoff: can't add new attributes
+# slotted.z = 3  # AttributeError!
+</code></pre>
+<h3 id="124-deep-copy-vs-shallow-copy">12.4 Deep Copy vs Shallow Copy</h3>
+<pre><code class="language-python">import copy
+
+# Shallow copy: copies the outer object, but inner objects are SHARED
+original = [[1, 2, 3], [4, 5, 6]]
+shallow = copy.copy(original)
+
+# They look the same:
+print(original)  # [[1, 2, 3], [4, 5, 6]]
+print(shallow)   # [[1, 2, 3], [4, 5, 6]]
+
+# But modifying an inner list affects both:
+original[0].append(99)
+print(original)  # [[1, 2, 3, 99], [4, 5, 6]]
+print(shallow)   # [[1, 2, 3, 99], [4, 5, 6]]  &lt;- ALSO CHANGED!
+
+# Deep copy: copies EVERYTHING recursively
+original2 = [[1, 2, 3], [4, 5, 6]]
+deep = copy.deepcopy(original2)
+
+original2[0].append(99)
+print(original2)  # [[1, 2, 3, 99], [4, 5, 6]]
+print(deep)       # [[1, 2, 3], [4, 5, 6]]  &lt;- NOT affected
+</code></pre>
+<hr />
+<h2 id="chapter-13-concurrency-parallelism">Chapter 13: Concurrency &amp; Parallelism</h2>
+<h3 id="131-threading-for-io-bound-tasks">13.1 Threading (For I/O-bound Tasks)</h3>
+<pre><code class="language-python">from concurrent.futures import ThreadPoolExecutor, as_completed
+import time
+
+def download_page(url):
+    &quot;&quot;&quot;Simulate downloading a web page.&quot;&quot;&quot;
+    time.sleep(1)  # Simulate network I/O
+    return f&quot;Content of {url}&quot;
+
+urls = [f&quot;https://example.com/page/{i}&quot; for i in range(10)]
+
+# Sequential: ~10 seconds
+start = time.perf_counter()
+results = [download_page(url) for url in urls]
+print(f&quot;Sequential: {time.perf_counter() - start:.1f}s&quot;)
+
+# Parallel with ThreadPoolExecutor: ~2 seconds
+start = time.perf_counter()
+with ThreadPoolExecutor(max_workers=5) as executor:
+    futures = {executor.submit(download_page, url): url for url in urls}
+    for future in as_completed(futures):
+        url = futures[future]
+        try:
+            result = future.result()
+            print(f&quot;Done: {url}&quot;)
+        except Exception as e:
+            print(f&quot;Failed: {url} - {e}&quot;)
+print(f&quot;Threaded: {time.perf_counter() - start:.1f}s&quot;)
+</code></pre>
+<h3 id="132-multiprocessing-for-cpu-bound-tasks">13.2 Multiprocessing (For CPU-bound Tasks)</h3>
+<pre><code class="language-python">from multiprocessing import Pool
+
+def cpu_task(n):
+    &quot;&quot;&quot;CPU-intensive calculation.&quot;&quot;&quot;
+    return sum(i * i for i in range(n))
+
+# Parallel processing
+with Pool(processes=4) as pool:
+    results = pool.map(cpu_task, [10**6, 10**6, 10**6, 10**6])
+    print(f&quot;Total: {sum(results)}&quot;)
+</code></pre>
+<h3 id="133-asyncio-modern-async-io">13.3 asyncio (Modern Async I/O)</h3>
+<pre><code class="language-python">import asyncio
+
+async def fetch_data(name, delay):
+    print(f&quot;Starting {name}...&quot;)
+    await asyncio.sleep(delay)  # Non-blocking sleep
+    print(f&quot;Done {name}&quot;)
+    return f&quot;{name}: {delay}s of data&quot;
+
+async def main():
+    # Run all three concurrently
+    results = await asyncio.gather(
+        fetch_data(&quot;users&quot;, 2),
+        fetch_data(&quot;orders&quot;, 1),
+        fetch_data(&quot;products&quot;, 1.5),
+    )
+    for r in results:
+        print(r)
+
+asyncio.run(main())
+# All three complete in ~2s (the longest), not 4.5s (sequential)
+</code></pre>
+<h3 id="when-to-use-what">When to Use What</h3>
+<table>
+<thead>
+<tr>
+<th>Task Type</th>
+<th>Tool</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Download files, API calls</td>
+<td><code>ThreadPoolExecutor</code></td>
+<td>HTTP requests</td>
+</tr>
+<tr>
+<td>Database queries</td>
+<td><code>threading</code> / <code>asyncio</code></td>
+<td>SELECT/INSERT</td>
+</tr>
+<tr>
+<td>Number crunching</td>
+<td><code>multiprocessing.Pool</code></td>
+<td>Math, image processing</td>
+</tr>
+<tr>
+<td>Many concurrent connections</td>
+<td><code>asyncio</code></td>
+<td>Web servers, chat</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="chapter-14-design-patterns">Chapter 14: Design Patterns</h2>
+<h3 id="141-singleton">14.1 Singleton</h3>
+<pre><code class="language-python">class Singleton:
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+    def __init__(self, value=None):
+        if not hasattr(self, '_initialized'):
+            self.value = value
+            self._initialized = True
+
+s1 = Singleton(&quot;first&quot;)
+s2 = Singleton(&quot;second&quot;)
+print(s1 is s2)      # True - same object
+print(s1.value)       # &quot;first&quot; - not overwritten
+</code></pre>
+<h3 id="142-factory-pattern">14.2 Factory Pattern</h3>
+<pre><code class="language-python">from abc import ABC, abstractmethod
+
+class Notification(ABC):
+    @abstractmethod
+    def send(self, message): pass
+
+class EmailNotification(Notification):
+    def send(self, message): print(f&quot;Email: {message}&quot;)
+
+class SMSNotification(Notification):
+    def send(self, message): print(f&quot;SMS: {message}&quot;)
+
+class NotificationFactory:
+    _registry = {
+        &quot;email&quot;: EmailNotification,
+        &quot;sms&quot;: SMSNotification,
+    }
+
+    @classmethod
+    def create(cls, channel: str) -&gt; Notification:
+        klass = cls._registry.get(channel)
+        if not klass:
+            raise ValueError(f&quot;Unknown channel: {channel}&quot;)
+        return klass()
+
+    @classmethod
+    def register(cls, channel: str, klass):
+        cls._registry[channel] = klass
+
+# Usage:
+notif = NotificationFactory.create(&quot;email&quot;)
+notif.send(&quot;Hello!&quot;)
+</code></pre>
+<h3 id="143-observer-pattern">14.3 Observer Pattern</h3>
+<pre><code class="language-python">class EventEmitter:
+    def __init__(self):
+        self._listeners = {}
+
+    def on(self, event, callback):
+        self._listeners.setdefault(event, []).append(callback)
+
+    def emit(self, event, *args, **kwargs):
+        for callback in self._listeners.get(event, []):
+            callback(*args, **kwargs)
+
+# Usage
+bus = EventEmitter()
+bus.on(&quot;user_created&quot;, lambda user: print(f&quot;Welcome {user}!&quot;))
+bus.on(&quot;user_created&quot;, lambda user: print(f&quot;Sending email to {user}&quot;))
+bus.emit(&quot;user_created&quot;, &quot;Alice&quot;)
+# Welcome Alice!
+# Sending email to Alice
+</code></pre>
+<hr />
+<h2 id="chapter-15-data-science-with-python">Chapter 15: Data Science with Python</h2>
+<h3 id="151-numpy">15.1 NumPy</h3>
+<pre><code class="language-python">import numpy as np
+
+# Arrays (much faster than Python lists for math)
+arr = np.array([1, 2, 3, 4, 5])
+print(arr * 2)       # [2, 4, 6, 8, 10]  - element-wise!
+print(arr ** 2)      # [1, 4, 9, 16, 25]
+print(np.mean(arr))  # 3.0
+print(np.std(arr))   # 1.414
+
+# 2D arrays (matrices)
+matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+print(matrix[0, :])   # First row: [1, 2, 3]
+print(matrix[:, 0])   # First column: [1, 4, 7]
+print(matrix[matrix &gt; 5])  # Boolean indexing: [6, 7, 8, 9]
+</code></pre>
+<h3 id="152-pandas">15.2 Pandas</h3>
+<pre><code class="language-python">import pandas as pd
+
+df = pd.DataFrame({
+    &quot;name&quot;: [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Charlie&quot;, &quot;Diana&quot;],
+    &quot;age&quot;: [30, 25, 35, 28],
+    &quot;city&quot;: [&quot;NYC&quot;, &quot;LA&quot;, &quot;NYC&quot;, &quot;Chicago&quot;],
+    &quot;salary&quot;: [95000, 72000, 88000, 78000]
+})
+
+# Explore
+print(df.head())
+print(df.describe())
+print(df.info())
+
+# Filter
+nyc = df[df[&quot;city&quot;] == &quot;NYC&quot;]
+high_salary = df[df[&quot;salary&quot;] &gt; 80000]
+
+# GroupBy
+print(df.groupby(&quot;city&quot;)[&quot;salary&quot;].mean())
+
+# Missing data
+df_dirty = pd.DataFrame({&quot;A&quot;: [1, None, 3], &quot;B&quot;: [None, 5, 6]})
+print(df_dirty.isnull().sum())
+clean = df_dirty.fillna(df_dirty.mean())
+</code></pre>
+<h3 id="153-visualization">15.3 Visualization</h3>
+<pre><code class="language-python">import matplotlib.pyplot as plt
+
+x = [1, 2, 3, 4, 5]
+y = [2, 4, 6, 8, 10]
+
+plt.plot(x, y, 'b-o', label=&quot;Linear&quot;)
+plt.xlabel(&quot;X&quot;)
+plt.ylabel(&quot;Y&quot;)
+plt.title(&quot;Simple Plot&quot;)
+plt.legend()
+plt.show()
+</code></pre>
+<hr />
+<h2 id="chapter-16-data-engineering-with-python">Chapter 16: Data Engineering with Python</h2>
+<h3 id="161-database-operations">16.1 Database Operations</h3>
+<pre><code class="language-python"># SQLite (built-in, no server needed)
+import sqlite3
+
+conn = sqlite3.connect(&quot;local.db&quot;)
+cursor = conn.cursor()
+
+cursor.execute(&quot;&quot;&quot;
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        age INTEGER
+    )
+&quot;&quot;&quot;)
+cursor.execute(&quot;INSERT INTO users (name, age) VALUES (?, ?)&quot;, (&quot;Alice&quot;, 30))
+conn.commit()
+
+cursor.execute(&quot;SELECT * FROM users&quot;)
+for row in cursor.fetchall():
+    print(row)
+
+conn.close()
+</code></pre>
+<h3 id="162-processing-large-files">16.2 Processing Large Files</h3>
+<pre><code class="language-python"># Stream large CSV without loading into memory
+import pandas as pd
+
+for chunk in pd.read_csv(&quot;huge_file.csv&quot;, chunksize=10000):
+    # Process each chunk (10,000 rows at a time)
+    filtered = chunk[chunk[&quot;amount&quot;] &gt; 100]
+    # Save or aggregate results
+</code></pre>
+<hr />
+<h2 id="chapter-17-testing-code-quality">Chapter 17: Testing &amp; Code Quality</h2>
+<h3 id="171-pytest">17.1 pytest</h3>
+<pre><code class="language-python"># test_calculator.py
+import pytest
+
+def add(a, b):
+    return a + b
+
+def test_add():
+    assert add(2, 3) == 5
+    assert add(-1, 1) == 0
+    assert add(0, 0) == 0
+
+def test_add_raises():
+    with pytest.raises(TypeError):
+        add(&quot;hello&quot;, 5)
+
+@pytest.mark.parametrize(&quot;a, b, expected&quot;, [
+    (2, 3, 5),
+    (0, 0, 0),
+    (-1, 1, 0),
+    (100, -50, 50),
+])
+def test_add_parametrized(a, b, expected):
+    assert add(a, b) == expected
+</code></pre>
+<pre><code class="language-bash">pytest tests/ -v
+pytest tests/ -v -k &quot;test_add&quot;  # Run specific tests
+</code></pre>
+<h3 id="172-mocking">17.2 Mocking</h3>
+<pre><code class="language-python">from unittest.mock import Mock, patch
+
+@patch('requests.get')
+def test_api(mock_get):
+    mock_get.return_value.status_code = 200
+    mock_get.return_value.json.return_value = {&quot;data&quot;: &quot;test&quot;}
+
+    import requests
+    response = requests.get(&quot;https://api.example.com&quot;)
+    assert response.status_code == 200
+    assert response.json()[&quot;data&quot;] == &quot;test&quot;
+</code></pre>
+<h3 id="173-code-quality-tools">17.3 Code Quality Tools</h3>
+<pre><code class="language-bash">black src/               # Auto-format code
+ruff check src/          # Fast linter
+mypy src/                # Type checking
+bandit -r src/           # Security linter
+isort src/               # Sort imports
+</code></pre>
+<hr />
+<h2 id="chapter-18-data-structures-algorithms">Chapter 18: Data Structures &amp; Algorithms</h2>
+<h3 id="big-o-reference">Big-O Reference</h3>
+<table>
+<thead>
+<tr>
+<th>Notation</th>
+<th>Name</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O(1)</td>
+<td>Constant</td>
+<td>Dict lookup, array index</td>
+</tr>
+<tr>
+<td>O(log n)</td>
+<td>Logarithmic</td>
+<td>Binary search</td>
+</tr>
+<tr>
+<td>O(n)</td>
+<td>Linear</td>
+<td>List scan</td>
+</tr>
+<tr>
+<td>O(n log n)</td>
+<td>Linearithmic</td>
+<td>Merge sort, Python sort</td>
+</tr>
+<tr>
+<td>O(n^2)</td>
+<td>Quadratic</td>
+<td>Nested loops</td>
+</tr>
+</tbody>
+</table>
+<h3 id="binary-search">Binary Search</h3>
+<pre><code class="language-python">def binary_search(arr, target):
+    low, high = 0, len(arr) - 1
+    while low &lt;= high:
+        mid = (low + high) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] &lt; target:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return -1
+
+# Python built-in
+import bisect
+arr = [1, 3, 5, 7, 9]
+idx = bisect.bisect_left(arr, 5)  # 2
+</code></pre>
+<h3 id="fibonacci-with-memoization">Fibonacci with Memoization</h3>
+<pre><code class="language-python">from functools import lru_cache
+
+@lru_cache(maxsize=None)
+def fibonacci(n):
+    if n &lt; 2: return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+print([fibonacci(i) for i in range(10)])
+# [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+</code></pre>
+<h3 id="two-sum-classic-interview-problem">Two Sum (Classic Interview Problem)</h3>
+<pre><code class="language-python">def two_sum(nums, target):
+    &quot;&quot;&quot;Find two numbers that add up to target. Return their indices. O(n).&quot;&quot;&quot;
+    seen = {}  # value -&gt; index
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return [seen[complement], i]
+        seen[num] = i
+    return []
+
+print(two_sum([2, 7, 11, 15], 9))  # [0, 1] (2 + 7 = 9)
+</code></pre>
+<hr />
+<h2 id="chapter-19-interview-questions-answers">Chapter 19: Interview Questions &amp; Answers</h2>
+<h3 id="q1-list-vs-tuple-vs-set">Q1: List vs Tuple vs Set?</h3>
+<p><strong>List</strong>: ordered, mutable, duplicates allowed. Use for collections that change.
+<strong>Tuple</strong>: ordered, immutable, duplicates allowed. Use for fixed data, dict keys.
+<strong>Set</strong>: unordered, mutable, NO duplicates. Use for membership testing (O(1)), deduplication.</p>
+<h3 id="q2-deep-copy-vs-shallow-copy">Q2: Deep copy vs Shallow copy?</h3>
+<p>Shallow copy (<code>copy.copy()</code>) copies the outer object but shares inner references. Deep copy (<code>copy.deepcopy()</code>) copies everything recursively.</p>
+<h3 id="q3-what-is-the-gil">Q3: What is the GIL?</h3>
+<p>Global Interpreter Lock - only one thread runs Python bytecode at a time. For CPU work: use <code>multiprocessing</code>. For I/O work: threading/asyncio work fine since GIL is released during I/O.</p>
+<h3 id="q4-what-are-decorators">Q4: What are decorators?</h3>
+<p>Functions that wrap other functions to add behavior. <code>@decorator</code> is syntactic sugar for <code>func = decorator(func)</code>.</p>
+<h3 id="q5-args-vs-kwargs">Q5: <code>*args</code> vs <code>**kwargs</code>?</h3>
+<p><code>*args</code> collects extra positional arguments as a tuple. <code>**kwargs</code> collects extra keyword arguments as a dict.</p>
+<h3 id="q6-what-is-a-generator">Q6: What is a generator?</h3>
+<p>Functions that use <code>yield</code> to produce values lazily. Memory-efficient for large datasets (generator: ~200 bytes vs list: ~85KB for 10K items).</p>
+<h3 id="q7-mutable-default-argument-trap">Q7: Mutable default argument trap?</h3>
+<pre><code class="language-python">def bad(items=[]):     # BUG: shared across all calls!
+def good(items=None):  # Correct: create new list each time
+    items = items or []
+</code></pre>
+<h3 id="q8-vs-is">Q8: <code>==</code> vs <code>is</code>?</h3>
+<p><code>==</code> compares <strong>values</strong>. <code>is</code> compares <strong>identity</strong> (same object in memory). Use <code>is</code> only for <code>None</code>, <code>True</code>, <code>False</code>.</p>
+<h3 id="q9-if-__name__-__main__">Q9: <code>if __name__ == "__main__"</code>?</h3>
+<p>Runs code only when file is executed directly, not when imported as a module.</p>
+<h3 id="q10-how-to-handle-missing-data-in-pandas">Q10: How to handle missing data in pandas?</h3>
+<pre><code class="language-python">df.dropna()           # Remove rows with NaN
+df.fillna(0)          # Fill with value
+df.fillna(df.mean())  # Fill with column mean
+df.interpolate()      # Interpolate
+df.isnull().sum()     # Count missing per column
+</code></pre>
+<h3 id="q11-what-is-mro">Q11: What is MRO?</h3>
+<p>Method Resolution Order - the order Python searches for methods in multiple inheritance. Uses C3 linearization. Check with <code>ClassName.__mro__</code>.</p>
+<h3 id="q12-what-are-context-managers">Q12: What are context managers?</h3>
+<p>Objects with <code>__enter__</code>/<code>__exit__</code> for <code>with</code> statements. Guarantee cleanup even on exceptions. Use for files, DB connections, locks.</p>
+<h3 id="q13-explain-bias-variance-tradeoff">Q13: Explain bias-variance tradeoff?</h3>
+<p><strong>Bias</strong>: error from wrong assumptions (underfitting, model too simple). <strong>Variance</strong>: error from sensitivity to training data (overfitting, model too complex). Goal: find the sweet spot using cross-validation, regularization, ensemble methods.</p>
+<hr />
+<h2 id="appendix-a-quick-reference">Appendix A: Quick Reference</h2>
+<h3 id="common-one-liners">Common One-Liners</h3>
+<pre><code class="language-python"># Flatten nested list
+flat = [x for sub in nested for x in sub]
+
+# Remove duplicates, preserve order
+unique = list(dict.fromkeys(items))
+
+# Merge dicts (3.9+)
+merged = d1 | d2
+
+# Safe nested dict access
+val = d.get(&quot;a&quot;, {}).get(&quot;b&quot;, {}).get(&quot;c&quot;)
+
+# Transpose matrix
+transposed = list(zip(*matrix))
+
+# Frequency count
+from collections import Counter
+freq = Counter(items)
+</code></pre>
+<h3 id="built-in-functions">Built-in Functions</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Functions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Iteration</td>
+<td><code>enumerate, zip, reversed, sorted, range</code></td>
+</tr>
+<tr>
+<td>Aggregation</td>
+<td><code>len, sum, min, max, any, all</code></td>
+</tr>
+<tr>
+<td>Types</td>
+<td><code>int, float, str, bool, list, tuple, set, dict</code></td>
+</tr>
+<tr>
+<td>Functional</td>
+<td><code>map, filter, isinstance, getattr, hasattr</code></td>
+</tr>
+<tr>
+<td>I/O</td>
+<td><code>print, input, open</code></td>
+</tr>
+<tr>
+<td>Introspection</td>
+<td><code>type, dir, help, vars, id</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="appendix-b-resources">Appendix B: Resources</h2>
+<ul>
+<li><a href="https://docs.python.org/3/">Python Documentation</a></li>
+<li><a href="https://peps.python.org/pep-0008/">PEP 8 Style Guide</a></li>
+<li><a href="https://developers.google.com/edu/python">Google's Python Class</a></li>
+<li><a href="https://leetcode.com/">LeetCode</a> - Practice problems</li>
+<li><a href="https://projecteuler.net/">Project Euler</a> - Math + programming</li>
+<li><a href="https://pypi.org/project/dtale/">D-Tale</a> - Interactive DataFrame exploration</li>
+</ul>
+<hr />
+<p><em>Generated from the <a href="https://github.com/paramraghavan/beginners-py-learn">beginners-py-learn</a> repository.</em></p>
+</div>
+<a href="#" class="back-top" title="Back to top">&uarr;</a>
+</body>
+</html>
