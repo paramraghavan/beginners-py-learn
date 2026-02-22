@@ -1286,6 +1286,9 @@ print("\nfillna(0):\n", df.fillna(0))
 print("\nfillna(mean):\n", df.fillna(df.mean()))
 print("\ninterpolate:\n", df.interpolate())
 print("\nisnull sum:\n", df.isnull().sum())
+df.columns[df.isna().any()] #print null columns 
+df[df.isna().any(axis=1)]  # print null rows
+
 
 
 # === Q12: Explain bias-variance tradeoff ===
