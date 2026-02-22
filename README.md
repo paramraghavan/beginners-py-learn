@@ -8,6 +8,7 @@ An attempt to teach python to beginners with examples.
 - [Click here and start with 0-learn_variables.py](src/)
 - [Quick 101](quick101)
 - [Advanced](src/advance_stuff/readme.md)
+- [Quick Review](cheatsheet/quick-review.md)
 
 # Setting up Environment and more...
 ## Any one of these IDE's
