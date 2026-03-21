@@ -17,6 +17,8 @@ Anaconda includes Python + Jupyter + common data libraries.
 2. Run:
 
    ```bash
+   # install
+   # python -m pip install jupyter
    jupyter notebook
    ```
 
