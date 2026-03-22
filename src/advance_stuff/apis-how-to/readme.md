@@ -2,7 +2,7 @@
 
 Designing great Python APIs is all about creating interfaces that hide complexity while providing powerful, intuitive
 functionality. Here's a comprehensive guide to building APIs that are simple, reusable, and effective.
- 
+
 Here showing **both versions** code:
 (1) **without encapsulation** (where internal details are exposed), and  
 (2) **with encapsulation** (where the same API is refactored into a clean, user-friendly interface).
@@ -65,11 +65,32 @@ class DataProcessor:
 
 **Notes:**
 
-- `_method` → private **by convention**; signals “for internal use only” (Python doesn’t strictly enforce access).[6][9]
+- Protected Variables (_single_underscore, example self._raw_data)
+- Protected Methods (_single_underscore, example __load(self, data)
+- `__method` → private **by convention**; signals “for internal use only” (Python doesn’t strictly enforce
+  access).[6][9]
 - Hides intermediate steps (`_load`, `_validate`) from API consumers.
 - The user only interacts with `process()`, ensuring correct order and context.
 
 ***
+
+#### Quick Comparison of "Reachability"
+
+| Accessing from... | `method()` (Public) | `_method()` (Protected) | `__method()` (Private) |
+| :--- | :--- | :--- | :--- |
+| **Same Class** | Yes | Yes | **Yes** |
+| **Subclass** | Yes | Yes | No (AttributeError) |
+| **Object Instance** | Yes | Yes (but frowned upon) | No (AttributeError) |
+
+
+```python
+class DataProcessor:
+    def __init__(self):
+        self.__super_secret_key = "12345"  # Private: Mangled to _DataProcessor__super_secret_key
+
+    def __internal_security_check(self):  # Private Method
+        pass
+```
 
 ## 2. Properties for Controlled Attribute Access
 
