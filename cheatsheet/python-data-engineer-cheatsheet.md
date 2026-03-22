@@ -1213,6 +1213,154 @@ print(f"\nAll checks passed: {all_passed}")
 
 ---
 
+## Data Validation with Pydantic
+
+Pydantic enforces type hints at runtime with minimal boilerplate. Perfect for API requests, database models, and configuration validation.
+
+```python
+from pydantic import BaseModel, Field, field_validator, ValidationError
+from typing import Optional
+
+# === Basic Model ===
+class User(BaseModel):
+    id: int
+    name: str
+    email: str
+    age: Optional[int] = None
+    is_active: bool = True
+
+user = User(id=1, name="Alice", email="alice@example.com", age=30)
+print(f"user: {user}")
+print(f"dict: {user.model_dump()}")
+print(f"json: {user.model_dump_json()}")
+
+# === Field Constraints ===
+class Product(BaseModel):
+    name: str = Field(..., min_length=1, max_length=100)
+    price: float = Field(..., ge=0)  # ge = greater or equal
+    quantity: int = Field(default=0, ge=0)
+    tags: list[str] = Field(default=[], max_items=5)
+
+product = Product(name="Laptop", price=999.99, quantity=5)
+print(f"\nproduct: {product}")
+
+# === Custom Field Validators ===
+class Article(BaseModel):
+    title: str
+    email: str
+
+    @field_validator('email')
+    @classmethod
+    def validate_email(cls, v):
+        if '@' not in v:
+            raise ValueError('Invalid email')
+        return v.lower()
+
+    @field_validator('title')
+    @classmethod
+    def title_not_empty(cls, v):
+        if len(v.strip()) == 0:
+            raise ValueError('Title cannot be empty')
+        return v.title()
+
+article = Article(title="python tips", email="AUTHOR@EXAMPLE.COM")
+print(f"\narticle: {article}")
+
+# === Model-Level Validators ===
+from pydantic import model_validator
+
+class Account(BaseModel):
+    username: str
+    password: str
+    password_confirm: str
+
+    @model_validator(mode='after')
+    def passwords_match(self):
+        if self.password != self.password_confirm:
+            raise ValueError('Passwords do not match')
+        return self
+
+account = Account(
+    username="john",
+    password="SecurePass123",
+    password_confirm="SecurePass123"
+)
+print(f"\naccount: {account}")
+
+# === Nested Models ===
+class Address(BaseModel):
+    street: str
+    city: str
+    country: str
+
+class Company(BaseModel):
+    name: str
+    address: Address
+
+company = Company(
+    name="TechCorp",
+    address={"street": "123 Main St", "city": "NYC", "country": "USA"}
+)
+print(f"\ncompany: {company}")
+print(f"city: {company.address.city}")
+
+# === Type Coercion ===
+class Data(BaseModel):
+    count: int
+    price: float
+    active: bool
+
+data = Data(count="42", price="19.99", active="yes")
+print(f"\ncoerced - count: {data.count} (type: {type(data.count).__name__})")
+print(f"coerced - price: {data.price} (type: {type(data.price).__name__})")
+print(f"coerced - active: {data.active} (type: {type(data.active).__name__})")
+
+# === Error Handling ===
+try:
+    bad_user = User(id="not-a-number", name="Bob", email="bob@example.com")
+except ValidationError as e:
+    print(f"\nValidation error: {len(e.errors())} errors")
+    for error in e.errors():
+        print(f"  - {error['loc'][0]}: {error['msg']}")
+
+# === API Integration Example ===
+from datetime import datetime
+
+class CreateOrderRequest(BaseModel):
+    product_id: int = Field(..., ge=1)
+    quantity: int = Field(..., ge=1, le=1000)
+    customer_email: str
+    notes: Optional[str] = Field(None, max_length=500)
+
+    @field_validator('customer_email')
+    @classmethod
+    def validate_email(cls, v):
+        if '@' not in v:
+            raise ValueError('Invalid email format')
+        return v.lower()
+
+# Valid request
+order = CreateOrderRequest(
+    product_id=42,
+    quantity=5,
+    customer_email="CUSTOMER@EXAMPLE.COM",
+    notes="Please wrap as gift"
+)
+print(f"\nvalid order: product_id={order.product_id}, qty={order.quantity}")
+
+# Invalid request
+try:
+    bad_order = CreateOrderRequest(
+        product_id=-1,  # Invalid: must be >= 1
+        quantity=0,      # Invalid: must be >= 1
+        customer_email="invalid"  # Invalid: no @
+    )
+except ValidationError as e:
+    print(f"\nbad order has {len(e.errors())} validation errors")
+```
+
+---
+
 ## Environment & Configuration
 
 ```python

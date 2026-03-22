@@ -23,11 +23,13 @@ pre{background:var(--code-bg);border:1px solid var(--border);border-radius:var(-
 table{width:100%;border-collapse:collapse;margin:8px 0;font-size:0.78rem}th{background:var(--surface2);color:var(--heading);padding:8px 10px;text-align:left;border:1px solid var(--border);font-weight:600}td{padding:6px 10px;border:1px solid var(--border)}tbody tr:nth-child(even){background:var(--bg2)}tbody tr:hover{background:var(--surface2)}
 @media(max-width:880px){.grid{grid-template-columns:1fr;padding:18px 12px 60px}.card.wide{grid-column:span 1}.header{padding:32px 16px 24px}.nav{gap:4px;padding:12px 10px}}
 .card.hidden{display:none}.section-divider.hidden{display:none}
-@media print{body{background:#fff;color:#222}pre{background:#f5f5f5;border-color:#ddd;color:#222}.header::before{display:none}.nav,.search-wrap{display:none}.card{break-inside:avoid;border-color:#ddd}.section-divider h2{color:#111}th{background:#eee;color:#111}.kw,.fn,.st,.cm,.nb,.op,.num,.dc{color:#333}}
+.top-toggle{position:fixed;bottom:20px;right:20px;z-index:200;width:50px;height:50px;border-radius:50%;background:var(--surface);border:2px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--amber);font-size:24px;transition:all .3s;opacity:0.7}.top-toggle:hover{opacity:1;transform:scale(1.1);border-color:var(--amber)}.top-toggle.collapsed{background:var(--amber-dim)}.header.collapsed{padding:12px 32px 8px;max-height:120px;overflow:hidden}.header.collapsed h1{font-size:1.2rem;margin:0}.header.collapsed p,.header.collapsed .jupyter-badge{display:none}.header.collapsed .search-wrap{margin:8px auto 0;max-width:400px}
+@media print{body{background:#fff;color:#222}pre{background:#f5f5f5;border-color:#ddd;color:#222}.header::before{display:none}.nav,.search-wrap,.top-toggle{display:none}.card{break-inside:avoid;border-color:#ddd}.section-divider h2{color:#111}th{background:#eee;color:#111}.kw,.fn,.st,.cm,.nb,.op,.num,.dc{color:#333}}
 </style>
 </head>
 <body>
-<div class="header">
+<button class="top-toggle" id="topToggle" title="Collapse/expand header">⬆️</button>
+<div class="header" id="headerElement">
   <h1>Python <em>Cheatsheet</em></h1>
   <p>Essential reference for Python developers & data engineers</p>
   <div class="jupyter-badge">JUPYTER-READY — Every cell runs standalone</div>
@@ -52,6 +54,7 @@ table{width:100%;border-collapse:collapse;margin:8px 0;font-size:0.78rem}th{back
 <a href="#api-interaction-simulated">API Interaction (Simulated)</a>
 <a href="#concurrency-parallelism">Concurrency & Parallelism</a>
 <a href="#data-validation-quality">Data Validation & Quality</a>
+<a href="#pydantic-validation">Pydantic Validation</a>
 <a href="#environment-configuration">Environment & Configuration</a>
 <a href="#pro-tips-patterns">Pro Tips & Patterns</a>
 <a href="#dunder-magic-methods">Dunder (Magic) Methods</a>
@@ -1454,6 +1457,82 @@ all_passed <span class="op">=</span> data_quality_checks(df)
   </div>
 </div>
 
+<div class="section-divider" id="pydantic-validation" data-section="pydantic-validation">
+  <h2>Pydantic Validation</h2>
+  <div class="line"></div>
+  <span class="badge" style="background:var(--pink-dim);color:var(--pink)">Type Safety</span>
+</div>
+
+<div class="card wide" data-tags="pydantic validation models fields">
+  <div class="card-head">
+    <div class="card-icon" style="background:var(--pink-dim);color:var(--pink)">Py</div>
+    <h3>Pydantic — Data Validation with Type Hints</h3>
+    <span class="card-tag">Jupyter &#10003;</span>
+  </div>
+  <div class="card-body">
+    <pre><code><span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel, Field, field_validator, ValidationError
+<span class="kw">from</span> typing <span class="kw">import</span> Optional
+
+<span class="cm"># === Basic Model ===</span>
+<span class="kw">class</span> <span class="fn">User</span>(BaseModel):
+    id: <span class="nb">int</span>
+    name: <span class="nb">str</span>
+    email: <span class="nb">str</span>
+    age: Optional[<span class="nb">int</span>] <span class="op">=</span> <span class="kw">None</span>
+
+user <span class="op">=</span> User(id<span class="op">=</span><span class="num">1</span>, name<span class="op">=</span><span class="st">&quot;</span><span class="st">Alice</span><span class="st">&quot;</span>, email<span class="op">=</span><span class="st">&quot;</span><span class="st">alice@example.com</span><span class="st">&quot;</span>)
+<span class="nb">print</span>(user<span class="op">.</span>model_dump())  <span class="cm"># As dict</span>
+<span class="nb">print</span>(user<span class="op">.</span>model_dump_json())  <span class="cm"># As JSON</span>
+
+<span class="cm"># === Field Constraints ===</span>
+<span class="kw">class</span> <span class="fn">Product</span>(BaseModel):
+    name: <span class="nb">str</span> <span class="op">=</span> Field(<span class="op">...</span>, min_length<span class="op">=</span><span class="num">1</span>, max_length<span class="op">=</span><span class="num">100</span>)
+    price: <span class="nb">float</span> <span class="op">=</span> Field(<span class="op">...</span>, ge<span class="op">=</span><span class="num">0</span>)  <span class="cm"># ge = greater or equal</span>
+    quantity: <span class="nb">int</span> <span class="op">=</span> Field(default<span class="op">=</span><span class="num">0</span>, ge<span class="op">=</span><span class="num">0</span>)
+
+product <span class="op">=</span> Product(name<span class="op">=</span><span class="st">&quot;</span><span class="st">Laptop</span><span class="st">&quot;</span>, price<span class="op">=</span><span class="num">999.99</span>)
+<span class="nb">print</span>(product)
+
+<span class="cm"># === Custom Validators ===</span>
+<span class="kw">class</span> <span class="fn">Article</span>(BaseModel):
+    title: <span class="nb">str</span>
+    email: <span class="nb">str</span>
+
+    <span class="dc">@field_validator</span>(<span class="st">'</span><span class="st">email</span><span class="st">'</span>)
+    <span class="dc">@classmethod</span>
+    <span class="kw">def</span> <span class="fn">validate_email</span>(cls, v):
+        <span class="kw">if</span> <span class="st">'</span><span class="st">@</span><span class="st">'</span> <span class="kw">not</span> <span class="kw">in</span> v:
+            <span class="kw">raise</span> <span class="nb">ValueError</span>(<span class="st">'</span><span class="st">Invalid email</span><span class="st">'</span>)
+        <span class="kw">return</span> v<span class="op">.</span>lower()
+
+article <span class="op">=</span> Article(title<span class="op">=</span><span class="st">&quot;</span><span class="st">Python Tips</span><span class="st">&quot;</span>, email<span class="op">=</span><span class="st">&quot;</span><span class="st">AUTHOR@EXAMPLE.COM</span><span class="st">&quot;</span>)
+<span class="nb">print</span>(article<span class="op">.</span>email)  <span class="cm"># author@example.com</span>
+
+<span class="cm"># === Nested Models ===</span>
+<span class="kw">class</span> <span class="fn">Address</span>(BaseModel):
+    street: <span class="nb">str</span>
+    city: <span class="nb">str</span>
+
+<span class="kw">class</span> <span class="fn">Company</span>(BaseModel):
+    name: <span class="nb">str</span>
+    address: Address
+
+company <span class="op">=</span> Company(
+    name<span class="op">=</span><span class="st">&quot;</span><span class="st">TechCorp</span><span class="st">&quot;</span>,
+    address<span class="op">=</span>{<span class="st">&quot;</span><span class="st">street</span><span class="st">&quot;</span>: <span class="st">&quot;</span><span class="st">123 Main</span><span class="st">&quot;</span>, <span class="st">&quot;</span><span class="st">city</span><span class="st">&quot;</span>: <span class="st">&quot;</span><span class="st">NYC</span><span class="st">&quot;</span>}
+)
+<span class="nb">print</span>(company<span class="op">.</span>address<span class="op">.</span>city)
+
+<span class="cm"># === Error Handling ===</span>
+<span class="kw">try</span>:
+    bad_user <span class="op">=</span> User(id<span class="op">=</span><span class="st">&quot;</span><span class="st">not-a-number</span><span class="st">&quot;</span>, name<span class="op">=</span><span class="st">&quot;</span><span class="st">Bob</span><span class="st">&quot;</span>, email<span class="op">=</span><span class="st">&quot;</span><span class="st">bob@example.com</span><span class="st">&quot;</span>)
+<span class="kw">except</span> ValidationError <span class="kw">as</span> e:
+    <span class="nb">print</span>(<span class="st">f</span><span class="st">&quot;</span><span class="st">Validation error: </span><span class="st">{</span>e<span class="st">}</span><span class="st">&quot;</span>)
+</code></pre>
+    <p class="card-text"><strong>Key constraints:</strong> min_length, max_length, pattern, ge/le (≥/≤), gt/lt (>/&lt;), multiple_of, max_items. Use <code class="inline">@field_validator</code> for custom logic. See <code class="inline">src/15-pydantic.md</code> for detailed guide.</p>
+  </div>
+</div>
+
 <div class="section-divider" id="environment-configuration" data-section="environment-configuration">
   <h2>Environment &amp; Configuration</h2>
   <div class="line"></div>
@@ -1989,9 +2068,18 @@ d <span class="op">=</span> D()
 </div>
 </div>
 <script>
+// Search functionality
 const input=document.getElementById('search'),cards=document.querySelectorAll('.card'),dividers=document.querySelectorAll('.section-divider');
 input.addEventListener('input',()=>{const q=input.value.toLowerCase().trim();cards.forEach(c=>{const t=(c.dataset.tags||'').toLowerCase(),x=c.textContent.toLowerCase();c.classList.toggle('hidden',q&&!t.includes(q)&&!x.includes(q))});dividers.forEach(d=>{let n=d.nextElementSibling,v=false;while(n&&!n.classList.contains('section-divider')){if(n.classList.contains('card')&&!n.classList.contains('hidden'))v=true;n=n.nextElementSibling}d.classList.toggle('hidden',!v)});});
+
+// Active section highlighting
 const secs=document.querySelectorAll('.section-divider[id]'),navs=document.querySelectorAll('.nav a');
 secs.forEach(s=>new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){navs.forEach(a=>a.classList.remove('active'));const l=document.querySelector('.nav a[href="#'+e.target.id+'"]');if(l)l.classList.add('active')}})},{rootMargin:'-100px 0px -70% 0px'}).observe(s));
+
+// Header/Nav toggle functionality
+const toggle=document.getElementById('topToggle'),header=document.getElementById('headerElement'),nav=document.getElementById('nav');
+let isCollapsed=false;
+toggle.addEventListener('click',()=>{isCollapsed=!isCollapsed;header.classList.toggle('collapsed');nav.classList.toggle('hidden');toggle.classList.toggle('collapsed');toggle.textContent=isCollapsed?'⬇️':'⬆️';localStorage.setItem('headerCollapsed',isCollapsed);});
+if(localStorage.getItem('headerCollapsed')==='true'){toggle.click();}
 </script>
 </body></html>
