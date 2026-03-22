@@ -428,6 +428,36 @@ def clean(x):
 
 results = [cleaned for x in data if (cleaned := clean(x)) is not None]
 print("walrus results:", results)
+
+# List Comprehension vs Generator Expression
+# [squares] — creates entire list in memory immediately
+list_comp = [x**2 for x in range(10000)]
+print(f"List size: {len(list_comp)} items, memory: large")
+
+# (squares) — creates values on-demand (lazy), saves memory
+gen_exp = (x**2 for x in range(10000))
+print(f"Generator: {gen_exp}, memory: tiny (not created yet)")
+
+# Generators are great for:
+# 1. Large datasets (don't load all into memory)
+# 2. Pipelines (chain generators)
+# 3. Only need first few items
+
+print("\nList comp (all 10k items created):", list_comp[:3])
+
+print("Gen exp (values created on demand):")
+for i, val in enumerate(gen_exp):
+    if i < 3:
+        print(f"  {val}")
+    else:
+        break  # Stop — generator doesn't waste memory
+
+# Memory comparison
+import sys
+list_comp = [x**2 for x in range(10000)]
+gen_exp = (x**2 for x in range(10000))
+print(f"\nList: {sys.getsizeof(list_comp):,} bytes")
+print(f"Generator: {sys.getsizeof(gen_exp):,} bytes")
 ```
 
 ---

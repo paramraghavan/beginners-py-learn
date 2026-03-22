@@ -554,6 +554,36 @@ data <span class="op">=</span> [<span class="num">1</span>, <span class="op">-</
 
 results <span class="op">=</span> [cleaned <span class="kw">for</span> x <span class="kw">in</span> data <span class="kw">if</span> (cleaned <span class="op">:=</span> clean(x)) <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>]
 <span class="nb">print</span>(<span class="st">&quot;</span><span class="st">walrus results:</span><span class="st">&quot;</span>, results)
+
+<span class="cm"># List Comprehension vs Generator Expression</span>
+<span class="cm"># [squares] — creates entire list in memory immediately</span>
+list_comp <span class="op">=</span> [x<span class="op">*</span><span class="op">*</span><span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="nb">range</span>(<span class="num">10000</span>)]
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">&quot;</span><span class="st">List size: {len(list_comp)} items, memory: large</span><span class="st">&quot;</span>)
+
+<span class="cm"># (squares) — creates values on-demand (lazy), saves memory</span>
+gen_exp <span class="op">=</span> (x<span class="op">*</span><span class="op">*</span><span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="nb">range</span>(<span class="num">10000</span>))
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">&quot;</span><span class="st">Generator: {gen_exp}, memory: tiny (not created yet)</span><span class="st">&quot;</span>)
+
+<span class="cm"># Generators are great for:</span>
+<span class="cm"># 1. Large datasets (don't load all into memory)</span>
+<span class="cm"># 2. Pipelines (chain generators)</span>
+<span class="cm"># 3. Only need first few items</span>
+
+<span class="nb">print</span>(<span class="st">&quot;</span><span class="st">\nList comp (all 10k items created):</span><span class="st">&quot;</span>, list_comp[:<span class="num">3</span>])
+
+<span class="nb">print</span>(<span class="st">&quot;</span><span class="st">Gen exp (values created on demand):</span><span class="st">&quot;</span>)
+<span class="kw">for</span> i, val <span class="kw">in</span> <span class="nb">enumerate</span>(gen_exp):
+    <span class="kw">if</span> i <span class="op">&lt;</span> <span class="num">3</span>:
+        <span class="nb">print</span>(<span class="nb">f</span><span class="st">&quot;</span><span class="st">  {val}</span><span class="st">&quot;</span>)
+    <span class="kw">else</span>:
+        <span class="kw">break</span>  <span class="cm"># Stop — generator doesn't waste memory</span>
+
+<span class="cm"># Memory comparison</span>
+<span class="kw">import</span> sys
+list_comp <span class="op">=</span> [x<span class="op">*</span><span class="op">*</span><span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="nb">range</span>(<span class="num">10000</span>)]
+gen_exp <span class="op">=</span> (x<span class="op">*</span><span class="op">*</span><span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="nb">range</span>(<span class="num">10000</span>))
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">&quot;</span><span class="st">\nList: {sys.getsizeof(list_comp):,} bytes</span><span class="st">&quot;</span>)
+<span class="nb">print</span>(<span class="nb">f</span><span class="st">&quot;</span><span class="st">Generator: {sys.getsizeof(gen_exp):,} bytes</span><span class="st">&quot;</span>)
 </code></pre>
   </div>
 </div>
