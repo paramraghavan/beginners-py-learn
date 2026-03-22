@@ -299,12 +299,41 @@ from functools import reduce
 print("reduce:", reduce(lambda a, b: a+b, [1,2,3,4]))  # 10
 
 # Type hints
-from typing import Optional
+from typing import Optional, Union, List
 
+# Basic type hints
 def process(data: list[dict]) -> list[dict]:
     return [{"key": d.get("key", "").lower()} for d in data]
 
 print("typed:", process([{"key": "HELLO"}, {"key": "WORLD"}]))
+
+# Optional: value can be the type OR None
+def greet(name: Optional[str] = None) -> str:
+    """Optional parameter - can be str or None"""
+    return f"Hello, {name}!" if name else "Hello, stranger!"
+
+print(greet("Alice"))  # "Hello, Alice!"
+print(greet(None))     # "Hello, stranger!"
+print(greet())         # "Hello, stranger!"
+
+# Optional with data processing
+def get_user_age(users: list[dict], user_id: int) -> Optional[int]:
+    """Returns age if user found, None otherwise"""
+    for user in users:
+        if user["id"] == user_id:
+            return user["age"]
+    return None
+
+users = [{"id": 1, "name": "Alice", "age": 30}, {"id": 2, "name": "Bob", "age": 25}]
+print("Age:", get_user_age(users, 1))      # 30
+print("Age:", get_user_age(users, 999))    # None
+
+# Union: multiple possible types
+def convert_to_int(value: Union[str, int, float]) -> int:
+    """Accepts string, int, or float"""
+    return int(value)
+
+print("Union:", convert_to_int("42"), convert_to_int(3.14), convert_to_int(100))
 ```
 
 ### Decorators & Generators

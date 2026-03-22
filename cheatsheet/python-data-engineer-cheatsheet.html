@@ -409,12 +409,41 @@ square <span class="op">=</span> <span class="kw">lambda</span> x: x <span class
 <span class="nb">print</span>(<span class="st">&quot;</span><span class="st">reduce:</span><span class="st">&quot;</span>, reduce(<span class="kw">lambda</span> a, b: a<span class="op">+</span>b, [<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>]))  <span class="cm"># 10</span>
 
 <span class="cm"># Type hints</span>
-<span class="kw">from</span> typing <span class="kw">import</span> Optional
+<span class="kw">from</span> typing <span class="kw">import</span> Optional, Union, List
 
+<span class="cm"># Basic type hints</span>
 <span class="kw">def</span> <span class="fn">process</span>(data: <span class="nb">list</span>[<span class="nb">dict</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="nb">list</span>[<span class="nb">dict</span>]:
     <span class="kw">return</span> [{<span class="st">&quot;</span><span class="st">key</span><span class="st">&quot;</span>: d<span class="op">.</span>get(<span class="st">&quot;</span><span class="st">key</span><span class="st">&quot;</span>, <span class="st">&quot;</span><span class="st">&quot;</span>)<span class="op">.</span>lower()} <span class="kw">for</span> d <span class="kw">in</span> data]
 
 <span class="nb">print</span>(<span class="st">&quot;</span><span class="st">typed:</span><span class="st">&quot;</span>, process([{<span class="st">&quot;</span><span class="st">key</span><span class="st">&quot;</span>: <span class="st">&quot;</span><span class="st">HELLO</span><span class="st">&quot;</span>}, {<span class="st">&quot;</span><span class="st">key</span><span class="st">&quot;</span>: <span class="st">&quot;</span><span class="st">WORLD</span><span class="st">&quot;</span>}]))
+
+<span class="cm"># Optional: value can be the type OR None</span>
+<span class="kw">def</span> <span class="fn">greet</span>(name: Optional[<span class="nb">str</span>] <span class="op">=</span> <span class="kw">None</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="nb">str</span>:
+    <span class="st">&quot;&quot;&quot;</span><span class="st">Optional parameter - can be str or None</span><span class="st">&quot;&quot;&quot;</span>
+    <span class="kw">return</span> <span class="nb">f</span><span class="st">&quot;</span><span class="st">Hello, {name}!</span><span class="st">&quot;</span> <span class="kw">if</span> name <span class="kw">else</span> <span class="st">&quot;</span><span class="st">Hello, stranger!</span><span class="st">&quot;</span>
+
+<span class="nb">print</span>(greet(<span class="st">&quot;</span><span class="st">Alice</span><span class="st">&quot;</span>))  <span class="cm"># "Hello, Alice!"</span>
+<span class="nb">print</span>(greet(<span class="kw">None</span>))     <span class="cm"># "Hello, stranger!"</span>
+<span class="nb">print</span>(greet())         <span class="cm"># "Hello, stranger!"</span>
+
+<span class="cm"># Optional with data processing</span>
+<span class="kw">def</span> <span class="fn">get_user_age</span>(users: <span class="nb">list</span>[<span class="nb">dict</span>], user_id: <span class="nb">int</span>) <span class="op">-</span><span class="op">&gt;</span> Optional[<span class="nb">int</span>]:
+    <span class="st">&quot;&quot;&quot;</span><span class="st">Returns age if user found, None otherwise</span><span class="st">&quot;&quot;&quot;</span>
+    <span class="kw">for</span> user <span class="kw">in</span> users:
+        <span class="kw">if</span> user[<span class="st">&quot;</span><span class="st">id</span><span class="st">&quot;</span>] <span class="op">==</span> user_id:
+            <span class="kw">return</span> user[<span class="st">&quot;</span><span class="st">age</span><span class="st">&quot;</span>]
+    <span class="kw">return</span> <span class="kw">None</span>
+
+users <span class="op">=</span> [{<span class="st">&quot;</span><span class="st">id</span><span class="st">&quot;</span>: <span class="num">1</span>, <span class="st">&quot;</span><span class="st">name</span><span class="st">&quot;</span>: <span class="st">&quot;</span><span class="st">Alice</span><span class="st">&quot;</span>, <span class="st">&quot;</span><span class="st">age</span><span class="st">&quot;</span>: <span class="num">30</span>}, {<span class="st">&quot;</span><span class="st">id</span><span class="st">&quot;</span>: <span class="num">2</span>, <span class="st">&quot;</span><span class="st">name</span><span class="st">&quot;</span>: <span class="st">&quot;</span><span class="st">Bob</span><span class="st">&quot;</span>, <span class="st">&quot;</span><span class="st">age</span><span class="st">&quot;</span>: <span class="num">25</span>}]
+<span class="nb">print</span>(<span class="st">&quot;</span><span class="st">Age:</span><span class="st">&quot;</span>, get_user_age(users, <span class="num">1</span>))      <span class="cm"># 30</span>
+<span class="nb">print</span>(<span class="st">&quot;</span><span class="st">Age:</span><span class="st">&quot;</span>, get_user_age(users, <span class="num">999</span>))    <span class="cm"># None</span>
+
+<span class="cm"># Union: multiple possible types</span>
+<span class="kw">def</span> <span class="fn">convert_to_int</span>(value: Union[<span class="nb">str</span>, <span class="nb">int</span>, <span class="nb">float</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="nb">int</span>:
+    <span class="st">&quot;&quot;&quot;</span><span class="st">Accepts string, int, or float</span><span class="st">&quot;&quot;&quot;</span>
+    <span class="kw">return</span> <span class="nb">int</span>(value)
+
+<span class="nb">print</span>(<span class="st">&quot;</span><span class="st">Union:</span><span class="st">&quot;</span>, convert_to_int(<span class="st">&quot;</span><span class="st">42</span><span class="st">&quot;</span>), convert_to_int(<span class="num">3.14</span>), convert_to_int(<span class="num">100</span>))
 </code></pre>
   </div>
 </div>
