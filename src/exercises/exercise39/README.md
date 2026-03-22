@@ -260,9 +260,11 @@ db = boto3.resource('dynamodb')
   - \s*=\s* - Matches = with optional spaces
   - boto3\.(?:client|resource) - Matches boto3.client OR boto3.resource
   - \([\'"](\w+)[\'"]\) - GROUP 2: Captures the service name
+  > Group(0): Returns the entire matched string.
+
 
   On our example code:
-
+```text
   ┌─────────────────────────────────────────────┬───────────────┬──────────┬────────────────────────────────────────────┐
   │                    Match                    │    GROUP 1    │ GROUP 2  │                   Result                   │
   ├─────────────────────────────────────────────┼───────────────┼──────────┼────────────────────────────────────────────┤
@@ -272,6 +274,7 @@ db = boto3.resource('dynamodb')
   ├─────────────────────────────────────────────┼───────────────┼──────────┼────────────────────────────────────────────┤
   │ self.db = boto3.resource('dynamodb')        │ db            │ dynamodb │ var_to_service['db'] = 'dynamodb'          │
   └─────────────────────────────────────────────┴───────────────┴──────────┴────────────────────────────────────────────┘
+```
 
 
 ### Step 2: Find Method Calls on Tracked Variables
