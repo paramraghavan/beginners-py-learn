@@ -1,9 +1,10 @@
-Managing how Python finds your modules is a classic hurdle. Whether you want a "set it and forget it" approach or a
-quick temporary fix, you have two primary paths.
+# Managing how Python finds your modules is a classic hurdle
 
-Here is the breakdown of how to use both methods effectively.
+**Note:**
+> To add Python as an interpreter in an IDE
+> import sys
+> print(sys.executable)
 
----
 
 ## 1. The Professional Way: `pip install -e .`
 
