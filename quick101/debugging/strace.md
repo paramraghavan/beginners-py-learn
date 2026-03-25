@@ -5,6 +5,11 @@
 ```bash
 strace [options] command [args]
 ```
+> In scenarios where the script hangs at a particular point and you don't know where run
+>> strace python_script
+>>> once the script hangs perform ctrl+c
+>>> this should give you the stack trace.
+
 
 ## Common usage patterns
 
