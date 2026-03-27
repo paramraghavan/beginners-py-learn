@@ -111,6 +111,23 @@ setup(
 )
 ```
 
+## The "Executable Script" Method (Linux/macOS)
+This is the most common way to make a script feel like a binary without actually compiling it.
+
+**Add a Shebang**
+Add this exact line as the very first line of your Python file. This tells the system which interpreter to use.
+**my_script**
+```python
+#!/usr/bin/env python3
+print("Hello from the script!")
+```
+> chmod +x **my_script**
+>> Move the file to a folder in your $PATH
+>>> You can run it from anywhere just by typing **my_script**.
+
+
+
+
 ## Summary
 - **PyInstaller** or **cx_Freeze** are the go-to tools for creating executables on Windows or Mac.
 - To bundle binaries with a `.whl` file, you can use `setuptools` with `package_data` to include the binaries in the wheel.
