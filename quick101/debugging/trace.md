@@ -179,3 +179,47 @@ def trace_calls(frame, event, arg):
 
 The **trace module approach (Method 1)** is usually the quickest for one-off debugging, while **Method 4** is best if
 you want to permanently instrument your code for optional tracing.
+
+## how does trace work
+
+The `trace` module works by "hooking" into the Python interpreter’s execution engine. It doesn't actually "search" for
+unexecuted lines; instead, it creates a map of the entire file and checks off lines as the processor hits them.
+
+Here is the step-by-step breakdown of how it identifies what you *didn't* run:
+
+### 1. The Trace Hook
+
+When you run `python -m trace`, Python sets a **trace function** (using `sys.settrace`). This is like a security guard
+standing at the doorway of every line of code. Every time the Python interpreter moves to a new line, it pauses for a
+microsecond to tell the `trace` module: *"I am currently executing Line 42 in my_script.py."*
+
+### 2. Line Mapping
+
+Before the script finishes, `trace` looks at the source code of your modules. It parses the file to identify which lines
+are "executable" (statements, assignments, function calls) and which are "non-executable" (comments, blank lines, or
+multi-line strings).
+
+### 3. The Comparison (The "Aha!" Moment)
+
+At the end of the execution, `trace` compares two lists:
+
+* **List A:** All possible executable lines in your file.
+* **List B:** All lines that the "Trace Hook" reported as having been executed.
+
+Any line that is in **List A** but NOT in **List B** is marked with `>>>>>>`.
+
+---
+
+### Why it catches "Sometimes-Executed" Paths
+
+If your code looks like this:
+
+```python
+if user_input == "A":
+    do_thing_a()  # Path 1
+else:
+    do_thing_b()  # Path 2
+```
+
+If you only run the script with `user_input = "A"`, the interpreter never physically steps into the `else` block. The
+trace hook never reports those line numbers, so they remain on the "unexecuted" list.
