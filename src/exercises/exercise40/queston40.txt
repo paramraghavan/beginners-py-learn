@@ -1,0 +1,2 @@
+i have csv file with lots of colusm write code to read this csv file itnp data frame using pandas, then it takes a list of column names ['colA','colc', 'colD'], it
+ all these columns indidually and writes the sum of each of the columns into adata frame and into a csv file
