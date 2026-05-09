@@ -270,6 +270,114 @@ print(f"I am {age} years old")             # Better: f-strings handle it
 
 *Dicts are insertion-ordered since Python 3.7
 
+### 2.1.1 Variables as References
+
+**Critical concept**: Variables in Python don't "hold" values like containers. Instead, they're **labels/references that point to objects in memory**. This is essential for understanding mutability.
+
+```python
+# Think of variables as labels, not containers
+a = 42
+b = a  # Both labels point to the SAME integer 42
+
+# For immutable objects (int, str, tuple), this rarely matters:
+a = 10
+b = a
+a = 20  # Rebind 'a' to a new object
+print(f"a={a}, b={b}")  # a=20, b=10 ✓ They're separate as expected
+
+# But for MUTABLE objects (list, dict, set), this is CRITICAL:
+list_a = [1, 2, 3]
+list_b = list_a  # Both variables point to the SAME list object
+
+list_b.append(4)
+print(f"list_a: {list_a}")  # [1, 2, 3, 4] ← SURPRISE! list_a changed!
+print(f"list_b: {list_b}")  # [1, 2, 3, 4]
+
+# Why? Because list_a and list_b point to the SAME object in memory
+print(list_a is list_b)  # True - they're the exact same object
+```
+
+**How to fix it - create a true copy:**
+
+```python
+# Shallow copy - works for simple lists
+list_a = [1, 2, 3]
+list_b = list_a.copy()  # Create a new list with the same values
+
+list_b.append(4)
+print(f"list_a: {list_a}")  # [1, 2, 3] ✓ Unchanged
+print(f"list_b: {list_b}")  # [1, 2, 3, 4]
+print(list_a is list_b)     # False - different objects
+
+# Alternative: list slicing also creates a copy
+list_c = list_a[:]  # Also creates a new list
+```
+
+**Understanding with `id()` - check object identity:**
+
+```python
+# id() gives memory address of an object
+x = [1, 2, 3]
+y = x
+
+print(id(x))  # e.g., 140214562458816
+print(id(y))  # e.g., 140214562458816 ← Same address!
+print(x is y) # True - confirmed same object
+
+z = x.copy()
+print(id(z))  # e.g., 140214562501024 ← Different address
+print(x is z) # False - different objects
+```
+
+**Immutable vs Mutable - the key difference:**
+
+| Type | Mutable | Behavior |
+|---|---|---|
+| `int`, `float`, `str`, `tuple` | No | When you "change" it, Python creates a NEW object |
+| `list`, `dict`, `set` | Yes | Changes modify the object IN-PLACE |
+
+```python
+# Immutable example - creates new object
+s = "hello"
+t = s
+s = s.upper()  # Rebind s to a new string object
+print(f"s: {s}, t: {t}")  # s: HELLO, t: hello ✓ t unchanged
+
+# Mutable example - modifies in-place
+lst = [1, 2, 3]
+lst2 = lst
+lst.sort()  # Modifies the list IN-PLACE (doesn't create new object)
+print(f"lst: {lst}, lst2: {lst2}")  # Both sorted - ⚠️ lst2 affected!
+```
+
+**Why this matters:**
+
+```python
+# Gotcha: Default arguments!
+def add_item(item, lst=[]):  # ⚠️ Mutable default - DANGEROUS!
+    lst.append(item)
+    return lst
+
+print(add_item(1))  # [1]
+print(add_item(2))  # [1, 2] ← Unexpected! Same list reused!
+print(add_item(3))  # [1, 2, 3]
+
+# Fix: Use None as default
+def add_item_correct(item, lst=None):
+    if lst is None:
+        lst = []  # Create new list each time
+    lst.append(item)
+    return lst
+
+print(add_item_correct(1))  # [1]
+print(add_item_correct(2))  # [2] ✓ Fresh list
+print(add_item_correct(3))  # [3] ✓ Fresh list
+```
+
+**Key Takeaway**: When working with mutable objects, remember you're working with references to objects in memory. Assign with `=` copies the reference, not the object. Use `.copy()` if you need a separate copy.
+
+---
+
 ### 2.2 Operators
 
 **Arithmetic operators** - the basics of math:
@@ -516,6 +624,118 @@ else:
 print(f"Score: {score}, Grade: {grade}")  # Score: 85, Grade: B
 ```
 
+**Critical: `elif` vs Multiple `if` statements:**
+
+Beginners often confuse `elif` with multiple `if` statements. Here's the crucial difference:
+
+- **`elif`** = mutually exclusive - **only ONE block executes**
+- **Multiple `if`** = independent checks - **potentially MANY blocks execute**
+
+```python
+# WRONG approach - using multiple if statements:
+score = 85
+grade = ""
+
+if score >= 90:
+    grade = "A"
+if score >= 80:  # ⚠️ This runs even after the previous if was true!
+    grade = "B"
+if score >= 70:  # ⚠️ And this runs too!
+    grade = "C"
+if score >= 60:  # ⚠️ And this runs too!
+    grade = "D"
+
+print(grade)  # "D" - Not what we wanted! It overwrote the previous values
+
+# This is WRONG because:
+# - 85 >= 90? No → grade stays ""
+# - 85 >= 80? Yes → grade becomes "B" ✓
+# - 85 >= 70? Yes → grade becomes "C" (overwrites!)
+# - 85 >= 60? Yes → grade becomes "D" (overwrites again!)
+
+# CORRECT approach - using elif:
+score = 85
+grade = ""
+
+if score >= 90:
+    grade = "A"
+elif score >= 80:  # Only checked if the previous 'if' was false
+    grade = "B"    # Once this is true, SKIP the rest
+elif score >= 70:
+    grade = "C"
+elif score >= 60:
+    grade = "D"
+else:
+    grade = "F"
+
+print(grade)  # "B" ✓ Correct!
+
+# Why it's right:
+# - 85 >= 90? No
+# - 85 >= 80? Yes → grade becomes "B" and STOP checking
+```
+
+**When to use multiple `if`:**
+
+Multiple `if` statements are correct when conditions are **independent**:
+
+```python
+# RIGHT: Multiple independent checks
+age = 25
+income = 50000
+
+if age >= 18:           # Check 1: Are they an adult?
+    print("Adult")      # Prints
+
+if income >= 30000:     # Check 2: (independent) Do they earn enough?
+    print("High income") # Also prints
+
+# Both can be true - they're checking different things
+
+# Another example:
+temperature = 100
+if temperature > 37:
+    print("Running fever")        # Prints
+
+if temperature > 40:
+    print("Seek medical attention") # Also prints - legitimate to check both
+```
+
+**Performance tip:**
+
+```python
+# This is inefficient - keeps checking even after match:
+score = 95
+
+if score >= 60:
+    print("Passed")
+if score >= 70:
+    print("Good")
+if score >= 80:
+    print("Excellent")
+if score >= 90:
+    print("Outstanding")
+
+# Use elif to stop checking once a condition is true:
+if score >= 90:
+    print("Outstanding")
+elif score >= 80:
+    print("Excellent")
+elif score >= 70:
+    print("Good")
+elif score >= 60:
+    print("Passed")
+else:
+    print("Failed")
+```
+
+**Rule of thumb:**
+
+> Use `elif` when conditions are **mutually exclusive** (only one can be true).
+> Use multiple `if` when conditions are **independent** (multiple can be true).
+
+---
+
 **Ternary expression** - one-line if/else:
 
 ```python
@@ -667,7 +887,309 @@ for n in range(2, 20):
         print(f"{n} is prime")
 ```
 
-### 2.6 List Comprehensions
+### 2.6 Comments & Documentation
+
+Writing clear comments and documentation is crucial for code that other people (and future you!) can understand.
+
+**The Golden Rule of Comments:**
+
+> Comment the **WHY**, not the **WHAT**. Code shows WHAT it does; comments should explain WHY.
+
+```python
+# BAD: Stating the obvious
+x = 5
+y = 10
+z = x + y  # Add x and y
+
+# GOOD: Explaining the reasoning
+# Start with default margin and add user preference for accessibility
+margin_px = 5
+user_preference_px = 10
+total_margin = margin_px + user_preference_px
+
+# BAD: Redundant
+if age >= 18:  # Check if age is greater than or equal to 18
+    print("Adult")
+
+# GOOD: Explaining business logic
+if age >= 18:  # Legal voting age in most countries
+    print("Adult")
+```
+
+**When to write comments:**
+
+1. **Complex algorithms** - explain the strategy
+2. **Surprising or non-obvious code** - clarify why you did it this way
+3. **Important assumptions** - what preconditions must be true?
+4. **Workarounds or hacks** - explain why you couldn't do the "normal" way
+
+```python
+# Example: Complex logic needs explanation
+def calculate_compound_interest(principal, rate, time):
+    # Using A = P(1 + r/n)^(nt) formula where n=1 for annual compounding
+    # This assumes annual compounding (not quarterly, monthly, etc.)
+    return principal * (1 + rate) ** time
+
+# Example: Why we're doing something unusual
+# TODO: Replace with library call once we upgrade to Python 3.11
+dates = []
+for item in data:
+    dates.append(parse_date(item['date']))
+```
+
+**Comment Anti-patterns to avoid:**
+
+```python
+# ❌ WRONG: Over-commenting (noise)
+x = x + 1  # Increment x
+lst.append(item)  # Add item to list
+
+# ❌ WRONG: Outdated comments (worse than no comment)
+# This function was broken in Python 3.7
+def old_function():
+    pass
+
+# ❌ WRONG: Comments that explain incorrect code
+if x > 5:  # Check if x is less than 5
+    return "big"
+
+# ✅ RIGHT: Only comment what truly needs explanation
+def fibonacci(n):
+    # Using iterative approach instead of recursive to avoid stack overflow
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    return a
+```
+
+**Docstrings - documentation inside your code:**
+
+Docstrings are special comments that document functions, classes, and modules. Use triple quotes:
+
+```python
+def greet(name):
+    """Greet a person by name.
+
+    Args:
+        name (str): The person's name
+
+    Returns:
+        str: A greeting message
+    """
+    return f"Hello, {name}!"
+
+class Dog:
+    """Represents a dog with name and age."""
+
+    def __init__(self, name, age):
+        """Initialize a dog.
+
+        Args:
+            name (str): The dog's name
+            age (int): The dog's age in years
+        """
+        self.name = name
+        self.age = age
+
+    def bark(self):
+        """Make the dog bark."""
+        return f"{self.name} says Woof!"
+```
+
+**Access docstrings with `help()` or `.__doc__`:**
+
+```python
+help(greet)  # Displays the docstring in an interactive way
+
+print(greet.__doc__)  # Prints the raw docstring
+# Greet a person by name.
+#
+#    Args:
+#        name (str): The person's name
+#
+#    Returns:
+#        str: A greeting message
+```
+
+**Self-documenting code:**
+
+The best comment is clear code that doesn't need explaining:
+
+```python
+# ❌ Unclear code needing explanation
+users = [u for u in data if u['active'] and u['age'] >= 18]
+
+# ✅ Self-documenting code
+active_adult_users = [
+    user for user in data
+    if user['active'] and user['age'] >= 18
+]
+
+# ❌ Cryptic variable names
+def calc(x, y, z):
+    return (x * y) + (x * z) + (y * z)
+
+# ✅ Clear names make purpose obvious
+def surface_area_of_box(length, width, height):
+    return 2 * (length * width + length * height + width * height)
+```
+
+**Style Guide:**
+
+- Use `#` for single-line comments
+- Use `"""..."""` for docstrings (multi-line documentation)
+- Start comments with `#` followed by a space
+- Keep comments concise (1-3 sentences usually)
+- Update comments when you update code
+
+---
+
+### 2.7 User Input & Input Validation
+
+Getting input from users is fundamental. However, `input()` returns a **string** - this trips up many beginners.
+
+**Basic `input()`:**
+
+```python
+name = input("What is your name? ")
+print(f"Hello, {name}!")  # name is a STRING
+
+# input() always returns a string, even if user types numbers:
+age_str = input("How old are you? ")
+print(type(age_str))  # <class 'str'>, not int!
+```
+
+**Type conversion is essential:**
+
+```python
+# ❌ WRONG: Treating input as a number without converting
+age = input("How old are you? ")
+if age > 18:  # ERROR! Can't compare string to int
+    print("Adult")
+
+# ✅ RIGHT: Convert to the type you need
+age = int(input("How old are you? "))
+if age > 18:
+    print("Adult")
+
+# More type conversions:
+price = float(input("Enter price: "))
+quantity = int(input("Enter quantity: "))
+total = price * quantity
+print(f"Total: ${total:.2f}")
+```
+
+**Handling invalid input - basic approach:**
+
+```python
+# Simple but repeats code
+try:
+    age = int(input("How old are you? "))
+except ValueError:
+    print("That's not a valid number!")
+    age = int(input("Please enter a number: "))
+```
+
+**Better approach - validation loop:**
+
+```python
+# Keep asking until valid input
+while True:
+    try:
+        age = int(input("How old are you? "))
+        if age < 0:
+            print("Age can't be negative!")
+            continue  # Go back to asking
+        break  # Exit loop if valid
+    except ValueError:
+        print("Please enter a valid number!")
+
+print(f"You are {age} years old")
+```
+
+**Helper function for clean code:**
+
+```python
+def get_positive_integer(prompt):
+    """Get a positive integer from user, keep asking until valid."""
+    while True:
+        try:
+            value = int(input(prompt))
+            if value <= 0:
+                print("Please enter a positive number!")
+                continue
+            return value  # Valid input - return it
+        except ValueError:
+            print("That's not a valid number!")
+
+# Now it's simple to use:
+age = get_positive_integer("Enter your age: ")
+quantity = get_positive_integer("Enter quantity: ")
+```
+
+**Multiple inputs at once:**
+
+```python
+# Get multiple values and convert
+name, age_str = input("Enter name and age (comma-separated): ").split(",")
+age = int(age_str.strip())  # Strip whitespace
+print(f"{name} is {age} years old")
+
+# More robust:
+try:
+    data = input("Enter name and age (name,age): ").split(",")
+    name = data[0].strip()
+    age = int(data[1].strip())
+    print(f"{name} is {age} years old")
+except (ValueError, IndexError):
+    print("Invalid format! Use: name,age")
+```
+
+**Common input patterns:**
+
+```python
+# Yes/no question
+while True:
+    response = input("Continue? (yes/no): ").lower()
+    if response in ('yes', 'y'):
+        print("Continuing...")
+        break
+    elif response in ('no', 'n'):
+        print("Stopping...")
+        break
+    else:
+        print("Please enter yes or no")
+
+# Multiple choice
+options = ['apple', 'banana', 'cherry']
+while True:
+    choice = input(f"Choose ({', '.join(options)}): ").lower()
+    if choice in options:
+        print(f"You selected {choice}")
+        break
+    else:
+        print(f"Invalid choice. Try again.")
+
+# Numeric input with range
+while True:
+    try:
+        score = int(input("Enter score (0-100): "))
+        if 0 <= score <= 100:
+            print(f"Score recorded: {score}")
+            break
+        else:
+            print("Score must be between 0 and 100!")
+    except ValueError:
+        print("Please enter a valid number!")
+```
+
+**Key takeaway:**
+
+> Always assume `input()` returns a **string**. Convert it to the type you need. Always validate that the conversion worked using `try/except`.
+
+---
+
+### 2.8 List Comprehensions
 
 List comprehensions are a concise way to create lists. They're very Pythonic and you'll see them everywhere.
 
@@ -1554,6 +2076,518 @@ print(f"Longest line ({len(longest)} chars): {longest[:50]}...")
 ```
 </details>
 
+### 4.6 Scope & LEGB Rule
+
+Scope determines where a variable is accessible. Python uses the **LEGB rule** to look up variables.
+
+**LEGB stands for:**
+
+1. **Local** - Inside the current function
+2. **Enclosing** - Inside enclosing functions (for closures)
+3. **Global** - Module level (top of file)
+4. **Built-in** - Python's built-in namespace (`print`, `len`, `range`, etc.)
+
+```python
+# Global scope
+x = "global"
+
+def outer():
+    # Enclosing scope
+    x = "enclosing"
+
+    def inner():
+        # Local scope
+        x = "local"
+        print(x)  # Prints "local" - uses LOCAL first
+
+    inner()
+    print(x)  # Prints "enclosing"
+
+outer()
+print(x)  # Prints "global"
+
+# Summary:
+# - inner() found 'x' in LOCAL scope → "local"
+# - outer() found 'x' in ENCLOSING scope → "enclosing"
+# - global found 'x' in GLOBAL scope → "global"
+```
+
+**Why LEGB matters:**
+
+```python
+x = "global"
+
+def my_function():
+    # x is "global" here - Python looks it up using LEGB
+    print(x)  # "global" - found in GLOBAL scope
+
+my_function()
+
+# But once you ASSIGN a variable, it becomes LOCAL:
+def my_function2():
+    x = "local"  # This creates a LOCAL x
+    print(x)  # "local"
+
+my_function2()
+```
+
+**Common confusion - reading vs assigning:**
+
+```python
+x = 10
+
+def modify_x():
+    x = x + 1  # ERROR! NameError: local variable 'x' referenced before assignment
+    return x
+
+# Why? Because Python sees the assignment to x, it treats x as LOCAL throughout.
+# So on the right side of x = x + 1, x is local (not defined yet).
+```
+
+**Fix #1: Use the `global` keyword (for module-level variables):**
+
+```python
+x = 10
+
+def modify_x():
+    global x  # Tell Python: use the GLOBAL x, not a local one
+    x = x + 1
+    return x
+
+modify_x()
+print(x)  # 11 - global x was modified
+```
+
+**Fix #2: Use `nonlocal` (for enclosing scope variables):**
+
+```python
+def outer():
+    x = 10
+
+    def inner():
+        nonlocal x  # Tell Python: use the ENCLOSING x
+        x = x + 1
+
+    inner()
+    print(x)  # 11 - enclosing x was modified
+
+outer()
+```
+
+**Built-in scope:**
+
+```python
+# Built-ins are always accessible
+print(len([1, 2, 3]))  # len is built-in
+print(type(42))        # type is built-in
+
+# But you can shadow them (not recommended!)
+len = "I shadowed len!"
+print(len)  # "I shadowed len!"
+# Now len([1,2,3]) won't work!
+
+# Restore with del
+del len
+print(len([1, 2, 3]))  # 3 - back to normal
+```
+
+**When to use `global` and `nonlocal`:**
+
+- **Avoid them when possible** - they make code hard to follow
+- **Better approach**: Pass variables as arguments, return new values
+
+```python
+# ❌ BAD: Using global
+counter = 0
+
+def increment():
+    global counter
+    counter += 1
+
+# ✓ BETTER: Return values
+def increment_value(value):
+    return value + 1
+
+counter = 0
+counter = increment_value(counter)
+```
+
+**Real-world example where nonlocal is useful:**
+
+```python
+def make_counter():
+    """Create a counter function that remembers state."""
+    count = 0
+
+    def increment():
+        nonlocal count  # Remember the 'count' from outer scope
+        count += 1
+        return count
+
+    def get_count():
+        return count
+
+    return increment, get_count
+
+inc, get = make_counter()
+print(inc())  # 1
+print(inc())  # 2
+print(get())  # 2
+```
+
+**Function scope summary:**
+
+```python
+def my_func(a, b):  # a, b are LOCAL (function parameters)
+    c = a + b       # c is LOCAL (assigned in function)
+    return c        # Return local c
+
+# a, b, c don't exist outside my_func
+# They only exist during execution
+```
+
+---
+
+### 4.7 Recursion
+
+Recursion means a function calls itself. It's useful for solving problems that naturally break into smaller versions of the same problem.
+
+**Basic structure:**
+
+Every recursive function has two parts:
+1. **Base case** - the stop condition (prevents infinite recursion)
+2. **Recursive case** - call itself with a smaller/simpler problem
+
+```python
+# Count down from n
+def countdown(n):
+    # BASE CASE: When to stop
+    if n == 0:
+        print("Blastoff!")
+        return
+
+    # RECURSIVE CASE: Do something, then call self with smaller problem
+    print(n)
+    countdown(n - 1)
+
+countdown(5)
+# Output:
+# 5
+# 4
+# 3
+# 2
+# 1
+# Blastoff!
+```
+
+**Classic example: Factorial**
+
+```python
+# Factorial: 5! = 5 × 4 × 3 × 2 × 1 = 120
+
+# Recursive version
+def factorial(n):
+    # Base case
+    if n == 0 or n == 1:
+        return 1
+    # Recursive case
+    return n * factorial(n - 1)
+
+print(factorial(5))  # 120
+print(factorial(0))  # 1
+
+# How it works:
+# factorial(5)
+# = 5 * factorial(4)
+# = 5 * (4 * factorial(3))
+# = 5 * (4 * (3 * factorial(2)))
+# = 5 * (4 * (3 * (2 * factorial(1))))
+# = 5 * (4 * (3 * (2 * 1)))
+# = 120
+```
+
+**Another example: Fibonacci**
+
+```python
+# Fibonacci: Each number is sum of previous two
+# 0, 1, 1, 2, 3, 5, 8, 13...
+
+def fibonacci(n):
+    # Base cases
+    if n <= 1:
+        return n
+    # Recursive case
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+for i in range(10):
+    print(fibonacci(i), end=" ")
+# Output: 0 1 1 2 3 5 8 13 21 34
+```
+
+**When to use recursion:**
+
+✅ Good use cases:
+- Tree/graph traversal (folders, family trees)
+- Divide-and-conquer problems (merge sort, quicksort)
+- Mathematical sequences
+- Parsing nested structures
+
+```python
+# Example: Calculate sum of all files in folders recursively
+import os
+
+def total_size(path):
+    """Sum size of all files in path and subdirectories."""
+    total = 0
+
+    for item in os.listdir(path):
+        item_path = os.path.join(path, item)
+        if os.path.isfile(item_path):
+            total += os.path.getsize(item_path)  # Add file size
+        elif os.path.isdir(item_path):
+            total += total_size(item_path)  # Recurse into folders
+
+    return total
+```
+
+**⚠️ Dangers of recursion:**
+
+```python
+# DANGER: Stack overflow (too many recursive calls)
+def bad_recursion(n):
+    return bad_recursion(n - 1)  # No base case!
+
+# This will crash with RecursionError (max recursion depth exceeded)
+# bad_recursion(100000)
+
+# Safer: Check recursion limit
+import sys
+print(sys.getrecursionlimit())  # Usually 1000
+```
+
+**Recursion vs Iteration:**
+
+```python
+# RECURSIVE version of sum
+def sum_recursive(lst):
+    if len(lst) == 0:
+        return 0
+    return lst[0] + sum_recursive(lst[1:])
+
+# ITERATIVE version (preferred for performance)
+def sum_iterative(lst):
+    total = 0
+    for num in lst:
+        total += num
+    return total
+
+# Both work, but iterative is faster and safer for large inputs
+print(sum_recursive([1, 2, 3, 4, 5]))  # 15
+print(sum_iterative([1, 2, 3, 4, 5]))  # 15
+```
+
+**Optimization: Memoization**
+
+Without memoization, recursive functions can recalculate the same values:
+
+```python
+# SLOW: Calculates fibonacci(3) multiple times
+def fib_slow(n):
+    if n <= 1:
+        return n
+    return fib_slow(n-1) + fib_slow(n-2)
+
+# FAST: Remember calculated values
+def fib_fast(n, memo=None):
+    if memo is None:
+        memo = {}
+
+    if n in memo:
+        return memo[n]  # Return cached result
+
+    if n <= 1:
+        return n
+
+    # Calculate and remember
+    memo[n] = fib_fast(n-1, memo) + fib_fast(n-2, memo)
+    return memo[n]
+
+print(fib_slow(35))  # Slow!
+print(fib_fast(35))  # Fast!
+```
+
+---
+
+### 4.8 Common Function Mistakes
+
+Mistakes that trick beginners (and sometimes experienced developers).
+
+**Mistake #1: Mutable Default Arguments**
+
+```python
+# ❌ WRONG - shares the same list for all calls!
+def append_item(item, lst=[]):
+    lst.append(item)
+    return lst
+
+print(append_item(1))  # [1]
+print(append_item(2))  # [1, 2] ← Unexpected!
+print(append_item(3))  # [1, 2, 3] ← Same list!
+
+# ✅ CORRECT
+def append_item_fixed(item, lst=None):
+    if lst is None:
+        lst = []
+    lst.append(item)
+    return lst
+
+print(append_item_fixed(1))  # [1]
+print(append_item_fixed(2))  # [2] ✓
+print(append_item_fixed(3))  # [3] ✓
+```
+
+**Why this happens**: Default arguments are created once when the function is defined, not each time it's called.
+
+**Mistake #2: Forgetting to `return`**
+
+```python
+# ❌ WRONG
+def double(x):
+    x * 2  # This doesn't return!
+
+result = double(5)
+print(result)  # None ← Not 10!
+
+# ✅ CORRECT
+def double_fixed(x):
+    return x * 2
+
+result = double_fixed(5)
+print(result)  # 10 ✓
+```
+
+**Mistake #3: Confusion between `return` and `print`**
+
+```python
+# These are DIFFERENT!
+
+def add_with_print(a, b):
+    print(a + b)  # Prints to screen, returns None
+
+def add_with_return(a, b):
+    return a + b  # Returns the value
+
+# Using them
+add_with_print(2, 3)     # Prints "5" but can't use the result
+result = add_with_return(2, 3)  # result = 5, can use it
+print(result + 10)  # 15 ✓
+
+# Mixing them up:
+result = add_with_print(2, 3)  # Prints "5"
+print(result + 10)  # ❌ ERROR: can't add None to int!
+```
+
+**Mistake #4: Modifying list during iteration**
+
+```python
+# ❌ WRONG - skips items!
+numbers = [1, 2, 3, 4, 5]
+for num in numbers:
+    if num % 2 == 0:
+        numbers.remove(num)
+print(numbers)  # [1, 3, 5] - looks right by accident
+
+# But this is unreliable:
+numbers = [1, 2, 3, 4, 5, 6]
+for num in numbers:
+    if num % 2 == 0:
+        numbers.remove(num)
+print(numbers)  # [1, 3, 5] - missing 6!
+
+# ✅ CORRECT - iterate over a copy
+for num in numbers[:]:  # Create a copy with [:]
+    if num % 2 == 0:
+        numbers.remove(num)
+
+# ✅ BETTER - use list comprehension
+numbers = [num for num in numbers if num % 2 != 0]
+```
+
+**Mistake #5: Side effects vs pure functions**
+
+```python
+# ❌ WRONG - function has side effect (modifies input)
+def add_tax(prices_list):
+    for i in range(len(prices_list)):
+        prices_list[i] = prices_list[i] * 1.1
+    return prices_list
+
+original = [100, 200]
+total = add_tax(original)  # Modifies original!
+print(original)  # [110, 220] - changed!
+
+# ✅ CORRECT - pure function (doesn't modify input)
+def add_tax_pure(prices_list):
+    return [price * 1.1 for price in prices_list]
+
+original = [100, 200]
+total = add_tax_pure(original)
+print(original)  # [100, 200] - unchanged ✓
+```
+
+**Mistake #6: `==` vs `is` in conditions**
+
+```python
+a = [1, 2, 3]
+b = [1, 2, 3]
+
+print(a == b)  # True - same content
+print(a is b)  # False - different objects
+
+# ❌ WRONG for most cases
+if a is b:
+    print("Same list")
+
+# ✅ CORRECT
+if a == b:
+    print("Same content")
+
+# WHERE `is` is appropriate:
+if result is None:  # Check for None, True, False
+    print("No result")
+```
+
+**Mistake #7: Global variables**
+
+```python
+# ❌ WRONG - hard to track where x changes
+x = 0
+
+def increment():
+    global x
+    x += 1
+
+# Where did x change? Have to search the file.
+
+# ✅ CORRECT - clear input and output
+def increment(value):
+    return value + 1
+
+x = 0
+x = increment(x)
+```
+
+**Quick checklist for writing good functions:**
+
+1. ✅ Functions have single responsibility
+2. ✅ Use meaningful names (not `x`, `func`, etc.)
+3. ✅ Keep functions small (under 20 lines)
+4. ✅ No mutable default arguments
+5. ✅ Don't modify inputs (return new values)
+6. ✅ Always return a value (or be explicit about returning None)
+7. ✅ Avoid `global` variables
+8. ✅ Document with docstrings
+
 ---
 
 ## Chapter 5: Object-Oriented Programming
@@ -2010,6 +3044,279 @@ print(m1 < m2)      # True
 print(m1 == Money(10.50))  # True
 ```
 </details>
+
+### 5.9 Composition vs Inheritance
+
+**Composition vs Inheritance** is one of the most important design decisions in OOP.
+
+- **Inheritance** ("is-a"): `Dog` is-a `Animal`
+- **Composition** ("has-a"): `Dog` has-a `Brain`, `Dog` has-a `Heart`
+
+**General rule**: "Favor composition over inheritance" - it's more flexible and less error-prone.
+
+**Understanding Inheritance ("is-a"):**
+
+```python
+# Inheritance hierarchy
+class Animal:
+    def speak(self):
+        return "Some sound"
+
+class Dog(Animal):
+    """Dog IS-A Animal"""
+    def speak(self):
+        return "Woof!"
+
+class Cat(Animal):
+    """Cat IS-A Animal"""
+    def speak(self):
+        return "Meow!"
+
+dog = Dog()
+print(dog.speak())  # Woof!
+print(isinstance(dog, Animal))  # True
+```
+
+**Problems with Inheritance:**
+
+```python
+# ❌ Problem: Deep hierarchies are fragile
+class Vehicle:
+    pass
+
+class Car(Vehicle):
+    pass
+
+class ElectricCar(Car):  # Deep hierarchy
+    pass
+
+class HybridCar(Car):
+    pass
+
+# What if you need ElectricBike? It doesn't fit the hierarchy!
+# Should it inherit from Bike or Vehicle?
+
+# ❌ Problem: Rigid hierarchies
+class Bird:
+    def fly(self):
+        return "Flying..."
+
+class Penguin(Bird):  # Penguin IS-A Bird, but...
+    def fly(self):
+        raise NotImplementedError("Penguins can't fly!")
+    # Now we have to override and break the contract
+```
+
+**Understanding Composition ("has-a"):**
+
+```python
+# Composition: Build objects from smaller parts
+class Engine:
+    def start(self):
+        return "Engine started"
+
+class Wheels:
+    def rotate(self):
+        return "Wheels spinning"
+
+class Car:
+    """Car HAS-A Engine and HAS-A Wheels"""
+    def __init__(self):
+        self.engine = Engine()
+        self.wheels = Wheels()
+
+    def drive(self):
+        self.engine.start()
+        self.wheels.rotate()
+        return "Driving!"
+
+car = Car()
+print(car.drive())  # Engine started, Wheels spinning, Driving!
+```
+
+**Composition vs Inheritance Example:**
+
+```python
+# ❌ INHERITANCE approach (rigid)
+class Bird:
+    def fly(self):
+        return "Flying..."
+
+class Penguin(Bird):
+    def fly(self):
+        raise NotImplementedError("Can't fly")
+    def swim(self):
+        return "Swimming..."
+
+class Parrot(Bird):
+    def squawk(self):
+        return "Squawk!"
+
+# ✅ COMPOSITION approach (flexible)
+class FlyingAbility:
+    def fly(self):
+        return "Flying..."
+
+class SwimmingAbility:
+    def swim(self):
+        return "Swimming..."
+
+class Penguin:
+    """Penguin HAS-A SwimmingAbility"""
+    def __init__(self):
+        self.swimming = SwimmingAbility()
+
+class Parrot:
+    """Parrot HAS-A FlyingAbility"""
+    def __init__(self):
+        self.flying = FlyingAbility()
+        self.voice = "Squawk!"
+
+penguin = Penguin()
+print(penguin.swimming.swim())  # Swimming...
+
+parrot = Parrot()
+print(parrot.flying.fly())  # Flying...
+
+# Now it's easy to create an ElectricBird that can't fly:
+class ElectricBird:
+    def __init__(self):
+        self.voice = "Beep!"
+    # No flying ability needed!
+```
+
+**Composition for flexibility:**
+
+```python
+# Example: Game character system
+class AttackAbility:
+    def attack(self, damage=10):
+        return f"Attacking for {damage} damage"
+
+class DefenseAbility:
+    def defend(self):
+        return "Defending!"
+
+class HealAbility:
+    def heal(self):
+        return "Healing!"
+
+class Warrior:
+    """Warrior HAS-A AttackAbility and DefenseAbility"""
+    def __init__(self):
+        self.attack = AttackAbility()
+        self.defense = DefenseAbility()
+
+class Healer:
+    """Healer HAS-A HealAbility and AttackAbility"""
+    def __init__(self):
+        self.heal = HealAbility()
+        self.attack = AttackAbility()
+
+class Paladin:
+    """Paladin HAS-A all three abilities!"""
+    def __init__(self):
+        self.attack = AttackAbility()
+        self.defense = DefenseAbility()
+        self.heal = HealAbility()
+
+warrior = Warrior()
+print(warrior.attack.attack())     # Attacking for 10 damage
+print(warrior.defense.defend())    # Defending!
+
+paladin = Paladin()
+print(paladin.attack.attack())     # Attacking for 10 damage
+print(paladin.heal.heal())         # Healing!
+
+# Easy to add new characters with any combination of abilities!
+```
+
+**When to use Inheritance:**
+
+Use inheritance when:
+- There's a clear "is-a" relationship
+- You want to share implementation (not just interface)
+- The hierarchy is shallow (1-2 levels deep)
+
+```python
+# GOOD: Simple, clear inheritance
+class Shape:
+    def area(self):
+        raise NotImplementedError
+
+class Circle(Shape):
+    def __init__(self, radius):
+        self.radius = radius
+
+    def area(self):
+        return 3.14 * self.radius ** 2
+
+class Rectangle(Shape):
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
+    def area(self):
+        return self.width * self.height
+
+# Clear hierarchy, minimal levels, proper polymorphism
+```
+
+**When to use Composition:**
+
+Use composition when:
+- You want flexibility and reusability
+- Behaviors can be mixed and matched
+- You want to avoid deep hierarchies
+
+```python
+# GOOD: Flexible composition
+class Logger:
+    def log(self, message):
+        print(f"LOG: {message}")
+
+class Database:
+    def query(self, sql):
+        return f"Results from: {sql}"
+
+class UserService:
+    def __init__(self):
+        self.logger = Logger()
+        self.db = Database()
+
+    def get_user(self, user_id):
+        self.logger.log(f"Fetching user {user_id}")
+        result = self.db.query(f"SELECT * FROM users WHERE id={user_id}")
+        return result
+
+service = UserService()
+print(service.get_user(123))
+# LOG: Fetching user 123
+# Results from: SELECT * FROM users WHERE id=123
+```
+
+**Decision Tree:**
+
+```
+Is the relationship "is-a" AND is it stable?
+├─ YES → Use inheritance
+└─ NO → Use composition
+
+Can the subclass replace the parent everywhere?
+├─ YES → Inheritance might work
+└─ NO → Use composition
+
+Do you need to mix behaviors?
+├─ YES → Use composition
+└─ NO → Inheritance is fine
+```
+
+**Key Takeaway:**
+
+> Composition is more flexible, easier to understand, and easier to change. Inheritance creates rigid hierarchies that are hard to modify. Default to composition, only use inheritance when you have a clear, stable "is-a" relationship.
+
+---
+
 ## Chapter 6: Error Handling & Exceptions
 
 ### 6.1 Why Error Handling Matters
