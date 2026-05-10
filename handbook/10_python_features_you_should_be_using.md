@@ -141,6 +141,18 @@ buffer = StringIO("hello world")
 process_file(buffer)  # Type checker happy!
 ```
 
+### Python Protocol is like a java Interface
+```java
+interface RateFetcher {
+    double getRate(String currency);
+}
+
+class ApiRateFetcher implements RateFetcher {
+    public double getRate(String currency) {
+        return 1.1;
+    }
+}
+```
 ---
 
 ## 3. Data Class `replace`
