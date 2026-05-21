@@ -650,6 +650,11 @@ PEP 8 is the Python Enhancement Proposal which provides guidelines and best prac
 ## what is devops
 - https://www.geeksforgeeks.org/devops/devops-lifecycle/
 
+## BI Tool
+Apache Superset = open-source BI tool for SQL-based dashboards and data exploration
+-[apache_superset.md](quick101/apache_superset.md)
+-[apache_superset_with_csv.md](quick101/apache_superset_with_csv.md)
+
 ## Errors
 
 ### openssl error on git clone

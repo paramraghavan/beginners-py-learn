@@ -21,13 +21,14 @@ application.
         |  - Checkout              |
         |  - Lint / Static checks  |
         |  - Unit tests            |
+        |  - fortify scans         |
         +------------+-------------+
                      |
                      v
-            +--------+--------+
-            |  PR to `main`   |
-            |  CI re-runs     |
-            +--------+--------+
+            +--------+---------------------------+
+            |  PR to `main` from feature branch  |
+            |  CI re-runs                        |
+            +--------+----------------------------+
                      |
           PR passes checks & review
                      |
@@ -60,6 +61,20 @@ application.
         +--------------------------+
 ```
 
+```mermaid
+flowchart TD
+    A[Developer writes code] --> B[Push to feature branch]
+    B --> C[CI: build + lint + unit tests]
+    C --> D[Open PR to main from feature branch ]
+    D --> E[CI reruns + code review]
+    E --> F[Merge to main]
+    F --> G[Build artifact and store it]
+    G --> H[Deploy to staging]
+    H --> I[Smoke tests]
+    I --> J[Manual approval]
+    J --> K[Deploy same artifact to production]
+    K --> L[Monitor and rollback if needed]
+```
 
 
 ## Goals
