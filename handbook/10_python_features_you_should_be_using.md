@@ -77,7 +77,60 @@ def convert_sale(fetcher: RateFetcher, amount: float, currency: str) -> float:
     return amount * rate
 ```
 
+### Python Protocol is like a java Interface
+```java
+interface RateFetcher {
+    double getRate(String currency);
+}
+
+class ApiRateFetcher implements RateFetcher {
+    public double getRate(String currency) {
+        return 1.1;
+    }
+}
+```
+
+### File-like Object Protocol
+> **Note:** StringIO implements both read and write
+
+```python
+from typing import Protocol
+
+class FileLike(Protocol):
+    def read(self, size: int = -1) -> str:
+        ...
+
+    def write(self, data: str) -> int:
+        ...
+
+def process_file(file: FileLike):
+    content = file.read()
+    # Process content
+    file.write('\n' + content.upper())
+
+# Works with real files, StringIO, custom classes, etc.
+from io import StringIO
+
+buffer = StringIO("hello world")
+process_file(buffer)  # Type checker happy!
+print(buffer.getvalue())
+```
+**Output**
+```
+hello world
+HELLO WORLD
+```
+
 ### Practical Example: Payment Processing
+
+This example demonstrates **structural subtyping** with Protocols:
+- **Protocol Definition** - `PaymentProcessor` defines a contract with required methods
+- **`@runtime_checkable`** - Allows runtime type checking with `isinstance()`
+- **No Explicit Inheritance** - Classes don't inherit from `PaymentProcessor`, yet they satisfy it structurally
+- **Type Safety** - `checkout()` expects a `PaymentProcessor`, and both implementations work without explicit declaration
+
+The key insight: **duck typing with type hints** — if it walks like a payment processor and quacks like a payment processor, it *is* a payment processor.
+
 ```python
 from typing import Protocol, runtime_checkable
 
@@ -116,42 +169,17 @@ def checkout(processor: PaymentProcessor, amount: float):
 # Both work without explicit inheritance!
 checkout(StripeProcessor(), 99.99)
 checkout(PayPalProcessor(), 149.99)
-```
 
-### File-like Object Protocol
-```python
-from typing import Protocol
+# Runtime type checking with isinstance()
+processor = StripeProcessor()
+print(isinstance(processor, PaymentProcessor))  # True at runtime
 
-class FileLike(Protocol):
-    def read(self, size: int = -1) -> str:
-        ...
-
-    def write(self, data: str) -> int:
-        ...
-
-def process_file(file: FileLike):
-    content = file.read()
-    # Process content
-    file.write(content.upper())
-
-# Works with real files, StringIO, custom classes, etc.
-from io import StringIO
-
-buffer = StringIO("hello world")
-process_file(buffer)  # Type checker happy!
-```
-
-### Python Protocol is like a java Interface
-```java
-interface RateFetcher {
-    double getRate(String currency);
-}
-
-class ApiRateFetcher implements RateFetcher {
-    public double getRate(String currency) {
-        return 1.1;
-    }
-}
+# Safe checkout with error handling
+def safe_checkout(processor: PaymentProcessor, amount: float):
+    if not isinstance(processor, PaymentProcessor):
+        raise TypeError(f"{type(processor).__name__} doesn't implement PaymentProcessor")
+    if processor.process_payment(amount, "USD"):
+        print("Payment successful!")
 ```
 ---
 

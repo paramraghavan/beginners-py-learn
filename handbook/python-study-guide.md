@@ -751,6 +751,8 @@ print(f"You are {'old enough' if age >= 21 else 'too young'} to drink")
 
 ```python
 command = "start"
+# output: "Going to Paris"
+# command = "go Paris" 
 
 match command:
     case "start":
