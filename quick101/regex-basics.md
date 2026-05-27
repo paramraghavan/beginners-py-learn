@@ -15,27 +15,27 @@ print(match.group())  # 12345
 
 ## Common Regex Symbols
 
-| Regex   | Meaning                      | Example                             |      |      |
-|---------|------------------------------|-------------------------------------|------|------|
-| `.`     | Any one character            | `a.c` matches `abc`, `axc`          |      |      |
-| `\d`    | Any digit                    | `\d` matches `5`                    |      |      |
-| `\D`    | Not a digit                  | `\D` matches `A`                    |      |      |
-| `\w`    | Letter, digit, or underscore | `\w` matches `a`, `7`, `_`          |      |      |
-| `\W`    | Not letter/digit/underscore  | `\W` matches `@`, `#`               |      |      |
-| `\s`    | Whitespace                   | space, tab, newline                 |      |      |
-| `\S`    | Not whitespace               | `A`, `1`, `$`                       |      |      |
-| `^`     | Start of string              | `^Hello`                            |      |      |
-| `$`     | End of string                | `end$`                              |      |      |
-| `*`     | 0 or more times              | `ab*` matches `a`, `ab`, `abb`      |      |      |
-| `+`     | 1 or more times              | `ab+` matches `ab`, `abb`           |      |      |
-| `?`     | 0 or 1 time                  | `colou?r` matches `color`, `colour` |      |      |
-| `{n}`   | Exactly n times              | `\d{3}` matches `123`               |      |      |
-| `{n,}`  | n or more times              | `\d{2,}`                            |      |      |
-| `{n,m}` | Between n and m times        | `\d{2,4}`                           |      |      |
-| `[]`    | One character from set       | `[aeiou]`                           |      |      |
-| `[^]`   | Not in set                   | `[^0-9]`                            |      |      |
-| `       | `                            | OR                                  | `cat | dog` |
-| `()`    | Group                        | `(abc)+`                            |      |      |
+| Regex      | Meaning                      | Example                             |      |      |
+|------------|------------------------------|-------------------------------------|------|------|
+| `.`        | Any one character            | `a.c` matches `abc`, `axc`          |      |      |
+| `\d`       | Any digit                    | `\d` matches `5`                    |      |      |
+| `\D`       | Not a digit                  | `\D` matches `A`                    |      |      |
+| `\w`       | Letter, digit, or underscore | `\w` matches `a`, `7`, `_`          |      |      |
+| `\W`       | Not letter/digit/underscore  | `\W` matches `@`, `#`               |      |      |
+| `\s`       | Whitespace                   | space, tab, newline                 |      |      |
+| `\S`       | Not whitespace               | `A`, `1`, `$`                       |      |      |
+| `^`        | Start of string              | `^Hello`                            |      |      |
+| `$`        | End of string                | `end$`                              |      |      |
+| `*`        | 0 or more times              | `ab*` matches `a`, `ab`, `abb`      |      |      |
+| `+`        | 1 or more times              | `ab+` matches `ab`, `abb`           |      |      |
+| `?`        | 0 or 1 time                  | `colou?r` matches `color`, `colour` |      |      |
+| `{n}`      | Exactly n times              | `\d{3}` matches `123`               |      |      |
+| `{n,}`     | n or more times              | `\d{2,}`                            |      |      |
+| `{n,m}`    | Between n and m times        | `\d{2,4}`                           |      |      |
+| `[]`       | One character from set       | `[aeiou]`                           |      |      |
+| `[^]`      | Not in set                   | `[^0-9]`                            |      |      |
+| `     \| ` | OR                                  | `cat \| dog`                        |
+| `()`       | Group                        | `(abc)+`                            |      |      |
 
 ## Common Patterns
 
