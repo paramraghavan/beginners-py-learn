@@ -586,5 +586,5 @@ Master the fundamentals (data structures, modularity, SDLC), and you can confide
 **Enhanced with practical tutoring guidance**
 **Last Updated: 2026**
 
-## References
+## Reference
 - https://www.youtube.com/watch?v=SnRLTuD_imI
