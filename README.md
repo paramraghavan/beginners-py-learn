@@ -9,6 +9,9 @@
 
 ---
 
+## AI and Coding
+- [coding_with_ai.md](quick101/coding_with_ai.md)
+
 ## 🚀 Quick Start Paths
 
 ### For Complete Beginners
@@ -407,6 +410,8 @@ python get-pip.py
 - [Python Handbook](handbook/README.md)
 - [Python Study Guide](handbook/python-study-guide.md)
 - [Quick Reference Cards](handbook/quick-reference-cards.md) ⭐ NEW
+- CS50P (Harvard, Free): https://cs50.harvard.edu/python/
+- Python Data Structures: https://docs.python.org/3/tutorial/da...
 
 **Interview Prep:**
 - [Interview Hub](handbook/PYTHON_HANDBOOK.md#-interview-preparation)
