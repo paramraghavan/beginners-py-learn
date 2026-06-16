@@ -35,8 +35,10 @@ class MyClass:
 * Example:
 ```python
 class MyClass:
-    static_variable = "I am a static variable"
-
+    # This is a CLASS VARIABLE (aka STATIC VARIABLE)
+    static_variable = "I am a static variable, Also shared by all instances"  # Same thing!
+    class_variable = "I am shared by all instances, I am also  a static variable"
+    
     @staticmethod
     def static_method():
         print("I am a static method")
