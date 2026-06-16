@@ -1,0 +1,50 @@
+[run]
+# Source code to measure
+source = src
+
+# Enable branch coverage
+branch = True
+
+# Omit these files from coverage
+omit =
+    */tests/*
+    */test_*.py
+    */__pycache__/*
+    */venv/*
+    */virtualenv/*
+
+[report]
+# Minimum coverage percentage required
+fail_under = 70
+
+# Skip files with 100% coverage from report
+skip_covered = False
+
+# Exclude specific lines from coverage
+exclude_lines =
+    # Standard pragmas
+    pragma: no cover
+    def __repr__
+    def __str__
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    if TYPE_CHECKING:
+    @abstractmethod
+    @abc.abstractmethod
+
+# Precision of coverage percentage
+precision = 2
+
+# Show missing line numbers
+show_missing = True
+
+[html]
+# Directory for HTML coverage report
+directory = htmlcov
+
+[paths]
+# Map source file paths for combined coverage
+source =
+    src
+    */src
