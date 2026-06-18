@@ -1,7 +1,11 @@
-In Python, **dunder methods** (short for “double underscore” methods) are special methods surrounded by double underscores, like `__init__`, `__str__`, or `__add__`. They enable classes to interact seamlessly with Python’s built-in syntax and operations, forming the backbone of Python’s *data model*.[1][3][9]
+In Python, **dunder methods** (short for “double underscore” methods) are special methods surrounded by double
+underscores, like `__init__`, `__str__`, or `__add__`. They enable classes to interact seamlessly with Python’s built-in
+syntax and operations, forming the backbone of Python’s *data model*.[1][3][9]
 
 ### What Dunder Methods Do
+
 Dunder methods allow you to **customize class behavior** for standard operations such as:
+
 - **Object creation and initialization** (`__new__`, `__init__`, `__del__`)
 - **String representation** (`__str__`, `__repr__`)
 - **Arithmetic and comparisons** (`__add__`, `__sub__`, `__eq__`, `__lt__`)
@@ -10,6 +14,7 @@ Dunder methods allow you to **customize class behavior** for standard operations
 - **Callability and context management** (`__call__`, `__enter__`, `__exit__`).[3][4][5]
 
 ### Why They’re Useful
+
 1. **Operator Overloading** – You can define how objects respond to mathematical or logical operators.  
    Example:
    ```python
@@ -27,30 +32,32 @@ Dunder methods allow you to **customize class behavior** for standard operations
    ```
    This uses `__add__` and `__str__`.[3]
 
-2. **Integration with Built-in Functions** – Many built-ins like `len()`, `abs()`, and `round()` rely on corresponding dunder methods (`__len__`, `__abs__`, `__round__`).[4][5]
+2. **Integration with Built-in Functions** – Many built-ins like `len()`, `abs()`, and `round()` rely on corresponding
+   dunder methods (`__len__`, `__abs__`, `__round__`).[4][5]
 
-3. **Code Readability and Consistency** – Dunder methods make user-defined classes act like native Python objects, maintaining predictable and Pythonic interfaces.[6][7][8]
+3. **Code Readability and Consistency** – Dunder methods make user-defined classes act like native Python objects,
+   maintaining predictable and Pythonic interfaces.[6][7][8]
 
 ### Example of Common Dunder Methods
 
-| Operation | Dunder Method | Example |
-|------------|----------------|----------|
-| Object creation | `__init__` | `__init__(self, x)` sets up attributes |
-| String conversion | `__str__` | Controls output of `print(obj)` |
-| Addition | `__add__` | Defines `obj1 + obj2` |
-| Equality | `__eq__` | Defines `obj1 == obj2` |
-| Length | `__len__` | Used by `len(obj)` |
-| Indexing | `__getitem__` | Handles `obj[key]` |
-| Iteration | `__iter__`, `__next__` | Make objects iterable |
-| Function-like behavior | `__call__` | Allows `obj()` syntax [3][4][5] |
-
-
+| Operation              | Dunder Method          | Example                                |
+|------------------------|------------------------|----------------------------------------|
+| Object creation        | `__init__`             | `__init__(self, x)` sets up attributes |
+| String conversion      | `__str__`              | Controls output of `print(obj)`        |
+| Addition               | `__add__`              | Defines `obj1 + obj2`                  |
+| Equality               | `__eq__`               | Defines `obj1 == obj2`                 |
+| Length                 | `__len__`              | Used by `len(obj)`                     |
+| Indexing               | `__getitem__`          | Handles `obj[key]`                     |
+| Iteration              | `__iter__`, `__next__` | Make objects iterable                  |
+| Function-like behavior | `__call__`             | Allows `obj()` syntax [3][4][5]        |
 
 ## Iteration and Container Behavior
-Dunder methods like __iter__, __next__, and __getitem__ make objects iterable (usable in loops). 
+
+Dunder methods like __iter__, __next__, and __getitem__ make objects iterable (usable in loops).
 You can implement them with or without yield.
 
 **Explanation:**
+
 - __iter__ returns the iterator object.
 - __next__ defines logic for each iteration and raises StopIteration when done.
 
@@ -71,6 +78,7 @@ class Countdown:
         self.n -= 1
         return current
 
+
 # Usage
 for number in Countdown(5):
     print(number)
@@ -90,6 +98,7 @@ class CountdownYield:
         for n in range(self.start, 0, -1):
             yield n
 
+
 # Usage
 for number in CountdownYield(5):
     print(number)
@@ -97,6 +106,7 @@ for number in CountdownYield(5):
 ```
 
 ## Attribute Management
+
 - [attribute-management.md](attribute-management.md)
 
 ## Callability and Context Management
@@ -110,22 +120,35 @@ class Multiplier:
     def __init__(self, factor):
         self.factor = factor
 
-    def __call__(self, value):
-        return value * self.factor
+    def __call__(self, *args):
+        if len(args) == 1:
+            return args[0] * self.factor
+        elif len(args) == 2:
+            return (args[0] + args[1]) * self.factor
+        else:
+            raise TypeError(f"Expected 1 or 2 arguments, got {len(args)}")
+
 
 # Usage
-double = Multiplier(2)
-print(double(5))  # Works like a function → Output: 10
+double = Multiplier(5)
+print(double(10))  # Output: 50
+print(double(10, 20))  # Output: 150
 ```
 
-**Explanation:**  
+**Explanation:**
 Once `__call__` is defined, instances can be *called like functions*, enabling reusable callable objects.
+
+> **Important Note:** Python doesn't support method overloading (defining multiple methods with the same name). The second
+definition overwrites the first. To handle multiple argument patterns, use `*args` to accept variable arguments and
+branch logic based on the number of arguments passed. so you cannot have __call__ defined as  __call__(self, value1) and
+__call__(self, value1, value2)
 
 ***
 
 ### Example 2 – Context Management (`with` Statement)
 
-Context managers require `__enter__` and `__exit__`. They’re used in `with` statements to handle resource setup and cleanup automatically.
+Context managers require `__enter__` and `__exit__`. They’re used in `with` statements to handle resource setup and
+cleanup automatically.
 
 ```python
 class FileManager:
@@ -142,19 +165,21 @@ class FileManager:
         print("Closing file...")
         self.file.close()
 
+
 # Usage
 with FileManager("example.txt", "w") as f:
     f.write("Hello, world!")
 ```
 
-**Explanation:**  
-- `__enter__`: Sets up resources and returns what `as` receives.  
+**Explanation:**
+
+- `__enter__`: Sets up resources and returns what `as` receives.
 - `__exit__`: Cleans resources or handles exceptions automatically.
 
 ***
 
-
 ## Reference
+
 [1](https://www.geeksforgeeks.org/python/dunder-magic-methods-python/)
 [2](https://www.reddit.com/r/Python/comments/1bioxer/every_dunder_method_in_python/)
 [3](https://www.datacamp.com/tutorial/python-dunder-methods)
