@@ -264,6 +264,197 @@ result = PipelineResult(1500, 3, 12.5)
 print(f"result: {result}, rows={result.rows_processed}")
 ```
 
+### Benefits of Custom NamedTuple Subclass
+
+**Why extend NamedTuple instead of using plain tuples?**
+
+#### 1. **Type Identity & Type Safety**
+```python
+class PipelineResult(NamedTuple):
+    rows_processed: int
+    errors: int
+    duration_sec: float
+
+def save_result(result: PipelineResult) -> None:
+    """Type checker knows exactly what this expects"""
+    pass
+
+result = PipelineResult(1000, 5, 2.3)
+save_result(result)  # ✅ Type checker approves
+
+# Vs plain tuple - ambiguous
+def save_result(result: tuple) -> None:  # What tuple?
+    pass
+```
+
+#### 2. **Add Domain Logic Methods**
+```python
+class PipelineResult(NamedTuple):
+    rows_processed: int
+    errors: int
+    duration_sec: float
+
+    def success_rate(self) -> float:
+        """Calculate business metric"""
+        if self.rows_processed == 0:
+            return 0.0
+        return (self.rows_processed - self.errors) / self.rows_processed
+
+    def throughput(self) -> float:
+        """Rows per second"""
+        return self.rows_processed / self.duration_sec if self.duration_sec > 0 else 0
+
+result = PipelineResult(1000, 5, 2.0)
+print(result.success_rate())  # 0.995 ← Encapsulated logic
+print(result.throughput())     # 500.0 rows/sec
+```
+
+#### 3. **Validation on Creation**
+```python
+class PipelineResult(NamedTuple):
+    rows_processed: int
+    errors: int
+    duration_sec: float
+
+    def __new__(cls, rows_processed, errors, duration_sec):
+        # Validate before creating
+        if rows_processed < 0:
+            raise ValueError("rows_processed must be >= 0")
+        if errors < 0 or errors > rows_processed:
+            raise ValueError("Invalid error count")
+        if duration_sec <= 0:
+            raise ValueError("duration_sec must be > 0")
+        return super().__new__(cls, rows_processed, errors, duration_sec)
+
+# Usage
+result = PipelineResult(1000, 5, 2.0)  # ✅ Valid
+result = PipelineResult(-100, 5, 2.0)  # ❌ Raises ValueError
+```
+
+#### 4. **Computed Properties**
+```python
+from datetime import timedelta
+
+class PipelineResult(NamedTuple):
+    rows_processed: int
+    errors: int
+    duration_sec: float
+
+    @property
+    def duration(self) -> timedelta:
+        """Auto-convert to timedelta"""
+        return timedelta(seconds=self.duration_sec)
+
+    @property
+    def error_rate(self) -> float:
+        """Computed on-the-fly"""
+        if self.rows_processed == 0:
+            return 0.0
+        return self.errors / self.rows_processed
+
+result = PipelineResult(1000, 50, 2.0)
+print(result.duration)      # 0:00:02
+print(result.error_rate)    # 0.05 (5%)
+```
+
+#### 5. **Better IDE Support & Documentation**
+```python
+# Custom class - IDE knows structure
+result: PipelineResult = get_result()
+result.ro  # IDE autocompletes: rows_processed
+result.er  # IDE autocompletes: errors
+result.du  # IDE autocompletes: duration_sec
+
+# Vs bare tuple - IDE guesses
+result: tuple = get_result()
+result[0]  # What is this? IDE doesn't know
+```
+
+#### 6. **Serialization & Logging**
+```python
+class PipelineResult(NamedTuple):
+    rows_processed: int
+    errors: int
+    duration_sec: float
+
+    def to_dict(self) -> dict:
+        """Convert to JSON-serializable format"""
+        return self._asdict()
+
+    def to_log_entry(self) -> str:
+        """Format for logging"""
+        return (f"Pipeline: {self.rows_processed} rows, "
+                f"{self.errors} errors, {self.duration_sec:.2f}s")
+
+result = PipelineResult(1000, 5, 2.3)
+print(result.to_log_entry())  # "Pipeline: 1000 rows, 5 errors, 2.30s"
+```
+
+**Summary:** Custom NamedTuple gives you:
+- ✅ Type safety & type hints
+- ✅ Methods & properties (domain logic)
+- ✅ Validation (ensure data integrity)
+- ✅ Self-documenting code
+- ✅ IDE autocomplete
+- ✅ Immutability (like tuples)
+- ✅ Lightweight (unlike dataclass)
+
+### NamedTuple vs Regular Class: When to Use Each
+
+**Core Reasons to Use NamedTuple:**
+
+1. **Immutability** — Data cannot be modified after creation (prevents bugs, safe to cache/pass around)
+2. **Lighter** — 50% less memory + faster than regular classes
+3. **Hashable** — Can be dict keys or stored in sets (regular class cannot)
+4. **Zero boilerplate** — Automatic `__eq__`, `__hash__`, `__repr__` (regular class needs manual implementation)
+
+**Why use NamedTuple instead of a regular class?**
+
+```python
+# ❌ Regular class - verbose boilerplate
+class PipelineResult:
+    def __init__(self, rows_processed, errors, duration_sec):
+        self.rows_processed = rows_processed
+        self.errors = errors
+        self.duration_sec = duration_sec
+
+# ✅ NamedTuple - clean & automatic
+class PipelineResult(NamedTuple):
+    rows_processed: int
+    errors: int
+    duration_sec: float
+```
+
+**Quick Comparison:**
+
+| Feature | NamedTuple | Regular Class |
+|---------|-----------|---------------|
+| **Immutable** | Yes (safer) | Mutable by default |
+| **Memory** | ~50% less (uses `__slots__`) | More memory (uses `__dict__`) |
+| **Comparison** | Automatic `==`, `hash()` | Must implement manually |
+| **Code** | 3 lines | 5+ lines |
+| **Built-in methods** | `_asdict()`, `_replace()` | Must write yourself |
+| **Use case** | Data objects | Behavior/logic objects |
+
+**Real Example:**
+
+```python
+result1 = PipelineResult(1000, 5, 2.0)
+result2 = PipelineResult(1000, 5, 2.0)
+
+result1 == result2  # ✅ True (auto-implemented)
+result1.rows_processed = 999  # ❌ AttributeError (immutable - safe!)
+d = {result1: "cached"}  # ✅ Works (hashable)
+d = result1._asdict()  # ✅ {"rows_processed": 1000, ...}
+
+# With regular class, you'd need to implement __eq__, __hash__, __repr__
+# Plus the object would be mutable (risk of accidental changes)
+```
+
+**Rule of Thumb:**
+- **Use NamedTuple:** Simple data holders (immutable, no complex behavior)
+- **Use regular class:** Objects with methods/logic (need mutability or complex behavior)
+
 ---
 
 ## Functions
@@ -335,6 +526,41 @@ def convert_to_int(value: Union[str, int, float]) -> int:
 
 print("Union:", convert_to_int("42"), convert_to_int(3.14), convert_to_int(100))
 ```
+
+#### ⚠️ Critical: Type Hints Are NOT Enforced at Runtime
+
+```python
+# These type hints look strict, but Python ignores them at runtime!
+def convert_to_int(value: Union[str, int, float]) -> int:
+    """Type hint says: accepts str/int/float, returns int"""
+    return int(value)
+
+# ✅ Valid - matches type hints
+convert_to_int("42")  # Works
+convert_to_int(42)    # Works
+
+# ⚠️ Also works! (Python doesn't enforce the type hint)
+convert_to_int({"key": 42})  # Passes wrong type, no error at runtime!
+
+# Type hints are for:
+# 1. IDE/Editor — Shows squiggly red lines if you pass wrong type
+# 2. Type checkers (mypy) — Static analysis before running code
+# 3. Documentation — Shows what you should pass
+
+# Python does NOT validate types at runtime. This is intentional!
+# (Python's philosophy: "We trust you to use it correctly")
+
+# To enforce types at runtime, use isinstance():
+def safe_convert(value: Union[str, int, float]) -> int:
+    if not isinstance(value, (str, int, float)):
+        raise TypeError(f"Expected str/int/float, got {type(value).__name__}")
+    return int(value)
+
+safe_convert("42")  # ✅ Works
+safe_convert({"key": 42})  # ❌ TypeError: Expected str/int/float, got dict
+```
+
+**Bottom line:** Type hints help catch bugs in IDEs/type checkers, but Python doesn't enforce them at runtime.
 
 ### Decorators & Generators
 

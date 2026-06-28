@@ -373,6 +373,94 @@ r, g, b = colors
 print(f"RGB: {r}, {g}, {b}")
 ```
 
+### NamedTuple - Better Tuples with Names
+
+```python
+# Regular tuple - unclear what each position means
+result = (1000, 5, 2.3)  # What do these numbers mean?
+print(result[0])  # 1000 - but what is it?
+
+# NamedTuple - clear, named fields
+from typing import NamedTuple
+
+class PipelineResult(NamedTuple):
+    rows_processed: int
+    errors: int
+    duration_sec: float
+
+result = PipelineResult(1000, 5, 2.3)
+print(result.rows_processed)  # 1000 - clear!
+print(result.errors)          # 5
+print(result.duration_sec)    # 2.3
+
+# Compare with regular class
+class PipelineResultClass:
+    def __init__(self, rows_processed, errors, duration_sec):
+        self.rows_processed = rows_processed
+        self.errors = errors
+        self.duration_sec = duration_sec
+
+# NamedTuple is simpler and immutable!
+```
+
+**Core Reasons to Use NamedTuple:**
+
+1. **Clearer code** — Name fields instead of `result[0]`, `result[1]`, `result[2]`
+2. **Immutable** — Can't accidentally change data (safer)
+3. **Hashable** — Can use as dict keys or in sets (regular tuples can't always do this)
+4. **Less code** — No need for `__init__` like regular classes
+5. **Type hints** — Type checker knows what fields exist
+
+```python
+# You can even add methods!
+class PipelineResult(NamedTuple):
+    rows_processed: int
+    errors: int
+    duration_sec: float
+
+    def success_rate(self) -> float:
+        """Calculate percentage of successful rows"""
+        if self.rows_processed == 0:
+            return 0.0
+        return (self.rows_processed - self.errors) / self.rows_processed
+
+result = PipelineResult(1000, 5, 2.0)
+print(f"Success rate: {result.success_rate() * 100:.1f}%")  # Success rate: 99.5%
+```
+
+#### ⚠️ Important: Type Hints Are NOT Enforced at Runtime
+
+```python
+# Type hints like `: int`, `: str`, `-> float` are suggestions for IDEs
+# Python does NOT check them when your code runs!
+
+def calculate(x: int) -> int:
+    """Type hint says x should be int and return should be int"""
+    return x * 2
+
+# ✅ Works as expected
+print(calculate(5))  # 10
+
+# ⚠️ Also works! (Python doesn't enforce the type hint)
+print(calculate("hello"))  # hellohello (oops! but no error)
+
+# Type hints are for:
+# 1. IDE warnings — "You're passing a string, but function expects int"
+# 2. Type checkers (mypy) — Catch bugs before running code
+# 3. Documentation — Shows what types are expected
+
+# To actually enforce types at runtime, use isinstance():
+def safe_calculate(x):
+    if not isinstance(x, int):
+        raise TypeError(f"Expected int, got {type(x).__name__}")
+    return x * 2
+
+print(safe_calculate(5))  # 10
+print(safe_calculate("hello"))  # ❌ TypeError: Expected int, got str
+```
+
+**Bottom line:** Type hints help your IDE catch mistakes, but Python doesn't care at runtime.
+
 ### Sets
 
 ```python
