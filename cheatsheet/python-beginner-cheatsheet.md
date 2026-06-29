@@ -407,26 +407,9 @@ class PipelineResultClass:
 
 1. **Clearer code** — Name fields instead of `result[0]`, `result[1]`, `result[2]`
 2. **Immutable** — Can't accidentally change data (safer)
-3. **Hashable** — Can use as dict keys or in sets (regular tuples can't always do this)
+3. **Hashable** — Can use as dict keys or in sets
 4. **Less code** — No need for `__init__` like regular classes
 5. **Type hints** — Type checker knows what fields exist
-
-```python
-# You can even add methods!
-class PipelineResult(NamedTuple):
-    rows_processed: int
-    errors: int
-    duration_sec: float
-
-    def success_rate(self) -> float:
-        """Calculate percentage of successful rows"""
-        if self.rows_processed == 0:
-            return 0.0
-        return (self.rows_processed - self.errors) / self.rows_processed
-
-result = PipelineResult(1000, 5, 2.0)
-print(f"Success rate: {result.success_rate() * 100:.1f}%")  # Success rate: 99.5%
-```
 
 #### ⚠️ Important: Type Hints Are NOT Enforced at Runtime
 

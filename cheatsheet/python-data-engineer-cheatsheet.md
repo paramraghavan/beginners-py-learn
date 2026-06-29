@@ -309,27 +309,35 @@ print(result.success_rate())  # 0.995 ← Encapsulated logic
 print(result.throughput())     # 500.0 rows/sec
 ```
 
-#### 3. **Validation on Creation**
+#### 3. **When NOT to Use NamedTuple**
+
+If you need validation or complex logic, use a regular class instead:
+
 ```python
+# ❌ Too much logic for NamedTuple
 class PipelineResult(NamedTuple):
     rows_processed: int
     errors: int
     duration_sec: float
 
     def __new__(cls, rows_processed, errors, duration_sec):
-        # Validate before creating
+        # Validation logic here = confusing and not NamedTuple's purpose
         if rows_processed < 0:
-            raise ValueError("rows_processed must be >= 0")
-        if errors < 0 or errors > rows_processed:
-            raise ValueError("Invalid error count")
-        if duration_sec <= 0:
-            raise ValueError("duration_sec must be > 0")
+            raise ValueError("...")
         return super().__new__(cls, rows_processed, errors, duration_sec)
 
-# Usage
-result = PipelineResult(1000, 5, 2.0)  # ✅ Valid
-result = PipelineResult(-100, 5, 2.0)  # ❌ Raises ValueError
+# ✅ Better: Use a regular class if you need validation
+class PipelineResult:
+    def __init__(self, rows_processed: int, errors: int, duration_sec: float):
+        if rows_processed < 0:
+            raise ValueError("rows_processed must be >= 0")
+        self.rows_processed = rows_processed
+        self.errors = errors
+        self.duration_sec = duration_sec
 ```
+
+**Use NamedTuple when:** Just holding simple data (no validation needed)
+**Use regular class when:** Need validation, complex logic, or mutability
 
 #### 4. **Computed Properties**
 ```python
@@ -340,21 +348,115 @@ class PipelineResult(NamedTuple):
     errors: int
     duration_sec: float
 
-    @property
-    def duration(self) -> timedelta:
-        """Auto-convert to timedelta"""
-        return timedelta(seconds=self.duration_sec)
-
-    @property
-    def error_rate(self) -> float:
-        """Computed on-the-fly"""
-        if self.rows_processed == 0:
-            return 0.0
-        return self.errors / self.rows_processed
-
 result = PipelineResult(1000, 50, 2.0)
-print(result.duration)      # 0:00:02
-print(result.error_rate)    # 0.05 (5%)
+print(result.rows_processed)  # 1000
+print(result.errors)          # 50
+print(result.duration_sec)    # 2.0
+```
+
+##### Understanding `@property` Decorator
+
+`@property` turns a method into an attribute you can access without parentheses (syntactic sugar). It's read-only by default because there's no setter - use `@property_name.setter` to allow writes.
+
+It's useful for:
+1. **Computed values** — Calculate on-the-fly (like `error_rate`)
+2. **Data transformation** — Convert storage format to display format (like `duration_sec` → `duration`)
+3. **Controlled access** — Add validation or logic when accessing/setting data
+4. **API compatibility** — Access like an attribute (cleaner syntax), not a method
+
+```python
+# Example 1: Read-only property (no setter)
+class Temperature:
+    def __init__(self, celsius: float):
+        self._celsius = celsius
+
+    @property
+    def fahrenheit(self) -> float:
+        """Read-only property - calculated when accessed"""
+        return self._celsius * 9/5 + 32
+
+temp = Temperature(0)
+print(temp.fahrenheit)        # 32 (no parentheses needed)
+temp.fahrenheit = 212         # ❌ AttributeError - read-only (no setter defined)
+
+# Example 2: Writable property (with @setter)
+class Temperature:
+    def __init__(self, celsius: float):
+        self._celsius = celsius
+
+    @property
+    def fahrenheit(self) -> float:
+        """Getter - read the value"""
+        return self._celsius * 9/5 + 32
+
+    @fahrenheit.setter
+    def fahrenheit(self, value: float):
+        """Setter - write the value (converts to celsius)"""
+        self._celsius = (value - 32) * 5/9
+
+temp = Temperature(0)
+print(temp.fahrenheit)        # 32 (read)
+temp.fahrenheit = 212         # ✅ Works (setter runs)
+print(temp._celsius)          # 100 (converted to celsius)
+```
+
+**When to use `@property`:**
+
+| Use Case | Example | Why |
+|----------|---------|-----|
+| **Simple computed values** | `error_rate` (errors / total) | Quick calculation, feels like data |
+| **Format conversion** | `duration_sec` → `timedelta` | Transform storage to display format |
+| **Derived state** | `is_valid()` from flags | Logic that determines a status |
+| **Lazy evaluation** | Load on first access | Defer expensive work until needed |
+
+**When NOT to use `@property`:**
+
+| Don't | Why | Use Instead |
+|-------|-----|-------------|
+| **Expensive operations** | User won't expect property access to block | Explicit method: `calculate_total()` |
+| **Operations with side effects** | Accessing an attribute shouldn't modify state | Explicit method: `save_to_db()` |
+| **Operations with arguments** | Properties can't accept parameters | Explicit method: `filter_data(query)` |
+
+**Practical Examples:**
+
+```python
+# ✅ GOOD: Simple computation
+class User:
+    def __init__(self, first_name, last_name):
+        self.first_name = first_name
+        self.last_name = last_name
+
+    @property
+    def full_name(self) -> str:
+        """Combines first and last name"""
+        return f"{self.first_name} {self.last_name}"
+
+user = User("John", "Doe")
+print(user.full_name)  # "John Doe" (no parentheses needed)
+
+# ✅ GOOD: Format conversion
+class Config:
+    def __init__(self, timeout_ms: int):
+        self.timeout_ms = timeout_ms
+
+    @property
+    def timeout_seconds(self) -> float:
+        """Auto-convert milliseconds to seconds"""
+        return self.timeout_ms / 1000
+
+config = Config(5000)
+print(config.timeout_seconds)  # 5.0
+
+# ❌ BAD: Expensive operation (will block unexpectedly)
+@property
+def all_records(self):  # Don't do this!
+    """This queries database - takes seconds!"""
+    return db.query("SELECT * FROM large_table")
+
+# ✅ USE METHOD INSTEAD
+def fetch_all_records(self):
+    """Explicitly shows this is expensive work"""
+    return db.query("SELECT * FROM large_table")
 ```
 
 #### 5. **Better IDE Support & Documentation**
@@ -475,8 +577,8 @@ print("no mapping:", transform(raw))
 
 # *args and **kwargs
 def flexible(*args, **kwargs):
-    print("args:", args)
-    print("kwargs:", kwargs)
+    print("args:", args) # args type tuple
+    print("kwargs:", kwargs) # kwargs type dict
 
 flexible(1, 2, 3, x=10, y=20)
 
@@ -540,7 +642,10 @@ convert_to_int("42")  # Works
 convert_to_int(42)    # Works
 
 # ⚠️ Also works! (Python doesn't enforce the type hint)
+# error from     return int(value)
+#                       ^^^^^^^^^^
 convert_to_int({"key": 42})  # Passes wrong type, no error at runtime!
+
 
 # Type hints are for:
 # 1. IDE/Editor — Shows squiggly red lines if you pass wrong type
@@ -1359,6 +1464,51 @@ print(f"Last:  {all_data[-1]}")
 
 ## Concurrency & Parallelism
 
+### Threading vs Multiprocessing
+
+| Aspect | Threading | Multiprocessing |
+|--------|-----------|-----------------|
+| **Best for** | I/O-bound tasks | CPU-bound tasks |
+| **Examples** | Network requests, file I/O, database queries | Data processing, ML training, heavy math |
+| **Overhead** | Low (lightweight) | High (spawn new processes) |
+| **GIL limitation** | ❌ Python GIL prevents true parallelism | ✅ Bypasses GIL (true parallel execution) |
+| **Shared memory** | ✅ Easy (same process) | ⚠️ Hard (separate processes, must serialize) |
+| **Memory usage** | Low | High (separate Python interpreter per process) |
+
+**Decision Tree:**
+```
+Is your task CPU-bound (heavy computation)?
+  ├─ YES → Use ProcessPoolExecutor (Multiprocessing)
+  └─ NO (I/O-bound: network, disk, database)?
+      └─ YES → Use ThreadPoolExecutor (Threading)
+```
+
+**Example:**
+```python
+# ✅ Use THREADING for I/O
+# Waiting for network = wasted time without threading
+from concurrent.futures import ThreadPoolExecutor
+
+def fetch_api(url):
+    response = requests.get(url)  # Blocks, but other threads run
+    return response.json()
+
+with ThreadPoolExecutor(max_workers=10) as pool:
+    results = pool.map(fetch_api, urls)  # 10 concurrent requests
+
+# ✅ Use MULTIPROCESSING for CPU
+# Heavy math needs actual parallel cores
+from concurrent.futures import ProcessPoolExecutor
+
+def compute(n):
+    return sum(i*i for i in range(n))  # CPU-intensive
+
+with ProcessPoolExecutor(max_workers=4) as pool:
+    results = pool.map(compute, [100_000]*100)  # Uses all CPU cores
+```
+
+---
+
 ```python
 import time
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed
@@ -1410,6 +1560,19 @@ async def main():
 print("\n=== Asyncio ===")
 await main()  # In Jupyter, use `await` directly. In scripts, use: asyncio.run(main())
 ```
+
+### `pool.map` vs `pool.submit` (Executor)
+
+| Feature | `pool.map()` | `pool.submit()` |
+|---------|------------|-----------------|
+| **Input** | Iterable only | Single item per call |
+| **Blocking** | Blocks until ALL done | Returns immediately (futures) |
+| **Order** | Results in original order | Results as they complete |
+| **Use when** | Processing many items in order | Need control over execution/cancellation |
+| **Example** | `pool.map(func, [1,2,3])` | `futures = {pool.submit(func, x): x for x in [1,2,3]}` |
+
+**Choose `pool.map`** for simple "apply function to list" → get results in order.
+**Choose `pool.submit`** when you need progress tracking, early cancellation, or results as they complete.
 
 ---
 
