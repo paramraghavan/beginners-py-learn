@@ -109,6 +109,8 @@ def process_file(file: FileLike):
     file.write('\n' + content.upper())
 
 # Works with real files, StringIO, custom classes, etc.
+# FileLike  read and write interface methods which StringIO implements,
+# FileLike establishes a contract which StringIO implements
 from io import StringIO
 
 buffer = StringIO("hello world")
