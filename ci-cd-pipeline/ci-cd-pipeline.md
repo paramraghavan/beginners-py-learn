@@ -146,7 +146,7 @@ Triggered on:
 ### 1. Deploy to Staging
 
 - Pull versioned artifact from the registry.
-- Apply infrastructure-as-code templates (Terraform, CloudFormation, Helm, etc.).
+- **Apply infrastructure-as-code templates** (Terraform, CloudFormation, Helm, etc.) — **only if deploying to cloud/k8s infrastructure**. If the artifact is self-contained (e.g., JAR with embedded server) or infra already exists, skip this step.
 - Deploy to staging environment.
 - Run smoke tests and basic health checks.
 
@@ -196,6 +196,32 @@ Rollback:
 
 ---
 
+## When to Use IaC (Infrastructure-as-Code)
+
+**Use IaC if deploying to:**
+- ✅ Cloud platforms (AWS, Azure, GCP) — needs servers, databases, networking provisioned
+- ✅ Kubernetes clusters — needs configs, services, ingress created
+- ✅ Multi-server setups — needs load balancers, security groups, etc.
+
+**Skip IaC if:**
+- ❌ Deploying self-contained package (JAR with embedded Tomcat, single executable)
+- ❌ Infrastructure already exists and is stable
+- ❌ Just uploading an artifact to existing servers
+
+**Example:**
+```
+Scenario 1: Docker image deployment to K8s
+→ Apply IaC: YES (deploy services, ingress, persistent volumes via Helm)
+
+Scenario 2: Build Java JAR and upload to existing Tomcat server
+→ Apply IaC: NO (just copy JAR file, restart Tomcat)
+
+Scenario 3: Deploy to AWS Lambda with auto-scaling
+→ Apply IaC: YES (provision Lambda functions, API Gateway, Auto Scaling groups via Terraform)
+```
+
+---
+
 ## Example Tooling
 
 You can implement this pattern with many stacks, such as:
@@ -204,7 +230,7 @@ You can implement this pattern with many stacks, such as:
 - CI: GitHub Actions, GitLab CI, Jenkins, CircleCI.
 - CD: Argo CD, Spinnaker, GitHub Actions, GitLab Environments.
 - Artifacts: Docker Hub, ECR, GCR, Nexus, Artifactory.
-- IaC: Terraform, CloudFormation, Helm, Pulumi.
+- IaC: Terraform, CloudFormation, Helm, Pulumi (use when needed).
 
 ---
 

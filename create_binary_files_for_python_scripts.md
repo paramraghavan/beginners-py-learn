@@ -22,6 +22,55 @@ pyinstaller --onefile your_script.py
 - The `--onefile` option packages everything into a single executable file.
 - The executable will be generated in the `dist` directory.
 
+### Including Local Packages and Dependencies
+
+**What Gets Included Automatically:**
+- ✅ Packages imported via standard imports (`from package import module`)
+- ✅ Local modules in the same folder or subfolders with `__init__.py`
+- ✅ External packages installed via pip
+
+**What Does NOT Get Included Automatically:**
+- ❌ Dynamically imported modules (`importlib.import_module()`)
+- ❌ String-based imports (`__import__("module_name")`)
+- ❌ Conditionally imported modules at runtime
+
+**Example - Proper Project Structure (Recommended):**
+```
+my_app/
+├── main.py              (entry point)
+├── mypackage/
+│   ├── __init__.py      (makes it a package)
+│   ├── helpers.py
+│   └── utils.py
+└── requirements.txt
+```
+
+```python
+# main.py
+from mypackage.helpers import do_something  # ✅ Automatically included
+from mypackage.utils import helper_func     # ✅ Automatically included
+
+do_something()
+```
+
+Then build:
+```bash
+pyinstaller --onefile main.py
+```
+
+**If PyInstaller Misses a Module (Dynamic Imports):**
+Use `--hidden-import` to explicitly include it:
+
+```bash
+pyinstaller --onefile --hidden-import=mypackage.helpers --hidden-import=mypackage.utils main.py
+```
+
+**Quick Check:**
+- Use standard imports in your code
+- Create a `__init__.py` file in package folders
+- Avoid dynamic/string-based imports when possible
+- If something is missing, use `--hidden-import=package_name`
+
 ## 2. **Using cx_Freeze**
 
 **cx_Freeze** is another cross-platform tool:
