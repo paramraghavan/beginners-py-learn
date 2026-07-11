@@ -240,7 +240,7 @@ python -m cProfile -o output.pstats your_script.py
 **Best practice:** Use `python -m pip install` to avoid confusion with multiple Python versions.
 
 ### Package Distribution
-- **[Convert Python Scripts to Binary](create_binary_files_for_python_scripts.md)** - Create standalone executables
+- **[Convert Python Scripts to Binary](quick101/setup-and-debugging/create_binary_files_for_python_scripts.md)** - Create standalone executables
 - **[Build & Publish Packages](https://github.com/paramraghavan/pkg_example_project#readme)** - Version management & PyPI
 
 ---
