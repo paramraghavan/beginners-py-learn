@@ -67,3 +67,48 @@ class MyClass:
 obj = MyClass("I am an instance variable")
 
 ```
+
+## __call__ Method
+- Makes instances of a class callable like functions.
+- Can also be defined in a metaclass to make classes callable.
+- Called when you use `instance()` or `ClassName()` syntax.
+
+### Instance-level __call__:
+- Used to make an instance callable
+- Example:
+```python
+class Multiplier:
+    def __init__(self, factor):
+        self.factor = factor
+
+    def __call__(self, x):
+        return x * self.factor
+
+# Create an instance
+double = Multiplier(2)
+# Call the instance like a function
+result = double(5)  # Returns 10
+```
+
+### Metaclass-level __call__:
+- Used to customize class instantiation
+- The metaclass's __call__ method is invoked when creating an instance
+- Signature: `def __call__(cls, *args, **kwargs):`
+- Example:
+```python
+class SingletonMeta(type):
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super().__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+class Database(metaclass=SingletonMeta):
+    def __init__(self, connection_string):
+        self.connection = connection_string
+
+db1 = Database("connection1")
+db2 = Database("connection2")
+# db1 is db2 == True (same instance)
+```
