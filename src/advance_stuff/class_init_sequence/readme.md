@@ -112,3 +112,104 @@ db1 = Database("connection1")
 db2 = Database("connection2")
 # db1 is db2 == True (same instance)
 ```
+
+## Metaclass Explained
+
+### What is a Metaclass?
+- A **metaclass** is a "class of a class" — it defines how classes behave
+- Just like a class creates and controls instances, a metaclass creates and controls classes
+- By default, all classes use `type` as their metaclass
+
+### How It Works
+```
+type (metaclass)
+  ↓
+MyClass (class)
+  ↓
+obj (instance)
+```
+
+### Can You Pass Any Object?
+**No** — the object MUST be a metaclass (must inherit from `type`):
+```python
+# ✅ CORRECT: Inherits from type
+class MyMeta(type):
+    def __call__(cls, *args, **kwargs):
+        return super().__call__(*args, **kwargs)
+
+class MyClass(metaclass=MyMeta):
+    pass
+
+# ❌ WRONG: Not a metaclass
+class NotAMeta:
+    pass
+
+class BadClass(metaclass=NotAMeta):
+    pass  # TypeError: metaclass must be a type
+```
+
+### Naming Conventions
+- By convention, metaclass names end with `Meta` (e.g., `SingletonMeta`, `LoggingMeta`)
+- **But it's just a convention** — you can name it anything:
+```python
+class MyCustomName(type):  # Works fine, but confusing
+    def __call__(cls, *args, **kwargs):
+        return super().__call__(*args, **kwargs)
+
+class Database(metaclass=MyCustomName):
+    pass
+```
+
+### Metaclass Methods
+Two key methods:
+
+1. **`__new__(mcs, name, bases, namespace)`** - Called when CLASS is created
+   ```python
+   class LoggingMeta(type):
+       def __new__(mcs, name, bases, namespace):
+           print(f"Creating class: {name}")
+           return super().__new__(mcs, name, bases, namespace)
+
+   class MyClass(metaclass=LoggingMeta):
+       pass
+   # Output: "Creating class: MyClass"
+   ```
+
+2. **`__call__(cls, *args, **kwargs)`** - Called when INSTANCE is created
+   ```python
+   class LoggingMeta(type):
+       def __call__(cls, *args, **kwargs):
+           print(f"Creating instance of {cls.__name__}")
+           return super().__call__(*args, **kwargs)
+
+   class MyClass(metaclass=LoggingMeta):
+       pass
+
+   obj = MyClass()
+   # Output: "Creating instance of MyClass"
+   ```
+
+### Common Use Cases
+1. **Singleton Pattern** - Ensure only one instance exists
+2. **Validation** - Enforce naming rules or requirements on classes
+3. **Logging** - Track class and instance creation
+4. **Registration** - Auto-register classes in a registry
+5. **ORM** - Database ORMs use metaclasses to process class definitions
+
+### Example: Validate Class Names
+```python
+class PascalCaseMeta(type):
+    """Enforce classes use PascalCase naming"""
+    def __new__(mcs, name, bases, namespace):
+        if not name[0].isupper():
+            raise ValueError(f"Class name must start with uppercase: {name}")
+        return super().__new__(mcs, name, bases, namespace)
+
+# ✅ Works
+class GoodName(metaclass=PascalCaseMeta):
+    pass
+
+# ❌ Fails
+class badName(metaclass=PascalCaseMeta):
+    pass  # ValueError
+```
