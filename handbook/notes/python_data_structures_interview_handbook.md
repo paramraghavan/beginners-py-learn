@@ -364,6 +364,32 @@ def longest_unique_substring(text: str) -> int:
     return best
 ```
 
+Why `is_palindrome` uses `char.isalnum()`:
+
+Many interview palindrome questions say to ignore spaces, punctuation, and
+capitalization. `isalnum()` keeps only letters and numbers.
+
+```python
+text = "A man, a plan, a canal: Panama"
+cleaned = "".join(char.lower() for char in text if char.isalnum())
+print(cleaned)  # amanaplanacanalpanama
+```
+
+Without `isalnum()`, the comma, spaces, and colon would be compared too, and the
+phrase would look like it is not a palindrome. `char.lower()` handles uppercase
+and lowercase letters consistently.
+
+```python
+return cleaned == cleaned[::-1]
+```
+
+This compares the cleaned string with its reverse:
+
+```text
+amanaplanacanalpanama
+amanaplanacanalpanama
+```
+
 Build large strings efficiently:
 
 ```python
@@ -1720,6 +1746,40 @@ values.sort()
 
 `sorted()` returns a new list. `.sort()` mutates the list and returns `None`.
 
+Picture:
+
+```text
+Original list:
+values = [3, 1, 2]
+
+Using sorted(values):
+Step 1: Python reads values
+Step 2: Python creates a new sorted list
+Step 3: values is unchanged
+
+values             -> [3, 1, 2]
+new_values         -> [1, 2, 3]
+
+Using values.sort():
+Step 1: Python sorts the same list object in place
+Step 2: values itself changes
+
+values before      -> [3, 1, 2]
+values after       -> [1, 2, 3]
+```
+
+Python's built-in sort uses Timsort. It is the best default in real Python code
+because it is stable and performs very well on partially sorted data.
+
+Big O:
+
+```text
+Best time:    O(n)        when data is already mostly sorted
+Average time: O(n log n)
+Worst time:   O(n log n)
+Extra space:  O(n)        worst case for merging runs
+```
+
 Insertion sort:
 
 ```python
@@ -1733,6 +1793,51 @@ def insertion_sort(values: list[int]) -> list[int]:
             position -= 1
         result[position + 1] = current
     return result
+```
+
+Picture:
+
+```text
+Start: [5, 2, 4, 1]
+
+The left side is the sorted side.
+
+Pass 1: take 2
+[5 | 2, 4, 1]
+ 2 is smaller than 5, so shift 5 right
+[_, 5 | 4, 1]
+ insert 2
+[2, 5 | 4, 1]
+
+Pass 2: take 4
+[2, 5 | 4, 1]
+ 4 is smaller than 5, so shift 5 right
+[2, _, 5 | 1]
+ insert 4
+[2, 4, 5 | 1]
+
+Pass 3: take 1
+[2, 4, 5 | 1]
+ 1 is smaller than 5, shift 5 right
+[2, 4, _, 5]
+ 1 is smaller than 4, shift 4 right
+[2, _, 4, 5]
+ 1 is smaller than 2, shift 2 right
+[_, 2, 4, 5]
+ insert 1
+[1, 2, 4, 5]
+```
+
+Why it works: everything left of the divider is already sorted. Each new value is
+moved left until it lands in the correct position.
+
+Big O:
+
+```text
+Best time:    O(n)        when the list is already sorted
+Average time: O(n²)
+Worst time:   O(n²)       when the list is reversed
+Extra space:  O(n)        in this implementation because it copies the list
 ```
 
 Merge sort:
@@ -1762,6 +1867,48 @@ def merge(left: list[int], right: list[int]) -> list[int]:
     return result
 ```
 
+Picture:
+
+```text
+Start:
+[5, 2, 4, 1]
+
+Split phase:
+Level 0: [5, 2, 4, 1]
+Level 1: [5, 2]        [4, 1]
+Level 2: [5] [2]       [4] [1]
+
+Merge phase:
+Merge [5] and [2]:
+compare 5 vs 2 -> take 2
+remaining 5    -> take 5
+result         -> [2, 5]
+
+Merge [4] and [1]:
+compare 4 vs 1 -> take 1
+remaining 4    -> take 4
+result         -> [1, 4]
+
+Merge [2, 5] and [1, 4]:
+compare 2 vs 1 -> take 1
+compare 2 vs 4 -> take 2
+compare 5 vs 4 -> take 4
+remaining 5    -> take 5
+result         -> [1, 2, 4, 5]
+```
+
+Why it works: single-item lists are already sorted. Merge sort repeatedly merges
+two sorted lists into one bigger sorted list.
+
+Big O:
+
+```text
+Best time:    O(n log n)
+Average time: O(n log n)
+Worst time:   O(n log n)
+Extra space:  O(n)        needs temporary lists while merging
+```
+
 Quick sort educational version:
 
 ```python
@@ -1773,6 +1920,179 @@ def quick_sort(values: list[int]) -> list[int]:
     middle = [value for value in values if value == pivot]
     right = [value for value in values if value > pivot]
     return quick_sort(left) + middle + quick_sort(right)
+```
+
+Picture:
+
+```text
+Start: [5, 2, 4, 1, 3]
+
+Call 1:
+pivot = 4
+less than 4:    [2, 1, 3]
+equal to 4:     [4]
+greater than 4: [5]
+
+Now sort the left side [2, 1, 3]:
+pivot = 1
+less than 1:    []
+equal to 1:     [1]
+greater than 1: [2, 3]
+
+Now sort [2, 3]:
+pivot = 3
+less than 3:    [2]
+equal to 3:     [3]
+greater than 3: []
+
+Build result back up:
+[2] + [3]       -> [2, 3]
+[1] + [2, 3]    -> [1, 2, 3]
+[1, 2, 3] + [4] + [5] -> [1, 2, 3, 4, 5]
+```
+
+Why it works: after partitioning, every value on the left belongs before the
+pivot, and every value on the right belongs after the pivot.
+
+Big O:
+
+```text
+Best time:    O(n log n)
+Average time: O(n log n)
+Worst time:   O(n²)       bad pivots create very uneven splits
+Extra space:  O(n)        this educational version builds left/middle/right lists
+```
+
+Other common sorting pictures:
+
+Bubble sort:
+
+```text
+Start: [4, 2, 3, 1]
+
+Pass 1:
+compare 4 and 2 -> swap    [2, 4, 3, 1]
+compare 4 and 3 -> swap    [2, 3, 4, 1]
+compare 4 and 1 -> swap    [2, 3, 1, 4]
+4 is now fixed at the end.
+
+Pass 2:
+compare 2 and 3 -> keep    [2, 3, 1, 4]
+compare 3 and 1 -> swap    [2, 1, 3, 4]
+3 is now fixed.
+
+Pass 3:
+compare 2 and 1 -> swap    [1, 2, 3, 4]
+Sorted.
+```
+
+Big O:
+
+```text
+Best time:    O(n)        if optimized to stop when no swaps happen
+Average time: O(n²)
+Worst time:   O(n²)
+Extra space:  O(1)        in-place
+```
+
+Selection sort:
+
+```text
+Start: [4, 2, 3, 1]
+
+Pass 1:
+unsorted part: [4, 2, 3, 1]
+smallest value is 1
+swap 1 with first unsorted value 4
+[1 | 2, 3, 4]
+
+Pass 2:
+unsorted part: [2, 3, 4]
+smallest value is 2
+2 is already in the correct place
+[1, 2 | 3, 4]
+
+Pass 3:
+unsorted part: [3, 4]
+smallest value is 3
+3 is already in the correct place
+[1, 2, 3 | 4]
+
+Sorted: [1, 2, 3, 4]
+```
+
+Big O:
+
+```text
+Best time:    O(n²)       still scans for the smallest each pass
+Average time: O(n²)
+Worst time:   O(n²)
+Extra space:  O(1)        in-place
+```
+
+Heap sort:
+
+```text
+Start: [4, 2, 3, 1]
+
+Build a max heap:
+        4
+      /   \
+     2     3
+    /
+   1
+
+Remove largest 4 and place it at the end:
+heap left: [3, 2, 1]     sorted end: [4]
+
+Remove largest 3:
+heap left: [2, 1]        sorted end: [3, 4]
+
+Remove largest 2:
+heap left: [1]           sorted end: [2, 3, 4]
+
+Remove largest 1:
+heap left: []            sorted end: [1, 2, 3, 4]
+```
+
+Big O:
+
+```text
+Best time:    O(n log n)
+Average time: O(n log n)
+Worst time:   O(n log n)
+Extra space:  O(1)        for classic in-place heap sort
+```
+
+Timsort:
+
+```text
+Real data often has sorted runs:
+[1, 2, 5] [3, 4, 8] [6, 7]
+
+Step 1: detect existing sorted runs
+Run A: [1, 2, 5]
+Run B: [3, 4, 8]
+Run C: [6, 7]
+
+Step 2: sort small messy pieces if needed
+In this example, each run is already sorted.
+
+Step 3: merge runs
+Merge A and B:
+[1, 2, 5] + [3, 4, 8] -> [1, 2, 3, 4, 5, 8]
+
+Merge with C:
+[1, 2, 3, 4, 5, 8] + [6, 7] -> [1, 2, 3, 4, 5, 6, 7, 8]
+```
+
+Big O:
+
+```text
+Best time:    O(n)        when existing runs are already ordered
+Average time: O(n log n)
+Worst time:   O(n log n)
+Extra space:  O(n)        worst case
 ```
 
 | Algorithm |       Best |    Average |      Worst |     Stable |
