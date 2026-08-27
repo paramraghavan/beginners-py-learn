@@ -1,5 +1,39 @@
 # Quick Navigation
 
+Use this guide like a study path, not a pile of files. Start with the big picture,
+then practice one pattern at a time.
+
+## Beginner Study Path
+
+```text
+Day 1: README.md
+  Learn the pattern names and what each one is for.
+
+Day 2: gca_cheatsheet.md
+  Memorize the recognition clues and imports.
+
+Day 3-4: common_patterns.py
+  Trace each pattern by hand, then rewrite it without looking.
+
+Day 5-6: practice_problems.py
+  Solve easy problems first. Say the pattern before coding.
+
+Day 7: sample_test_walkthrough.md
+  Practice timing, debugging, and moving on when stuck.
+```
+
+## Mental Note For Students
+
+Do not ask, "Do I remember the exact code?"
+
+Ask:
+
+```text
+What information do I need quickly?
+What data structure gives me that information quickly?
+What edge case can break this?
+```
+
 ## Files in This Guide
 
 ### 📖 README.md - Core Concepts
@@ -24,8 +58,8 @@ scratch for practice.**
 
 ### 💪 practice_problems.py - Exercises
 
-18 solved problems: 8 Easy, 7 Medium, 3 Hard. Each with approach, solution, time/space complexity, and test cases. *
-*Practice twice: first solve, then with reference.**
+18 solved problems: 8 Easy, 7 Medium, 3 Hard. Each with approach, solution, time/space complexity, and test cases.
+**Practice twice: first solve, then with reference.**
 
 ### 🎯 sample_test_walkthrough.md - Full Simulation
 
@@ -56,4 +90,3 @@ cases. **Deep dive into how and why algorithms work.**
 3. Practice all 18 problems in practice_problems.py
 4. Understand data_structures.py implementations
 5. Do sample_test_walkthrough.md
-

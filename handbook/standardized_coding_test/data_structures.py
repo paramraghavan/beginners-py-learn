@@ -44,6 +44,23 @@ PRACTICE TIPS:
 - Understand each method's purpose
 - Know the time/space complexity of each operation
 - Practice building multiple instances
+
+BEGINNER MENTAL MODEL:
+- Linked list: each node points to the next node.
+- Tree: each node can branch into children.
+- BST: left values are smaller, right values are larger.
+- Graph: nodes connected by edges.
+- Stack: last in, first out.
+- Queue: first in, first out.
+- Trie: one character per level, useful for prefixes.
+
+HOW TO REMEMBER:
+Ask what operation must be fast.
+- Need undo or matching parentheses? Stack.
+- Need level order or shortest unweighted path? Queue.
+- Need prefix lookup? Trie.
+- Need ordered search? BST.
+- Need relationships between many things? Graph.
 """
 
 from typing import Optional, List, Any
@@ -54,7 +71,11 @@ from typing import Optional, List, Any
 # ============================================================================
 
 class ListNode:
-    """Node for singly linked list."""
+    """Node for singly linked list.
+
+    Mental picture:
+    [value | next] -> [value | next] -> None
+    """
 
     def __init__(self, val: int = 0, next: 'ListNode' = None):
         self.val = val
@@ -62,7 +83,11 @@ class ListNode:
 
 
 class SingleLinkedList:
-    """Singly linked list implementation."""
+    """Singly linked list implementation.
+
+    Why this matters: linked-list interview problems test whether you can change
+    pointers without losing the rest of the chain.
+    """
 
     def __init__(self):
         self.head = None
@@ -231,7 +256,10 @@ def remove_nth_from_end(head: Optional[ListNode], n: int) -> Optional[ListNode]:
 # ============================================================================
 
 class TreeNode:
-    """Node for binary tree."""
+    """Node for binary tree.
+
+    Mental picture: each node has a left child and a right child.
+    """
 
     def __init__(self, val: int = 0, left: 'TreeNode' = None, right: 'TreeNode' = None):
         self.val = val
@@ -434,7 +462,10 @@ def diameter_of_tree(root: Optional[TreeNode]) -> int:
 # ============================================================================
 
 class Graph:
-    """Graph using adjacency list."""
+    """Graph using adjacency list.
+
+    Mental picture: self.graph[node] gives the neighbors you can visit next.
+    """
 
     def __init__(self):
         self.graph = {}
@@ -551,7 +582,10 @@ class Graph:
 # ============================================================================
 
 class Stack:
-    """Stack implementation using list."""
+    """Stack implementation using list.
+
+    Mental note: last item pushed is the first item popped.
+    """
 
     def __init__(self):
         self.items = []
@@ -601,6 +635,8 @@ class Queue:
     Queue implementation using deque.
 
     Current: Uses deque for O(1) popleft()
+
+    Mental note: first item enqueued is the first item dequeued.
 
     Alternative: Index-based implementation (no imports):
         class Queue:
@@ -663,7 +699,10 @@ class TrieNode:
 
 
 class Trie:
-    """Trie implementation for strings."""
+    """Trie implementation for strings.
+
+    Mental note: a trie stores words by shared prefixes, one character at a time.
+    """
 
     def __init__(self):
         self.root = TrieNode()
@@ -727,7 +766,12 @@ class Trie:
 # ============================================================================
 
 class BST:
-    """Binary Search Tree implementation."""
+    """Binary Search Tree implementation.
+
+    Mental note: every left subtree is smaller; every right subtree is larger.
+    That rule is what makes search faster than scanning every node when the tree
+    is balanced.
+    """
 
     def __init__(self):
         self.root = None

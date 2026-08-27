@@ -1,5 +1,33 @@
 # Core Algorithms
 
+## How Beginners Should Read This File
+
+Do not read this like a dictionary. Read each algorithm using the same four
+questions:
+
+```text
+1. What problem shape does this solve?
+2. What information does the algorithm remember?
+3. Why does each step move closer to the answer?
+4. What is the time and space complexity?
+```
+
+Mental map:
+
+| Algorithm idea | Plain-English memory hook |
+|---|---|
+| Iteration | Walk through items one by one. |
+| Recursion | Solve a smaller copy of the same problem. |
+| Binary search | Throw away half the search space. |
+| DFS | Go deep, then come back. |
+| BFS | Explore by distance or level. |
+| Sorting | Put values in order so later decisions are easier. |
+| Hash maps | Remember what you have seen. |
+| Sliding window | Reuse a moving contiguous slice. |
+| Dynamic programming | Store repeated smaller answers. |
+| Backtracking | Choose, explore, undo. |
+| Two pointers | use two positions in the input, and move the pointer that lets you safely eliminate impossible answers. |
+
 ## 0. Understanding Time & Space Complexity
 
 Before diving into algorithms, let's understand HOW to calculate complexity, not just what it means.

@@ -4,6 +4,32 @@
 
 **During Preparation:** Use this as quick reference while studying
 **During Test:** Quick memory jogger for pattern names and imports
+
+## How Beginners Should Use This Sheet
+
+This sheet is not for memorizing every line. Use it to recognize problem shapes.
+
+Before coding, pause and ask:
+
+```text
+1. What is the input shape? array, string, tree, graph, intervals?
+2. What do I need quickly? membership, count, min/max, next node?
+3. Which pattern gives that quickly?
+4. What edge case can break it?
+```
+
+Mental shortcut:
+
+```text
+Repeated lookup  -> dict or set
+Contiguous range -> sliding window
+Sorted input     -> two pointers or binary search
+Shortest steps   -> BFS
+All paths        -> DFS/backtracking
+Top K            -> heap or Counter
+Repeated states  -> dynamic programming
+```
+
 **Difficulty Levels:**
 - ⭐ = Essential (appears in 70% of tests)
 - ⭐⭐ = Important (appears in 40% of tests)
@@ -73,41 +99,49 @@ import bisect
 ### Two Pointers ⭐⭐⭐
 **When:** Sorted arrays, pairs, palindromes
 **Template:** Start at edges, move towards center
+**Mental note:** Move the pointer that cannot help anymore.
 **See:** README.md or common_patterns.py for full implementation
 
 ### Sliding Window ⭐⭐⭐
 **When:** Substrings, subarrays, max/min windows
 **Template:** Expand/contract window, track state in hash map
+**Mental note:** Reuse the previous window instead of recomputing from scratch.
 **See:** README.md or common_patterns.py for full implementation
 
 ### Hash Map Counting ⭐⭐⭐
 **When:** Frequencies, anagrams, duplicates, lookups
 **Use:** Counter for frequencies, defaultdict for default values
+**Mental note:** Spend memory to avoid repeated searching.
 **See:** README.md or common_patterns.py for full implementation
 
 ### DFS (Depth-First Search) ⭐⭐⭐
 **When:** Paths, cycles, backtracking, permutations
 **Template:** Recursive or use stack, track visited nodes
+**Mental note:** Go deep, then backtrack.
 **See:** README.md or common_patterns.py for full implementation
 
 ### BFS (Breadth-First Search) ⭐⭐⭐
 **When:** Shortest paths, level-order, connected components
 **Template:** Use deque (NOT list.pop(0)!), track visited
+**Mental note:** BFS explores by distance: 1 step, then 2 steps, then 3.
 **See:** README.md or common_patterns.py for full implementation
 
 ### Binary Search ⭐⭐
 **When:** Sorted arrays, rotated arrays, boundaries
 **Template:** left=0, right=len-1, while left<=right, mid=(left+right)//2
+**Mental note:** You need a rule that discards half the search space.
 **See:** README.md or common_patterns.py for full implementation
 
 ### Dynamic Programming (Memoization) ⭐⭐⭐
 **When:** Overlapping subproblems, optimization
 **Template:** Use dict for memo, check cache first
+**Mental note:** If recursion repeats the same state, store the answer.
 **See:** README.md or common_patterns.py for full implementation
 
 ### Heaps ⭐⭐
 **When:** Priority queues, top-k problems, min/max
 **Template:** heappush, heappop, heapify
+**Mental note:** Keep only the best k items instead of sorting everything.
 **See:** README.md or common_patterns.py for full implementation
 
 ---

@@ -4,6 +4,23 @@ This document walks through a simulated 70-minute GCA test with 3 problems.
 
 ---
 
+## Beginner Goal For This Walkthrough
+
+Do not only read the final code. Practice the thinking script:
+
+```text
+1. Restate the problem in your own words.
+2. Write the brute-force idea.
+3. Identify why brute force is too slow.
+4. Name the pattern.
+5. Code the simplest correct version.
+6. Test with sample and edge cases.
+7. State time and space complexity.
+```
+
+During a real timed test, this script keeps you calm. It turns a large problem
+into small decisions.
+
 ## Simulated Test Problems
 
 ### Problem 1 (Easy): Two Sum

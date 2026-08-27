@@ -29,6 +29,23 @@ LEARNING APPROACH:
 4. Implement from scratch
 5. Run test section to verify
 6. Practice variations
+
+BEGINNER MENTAL MODEL:
+- Two pointers: use two positions in the input, and move the pointer that lets you safely eliminate impossible answers..
+- Sliding window: keep a moving slice and update it instead of recalculating.
+- Hash map: remember facts so you do not search again.
+- DFS: go deep, then back up.
+- BFS: explore by distance, one level at a time.
+- Binary search: discard half the search space each step.
+- Dynamic programming: cache repeated subproblem answers.
+- Heap: keep the next best item easy to remove.
+
+HOW TO STUDY ONE FUNCTION:
+1. Say when you would use the pattern.
+2. Trace the variables on a small input.
+3. Explain why the loop moves or stops.
+4. State time and space complexity.
+5. Rewrite from memory.
 """
 
 from collections import defaultdict, Counter, deque
@@ -41,9 +58,16 @@ import heapq
 # TWO POINTERS PATTERN
 # ============================================================================
 
+# Use this pattern when two positions can move through the input and each move
+# eliminates impossible answers. Sorted arrays, palindromes, and pair problems
+# are the common beginner examples.
+
 def two_sum(arr: List[int], target: int) -> List[int]:
     """
     Two pointer approach for sorted array.
+    Why it works: because the array is sorted. If the sum is too small, moving
+    left rightward makes the sum bigger. If the sum is too large, moving right
+    leftward makes the sum smaller.
     Time: O(n), Space: O(1)
     """
     left, right = 0, len(arr) - 1
@@ -61,6 +85,8 @@ def two_sum(arr: List[int], target: int) -> List[int]:
 def two_sum_unsorted(arr: List[int], target: int) -> List[int]:
     """
     Hash map approach for unsorted array.
+    Why it works: store each number's index. For each number, check whether its
+    complement was already seen.
     Time: O(n), Space: O(n)
     """
     seen = {}
@@ -119,9 +145,14 @@ def container_with_most_water(heights: List[int]) -> int:
 # SLIDING WINDOW PATTERN
 # ============================================================================
 
+# Use this pattern for contiguous subarrays or substrings. The key idea is to
+# update the current window as it moves instead of recomputing each window from
+# scratch.
+
 def max_window_sum(arr: List[int], k: int) -> int:
     """
     Find maximum sum of k consecutive elements.
+    Why it works: each new window removes one old value and adds one new value.
     Time: O(n), Space: O(1)
     """
     if k > len(arr):
@@ -239,6 +270,9 @@ def min_window_substring(s: str, t: str) -> str:
 # HASH MAP / COUNTER PATTERN
 # ============================================================================
 
+# Use this pattern when you need fast lookup, frequency counts, grouping, or
+# "have I seen this before?" information.
+
 def most_common_elements(arr: List[int], k: int) -> List[int]:
     """
     Find k most common elements.
@@ -280,6 +314,9 @@ def intersection_of_two_arrays(arr1: List[int], arr2: List[int]) -> List[int]:
 # ============================================================================
 # DFS / BACKTRACKING PATTERN
 # ============================================================================
+
+# Use DFS when you need to explore paths, connected components, trees, islands,
+# or all possible choices. Always track visited nodes for graphs with cycles.
 
 def dfs_recursive(node, visited: Set = None) -> None:
     """Generic DFS traversal."""
@@ -354,6 +391,9 @@ def combinations(arr: List, r: int) -> List[List]:
 # ============================================================================
 # BFS PATTERN
 # ============================================================================
+
+# Use BFS when the question asks for shortest path or minimum number of steps in
+# an unweighted graph. BFS works level by level.
 
 def bfs_traversal(start_node) -> List:
     """
@@ -462,6 +502,9 @@ def shortest_path(graph: Dict, start, end) -> int:
 # BINARY SEARCH PATTERN
 # ============================================================================
 
+# Use binary search when the input is sorted or when a yes/no condition becomes
+# true after a boundary. The important skill is deciding which half is impossible.
+
 def binary_search(arr: List[int], target: int) -> int:
     """Standard binary search."""
     left, right = 0, len(arr) - 1
@@ -523,6 +566,9 @@ def search_rotated_array(arr: List[int], target: int) -> int:
 # ============================================================================
 # DYNAMIC PROGRAMMING PATTERN
 # ============================================================================
+
+# Use DP when brute force repeats the same state. Store the answer to a state so
+# future calls can reuse it.
 
 def fibonacci_memo(n: int, memo: Dict = None) -> int:
     """Fibonacci with memoization."""
@@ -598,6 +644,9 @@ def longest_common_subsequence(text1: str, text2: str) -> int:
 # HEAP / PRIORITY QUEUE PATTERN
 # ============================================================================
 
+# Use heaps for top-k, priority queues, and repeated "give me the smallest/largest"
+# problems.
+
 def kth_largest_element(arr: List[int], k: int) -> int:
     """Find kth largest element using min heap."""
     if k > len(arr):
@@ -648,6 +697,9 @@ def merge_k_sorted_lists(lists: List[List[int]]) -> List[int]:
 # ============================================================================
 # UNION-FIND / DISJOINT SET PATTERN
 # ============================================================================
+
+# Use union-find when the problem repeatedly asks whether two items are in the
+# same group or asks you to merge groups efficiently.
 
 class UnionFind:
     """Union-Find (Disjoint Set Union) implementation."""

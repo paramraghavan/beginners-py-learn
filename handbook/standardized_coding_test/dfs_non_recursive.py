@@ -1,5 +1,25 @@
+"""Beginner DFS examples.
+
+Mental model:
+DFS means "go as deep as possible, then come back."
+
+Use DFS when:
+- You need to visit everything connected to a starting node.
+- You need to search paths in a tree or graph.
+- You need to mark connected components, islands, or reachable nodes.
+
+Why visited matters:
+Graphs can contain cycles. Without a visited set, DFS may revisit the same nodes
+forever.
+"""
+
+
 def dfs(graph, start, visited=None):
-    """Recursive DFS - handles sparse graphs"""
+    """Recursive DFS that also handles sparse graphs.
+
+    A sparse graph may mention a neighbor that is not itself a key in the
+    dictionary. `graph.get(start, [])` prevents KeyError for those leaf nodes.
+    """
     if visited is None:
         visited = set()
 
@@ -41,5 +61,4 @@ print(f"Output: {result3}")
 # Output: {1, 2, 3} (4 and 5 not reachable)
 
 # Time: O(V + E), Space: O(V) for recursion
-
 

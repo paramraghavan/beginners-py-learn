@@ -19,6 +19,19 @@ PRACTICE TIP:
 Solve each problem twice:
 - First: Try to solve without hints
 - Second: Solve by referencing the pattern only (no full code)
+
+BEGINNER SOLVING SCRIPT:
+Before writing code, fill in these blanks:
+1. Input type: ______
+2. Output type: ______
+3. Brute force idea: ______
+4. Pattern I recognize: ______
+5. Data structure I need: ______
+6. Edge cases: empty, one item, duplicates, negatives, no answer
+
+MENTAL NOTE:
+Most mistakes happen before coding starts. If you cannot say the pattern in one
+sentence, slow down and trace the sample input by hand.
 """
 
 from typing import List, Optional, Dict
@@ -38,7 +51,9 @@ def remove_duplicates_from_sorted_array(nums: List[int]) -> int:
     Input: nums = [1,1,2]
     Output: 2, nums = [1,2,_]
 
-    Approach: Two pointers - maintain pointer for insertion position
+    Approach: Two pointers - maintain pointer for insertion position.
+    Why this works: the array is sorted, so duplicates are next to each other.
+    When a new value appears, copy it to the next safe position.
     Time: O(n), Space: O(1)
     """
     if not nums:
@@ -63,7 +78,8 @@ def single_number(nums: List[int]) -> int:
     Input: nums = [2,2,1]
     Output: 1
 
-    Approach: XOR all numbers (a ^ a = 0, a ^ 0 = a)
+    Approach: XOR all numbers (a ^ a = 0, a ^ 0 = a).
+    Why this works: paired values cancel out, leaving the unpaired value.
     Time: O(n), Space: O(1)
     """
     result = 0
@@ -81,7 +97,9 @@ def majority_element(nums: List[int]) -> int:
     Input: nums = [3,2,3]
     Output: 3
 
-    Approach: Boyer-Moore voting algorithm
+    Approach: Boyer-Moore voting algorithm.
+    Why this works: the majority value appears more than all other values
+    combined, so pairwise cancellation cannot fully remove it.
     Time: O(n), Space: O(1)
     """
     count = 0
@@ -103,7 +121,9 @@ def rotate_array(nums: List[int], k: int) -> None:
     Input: nums = [1,2,3,4,5], k = 2
     Output: [4,5,1,2,3]
 
-    Approach: Reverse sections - reverse all, reverse first k, reverse last n-k
+    Approach: Reverse sections - reverse all, reverse first k, reverse last n-k.
+    Why this works: reversing all moves the right block to the front but also
+    reverses both blocks internally; the next two reversals fix each block.
     Time: O(n), Space: O(1)
     """
     k = k % len(nums)
