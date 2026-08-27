@@ -1,8 +1,4 @@
-# Core Algorithms: Theory and Implementation
-
-Complete guide to algorithms commonly used in software and interviews. Each algorithm includes theory, Python implementation, complexity analysis, and practical use cases.
-
----
+# Core Algorithms
 
 ## 0. Understanding Time & Space Complexity
 
