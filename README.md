@@ -63,6 +63,7 @@
 - **[Visual Studio Code](https://code.visualstudio.com/)**
 - **[Spyder](https://www.spyder-ide.org/)**
 - **[Environment Setup Guide](python_environment_setup.md)**
+- **[PyCharm to VSCode Guide ](pycharm_to_vscode_guide.md)**
 - Any text editor (Sublime, Vim, etc.)
 
 ### Git & Version Control
