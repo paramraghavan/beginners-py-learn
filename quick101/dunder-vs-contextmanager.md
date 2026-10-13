@@ -1,33 +1,77 @@
-# Dunder
+# Dunder Methods and Context Managers
 
-"Dunder" is short for **Double Underscore**. These are the methods that look like `__method__`. In the Python community,
-they are officially called **Special Methods** or **Magic Methods**.
+"Dunder" means **double underscore**.
 
-They are the "secret sauce" that allows your custom objects to interact with Python's built-in syntax (like `+`,
-`len()`, or `print()`).
+Dunder methods are methods with names like this:
+
+```python
+__init__
+__str__
+__add__
+__enter__
+__exit__
+```
+
+Python officially calls them **special methods**. People also call them
+**magic methods**.
+
+They are special because Python's own syntax knows how to call them.
+
+For example:
+
+```python
+len(obj)      # may call obj.__len__()
+print(obj)   # may call obj.__str__()
+obj1 + obj2  # may call obj1.__add__(obj2)
+with obj:    # may call obj.__enter__() and obj.__exit__()
+```
+
+You do not invent random dunder names. You use the standard ones Python already
+understands.
 
 ---
 
-### 1. The Most Common Dunders
+## Beginner Idea: Python Syntax Calls Methods
 
-You likely use these every day without thinking about them as "magic."
+When you write normal Python syntax, Python often translates it into a special
+method call.
 
-| Method     | Triggered by...                  | Purpose                                                           |
-|:-----------|:---------------------------------|:------------------------------------------------------------------|
-| `__init__` | `ClassName()`                    | **Initializer:** Sets up the object's starting state.             |
-| `__str__`  | `print(obj)` or `str(obj)`       | **User-friendly string:** What a human should see.                |
-| `__repr__` | `repr(obj)` or Developer console | **Developer string:** A "code-like" representation for debugging. |
-| `__len__`  | `len(obj)`                       | **Length:** Returns the size of your object.                      |
+This:
+
+```python
+p3 = p1 + p2
+```
+
+is roughly like this:
+
+```python
+p3 = p1.__add__(p2)
+```
+
+That is how your own objects can work with operators like `+`.
 
 ---
 
-### 2. Making Objects "Act Like" Built-in Types
+## How Does `Point` Know to Call `__add__`?
 
-**The power of dunders is that they let your custom classes "mimic" integers, lists, or even functions.**
+The `Point` class does not "know" by itself.
 
-#### **Arithmetic (The Calculator Mimic)**
+Python knows.
 
-If you want to use the `+` operator between two objects, you define `__add__`.
+The `+` operator is part of Python's data model. When Python sees:
+
+```python
+p1 + p2
+```
+
+it follows a standard rule:
+
+1. Look at the type of `p1`.
+2. Check whether that type defines `__add__`.
+3. If it does, call `p1.__add__(p2)`.
+4. Use the returned value as the result of `p1 + p2`.
+
+Example:
 
 ```python
 class Point:
@@ -38,113 +82,332 @@ class Point:
     def __add__(self, other):
         return Point(self.x + other.x, self.y + other.y)
 
+    def __repr__(self):
+        return f"Point({self.x}, {self.y})"
+
 
 p1 = Point(1, 2)
 p2 = Point(3, 4)
-p3 = p1 + p2  # This triggers p1.__add__(p2)
+
+print(p1 + p2)
 ```
 
-#### **Container/Sequence (The List Mimic)**
+Output:
 
-If you want to access your object using square brackets `obj[0]`, you use `__getitem__`.
+```text
+Point(4, 6)
+```
+
+The important part is:
+
+```python
+def __add__(self, other):
+```
+
+Python has a standard rule that says `+` uses `__add__`.
+
+So yes, `__add__` is a standard dunder method.
+
+Advanced detail: for many special methods, Python looks on the object's class,
+not just on the individual object. So the important thing is that `Point`
+defines `__add__` as part of the class.
+
+---
+
+## What If Python Cannot Find `__add__`?
+
+If an object does not support `+`, Python raises a `TypeError`.
+
+```python
+class Point:
+    pass
+
+
+p1 = Point()
+p2 = Point()
+
+print(p1 + p2)
+```
+
+Output:
+
+```text
+TypeError: unsupported operand type(s) for +: 'Point' and 'Point'
+```
+
+That error means Python looked for a way to add those objects, but the class did
+not define the needed behavior.
+
+---
+
+## Common Standard Dunder Methods
+
+Python has many standard dunder methods. You do not need to memorize all of
+them, but you should recognize the common ones.
+
+### Object Setup and Display
+
+| Method | Triggered by | Purpose |
+|---|---|---|
+| `__init__` | `ClassName(...)` | Initialize a new object after it is created |
+| `__repr__` | `repr(obj)`, developer tools | Developer-friendly representation |
+| `__str__` | `str(obj)`, `print(obj)` | Human-friendly string |
+| `__bool__` | `if obj:` | Truth value |
+
+Example:
+
+```python
+class User:
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return f"User({self.name!r})"
+
+    def __str__(self):
+        return self.name
+
+
+user = User("Ada")
+
+print(repr(user))
+print(str(user))
+```
+
+Output:
+
+```text
+User('Ada')
+Ada
+```
+
+---
+
+### Operators
+
+| Method | Triggered by | Purpose |
+|---|---|---|
+| `__add__` | `a + b` | Addition |
+| `__radd__` | `b + a` fallback | Right-side addition fallback |
+| `__sub__` | `a - b` | Subtraction |
+| `__mul__` | `a * b` | Multiplication |
+| `__truediv__` | `a / b` | Division |
+| `__eq__` | `a == b` | Equality |
+| `__lt__` | `a < b` | Less-than comparison |
+
+Example:
+
+```python
+class Money:
+    def __init__(self, dollars):
+        self.dollars = dollars
+
+    def __add__(self, other):
+        return Money(self.dollars + other.dollars)
+
+    def __repr__(self):
+        return f"Money({self.dollars})"
+
+
+wallet = Money(10)
+bonus = Money(5)
+
+print(wallet + bonus)
+```
+
+Output:
+
+```text
+Money(15)
+```
+
+---
+
+### Containers and Iteration
+
+| Method | Triggered by | Purpose |
+|---|---|---|
+| `__len__` | `len(obj)` | Length |
+| `__getitem__` | `obj[index]` | Indexing |
+| `__setitem__` | `obj[index] = value` | Setting by index/key |
+| `__contains__` | `item in obj` | Membership test |
+| `__iter__` | `for item in obj` | Start iteration |
+| `__next__` | `next(iterator)` | Get the next item |
+
+Example:
 
 ```python
 class Playlist:
     def __init__(self, songs):
         self.songs = songs
 
+    def __len__(self):
+        return len(self.songs)
+
     def __getitem__(self, index):
         return self.songs[index]
 
 
-my_hits = Playlist(["Song A", "Song B"])
-print(my_hits[0])  # Triggers __getitem__
+playlist = Playlist(["Song A", "Song B"])
+
+print(len(playlist))
+print(playlist[0])
+```
+
+Output:
+
+```text
+2
+Song A
+```
+
+Because `Playlist` defines `__getitem__`, Python also knows how to loop over it
+by index:
+
+```python
+for song in playlist:
+    print(song)
 ```
 
 ---
 
-### 3. Lifecycle & Context Dunders
+### Callable Objects
 
-These manage how an object lives and dies within your code.
+| Method | Triggered by | Purpose |
+|---|---|---|
+| `__call__` | `obj(...)` | Make an object act like a function |
 
-* **`__call__`**: Makes your object **callable** like a function. If you run `my_obj()`, this method executes.
-* **`__enter__` & `__exit__`**: These turn your object into a **Context Manager**. They are triggered when you use the
-  `with` statement (great for closing files or database connections automatically).
-* **`__iter__` & `__next__`**: These make your object **iterable**, allowing you to use it in a `for` loop.
+Example:
 
-Lifecycle and context dunders are the "hooks" Python uses to manage an object from the moment it is born to the moment
-it is destroyed, as well as how it behaves inside a `with` block.
+```python
+class Greeter:
+    def __init__(self, greeting):
+        self.greeting = greeting
 
-#### 1. The Lifecycle Dunders: `__init__` and `__del__`
+    def __call__(self, name):
+        return f"{self.greeting}, {name}!"
 
-These manage the "Birth" and "Death" of an object.
 
-* **`__init__(self, ...)`**: The initializer. It runs immediately after the object is created to set up its initial
-  state.
-* **`__del__(self)`**: The destructor. It runs when the object is about to be destroyed (garbage collected). This is
-  less commonly used because Python handles memory automatically, but it's useful for closing external resources like
-  network sockets.
+hello = Greeter("Hello")
 
----
+print(hello("Ada"))
+```
 
-#### 2. The Context Dunders: `__enter__` and `__exit__`
+Output:
 
-These allow your object to work with the **`with`** statement. This is known as the **Context Management Protocol**.
-
-* **`__enter__(self)`**: Runs at the start of the `with` block. It usually sets up a resource (like opening a file or
-  connecting to a database) and returns the object to be used.
-* **`__exit__(self, exc_type, exc_value, traceback)`**: Runs at the end of the `with` block, **even if an error occurred
-  **. It’s used for cleanup (like closing the file or releasing a lock).
+```text
+Hello, Ada!
+```
 
 ---
 
-#### Full Example: A Database Connection Simulator
+## Context Manager Dunders: `__enter__` and `__exit__`
 
-Imagine you want to ensure that every time you "connect" to a database, you definitely "disconnect," no matter what
-happens in your code.
+The `with` statement also uses standard dunder methods.
+
+When Python sees:
+
+```python
+with resource as value:
+    ...
+```
+
+it uses the **context manager protocol**:
+
+1. Call `resource.__enter__()` at the start.
+2. Assign the return value to `value`.
+3. Run the code inside the `with` block.
+4. Call `resource.__exit__(...)` at the end, even if an error happened.
+
+Example:
 
 ```python
 class DatabaseConnection:
     def __init__(self, db_name):
         self.db_name = db_name
-        print(f"1. [Lifecycle] __init__: Created object for {self.db_name}")
 
     def __enter__(self):
-        print(f"2. [Context] __enter__: Opening connection to {self.db_name}")
-        return self  # This is what the 'as' variable becomes
+        print(f"Opening connection to {self.db_name}")
+        return self
 
     def execute(self, query):
-        print(f"3. [Action]: Executing '{query}'")
-        # Uncomment the next line to see how __exit__ still runs during an error!
-        # raise Exception("Query Failed!") 
+        print(f"Running query: {query}")
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        print(f"4. [Context] __exit__: Closing connection to {self.db_name}")
-        if exc_type:
-            print(f"   (Note: Closed safely after error: {exc_val})")
-
-    def __del__(self):
-        print(f"5. [Lifecycle] __del__: Object for {self.db_name} is being deleted from memory")
+    def __exit__(self, exc_type, exc_value, traceback):
+        print(f"Closing connection to {self.db_name}")
 
 
-# --- Using the class ---
 with DatabaseConnection("Production_DB") as db:
     db.execute("SELECT * FROM users")
-
-print("--- End of script ---")
 ```
 
-### contextmanager
+Output:
 
-Using `contextlib` is the "Pythonic" way to create context managers without having to write a whole class with
-`__enter__` and `__exit__` methods. It turns a simple **generator** into a fully functional context manager.
+```text
+Opening connection to Production_DB
+Running query: SELECT * FROM users
+Closing connection to Production_DB
+```
 
-### The `contextmanager` Decorator
+The biggest benefit is cleanup. `__exit__` runs even if something inside the
+`with` block fails.
 
-This approach is usually preferred for simple tasks because it keeps the setup and teardown logic in one continuous
-block of code.
+---
 
-Here is how you would rewrite the Database example:
+## `__exit__` and Errors
+
+`__exit__` receives error information:
+
+```python
+def __exit__(self, exc_type, exc_value, traceback):
+```
+
+If no error happened, those values are `None`.
+
+If an error happened, Python passes the error type, error object, and traceback.
+
+```python
+class Demo:
+    def __enter__(self):
+        print("enter")
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        print("exit")
+        print(exc_type)
+        print(exc_value)
+
+
+try:
+    with Demo():
+        raise ValueError("Something went wrong")
+except ValueError:
+    print("error handled outside the with block")
+```
+
+Output includes:
+
+```text
+enter
+exit
+<class 'ValueError'>
+Something went wrong
+error handled outside the with block
+```
+
+By default, the error continues after `__exit__` runs. If `__exit__` returns
+`True`, Python suppresses the error. Be careful with that because hiding errors
+can make debugging harder.
+
+---
+
+## `contextlib.contextmanager`
+
+For simple context managers, you do not always need a full class with
+`__enter__` and `__exit__`.
+
+Python's `contextlib.contextmanager` decorator lets you write setup and cleanup
+in one function.
 
 ```python
 from contextlib import contextmanager
@@ -152,53 +415,81 @@ from contextlib import contextmanager
 
 @contextmanager
 def database_connection(db_name):
-    # --- This is the __enter__ part ---
-    print(f"Connecting to {db_name}...")
-    connection = f"Conn({db_name})"
+    print(f"Opening connection to {db_name}")
+    connection = f"Connection({db_name})"
 
     try:
-        # The code inside the 'with' block runs here
         yield connection
     finally:
-        # --- This is the __exit__ part ---
-        # The 'finally' block ensures this runs even if an error occurs
-        print(f"Closing connection to {db_name}...")
+        print(f"Closing connection to {db_name}")
 
 
-# Usage
 with database_connection("Production_DB") as conn:
-    print(f"Using {conn} to read data.")
-    # If an error happened here, 'finally' would still catch it.
+    print(f"Using {conn}")
 ```
 
-### Why use this over the Dunder Class?
+Output:
 
-1. **Less Boilerplate:** You don't need to define a class or remember the specific arguments for `__exit__` (like
-   `exc_type`).
-2. **Readability:** The "setup" is before the `yield`, and the "cleanup" is after the `yield`. It reads chronologically.
-3. **State Management:** It’s easier to maintain local variables between the setup and teardown phases.
+```text
+Opening connection to Production_DB
+Using Connection(Production_DB)
+Closing connection to Production_DB
+```
 
-### When to stay with Dunder Methods?
+The code before `yield` acts like `__enter__`.
 
-If your context manager needs to hold a lot of internal state, have other methods (like our `db.execute()` example
-earlier), or be part of a complex class hierarchy, the **Dunder Class** approach is still the better architectural
-choice.
-
-
+The code after `yield`, usually inside `finally`, acts like `__exit__`.
 
 ---
 
-### 4. Important "Rules of the Road"
+## Class Context Manager vs `contextmanager`
 
-1. **Don't invent your own:** Only use the dunder names defined by Python. Creating `__my_cool_method__` is considered
-   bad practice because Python might add a method with that name in a future version, breaking your code.
-2. **`__str__` vs `__repr__`**: Always try to implement `__repr__` first. If `__str__` is missing, Python falls back to
-   `__repr__`.
-3. **The "Under the Hood" Truth**: When you call `len(my_list)`, Python actually calls `my_list.__len__()`. The built-in
-   functions are just wrappers that make the code look cleaner.
+Use a class with `__enter__` and `__exit__` when:
+
+- The object has several methods.
+- The object keeps meaningful internal state.
+- You want a reusable object type.
+- You are building a larger abstraction.
+
+Use `contextlib.contextmanager` when:
+
+- The setup and cleanup are simple.
+- You want fewer lines of code.
+- The context manager is mostly one small workflow.
+
+Both approaches use the same idea: setup at the start, cleanup at the end.
 
 ---
 
-> **Pro-Tip:** If you ever want to see every dunder method available to an object, run `dir(object_name)` in your
-> terminal. You'll see a long list of all the "magic" it can perform.
+## Important Rules
 
+1. Do not invent your own dunder names.
+2. Use standard dunders Python already understands.
+3. Prefer `__repr__` for debugging-friendly output.
+4. Add `__str__` when you also want a more human-friendly display.
+5. Use context managers for resources that must be cleaned up.
+6. Use `contextlib.contextmanager` for simple setup/cleanup workflows.
+
+---
+
+## Quick Mental Model
+
+Python syntax asks your object:
+
+```text
+Can you behave like this?
+```
+
+If the class defines the right dunder method, the answer is yes.
+
+```text
+obj1 + obj2     -> __add__
+len(obj)        -> __len__
+obj[index]      -> __getitem__
+for item in obj -> __iter__
+with obj        -> __enter__ and __exit__
+obj()           -> __call__
+```
+
+That is why dunder methods are powerful: they let your own classes participate
+in normal Python syntax.
