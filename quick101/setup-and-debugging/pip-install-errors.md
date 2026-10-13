@@ -1,4 +1,4 @@
-# pip instaall realted errors
+# pip install realted errors
 
 ```text
 Installing a python library from our private office repo. The library==1.0.0 exists in this repo. 

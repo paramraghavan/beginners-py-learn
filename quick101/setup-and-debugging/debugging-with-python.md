@@ -12,8 +12,8 @@ pdb_settrace()
 
 # Importing jwt and invoking functon jwt.decode(), error decode not found in module jwt.
 
-> Note: I am amble to import mmodule jwt, most likely either the install did not go well or using incorrect python path.
-> If isntall did not go well, oefrome a force pip install
+> Note: I am unable to import module jwt, most likely either the install did not go well or using incorrect python path.
+> If install did not go well, perfrom a force pip install
 
 ## Start python console
 
