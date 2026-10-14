@@ -188,14 +188,17 @@ Ada
 | Method | Triggered by | Purpose |
 |---|---|---|
 | `__add__` | `a + b` | Addition |
-| `__radd__` | `b + a` fallback | Right-side addition fallback |
+| `__radd__` | `b + a`, when the left operand cannot handle addition | Reflected (right-side) addition |
 | `__sub__` | `a - b` | Subtraction |
 | `__mul__` | `a * b` | Multiplication |
-| `__truediv__` | `a / b` | Division |
+| `__truediv__` | `a / b` | True division |
 | `__eq__` | `a == b` | Equality |
 | `__lt__` | `a < b` | Less-than comparison |
 
-Example:
+This teaching example adds and subtracts two `Money` objects, adds a number of
+dollars, and multiplies or divides an amount by a number. It uses ordinary
+numbers to keep the focus on operators; real currency calculations need more
+care with precision.
 
 ```python
 class Money:
@@ -203,7 +206,40 @@ class Money:
         self.dollars = dollars
 
     def __add__(self, other):
-        return Money(self.dollars + other.dollars)
+        if isinstance(other, Money):
+            return Money(self.dollars + other.dollars)
+        if isinstance(other, (int, float)):
+            return Money(self.dollars + other)
+        return NotImplemented
+
+    def __radd__(self, other):
+        # Addition has the same result in either order in this example.
+        return self.__add__(other)
+
+    def __sub__(self, other):
+        if isinstance(other, Money):
+            return Money(self.dollars - other.dollars)
+        return NotImplemented
+
+    def __mul__(self, other):
+        if isinstance(other, (int, float)):
+            return Money(self.dollars * other)
+        return NotImplemented
+
+    def __truediv__(self, other):
+        if isinstance(other, (int, float)):
+            return Money(self.dollars / other)
+        return NotImplemented
+
+    def __eq__(self, other):
+        if isinstance(other, Money):
+            return self.dollars == other.dollars
+        return NotImplemented
+
+    def __lt__(self, other):
+        if isinstance(other, Money):
+            return self.dollars < other.dollars
+        return NotImplemented
 
     def __repr__(self):
         return f"Money({self.dollars})"
@@ -212,14 +248,53 @@ class Money:
 wallet = Money(10)
 bonus = Money(5)
 
-print(wallet + bonus)
+print(wallet + bonus)       # __add__
+print(wallet + 5)           # __add__ with a number
+print(5 + wallet)           # __radd__ on wallet
+print(wallet - bonus)       # __sub__
+print(wallet * 3)           # __mul__
+print(wallet / 2)           # __truediv__
+print(wallet == Money(10))  # __eq__
+print(bonus < wallet)       # __lt__
 ```
 
 Output:
 
 ```text
 Money(15)
+Money(15)
+Money(15)
+Money(5)
+Money(30)
+Money(5.0)
+True
+True
 ```
+
+In `wallet + 5`, `wallet` is on the left, so Python uses its `__add__`.
+In `5 + wallet`, the integer cannot add a `Money` object, so Python tries
+`wallet.__radd__(5)`. The `r` means **reflected**: your object handles the
+operation from the right side.
+
+`NotImplemented` is a special return value that means "this method does not
+support that operand type." It lets Python try an appropriate fallback. It is
+different from raising `NotImplementedError`. If neither side supports an
+arithmetic operation, Python raises `TypeError`.
+
+For different operand types, Python can try the reflected method if the left
+method is missing or returns `NotImplemented`. A right operand whose type is a
+subclass of the left operand's type can get priority when it provides a different
+reflected implementation.
+
+Multiplication also has `__rmul__`, subtraction has `__rsub__`, and division has
+`__rtruediv__`. This class does not define them, so `3 * wallet`, `20 - wallet`,
+and `20 / wallet` are unsupported. For subtraction and division, operand order
+matters: `__rsub__` computes `other - self`, and `__rtruediv__` computes
+`other / self`.
+
+`/` uses `__truediv__`; `//` uses a separate method, `__floordiv__`. Here,
+`wallet / 2` contains `5.0` because dividing the stored integers with `/` produces
+a float. Dividing by zero raises `ZeroDivisionError` as usual.
 
 ---
 
