@@ -65,27 +65,38 @@
 
 ### Fast route for coding assessments
 
-| Prepare for | Read first |
-| --- | --- |
+| Prepare for                           | Read first                                                                                                                                                                   |
+|---------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Python operations and common mistakes | Sections [5](#5-built-in-python-data-types)–[16](#16-lambda-functions-and-functional-tools), [26](#26-python-memory-model-and-copying), and [49](#49-common-python-mistakes) |
-| Choosing an efficient solution | Sections [28](#28-standard-library-collections-and-utilities)–[35](#35-common-coding-interview-problems) |
-| Final revision | Section [56](#56-quick-revision-sheets) |
-| Testing or application interviews | Sections [36](#36-pytest-fundamentals)–[48](#48-common-python-design-patterns) |
+| Choosing an efficient solution        | Sections [28](#28-standard-library-collections-and-utilities)–[35](#35-common-coding-interview-problems)                                                                     |
+| Final revision                        | Section [56](#56-quick-revision-sheets)                                                                                                                                      |
+| Testing or application interviews     | Sections [36](#36-pytest-fundamentals)–[48](#48-common-python-design-patterns)                                                                                               |
 
-Setup, packaging, and production topics are reference material; you do not need to read them all before practicing algorithms.
+Setup, packaging, and production topics are reference material; you do not need
+to read them all before practicing algorithms.
 
 ### Solve each task in this order
 
-1. **Read the contract:** input sizes, allowed values, required output, tie-breaking, and whether mutation is allowed.
-2. **Match the interface:** keep the supplied function/class signature. Return a value for a function task; read stdin and print only when requested.
-3. **Choose the algorithm:** sketch a correct baseline, then remove repeated work using an appropriate structure. Estimate time and space from the constraints.
-4. **Implement the smallest clear solution:** use standard-library tools available in the selected runtime. Keep state local unless the task explicitly requires persistent state.
-5. **Test boundaries:** empty input if allowed, one item, duplicates, zero/negative values, ties, no solution, and maximum-size behavior.
-6. **Submit the required format:** remove debug output, check list vs tuple and value vs index, and submit through the assessment interface.
+1. **Read the contract:** input sizes, allowed values, required output,
+   tie-breaking, and whether mutation is allowed.
+2. **Match the interface:** keep the supplied function/class signature. Return a
+   value for a function task; read stdin and print only when requested.
+3. **Choose the algorithm:** sketch a correct baseline, then remove repeated
+   work using an appropriate structure. Estimate time and space from the
+   constraints.
+4. **Implement the smallest clear solution:** use standard-library tools
+   available in the selected runtime. Keep state local unless the task
+   explicitly requires persistent state.
+5. **Test boundaries:** empty input if allowed, one item, duplicates,
+   zero/negative values, ties, no solution, and maximum-size behavior.
+6. **Submit the required format:** remove debug output, check list vs tuple and
+   value vs index, and submit through the assessment interface.
 
-For a timed task, infer assumptions from the written constraints rather than inventing extra requirements. In a live interview, ask about ambiguous cases.
+For a timed task, infer assumptions from the written constraints rather than
+inventing extra requirements. In a live interview, ask about ambiguous cases.
 
-Example contract: **return the number of positive integers; an empty list returns zero.**
+Example contract: **return the number of positive integers; an empty list
+returns zero.**
 
 ```python
 def solution(numbers: list[int]) -> int:
@@ -97,9 +108,12 @@ assert solution([]) == 0
 assert solution([0]) == 0
 ```
 
-`print(2)` displays a value; `return 2` gives it to the caller. Keep local assertions outside a submitted function unless the platform requests tests.
+`print(2)` displays a value; `return 2` gives it to the caller. Keep local
+assertions outside a submitted function unless the platform requests tests.
 
-These are general preparation notes, not a prediction of assessment questions or scoring. Question formats vary; follow the instructions shown in your assessment. [CodeSignal assessment guide](https://support.codesignal.com/hc/en-us/articles/360045953873-Taking-an-assessment-on-CodeSignal)
+These are general preparation notes, not a prediction of assessment questions or
+scoring. Question formats vary; follow the instructions shown in your
+assessment. [CodeSignal assessment guide](https://support.codesignal.com/hc/en-us/articles/360045953873-Taking-an-assessment-on-CodeSignal)
 
 ## 2. macOS Python Development Environment
 
@@ -135,7 +149,8 @@ python -m pip --version
 Install development tools:
 
 **Why this matters:** These tools catch different classes of mistakes. `pytest`
-checks behavior, `ruff` catches common code issues, `black` formats consistently,
+checks behavior, `ruff` catches common code issues, `black` formats
+consistently,
 `mypy` checks type hints, and `pre-commit` runs checks before code is committed.
 
 ```bash
@@ -188,9 +203,11 @@ pytest -v
 pytest --cov=src
 ```
 
-**Production note:** Virtual environments isolate dependencies so one project does not break another.
+**Production note:** Virtual environments isolate dependencies so one project
+does not break another.
 
-**Common mistake:** Calling `pip` directly can install into a different Python. Prefer `python -m pip`.
+**Common mistake:** Calling `pip` directly can install into a different Python.
+Prefer `python -m pip`.
 
 ## 3. Recommended Python Project Structure
 
@@ -216,20 +233,25 @@ python-handbook-examples/
     └── test_algorithms.py
 ```
 
-**Beginner:** A module is a `.py` file. A package is a directory of modules. `__init__.py` marks a directory as a
+**Beginner:** A module is a `.py` file. A package is a directory of modules.
+`__init__.py` marks a directory as a
 regular package and can expose package-level imports.
 
-**Intermediate:** The `src` layout helps tests import installed package code instead of accidentally importing files
+**Intermediate:** The `src` layout helps tests import installed package code
+instead of accidentally importing files
 from the working directory.
 
-**Production note:** Do not make application logic depend on the current working directory. Pass paths explicitly or
+**Production note:** Do not make application logic depend on the current working
+directory. Pass paths explicitly or
 derive them from configuration.
 
 ## 4. Python Syntax And Execution Model
 
-Python programs are made of statements and expressions. Expressions produce values; statements perform actions.
+Python programs are made of statements and expressions. Expressions produce
+values; statements perform actions.
 
-**Mental model:** Python runs a file from top to bottom. A name is not a box that
+**Mental model:** Python runs a file from top to bottom. A name is not a box
+that
 contains a value; it is a label that points to an object. This matters when two
 names point to the same mutable object.
 
@@ -262,11 +284,14 @@ print(left is right)
 print(left is same_object)
 ```
 
-**Interview answer:** Python is dynamically typed because names can refer to different object types over time. It is
-strongly typed because it does not silently combine incompatible types like `"x" + 1`.
+**Interview answer:** Python is dynamically typed because names can refer to
+different object types over time. It is
+strongly typed because it does not silently combine incompatible types like
+`"x" + 1`.
 
 **When explaining in an interview:** Say both parts. "Dynamic" means the type is
-checked while the program runs. "Strong" means Python will not guess a conversion
+checked while the program runs. "Strong" means Python will not guess a
+conversion
 when the operation is unsafe.
 
 **Common mistake:** Use `is None`, but use `==` for normal value comparison.
@@ -294,7 +319,8 @@ print(type(value))
 print(isinstance(value, int))
 ```
 
-**Interview answer:** Prefer `isinstance(value, expected_type)` when checking type relationships because it respects
+**Interview answer:** Prefer `isinstance(value, expected_type)` when checking
+type relationships because it respects
 inheritance and can check multiple allowed types.
 
 **Common mistake:** Do not compare exact types with `type(value) == SomeClass`
@@ -318,14 +344,19 @@ print(bool(0), bool([]))  # False False: valid inputs can be falsey.
 print(isinstance(True, int))  # True: bool is an int subclass.
 ```
 
-Use `value is None` when only `None` means missing. Python integers grow beyond 64 bits, but arithmetic on very large integers is not constant-time. Avoid converting large integers to floats for exact calculations. Near zero, use an appropriate absolute tolerance, for example `math.isclose(result, 0.0, abs_tol=1e-9)`.
+Use `value is None` when only `None` means missing. Python integers grow beyond
+64 bits, but arithmetic on very large integers is not constant-time. Avoid
+converting large integers to floats for exact calculations. Near zero, use an
+appropriate absolute tolerance, for example
+`math.isclose(result, 0.0, abs_tol=1e-9)`.
 
 ## 6. Strings
 
 Strings are immutable Unicode sequences.
 
 **Mental model:** Strings cannot be changed in place. Methods such as `strip`,
-`lower`, and `replace` return strings; `split` returns a list. The original text stays unchanged.
+`lower`, and `replace` return strings; `split` returns a list. The original text
+stays unchanged.
 
 ```python
 text = "  Python,Data,Engineering  "
@@ -398,7 +429,8 @@ Without `isalnum()`, the comma, spaces, and colon would be compared too, and the
 phrase would look like it is not a palindrome. `char.lower()` handles uppercase
 and lowercase letters consistently.
 
-Inside `is_palindrome`, `cleaned == cleaned[::-1]` compares the cleaned text with its reverse.
+Inside `is_palindrome`, `cleaned == cleaned[::-1]` compares the cleaned text
+with its reverse.
 
 For this input, both sides are:
 
@@ -414,7 +446,8 @@ parts = ["row", ":", "42"]
 line = "".join(parts)
 ```
 
-**Performance note:** Repeated `result += piece` in a loop may allocate many intermediate strings. Use `"".join(parts)`
+**Performance note:** Repeated `result += piece` in a loop may allocate many
+intermediate strings. Use `"".join(parts)`
 when collecting many pieces.
 
 **Interview answer:** Strings are immutable, so algorithms that repeatedly build
@@ -422,7 +455,10 @@ text should collect pieces in a list and join once. For character counting,
 anagrams, and first-non-repeating-character problems, `Counter` is often the
 clearest tool.
 
-**Match the prompt:** The palindrome helper ignores punctuation and case; the anagram helper compares exact characters. Do not normalize text unless required. For example, `are_anagrams("Ab", "ba")` is `False`. String slices such as `text[::-1]` allocate O(n) space.
+**Match the prompt:** The palindrome helper ignores punctuation and case; the
+anagram helper compares exact characters. Do not normalize text unless required.
+For example, `are_anagrams("Ab", "ba")` is `False`. String slices such as
+`text[::-1]` allocate O(n) space.
 
 ## 7. Lists
 
@@ -469,7 +505,8 @@ Correct:
 matrix = [[0 for _ in range(3)] for _ in range(3)]
 ```
 
-**Common mistake:** Do not remove from a list while iterating over the same list. Build a new filtered list.
+**Common mistake:** Do not remove from a list while iterating over the same
+list. Build a new filtered list.
 
 ```python
 numbers = [1, 2, 3, 4]
@@ -477,8 +514,29 @@ evens = [number for number in numbers if number % 2 == 0]
 ```
 
 **Interview answer:** Lists give O(1) indexing and amortized O(1) append. Middle
-insertions, middle deletions, and membership checks are O(n), so switch to a set,
+insertions, middle deletions, and membership checks are O(n), so switch to a
+set,
 dict, or deque when those operations dominate.
+
+**Why these costs?** Here, `n` is the number of items. O(1) means roughly
+constant
+work; O(n) means work can grow with the list's size.
+
+- **Indexing:** `items[i]` jumps directly to a slot without scanning earlier
+  items.
+- **Append:** Most appends fill an available slot. Occasionally, resizing copies
+  existing references, costing O(n). Averaged over many appends, the cost is O(
+  1).
+- **Middle insert/delete:** Later items must shift to make room or close a gap.
+- **Membership:** `value in items` may scan every item before finding a match or
+  deciding the value is absent.
+
+**Choose by operation:** Use a `set` for average O(1) membership, a `dict` for
+average O(1) key lookup, and a `deque` for O(1) additions/removals at either
+end.
+A deque does **not** make middle insertions/deletions O(1). Set elements and
+dict
+keys must be hashable; neither provides list-style positional indexing.
 
 ## 8. Tuples
 
@@ -511,7 +569,8 @@ class Point(NamedTuple):
     y: int
 ```
 
-**Interview answer:** Use tuples for fixed-shape values and lists for mutable sequences.
+**Interview answer:** Use tuples for fixed-shape values and lists for mutable
+sequences.
 
 **Common mistake:** A tuple can contain mutable objects. The tuple cannot be
 resized, but a list inside the tuple can still be mutated.
@@ -551,7 +610,8 @@ key = frozenset({"read", "write"})
 permissions = {key: "editor"}
 ```
 
-**Performance note:** Set membership is average O(1), but values must be hashable.
+**Performance note:** Set membership is average O(1), but values must be
+hashable.
 
 **Interview answer:** Use a set when uniqueness or fast membership is more
 important than order or duplicates. Convert a list to a set only if losing
@@ -559,9 +619,12 @@ duplicates is acceptable.
 
 ## 10. Dictionaries
 
-Dictionaries map hashable keys to values and preserve insertion order (Python 3.7+). Insertion order is not sorted order. Sets have no guaranteed iteration order; sort the result if the task requires ordering.
+Dictionaries map hashable keys to values and preserve insertion order (Python
+3.7+). Insertion order is not sorted order. Sets have no guaranteed iteration
+order; sort the result if the task requires ordering.
 
-**Mental model:** A dictionary is a labeled lookup table. Use it when you want to
+**Mental model:** A dictionary is a labeled lookup table. Use it when you want
+to
 find information by a key instead of scanning a whole list.
 
 ```python
@@ -596,7 +659,8 @@ override = {"debug": True}
 config = defaults | override
 ```
 
-**Interview answer:** Dict lookup is average O(1). Worst case can degrade if many keys collide, but Python's
+**Interview answer:** Dict lookup is average O(1). Worst case can degrade if
+many keys collide, but Python's
 implementation is engineered to make this rare.
 
 **Common mistake:** Accessing `mapping[key]` raises `KeyError` if the key is
@@ -614,13 +678,17 @@ mapping` depending on the intent.
 | `dict`      |     Yes |     Yes |    Keys no |    O(1) avg key | Key-value lookup          |
 | `deque`     |     Yes |     Yes |        Yes | O(n) membership | Fast append/pop both ends |
 
-**Interview answer:** Use the structure that matches the operation you need most often.
+**Interview answer:** Use the structure that matches the operation you need most
+often.
 
-**Decision rule:** If you need order and mutation, start with `list`. If you need
+**Decision rule:** If you need order and mutation, start with `list`. If you
+need
 fast lookup by key, use `dict`. If you need unique values or repeated membership
 tests, use `set`. If you need a fixed record, use `tuple`.
 
-**Hashability:** Dict keys and set members must be hashable. Use `(row, col)` for a grid coordinate, not `[row, col]`. A tuple is hashable only when all its items are hashable. Membership in a dictionary checks keys, not values.
+**Hashability:** Dict keys and set members must be hashable. Use `(row, col)`
+for a grid coordinate, not `[row, col]`. A tuple is hashable only when all its
+items are hashable. Membership in a dictionary checks keys, not values.
 
 ## 12. Conditions And Control Flow
 
@@ -664,14 +732,16 @@ def describe(command: str) -> str:
 
 **Common mistake:** Avoid `if value == True:`. Prefer `if value:`.
 
-**Interview answer:** Python uses truthiness. Empty containers, `0`, `0.0`, `""`,
+**Interview answer:** Python uses truthiness. Empty containers, `0`, `0.0`,
+`""`,
 `False`, and `None` are falsey; most other objects are truthy.
 
 ## 13. Loops And Iteration
 
 Direct iteration is usually clearer than index iteration:
 
-**Mental model:** In Python, loop over the thing itself unless you truly need the
+**Mental model:** In Python, loop over the thing itself unless you truly need
+the
 index. This makes code shorter and avoids off-by-one errors.
 
 ```python
@@ -712,9 +782,11 @@ else:
     print("no even number")
 ```
 
-**Interview answer:** Prefer direct iteration, `enumerate` when you need indexes,
+**Interview answer:** Prefer direct iteration, `enumerate` when you need
+indexes,
 and `zip` when walking multiple iterables together. Always be ready to state
-how many times the inner operation runs. A sliding window can have nested loops and still be O(n) when each item enters and leaves once.
+how many times the inner operation runs. A sliding window can have nested loops
+and still be O(n) when each item enters and leaves once.
 
 ## 14. Functions
 
@@ -833,7 +905,8 @@ all_squares = [number * number for number in numbers]
 lazy_squares = (number * number for number in numbers)
 ```
 
-`all_squares` is a list. Python calculates every square immediately and stores all
+`all_squares` is a list. Python calculates every square immediately and stores
+all
 1,000,000 results in memory.
 
 `lazy_squares` is a generator expression. Python does not calculate all results
@@ -864,12 +937,15 @@ total = sum(number * number for number in range(1_000_000))
 
 This avoids building a large temporary list.
 
-**Interview answer:** A list comprehension eagerly builds and stores a full list.
+**Interview answer:** A list comprehension eagerly builds and stores a full
+list.
 A generator expression lazily produces one value at a time, so it can use much
-less memory. The trade-off is that a generator is one-pass: after it is consumed,
+less memory. The trade-off is that a generator is one-pass: after it is
+consumed,
 you must create it again if you want to iterate over the values again.
 
-**Common mistake:** If the comprehension needs multiple nested conditions, use a normal loop for readability.
+**Common mistake:** If the comprehension needs multiple nested conditions, use a
+normal loop for readability.
 
 ## 16. Lambda Functions And Functional Tools
 
@@ -963,7 +1039,8 @@ by_score = sorted(students, key=lambda student: student["score"])
 
 Here, Python sorts the dictionaries by each student's `score`.
 
-**Interview answer:** Use lambda for tiny throwaway functions, commonly with `key=`, but prefer named functions for
+**Interview answer:** Use lambda for tiny throwaway functions, commonly with
+`key=`, but prefer named functions for
 testable business logic.
 
 **Common mistake:** Do not use `lambda` to show off. A named function is easier
@@ -971,7 +1048,8 @@ to test, document, reuse, and debug.
 
 ## 17. Modules, Packages, And Imports
 
-**Mental model:** A module is one `.py` file. A package is a directory of modules.
+**Mental model:** A module is one `.py` file. A package is a directory of
+modules.
 Imports are how Python code shares names across files.
 
 ```python
@@ -1005,7 +1083,8 @@ Troubleshooting:
 module in `sys.modules`. Keep top-level code lightweight and put runnable script
 behavior behind `if __name__ == "__main__":`.
 
-**Common mistake:** Naming your file `json.py`, `typing.py`, `collections.py`, or
+**Common mistake:** Naming your file `json.py`, `typing.py`, `collections.py`,
+or
 `pytest.py` can shadow real packages and create confusing import errors.
 
 ## 18. File Handling And Serialization
@@ -1100,7 +1179,8 @@ def lines_containing(path: Path, marker: str) -> Iterator[str]:
                 yield line.rstrip()
 ```
 
-**Production note:** Do not unpickle untrusted data. Pickle can execute code during loading.
+**Production note:** Do not unpickle untrusted data. Pickle can execute code
+during loading.
 
 **Interview answer:** For text files, always be explicit about encoding. For
 large files, stream line by line instead of calling `read_text()` on the whole
@@ -1108,7 +1188,8 @@ file. For portable structured data, prefer JSON or CSV before pickle.
 
 ## 19. Exception Handling
 
-**Mental model:** Exceptions separate the normal path from failure paths. Catch an
+**Mental model:** Exceptions separate the normal path from failure paths. Catch
+an
 exception only when you can add context, recover, retry, or convert it into a
 clearer domain-specific error.
 
@@ -1132,9 +1213,11 @@ except Exception:
     pass
 ```
 
-**Interview answer:** `except Exception: pass` hides failures, makes debugging harder, and can leave data inconsistent.
+**Interview answer:** `except Exception: pass` hides failures, makes debugging
+harder, and can leave data inconsistent.
 
-**Common mistake:** Catching too broadly and continuing can make the program look
+**Common mistake:** Catching too broadly and continuing can make the program
+look
 successful after it has already failed. Catch specific exceptions and preserve
 the original cause with `raise ... from exc`.
 
@@ -1187,7 +1270,8 @@ class Rectangle(Shape):
 | `@classmethod`  | `cls`                    | Alternate constructor or class-level behavior |
 | `@property`     | `self`                   | Computed attribute                            |
 
-**Interview answer:** Prefer composition when an object "has a" dependency; use inheritance for true "is a"
+**Interview answer:** Prefer composition when an object "has a" dependency; use
+inheritance for true "is a"
 relationships.
 
 **Decision rule:** If you can describe the relationship as "uses a" or "has a",
@@ -1229,7 +1313,8 @@ class UserPayload(TypedDict):
     name: str
 ```
 
-**Interview answer:** Dataclasses are best for Python objects with named fields and light behavior. `TypedDict`
+**Interview answer:** Dataclasses are best for Python objects with named fields
+and light behavior. `TypedDict`
 describes dictionary-shaped data for type checkers.
 
 **Common mistake:** Use `field(default_factory=list)` for mutable defaults in a
@@ -1286,15 +1371,18 @@ def pages(total: int, page_size: int) -> Iterator[range]:
         yield range(start, min(start + page_size, total))
 ```
 
-**Interview answer:** `yield` turns a function into a generator. It returns values one at a time and preserves state
+**Interview answer:** `yield` turns a function into a generator. It returns
+values one at a time and preserves state
 between iterations.
 
 **When to use generators:** Use them for streaming data, large files, pipelines,
-or early stopping. Convert to a list only when you truly need all values at once.
+or early stopping. Convert to a list only when you truly need all values at
+once.
 
 ## 23. Decorators
 
-**Mental model:** A decorator takes a function and returns a new function, usually
+**Mental model:** A decorator takes a function and returns a new function,
+usually
 adding behavior before or after the original call.
 
 ```python
@@ -1345,7 +1433,8 @@ def fibonacci(n: int) -> int:
     return fibonacci(n - 1) + fibonacci(n - 2)
 ```
 
-**Decorator order:** With `@a` above `@b`, Python applies `f = a(b(f))`. In `retry`, `times` is the total number of attempts, including the first call.
+**Decorator order:** With `@a` above `@b`, Python applies `f = a(b(f))`. In
+`retry`, `times` is the total number of attempts, including the first call.
 
 **Interview answer:** Decorators are useful for cross-cutting behavior such as
 timing, logging, caching, authorization, retry, or validation. Use
@@ -1353,7 +1442,8 @@ timing, logging, caching, authorization, retry, or validation. Use
 
 ## 24. Context Managers
 
-**Mental model:** A context manager wraps setup and cleanup around a block. It is
+**Mental model:** A context manager wraps setup and cleanup around a block. It
+is
 the pattern behind `with open(...) as file_obj:`.
 
 ```python
@@ -1378,7 +1468,8 @@ with TemporaryDirectory() as directory:
     path.write_text("hello", encoding="utf-8")
 ```
 
-**Interview answer:** Context managers guarantee cleanup even when exceptions occur.
+**Interview answer:** Context managers guarantee cleanup even when exceptions
+occur.
 
 **Common mistake:** Manually opening files without closing them is fragile. Use
 `with` for files, locks, temporary directories, database sessions, and timers.
@@ -1415,16 +1506,19 @@ def first(values: Sequence[T]) -> T:
     return values[0]
 ```
 
-**Interview answer:** Type hints do not normally enforce runtime behavior. Static tools use annotations to catch errors
+**Interview answer:** Type hints do not normally enforce runtime behavior.
+Static tools use annotations to catch errors
 earlier and improve maintainability.
 
 **Decision rule:** Prefer `Sequence[T]` for read-only ordered inputs,
-`Iterable[T]` when you only loop, `Mapping[K, V]` for read-only dictionaries, and
+`Iterable[T]` when you only loop, `Mapping[K, V]` for read-only dictionaries,
+and
 concrete `list` or `dict` when the function mutates the object.
 
 ## 26. Python Memory Model And Copying
 
-**Mental model:** Assignment gives another name to the same object. Copying makes
+**Mental model:** Assignment gives another name to the same object. Copying
+makes
 a new object, but shallow copy does not recursively copy nested objects.
 
 ```python
@@ -1442,7 +1536,8 @@ deep["items"].append(4)
 print(original["items"])
 ```
 
-**Interview answer:** Assignment creates another reference to the same object. A shallow copy copies the outer
+**Interview answer:** Assignment creates another reference to the same object. A
+shallow copy copies the outer
 container; a deep copy recursively copies nested objects.
 
 **Common mistake:** Shallow copying a list of lists copies the outer list only.
@@ -1464,11 +1559,15 @@ def add(left: int, right: int) -> int:
 dis.dis(add)
 ```
 
-**Interview answer:** CPython compiles source code to bytecode and runs it on the Python virtual machine. The GIL allows
-one thread at a time to execute Python bytecode in a GIL-enabled interpreter. Optional free-threaded builds (Python 3.13+) can disable it; do not assume all builds behave alike.
+**Interview answer:** CPython compiles source code to bytecode and runs it on
+the Python virtual machine. The GIL allows
+one thread at a time to execute Python bytecode in a GIL-enabled interpreter.
+Optional free-threaded builds (Python 3.13+) can disable it; do not assume all
+builds behave alike.
 
 **Interview caveat:** The GIL does not make your whole program thread-safe. It
-does not prevent race conditions on shared state, and it does not block I/O-bound
+does not prevent race conditions on shared state, and it does not block
+I/O-bound
 concurrency from being useful.
 
 LEGB name lookup:
@@ -1478,25 +1577,25 @@ LEGB name lookup:
 3. Global
 4. Built-in
 
-Descriptors define `__get__`, `__set__`, or `__delete__` and power features like properties and methods.
+Descriptors define `__get__`, `__set__`, or `__delete__` and power features like
+properties and methods.
 
 ## 28. Standard-Library Collections And Utilities
 
 Choose the tool by the operation, not by the problem's title.
 
-| Need | Tool | Cost to remember |
-| --- | --- | --- |
-| Frequencies | `Counter` | O(n) to count n items on average |
-| Grouping | `defaultdict(list)` | Average O(1) lookup/append per item |
-| FIFO queue / BFS | `deque` | O(1) append and popleft; list.pop(0) is O(n) |
-| Next smallest / top-K | `heapq` | O(log n) push/pop; heapify is O(n) |
+| Need                      | Tool                          | Cost to remember                               |
+|---------------------------|-------------------------------|------------------------------------------------|
+| Frequencies               | `Counter`                     | O(n) to count n items on average               |
+| Grouping                  | `defaultdict(list)`           | Average O(1) lookup/append per item            |
+| FIFO queue / BFS          | `deque`                       | O(1) append and popleft; list.pop(0) is O(n)   |
+| Next smallest / top-K     | `heapq`                       | O(log n) push/pop; heapify is O(n)             |
 | Position in a sorted list | `bisect_left`, `bisect_right` | O(log n) search; insertion with insort is O(n) |
 
 ```python
 from bisect import bisect_left, bisect_right
 from collections import Counter, defaultdict, deque
 from heapq import heapify, heappop
-
 
 print(Counter("banana")["a"])  # 3
 
@@ -1516,11 +1615,14 @@ values = [1, 2, 2, 4]
 print(bisect_left(values, 2), bisect_right(values, 2))  # 1 3
 ```
 
-`bisect` returns an insertion position, not proof that a target exists. Check `index < len(values) and values[index] == target` for membership. [Reference: bisect performance](https://docs.python.org/3/library/bisect.html#performance-notes)
+`bisect` returns an insertion position, not proof that a target exists. Check
+`index < len(values) and values[index] == target` for
+membership. [Reference: bisect performance](https://docs.python.org/3/library/bisect.html#performance-notes)
 
 ## 29. Abstract Data Types And Implementations
 
-Educational implementations help interviews. In production, prefer built-ins unless you need custom behavior.
+Educational implementations help interviews. In production, prefer built-ins
+unless you need custom behavior.
 
 **Mental model:** An abstract data type describes behavior, not implementation.
 A stack means last-in, first-out. A queue means first-in, first-out. Many
@@ -1683,14 +1785,14 @@ as input grows. A solution that is clear for 10 items may be unusable for
 **Mental model:** Big O is about growth. Ask: "If input doubles, does the work
 stay constant, grow a little, grow linearly, or explode?"
 
-| Class      | Example                      |
-|------------|------------------------------|
-| O(1)       | Indexing a list              |
-| O(log n)   | Binary search                |
-| O(n)       | Linear scan                  |
-| O(n log n) | Efficient comparison sorting |
-| O(n²)      | All pairs                    |
-| O(n × 2ⁿ)  | Materialize all subsets of n distinct items |
+| Class      | Example                                          |
+|------------|--------------------------------------------------|
+| O(1)       | Indexing a list                                  |
+| O(log n)   | Binary search                                    |
+| O(n)       | Linear scan                                      |
+| O(n log n) | Efficient comparison sorting                     |
+| O(n²)      | All pairs                                        |
+| O(n × 2ⁿ)  | Materialize all subsets of n distinct items      |
 | O(n × n!)  | Materialize all permutations of n distinct items |
 
 ```python
@@ -1701,7 +1803,8 @@ def linear_sum(values: list[int]) -> int:
     return total
 ```
 
-**Interview answer:** Big O describes how runtime or memory grows as input grows. It ignores constants and lower-order
+**Interview answer:** Big O describes how runtime or memory grows as input
+grows. It ignores constants and lower-order
 terms.
 
 Recursion stack space counts as space complexity.
@@ -1774,9 +1877,13 @@ def test_binary_search_missing() -> None:
     assert binary_search([1, 3, 5], 2) == -1
 ```
 
-Examples: `binary_search([], 3) == -1`, `binary_search([1, 3, 5], 5) == 2`, and `search_rotated([4, 5, 1, 2, 3], 2) == 3`.
+Examples: `binary_search([], 3) == -1`, `binary_search([1, 3, 5], 5) == 2`, and
+`search_rotated([4, 5, 1, 2, 3], 2) == 3`.
 
-Binary search requires sorted input; with duplicates it may return any matching index. The rotated-array version assumes distinct values; duplicates require additional handling and can degrade the worst case to O(n). Both shown searches use O(log n) time and O(1) auxiliary space under their stated assumptions.
+Binary search requires sorted input; with duplicates it may return any matching
+index. The rotated-array version assumes distinct values; duplicates require
+additional handling and can degrade the worst case to O(n). Both shown searches
+use O(log n) time and O(1) auxiliary space under their stated assumptions.
 
 **Interview answer:** Binary search repeatedly discards half of the remaining
 search space. The key requirement is not merely "an array"; it is an ordered or
@@ -1879,7 +1986,8 @@ Pass 3: take 1
 [1, 2, 4, 5]
 ```
 
-Why it works: everything left of the divider is already sorted. Each new value is
+Why it works: everything left of the divider is already sorted. Each new value
+is
 moved left until it lands in the correct position.
 
 Big O:
@@ -2228,11 +2336,18 @@ def permutations(values: list[int]) -> list[list[int]]:
     return result
 ```
 
-**Boundary notes:** These subset/permutation examples treat input positions as distinct; repeated values can produce duplicate results. With n distinct items, storing every subset costs O(n × 2ⁿ) and every permutation O(n × n!) in the worst case. Recursive depth also uses memory; use an explicit stack for a potentially deep graph or grid traversal.
+**Boundary notes:** These subset/permutation examples treat input positions as
+distinct; repeated values can produce duplicate results. With n distinct items,
+storing every subset costs O(n × 2ⁿ) and every permutation O(n × n!) in the
+worst case. Recursive depth also uses memory; use an explicit stack for a
+potentially deep graph or grid traversal.
 
-**Common mistake:** Forgetting to restore state after recursive exploration. Memoization removes repeated work but does not remove recursive call depth; an iterative loop is safer for large Fibonacci inputs.
+**Common mistake:** Forgetting to restore state after recursive exploration.
+Memoization removes repeated work but does not remove recursive call depth; an
+iterative loop is safer for large Fibonacci inputs.
 
-**Interview answer:** A recursive solution needs a base case, progress toward the
+**Interview answer:** A recursive solution needs a base case, progress toward
+the
 base case, and a clear definition of what each call returns or contributes.
 Backtracking usually has choose, explore, unchoose.
 
@@ -2257,7 +2372,8 @@ structure.
 | Union-find          | Connectivity groups           | parent/rank       |
 | Dynamic programming | Overlapping subproblems       | table/cache       |
 
-Variable-size sliding window: find the length of the longest contiguous substring without repeated characters. `left` never moves backward.
+Variable-size sliding window: find the length of the longest contiguous
+substring without repeated characters. `left` never moves backward.
 
 ```python
 def longest_unique_substring_length(text: str) -> int:
@@ -2272,9 +2388,11 @@ def longest_unique_substring_length(text: str) -> int:
     return best
 ```
 
-Example: `longest_unique_substring_length("abba") == 2`; empty text gives 0. Time O(n), space O(u), where u is the number of distinct characters seen.
+Example: `longest_unique_substring_length("abba") == 2`; empty text gives 0.
+Time O(n), space O(u), where u is the number of distinct characters seen.
 
-Fixed-size sliding window: reuse the previous sum by adding the entering value and subtracting the leaving value. Negative values are allowed.
+Fixed-size sliding window: reuse the previous sum by adding the entering value
+and subtracting the leaving value. Negative values are allowed.
 
 ```python
 def max_sum_window(values: list[int], size: int) -> int:
@@ -2291,9 +2409,12 @@ assert max_sum_window([2, -1, 3, 4], 2) == 7
 assert max_sum_window([-5, -2, -3], 2) == -5
 ```
 
-O(n) time; the initial slice uses O(size) temporary space. A variable-size sum window that shrinks when the sum is too large generally needs nonnegative values; it is not a general solution when negatives are allowed.
+O(n) time; the initial slice uses O(size) temporary space. A variable-size sum
+window that shrinks when the sum is too large generally needs nonnegative
+values; it is not a general solution when negatives are allowed.
 
-Prefix sums: build once for repeated range-sum queries. Use half-open ranges `[left, right)`.
+Prefix sums: build once for repeated range-sum queries. Use half-open ranges
+`[left, right)`.
 
 ```python
 def prefix_sums(values: list[int]) -> list[int]:
@@ -2308,15 +2429,18 @@ assert prefix[4] - prefix[1] == 6  # Sum of indexes 1, 2, 3.
 assert prefix[2] - prefix[2] == 0  # Empty range.
 ```
 
-O(n) build time and space; O(1) per query. Recomputing `sum(values[left:right])` for every query repeats work.
+O(n) build time and space; O(1) per query. Recomputing `sum(values[left:right])`
+for every query repeats work.
 
-BFS: shortest number of edges in an unweighted graph. Mark nodes when enqueuing so cycles and duplicate edges do not cause repeated visits.
+BFS: shortest number of edges in an unweighted graph. Mark nodes when enqueuing
+so cycles and duplicate edges do not cause repeated visits.
 
 ```python
 from collections import deque
 
 
-def shortest_distance(graph: dict[int, list[int]], start: int, goal: int) -> int:
+def shortest_distance(graph: dict[int, list[int]], start: int,
+                      goal: int) -> int:
     queue = deque([(start, 0)])
     seen = {start}
     while queue:
@@ -2334,7 +2458,8 @@ assert shortest_distance({0: [1], 1: [0, 2], 2: []}, 0, 2) == 2
 assert shortest_distance({0: []}, 0, 2) == -1
 ```
 
-O(V + E) time and O(V) auxiliary space for the reachable graph. Ordinary BFS does not solve general weighted shortest paths.
+O(V + E) time and O(V) auxiliary space for the reachable graph. Ordinary BFS
+does not solve general weighted shortest paths.
 
 Topological sort:
 
@@ -2342,7 +2467,8 @@ Topological sort:
 from collections import deque
 
 
-def can_finish_courses(count: int, prerequisites: list[tuple[int, int]]) -> bool:
+def can_finish_courses(count: int,
+                       prerequisites: list[tuple[int, int]]) -> bool:
     graph = {course: [] for course in range(count)}
     indegree = [0] * count
     for course, prerequisite in prerequisites:
@@ -2360,7 +2486,9 @@ def can_finish_courses(count: int, prerequisites: list[tuple[int, int]]) -> bool
     return visited == count
 ```
 
-For `can_finish_courses`, each pair is `(course, prerequisite)` and course IDs are in `0..count-1`. A cycle prevents completion. Time and space are O(V + E), where V is the course count and E is the number of prerequisites.
+For `can_finish_courses`, each pair is `(course, prerequisite)` and course IDs
+are in `0..count-1`. A cycle prevents completion. Time and space are O(V + E),
+where V is the course count and E is the number of prerequisites.
 
 **Interview answer:** Name the pattern, explain why it fits, then state the data
 structure and complexity. For example: "This is a sliding window because we need
@@ -2385,7 +2513,10 @@ def two_sum(values: list[int], target: int) -> tuple[int, int] | None:
     return None
 ```
 
-Return two distinct indexes, or `None` when no pair exists. Check the complement before inserting the current value so an index is never reused. `two_sum([3, 3], 6) == (0, 1)`; `two_sum([3], 6) is None`. Time O(n) average, space O(n). Follow the task's tie-breaking rule if several pairs exist.
+Return two distinct indexes, or `None` when no pair exists. Check the complement
+before inserting the current value so an index is never reused.
+`two_sum([3, 3], 6) == (0, 1)`; `two_sum([3], 6) is None`. Time O(n) average,
+space O(n). Follow the task's tie-breaking rule if several pairs exist.
 
 Three Sum:
 
@@ -2414,7 +2545,9 @@ def three_sum(values: list[int]) -> list[tuple[int, int, int]]:
 
 Three Sum sorts first so the inner search can use two pointers. Sorting costs
 O(n log n), and the two-pointer scan across each fixed value gives O(n²) total
-time. It returns unique value triples, not indexes, and does not modify the input. For example, `three_sum([-1, 0, 1, 2, -1, -4])` gives `[(-1, -1, 2), (-1, 0, 1)]`.
+time. It returns unique value triples, not indexes, and does not modify the
+input. For example, `three_sum([-1, 0, 1, 2, -1, -4])` gives
+`[(-1, -1, 2), (-1, 0, 1)]`.
 
 Product except self:
 
@@ -2433,7 +2566,9 @@ def product_except_self(values: list[int]) -> list[int]:
 ```
 
 Product Except Self uses prefix and suffix products to avoid division and handle
-zeros correctly. `product_except_self([1, 0, 3]) == [0, 3, 0]`; two zeros produce all zeros. Time O(n); O(1) auxiliary space excluding the O(n) returned list (under fixed-size arithmetic).
+zeros correctly. `product_except_self([1, 0, 3]) == [0, 3, 0]`; two zeros
+produce all zeros. Time O(n); O(1) auxiliary space excluding the O(n) returned
+list (under fixed-size arithmetic).
 
 Number of islands:
 
@@ -2455,14 +2590,19 @@ def num_islands(grid: list[list[str]]) -> int:
                 current_row, current_col = stack.pop()
                 for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
                     nr, nc = current_row + dr, current_col + dc
-                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == "1":
-                        grid[nr][nc] = "0"  # Mark before pushing: visit only once.
+                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][
+                        nc] == "1":
+                        grid[nr][
+                            nc] = "0"  # Mark before pushing: visit only once.
                         stack.append((nr, nc))
     return count
 ```
 
 Number of Islands treats the grid as a graph. Each land cell is a node connected
-to neighboring land cells. Iterative DFS avoids recursion-depth failures. Only up/down/left/right connect cells, not diagonals. It changes the input; call `num_islands([row[:] for row in grid])` if the original must be preserved. Time and worst-case auxiliary space are O(rows × cols).
+to neighboring land cells. Iterative DFS avoids recursion-depth failures. Only
+up/down/left/right connect cells, not diagonals. It changes the input; call
+`num_islands([row[:] for row in grid])` if the original must be preserved. Time
+and worst-case auxiliary space are O(rows × cols).
 
 Climbing stairs:
 
@@ -2481,9 +2621,12 @@ def climb_stairs(n: int) -> int:
 ```
 
 Climbing Stairs is Fibonacci in disguise: ways to reach step `n` equals ways to
-reach `n - 1` plus ways to reach `n - 2`. This version counts one empty path for n=0; `climb_stairs(4) == 5`. Time O(n), O(1) integer variables; big-integer costs grow with n.
+reach `n - 1` plus ways to reach `n - 2`. This version counts one empty path for
+n=0; `climb_stairs(4) == 5`. Time O(n), O(1) integer variables; big-integer
+costs grow with n.
 
-Local pytest example (place these tests after the functions above in a `test_*.py` file):
+Local pytest example (place these tests after the functions above in a
+`test_*.py` file):
 
 ```python
 def test_two_sum() -> None:
@@ -2494,15 +2637,20 @@ def test_product_except_self() -> None:
     assert product_except_self([1, 2, 3, 4]) == [24, 12, 8, 6]
 ```
 
-For each problem, explain brute force first, then optimize with a stronger data structure.
+For each problem, explain brute force first, then optimize with a stronger data
+structure.
 
-**Interview checklist:** Clarify input size, handle empty input, state complexity,
+**Interview checklist:** Clarify input size, handle empty input, state
+complexity,
 and test at least one normal case plus one edge case before calling the solution
 done.
 
 ## 36. pytest Fundamentals
 
-By default, pytest discovers `test_*.py` or `*_test.py` files, `test_*` functions/methods, and `Test*` classes without an `__init__` method. These pytest examples are for local practice; coding judges may use their own test harness.
+By default, pytest discovers `test_*.py` or `*_test.py` files, `test_*`
+functions/methods, and `Test*` classes without an `__init__` method. These
+pytest examples are for local practice; coding judges may use their own test
+harness.
 
 **Mental model:** A test is executable documentation. It should show what the
 code promises to do.
@@ -2526,7 +2674,8 @@ pytest -k "binary_search"
 pytest -m "slow"
 ```
 
-**Testing note:** Plain `assert` is preferred in pytest because pytest rewrites assertions to show useful failure
+**Testing note:** Plain `assert` is preferred in pytest because pytest rewrites
+assertions to show useful failure
 details.
 
 **Common mistake:** Testing only the happy path. Add edge cases, invalid input,
@@ -2610,9 +2759,11 @@ def test_expected_failure() -> None:
     assert False
 ```
 
-**Testing note:** Use `xfail` for known, tracked defects. Do not use it to hide unexplained failures.
+**Testing note:** Use `xfail` for known, tracked defects. Do not use it to hide
+unexplained failures.
 
-**Interview answer:** Use parameterization when behavior should be the same shape
+**Interview answer:** Use parameterization when behavior should be the same
+shape
 across many inputs. Use markers to select, skip, or label tests intentionally.
 
 ## 39. Mocking And Patching
@@ -2652,7 +2803,8 @@ def test_get_username() -> None:
         assert get_username() == "Ada"
 ```
 
-**Testing note:** Prefer dependency injection over excessive patching. Do not mock simple value objects or the function
+**Testing note:** Prefer dependency injection over excessive patching. Do not
+mock simple value objects or the function
 under test.
 
 **Common mistake:** Patch where the dependency is imported or looked up by the
@@ -2710,7 +2862,8 @@ many real-world tests without touching the user's machine or global environment.
 
 ## 41. Test Design And Quality
 
-**Mental model:** Tests should fail for the reason a user would care about. Avoid
+**Mental model:** Tests should fail for the reason a user would care about.
+Avoid
 tests that simply repeat implementation details.
 
 | Test type   | Purpose                              |
@@ -2730,10 +2883,12 @@ def test_discount() -> None:
     assert discounted == 90.0
 ```
 
-**Testing note:** High coverage does not guarantee good tests. Tests must assert meaningful behavior and edge cases.
+**Testing note:** High coverage does not guarantee good tests. Tests must assert
+meaningful behavior and edge cases.
 
 **Interview answer:** A strong test suite includes normal cases, boundaries,
-invalid inputs, and regression tests. It avoids depending on test order or shared
+invalid inputs, and regression tests. It avoids depending on test order or
+shared
 mutable state.
 
 ## 42. Debugging
@@ -2760,7 +2915,8 @@ Troubleshooting:
 | `ModuleNotFoundError` | Environment and package layout       |
 | `RecursionError`      | Missing base case or excessive depth |
 
-**Interview answer:** Reproduce, minimize, inspect state, fix root cause, add a regression test.
+**Interview answer:** Reproduce, minimize, inspect state, fix root cause, add a
+regression test.
 
 **Common mistake:** Changing several things at once can hide the real fix. Make
 one hypothesis, test it, then move to the next.
@@ -2833,10 +2989,14 @@ if __name__ == "__main__":
         process_results = list(executor.map(square, [1, 2, 3]))
 ```
 
-**Interview answer:** Concurrency is overlapping tasks; parallelism is simultaneous execution. In GIL-enabled CPython, CPU-bound Python threads contend for the GIL. Processes have separate interpreters. Run the process-pool example as a saved script; the entry-point guard prevents recursive worker startup.
+**Interview answer:** Concurrency is overlapping tasks; parallelism is
+simultaneous execution. In GIL-enabled CPython, CPU-bound Python threads contend
+for the GIL. Processes have separate interpreters. Run the process-pool example
+as a saved script; the entry-point guard prevents recursive worker startup.
 
 **Decision rule:** Use threads for blocking I/O, processes for CPU-heavy pure
-Python work, and async when you have many cooperative I/O tasks and async-capable
+Python work, and async when you have many cooperative I/O tasks and
+async-capable
 libraries.
 
 ## 45. Async Programming
@@ -2877,9 +3037,11 @@ async def run_with_timeout() -> str:
     return await asyncio.wait_for(work(), timeout=1.0)
 ```
 
-**Common mistake:** Calling blocking functions inside async code blocks the event loop.
+**Common mistake:** Calling blocking functions inside async code blocks the
+event loop.
 
-**Interview answer:** Async improves throughput for many I/O-bound tasks. It does
+**Interview answer:** Async improves throughput for many I/O-bound tasks. It
+does
 not make CPU-heavy Python code faster by itself.
 
 ## 46. Performance And Profiling
@@ -2922,7 +3084,8 @@ print(tracemalloc.get_traced_memory())
 tracemalloc.stop()
 ```
 
-**Performance note:** Algorithm choice usually matters more than micro-optimizations.
+**Performance note:** Algorithm choice usually matters more than
+micro-optimizations.
 
 **Interview answer:** Start with complexity, then profile real workloads, then
 optimize the hot path. Keep benchmark inputs realistic and add regression tests
@@ -2951,9 +3114,11 @@ def total_active_scores(records: list[dict[str, object]]) -> int:
     return total
 ```
 
-**Production note:** Clean code is testable, observable, explicit, and boring in the best possible way.
+**Production note:** Clean code is testable, observable, explicit, and boring in
+the best possible way.
 
-**Common mistake:** Over-abstracting too early. Add an abstraction when it removes
+**Common mistake:** Over-abstracting too early. Add an abstraction when it
+removes
 real duplication or clarifies a stable concept, not because two lines look
 similar today.
 
@@ -2994,9 +3159,11 @@ def apply_discount(price: float, strategy: Callable[[float], float]) -> float:
     return strategy(price)
 ```
 
-**Interview answer:** Patterns are tools, not trophies. Prefer simple Python unless a pattern removes real complexity.
+**Interview answer:** Patterns are tools, not trophies. Prefer simple Python
+unless a pattern removes real complexity.
 
-**Decision rule:** If a simple function solves the problem, use a function. Reach
+**Decision rule:** If a simple function solves the problem, use a function.
+Reach
 for a class or formal pattern only when state, interchangeable behavior, or
 lifecycle management is becoming hard to manage.
 
@@ -3030,10 +3197,12 @@ mutability, scope, and iteration. Explain the underlying rule, not just the fix.
 
 ## 50. Frequently Used Python Snippets
 
-Use these snippets as starting points, not magic spells. In an interview, explain
+Use these snippets as starting points, not magic spells. In an interview,
+explain
 why the snippet fits the problem before writing it.
 
-**Why this matters:** Snippets reduce typing and recall pressure, but they should
+**Why this matters:** Snippets reduce typing and recall pressure, but they
+should
 not replace reasoning. Before using one, identify the input, output, failure
 cases, and the data structure that makes it appropriate.
 
@@ -3053,7 +3222,8 @@ def read_json(path: Path) -> dict[str, object]:
     return data
 
 
-def group_by_key(records: list[dict[str, str]], key: str) -> dict[str, list[dict[str, str]]]:
+def group_by_key(records: list[dict[str, str]], key: str) -> dict[
+    str, list[dict[str, str]]]:
     groups: dict[str, list[dict[str, str]]] = defaultdict(list)
     for record in records:
         groups[record[key]].append(record)
@@ -3104,19 +3274,20 @@ with one example and one trade-off.
 understanding. A strong candidate can define a term, show where it appears in
 code, and explain the trade-off.
 
-| Level        | Question                        | Concise answer                                                |
-|--------------|---------------------------------|---------------------------------------------------------------|
-| Beginner     | List vs tuple?                  | Lists are mutable; tuples are immutable.                      |
-| Beginner     | `is` vs `==`?                   | `is` checks identity; `==` checks equality.                   |
-| Beginner     | What is `None`?                 | A singleton object representing no value.                     |
-| Intermediate | What is a generator?            | A lazy iterator created by `yield` or a generator expression. |
-| Intermediate | What is a decorator?            | A callable that wraps another callable.                       |
+| Level        | Question                        | Concise answer                                                       |
+|--------------|---------------------------------|----------------------------------------------------------------------|
+| Beginner     | List vs tuple?                  | Lists are mutable; tuples are immutable.                             |
+| Beginner     | `is` vs `==`?                   | `is` checks identity; `==` checks equality.                          |
+| Beginner     | What is `None`?                 | A singleton object representing no value.                            |
+| Intermediate | What is a generator?            | A lazy iterator created by `yield` or a generator expression.        |
+| Intermediate | What is a decorator?            | A callable that wraps another callable.                              |
 | Intermediate | What does a context manager do? | Runs entry/exit behavior around `with`, typically setup and cleanup. |
-| Advanced     | What is the GIL?                | CPython lock around bytecode execution.                       |
-| Advanced     | What is MRO?                    | The order Python uses to resolve attributes in inheritance.   |
-| Advanced     | What is a descriptor?           | Object controlling attribute access with descriptor methods.  |
+| Advanced     | What is the GIL?                | CPython lock around bytecode execution.                              |
+| Advanced     | What is MRO?                    | The order Python uses to resolve attributes in inheritance.          |
+| Advanced     | What is a descriptor?           | Object controlling attribute access with descriptor methods.         |
 
-**Common incorrect answer:** "Python is never compiled." Better: source is compiled to bytecode, then executed by the
+**Common incorrect answer:** "Python is never compiled." Better: source is
+compiled to bytecode, then executed by the
 VM.
 
 **Interview habit:** After a short definition, add a practical consequence. For
@@ -3125,7 +3296,8 @@ pass."
 
 ## 52. Data-Structure And Algorithm Interview Questions
 
-For each answer, be ready to draw the state change for a small input. Interviewers
+For each answer, be ready to draw the state change for a small input.
+Interviewers
 often care more about reasoning than memorized labels.
 
 | Topic       | Question                      | Strong answer                                          |
@@ -3147,22 +3319,23 @@ include what `n`, `k`, `V`, or `E` means.
 pytest interview answers should connect testing tools to risk reduction: clearer
 failures, repeatable setup, edge cases, and regression protection.
 
-| Question                        | Interview answer                                                                  |
-|---------------------------------|-----------------------------------------------------------------------------------|
+| Question                        | Interview answer                                                                                                  |
+|---------------------------------|-------------------------------------------------------------------------------------------------------------------|
 | How does pytest discover tests? | By default: `test_*.py` or `*_test.py` files, `test_*` functions/methods, and `Test*` classes without `__init__`. |
-| What is a fixture?              | A reusable setup object injected into tests by name.                              |
-| What is `conftest.py`?          | A place for shared fixtures and pytest hooks.                                     |
-| Why parameterize?               | To run the same test logic over many cases.                                       |
-| What is monkeypatch for?        | Safely changing attributes, dicts, environment variables, or paths during a test. |
-| What should not be mocked?      | The function under test, simple data objects, or behavior better tested directly. |
-| Why can coverage mislead?       | Lines can execute without meaningful assertions.                                  |
+| What is a fixture?              | A reusable setup object injected into tests by name.                                                              |
+| What is `conftest.py`?          | A place for shared fixtures and pytest hooks.                                                                     |
+| Why parameterize?               | To run the same test logic over many cases.                                                                       |
+| What is monkeypatch for?        | Safely changing attributes, dicts, environment variables, or paths during a test.                                 |
+| What should not be mocked?      | The function under test, simple data objects, or behavior better tested directly.                                 |
+| Why can coverage mislead?       | Lines can execute without meaningful assertions.                                                                  |
 
 **Interview habit:** When asked about testing, include one example of a bad test
 and how you would improve it.
 
 ## 54. Scenario-Based Interview Preparation
 
-Scenario questions test diagnosis. A strong answer gives an immediate mitigation,
+Scenario questions test diagnosis. A strong answer gives an immediate
+mitigation,
 a root-cause investigation plan, and a prevention step.
 
 | Scenario                             | Strong response                                                              |
@@ -3179,14 +3352,16 @@ a root-cause investigation plan, and a prevention step.
 | Tests pass alone but fail together   | Shared state, order dependency, time, temp files, or global mocks.           |
 
 **Answer pattern:** "First I would reproduce it, then isolate the smallest case,
-then inspect the likely state/resource boundary, then add a regression test after
+then inspect the likely state/resource boundary, then add a regression test
+after
 the fix."
 
 ## 55. Runnable Practice Projects
 
 Each project below is intentionally small but complete enough to build and test.
 
-**How to practice:** Build each project in small commits. Write one failing test,
+**How to practice:** Build each project in small commits. Write one failing
+test,
 make it pass, then refactor. Keep a short README explaining how to run it.
 
 ### Project 1: Command-Line Contact Manager
@@ -3219,7 +3394,8 @@ def save_contacts(path: Path, contacts: dict[str, str]) -> None:
     path.write_text(json.dumps(contacts, indent=2), encoding="utf-8")
 
 
-def add_contact(contacts: dict[str, str], name: str, email: str) -> dict[str, str]:
+def add_contact(contacts: dict[str, str], name: str, email: str) -> dict[
+    str, str]:
     updated = contacts.copy()
     updated[name] = email
     return updated
@@ -3233,7 +3409,8 @@ from contacts import add_contact, load_contacts, save_contacts
 
 
 def test_add_contact() -> None:
-    assert add_contact({}, "Ada", "ada@example.com") == {"Ada": "ada@example.com"}
+    assert add_contact({}, "Ada", "ada@example.com") == {
+        "Ada": "ada@example.com"}
 
 
 def test_save_and_load(tmp_path: Path) -> None:
@@ -3250,7 +3427,8 @@ pytest
 
 ### Project 2: Log-File Analyzer
 
-Save the source below as `log_analyzer.py` and its test as `test_log_analyzer.py` in the same directory.
+Save the source below as `log_analyzer.py` and its test as
+`test_log_analyzer.py` in the same directory.
 
 ```python
 from collections import Counter
@@ -3286,7 +3464,8 @@ def test_summarize_logs(tmp_path: Path) -> None:
 
 ### Project 3: Data-Structure Library
 
-Implement `Stack`, `Queue`, linked list reversal, heap helper, and graph BFS using sections 28, 29, and 34. Test each
+Implement `Stack`, `Queue`, linked list reversal, heap helper, and graph BFS
+using sections 28, 29, and 34. Test each
 operation with empty, one-item, and many-item inputs.
 
 Learning goal: explain each data structure by its operations and complexity, not
@@ -3294,7 +3473,8 @@ by its implementation details alone.
 
 ### Project 4: Algorithm-Practice Package
 
-Implement binary search, merge sort, two sum, sliding window, top-K frequent values, tree traversal, graph traversal,
+Implement binary search, merge sort, two sum, sliding window, top-K frequent
+values, tree traversal, graph traversal,
 and dynamic programming problems. Use `pytest.mark.parametrize` for edge cases.
 
 Learning goal: practice recognizing problem patterns and stating brute force,
@@ -3302,7 +3482,8 @@ optimized approach, time complexity, and space complexity.
 
 ### Project 5: Concurrent File Processor
 
-Use `ThreadPoolExecutor` for I/O-bound file reads, log failures, and compare runtime with sequential processing. Add
+Use `ThreadPoolExecutor` for I/O-bound file reads, log failures, and compare
+runtime with sequential processing. Add
 tests with `tmp_path`.
 
 Learning goal: understand why threads help blocking I/O, how to collect results,
@@ -3313,8 +3494,10 @@ and how to report partial failures safely.
 Use this section the day before an interview. If any line feels unfamiliar, jump
 back to the full section and run the example.
 
-**Why this matters:** Quick revision should trigger memory, not replace learning.
-If a quick note feels vague, that is a signal to practice the full example again.
+**Why this matters:** Quick revision should trigger memory, not replace
+learning.
+If a quick note feels vague, that is a signal to practice the full example
+again.
 
 Core syntax:
 
