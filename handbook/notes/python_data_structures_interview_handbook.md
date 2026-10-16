@@ -65,12 +65,13 @@
 
 ### Fast route for coding assessments
 
+
 | Prepare for                           | Read first                                                                                                                                                                   |
-|---------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Python operations and common mistakes | Sections [5](#5-built-in-python-data-types)–[16](#16-lambda-functions-and-functional-tools), [26](#26-python-memory-model-and-copying), and [49](#49-common-python-mistakes) |
-| Choosing an efficient solution        | Sections [28](#28-standard-library-collections-and-utilities)–[35](#35-common-coding-interview-problems)                                                                     |
-| Final revision                        | Section [56](#56-quick-revision-sheets)                                                                                                                                      |
-| Testing or application interviews     | Sections [36](#36-pytest-fundamentals)–[48](#48-common-python-design-patterns)                                                                                               |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Python operations and common mistakes | Sections[5](#5-built-in-python-data-types)–[16](#16-lambda-functions-and-functional-tools), [26](#26-python-memory-model-and-copying), and [49](#49-common-python-mistakes) |
+| Choosing an efficient solution        | Sections[28](#28-standard-library-collections-and-utilities)–[35](#35-common-coding-interview-problems)                                                                     |
+| Final revision                        | Section[56](#56-quick-revision-sheets)                                                                                                                                       |
+| Testing or application interviews     | Sections[36](#36-pytest-fundamentals)–[48](#48-common-python-design-patterns)                                                                                               |
 
 Setup, packaging, and production topics are reference material; you do not need
 to read them all before practicing algorithms.
@@ -298,8 +299,9 @@ when the operation is unsafe.
 
 ## 5. Built-In Python Data Types
 
+
 | Type        | Example             | Mutable | Use                        |
-|-------------|---------------------|--------:|----------------------------|
+| ----------- | ------------------- | ------: | -------------------------- |
 | `int`       | `42`                |      No | Whole numbers              |
 | `float`     | `3.14`              |      No | Approximate decimal values |
 | `complex`   | `1 + 2j`            |      No | Scientific/math work       |
@@ -481,15 +483,16 @@ copy_of_numbers = numbers.copy()
 
 Complexity:
 
+
 | Operation            |     Complexity |
-|----------------------|---------------:|
+| -------------------- | -------------: |
 | Index lookup         |           O(1) |
 | Membership           |           O(n) |
 | Append               | O(1) amortized |
 | Insert/delete middle |           O(n) |
 | Pop end              |           O(1) |
 | Sorting              |     O(n log n) |
-| Slicing length `k`   |           O(k) |
+| Slicing length`k`    |           O(k) |
 
 Bad nested-list initialization (all rows reference the same list):
 
@@ -579,6 +582,18 @@ resized, but a list inside the tuple can still be mutated.
 
 Sets store unique hashable values and support fast average membership checks.
 
+**Ordering note:** Sets and frozensets guarantee neither insertion order nor sorted
+order. Do not rely on the order you see when printing or iterating over them.
+Use `sorted(values)` for ascending output or `sorted(values, reverse=True)` for
+descending output. Both return a **new list**; the original set stays unordered.
+The elements must be comparable, or you must provide a suitable `key` function.
+
+```python
+values = {30, 10, 20}
+print(sorted(values))                # [10, 20, 30]
+print(sorted(values, reverse=True))  # [30, 20, 10]
+```
+
 **Mental model:** A set answers the question "Have I seen this before?" quickly.
 It is the right default for deduplication and repeated membership tests.
 
@@ -623,6 +638,14 @@ Dictionaries map hashable keys to values and preserve insertion order (Python
 3.7+). Insertion order is not sorted order. Sets have no guaranteed iteration
 order; sort the result if the task requires ordering.
 
+**Key rule:** Dictionary keys must be **hashable**, not simply immutable. Strings,
+integers, and tuples containing only hashable items work; lists, dictionaries,
+and sets do not. For example, `(1, 2)` is a valid key, but `(1, [2])` is not.
+A key's hash must stay stable, and equal keys must have equal hashes. Some mutable
+custom objects are hashable, but do not change fields used for hashing or equality
+while they are keys. Dictionary values can be any type, including mutable lists.
+The same hashability rules apply to set elements.
+
 **Mental model:** A dictionary is a labeled lookup table. Use it when you want
 to
 find information by a key instead of scanning a whole list.
@@ -664,13 +687,13 @@ many keys collide, but Python's
 implementation is engineered to make this rare.
 
 **Common mistake:** Accessing `mapping[key]` raises `KeyError` if the key is
-missing. Use `get`, `setdefault`, `defaultdict`, or an explicit `if key in
-mapping` depending on the intent.
+missing. Use `get`, `setdefault`, `defaultdict`, or an explicit `if key in mapping` depending on the intent.
 
 ## 11. Comparing Core Python Collections
 
+
 | Collection  | Ordered | Mutable | Duplicates |          Lookup | Best use                  |
-|-------------|--------:|--------:|-----------:|----------------:|---------------------------|
+| ----------- | ------: | ------: | ---------: | --------------: | ------------------------- |
 | `list`      |     Yes |     Yes |        Yes | O(n) membership | Ordered mutable sequence  |
 | `tuple`     |     Yes |      No |        Yes | O(n) membership | Fixed records             |
 | `set`       |      No |     Yes |         No |        O(1) avg | Unique values             |
@@ -1072,8 +1095,9 @@ if __name__ == "__main__":
 
 Troubleshooting:
 
+
 | Problem               | Likely cause                                                |
-|-----------------------|-------------------------------------------------------------|
+| --------------------- | ----------------------------------------------------------- |
 | `ModuleNotFoundError` | Wrong environment, missing install, wrong working directory |
 | Relative import error | Running a file directly instead of as a module              |
 | Circular import       | Two modules import each other at import time                |
@@ -1264,11 +1288,12 @@ class Rectangle(Shape):
         return side > 0
 ```
 
-| Decorator       | Receives                 | Use                                           |
-|-----------------|--------------------------|-----------------------------------------------|
-| `@staticmethod` | Neither `self` nor `cls` | Related utility                               |
-| `@classmethod`  | `cls`                    | Alternate constructor or class-level behavior |
-| `@property`     | `self`                   | Computed attribute                            |
+
+| Decorator       | Receives                | Use                                           |
+| --------------- | ----------------------- | --------------------------------------------- |
+| `@staticmethod` | Neither`self` nor `cls` | Related utility                               |
+| `@classmethod`  | `cls`                   | Alternate constructor or class-level behavior |
+| `@property`     | `self`                  | Computed attribute                            |
 
 **Interview answer:** Prefer composition when an object "has a" dependency; use
 inheritance for true "is a"
@@ -1584,8 +1609,9 @@ properties and methods.
 
 Choose the tool by the operation, not by the problem's title.
 
+
 | Need                      | Tool                          | Cost to remember                               |
-|---------------------------|-------------------------------|------------------------------------------------|
+| ------------------------- | ----------------------------- | ---------------------------------------------- |
 | Frequencies               | `Counter`                     | O(n) to count n items on average               |
 | Grouping                  | `defaultdict(list)`           | Average O(1) lookup/append per item            |
 | FIFO queue / BFS          | `deque`                       | O(1) append and popleft; list.pop(0) is O(n)   |
@@ -1770,8 +1796,9 @@ Complexity summary:
 as input grows. A solution that is clear for 10 items may be unusable for
 1,000,000 items if the main operation is too slow.
 
+
 | Structure   | Main operations                           |
-|-------------|-------------------------------------------|
+| ----------- | ----------------------------------------- |
 | Stack       | push/pop O(1)                             |
 | Queue/deque | append/popleft O(1)                       |
 | Linked list | insert after node O(1), search O(n)       |
@@ -1785,14 +1812,15 @@ as input grows. A solution that is clear for 10 items may be unusable for
 **Mental model:** Big O is about growth. Ask: "If input doubles, does the work
 stay constant, grow a little, grow linearly, or explode?"
 
-| Class      | Example                                          |
-|------------|--------------------------------------------------|
-| O(1)       | Indexing a list                                  |
-| O(log n)   | Binary search                                    |
-| O(n)       | Linear scan                                      |
-| O(n log n) | Efficient comparison sorting                     |
+
+| Class       | Example                                          |
+| ----------- | ------------------------------------------------ |
+| O(1)        | Indexing a list                                  |
+| O(log n)    | Binary search                                    |
+| O(n)        | Linear scan                                      |
+| O(n log n)  | Efficient comparison sorting                     |
 | O(n²)      | All pairs                                        |
-| O(n × 2ⁿ)  | Materialize all subsets of n distinct items      |
+| O(n × 2ⁿ) | Materialize all subsets of n distinct items      |
 | O(n × n!)  | Materialize all permutations of n distinct items |
 
 ```python
@@ -2254,13 +2282,14 @@ Worst time:   O(n log n)
 Extra space:  O(n)        worst case
 ```
 
+
 | Algorithm |       Best |    Average |      Worst |     Stable |
-|-----------|-----------:|-----------:|-----------:|-----------:|
-| Bubble    |       O(n) |      O(n²) |      O(n²) |        Yes |
-| Selection |      O(n²) |      O(n²) |      O(n²) |         No |
-| Insertion |       O(n) |      O(n²) |      O(n²) |        Yes |
+| --------- | ---------: | ---------: | ---------: | ---------: |
+| Bubble    |       O(n) |     O(n²) |     O(n²) |        Yes |
+| Selection |     O(n²) |     O(n²) |     O(n²) |         No |
+| Insertion |       O(n) |     O(n²) |     O(n²) |        Yes |
 | Merge     | O(n log n) | O(n log n) | O(n log n) |        Yes |
-| Quick     | O(n log n) | O(n log n) |      O(n²) | Usually no |
+| Quick     | O(n log n) | O(n log n) |     O(n²) | Usually no |
 | Heap      | O(n log n) | O(n log n) | O(n log n) |         No |
 | Timsort   |       O(n) | O(n log n) | O(n log n) |        Yes |
 
@@ -2357,8 +2386,9 @@ Backtracking usually has choose, explore, unchoose.
 They do not replace reasoning, but they help you choose the first useful data
 structure.
 
+
 | Pattern             | Recognize it by               | Main structure    |
-|---------------------|-------------------------------|-------------------|
+| ------------------- | ----------------------------- | ----------------- |
 | Frequency map       | Count occurrences             | `Counter`, dict   |
 | Hash-set lookup     | Need fast membership          | set               |
 | Two pointers        | Sorted array or pair scan     | two indexes       |
@@ -2866,8 +2896,9 @@ many real-world tests without touching the user's machine or global environment.
 Avoid
 tests that simply repeat implementation details.
 
+
 | Test type   | Purpose                              |
-|-------------|--------------------------------------|
+| ----------- | ------------------------------------ |
 | Unit        | Small isolated behavior              |
 | Integration | Multiple components working together |
 | End-to-end  | User-level workflow                  |
@@ -2904,8 +2935,9 @@ def divide(left: int, right: int) -> float:
 
 Troubleshooting:
 
+
 | Error                 | Check                                |
-|-----------------------|--------------------------------------|
+| --------------------- | ------------------------------------ |
 | `NameError`           | Spelling and scope                   |
 | `TypeError`           | Types and function signature         |
 | `ValueError`          | Input value assumptions              |
@@ -2967,8 +2999,9 @@ supports levels, formatting, destinations, and structured operational debugging.
 **Mental model:** Concurrency is about managing many tasks in progress.
 Parallelism is about doing work at the exact same time on multiple CPU cores.
 
+
 | Workload                 | Tool                  |
-|--------------------------|-----------------------|
+| ------------------------ | --------------------- |
 | I/O-bound blocking calls | `ThreadPoolExecutor`  |
 | CPU-bound work           | `ProcessPoolExecutor` |
 | Many async I/O tasks     | `asyncio`             |
@@ -3096,8 +3129,9 @@ so performance fixes do not break correctness.
 **Mental model:** Clean code is code another person can safely change. Names,
 small functions, explicit inputs, and tests matter more than cleverness.
 
+
 | Principle             | Practice                                        |
-|-----------------------|-------------------------------------------------|
+| --------------------- | ----------------------------------------------- |
 | DRY                   | Remove meaningful duplication                   |
 | KISS                  | Prefer simple functions                         |
 | YAGNI                 | Do not overbuild                                |
@@ -3172,18 +3206,19 @@ lifecycle management is becoming hard to manage.
 **How to use this section:** Each mistake is a signal to slow down and ask,
 "What object is being shared? What is being mutated? What is Python comparing?"
 
-| Mistake                              | Correct approach                                    |
-|--------------------------------------|-----------------------------------------------------|
-| Mutable defaults                     | Use `None` sentinel                                 |
-| Modifying collection while iterating | Build a new collection                              |
-| `is` vs `==`                         | Use `is` only for identity checks like `None`       |
-| Shadowing built-ins                  | Avoid names like `list`, `dict`, `file`             |
-| Broad ignored exceptions             | Catch specific exceptions                           |
-| Late-binding closures                | Bind values at definition time                      |
-| Shallow copy surprises               | Use `deepcopy` when nested data must be independent |
-| Direct float equality                | Use `math.isclose`                                  |
-| Threads for CPU-heavy work           | Use processes or native/vectorized libraries        |
-| Blocking async code                  | Use async clients or executors                      |
+
+| Mistake                              | Correct approach                                   |
+| ------------------------------------ | -------------------------------------------------- |
+| Mutable defaults                     | Use`None` sentinel                                 |
+| Modifying collection while iterating | Build a new collection                             |
+| `is` vs `==`                         | Use`is` only for identity checks like `None`       |
+| Shadowing built-ins                  | Avoid names like`list`, `dict`, `file`             |
+| Broad ignored exceptions             | Catch specific exceptions                          |
+| Late-binding closures                | Bind values at definition time                     |
+| Shallow copy surprises               | Use`deepcopy` when nested data must be independent |
+| Direct float equality                | Use`math.isclose`                                  |
+| Threads for CPU-heavy work           | Use processes or native/vectorized libraries       |
+| Blocking async code                  | Use async clients or executors                     |
 
 Late-binding fix:
 
@@ -3241,10 +3276,11 @@ numbers = re.findall(r"\d+", "a1 b2")
 counts = Counter("banana")
 ```
 
+
 | Snippet                       | Why it is useful                                                      |
-|-------------------------------|-----------------------------------------------------------------------|
+| ----------------------------- | --------------------------------------------------------------------- |
 | `read_json`                   | Validates file data before the rest of the program trusts it.         |
-| `group_by_key`                | Uses `defaultdict` to group records without repetitive key checks.    |
+| `group_by_key`                | Uses`defaultdict` to group records without repetitive key checks.     |
 | `@dataclass`                  | Creates a small named data object with less boilerplate.              |
 | `logging.getLogger(__name__)` | Gives each module a logger that can be configured by the application. |
 | `re.findall`                  | Extracts repeated text patterns such as numbers, IDs, or tokens.      |
@@ -3274,17 +3310,18 @@ with one example and one trade-off.
 understanding. A strong candidate can define a term, show where it appears in
 code, and explain the trade-off.
 
-| Level        | Question                        | Concise answer                                                       |
-|--------------|---------------------------------|----------------------------------------------------------------------|
-| Beginner     | List vs tuple?                  | Lists are mutable; tuples are immutable.                             |
-| Beginner     | `is` vs `==`?                   | `is` checks identity; `==` checks equality.                          |
-| Beginner     | What is `None`?                 | A singleton object representing no value.                            |
-| Intermediate | What is a generator?            | A lazy iterator created by `yield` or a generator expression.        |
-| Intermediate | What is a decorator?            | A callable that wraps another callable.                              |
-| Intermediate | What does a context manager do? | Runs entry/exit behavior around `with`, typically setup and cleanup. |
-| Advanced     | What is the GIL?                | CPython lock around bytecode execution.                              |
-| Advanced     | What is MRO?                    | The order Python uses to resolve attributes in inheritance.          |
-| Advanced     | What is a descriptor?           | Object controlling attribute access with descriptor methods.         |
+
+| Level        | Question                        | Concise answer                                                      |
+| ------------ | ------------------------------- | ------------------------------------------------------------------- |
+| Beginner     | List vs tuple?                  | Lists are mutable; tuples are immutable.                            |
+| Beginner     | `is` vs `==`?                   | `is` checks identity; `==` checks equality.                         |
+| Beginner     | What is`None`?                  | A singleton object representing no value.                           |
+| Intermediate | What is a generator?            | A lazy iterator created by`yield` or a generator expression.        |
+| Intermediate | What is a decorator?            | A callable that wraps another callable.                             |
+| Intermediate | What does a context manager do? | Runs entry/exit behavior around`with`, typically setup and cleanup. |
+| Advanced     | What is the GIL?                | CPython lock around bytecode execution.                             |
+| Advanced     | What is MRO?                    | The order Python uses to resolve attributes in inheritance.         |
+| Advanced     | What is a descriptor?           | Object controlling attribute access with descriptor methods.        |
 
 **Common incorrect answer:** "Python is never compiled." Better: source is
 compiled to bytecode, then executed by the
@@ -3300,8 +3337,9 @@ For each answer, be ready to draw the state change for a small input.
 Interviewers
 often care more about reasoning than memorized labels.
 
+
 | Topic       | Question                      | Strong answer                                          |
-|-------------|-------------------------------|--------------------------------------------------------|
+| ----------- | ----------------------------- | ------------------------------------------------------ |
 | Arrays      | Why use two pointers?         | To scan from both ends or maintain a window in O(n).   |
 | Hash tables | Why are dict lookups fast?    | Hashing maps keys to table positions, average O(1).    |
 | Stacks      | When use a stack?             | Matching parentheses, DFS, undo, monotonic problems.   |
@@ -3319,15 +3357,16 @@ include what `n`, `k`, `V`, or `E` means.
 pytest interview answers should connect testing tools to risk reduction: clearer
 failures, repeatable setup, edge cases, and regression protection.
 
-| Question                        | Interview answer                                                                                                  |
-|---------------------------------|-------------------------------------------------------------------------------------------------------------------|
-| How does pytest discover tests? | By default: `test_*.py` or `*_test.py` files, `test_*` functions/methods, and `Test*` classes without `__init__`. |
-| What is a fixture?              | A reusable setup object injected into tests by name.                                                              |
-| What is `conftest.py`?          | A place for shared fixtures and pytest hooks.                                                                     |
-| Why parameterize?               | To run the same test logic over many cases.                                                                       |
-| What is monkeypatch for?        | Safely changing attributes, dicts, environment variables, or paths during a test.                                 |
-| What should not be mocked?      | The function under test, simple data objects, or behavior better tested directly.                                 |
-| Why can coverage mislead?       | Lines can execute without meaningful assertions.                                                                  |
+
+| Question                        | Interview answer                                                                                                 |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| How does pytest discover tests? | By default:`test_*.py` or `*_test.py` files, `test_*` functions/methods, and `Test*` classes without `__init__`. |
+| What is a fixture?              | A reusable setup object injected into tests by name.                                                             |
+| What is`conftest.py`?           | A place for shared fixtures and pytest hooks.                                                                    |
+| Why parameterize?               | To run the same test logic over many cases.                                                                      |
+| What is monkeypatch for?        | Safely changing attributes, dicts, environment variables, or paths during a test.                                |
+| What should not be mocked?      | The function under test, simple data objects, or behavior better tested directly.                                |
+| Why can coverage mislead?       | Lines can execute without meaningful assertions.                                                                 |
 
 **Interview habit:** When asked about testing, include one example of a bad test
 and how you would improve it.
@@ -3338,12 +3377,13 @@ Scenario questions test diagnosis. A strong answer gives an immediate
 mitigation,
 a root-cause investigation plan, and a prevention step.
 
+
 | Scenario                             | Strong response                                                              |
-|--------------------------------------|------------------------------------------------------------------------------|
-| Program slows as data grows          | Identify complexity, profile, replace O(n²) patterns, add benchmarks.        |
-| Memory keeps increasing              | Use `tracemalloc`, check caches/globals/open resources/reference cycles.     |
+| ------------------------------------ | ---------------------------------------------------------------------------- |
+| Program slows as data grows          | Identify complexity, profile, replace O(n²) patterns, add benchmarks.       |
+| Memory keeps increasing              | Use`tracemalloc`, check caches/globals/open resources/reference cycles.      |
 | Large file cannot fit memory         | Stream line by line or chunk data.                                           |
-| Dict key raises `TypeError`          | Key is unhashable, such as list or dict. Use tuple/frozenset or a stable ID. |
+| Dict key raises`TypeError`           | Key is unhashable, such as list or dict. Use tuple/frozenset or a stable ID. |
 | List modification skips elements     | Do not mutate during iteration; build a filtered list.                       |
 | Mock not intercepting call           | Patch where the dependency is looked up.                                     |
 | Async app is blocked                 | Locate blocking calls in event loop. Use async client or executor.           |
