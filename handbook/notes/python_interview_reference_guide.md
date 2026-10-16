@@ -1,6 +1,6 @@
 # Python Interview Tutorial And Reference Guide
 
-This standalone guide is a Python refresher, tutorial, desk reference, and interview-preparation handbook. It starts with fundamentals and gradually moves into intermediate, advanced, production, performance, testing, security, and architecture topics.
+A Python refresher for coding assessments and technical interviews, examples target Python 3.11+; 
 
 **How to use this guide**
 
@@ -83,7 +83,7 @@ This standalone guide is a Python refresher, tutorial, desk reference, and inter
 
 ## 1. Python Setup And Development Environment
 
-Start by installing Python 3.11 or newer for new projects unless a project requires another version.
+For local practice, use a virtual environment. Match the assessment runtime when testing a submitted solution; installing packages locally does not make them available in the judge.
 
 Check Python:
 
@@ -153,7 +153,6 @@ Common environment problems:
 | Dependency conflict | Incompatible versions | Recreate `.venv` and reinstall pinned packages. |
 
 ---
----
 
 ## 2. Python Syntax Fundamentals
 
@@ -207,7 +206,6 @@ numbers = [1, 2, 3]
 ```
 
 ---
----
 
 ## 3. Python Data Types
 
@@ -253,7 +251,6 @@ print([bool(value) for value in falsy_values])
 
 
 ---
----
 
 ## 4. Operators
 
@@ -264,6 +261,9 @@ total = 10 + 3
 floor = 10 // 3
 remainder = 10 % 3
 power = 2 ** 3
+
+print(-7 // 3, -7 % 3)  # -3 2: floor division rounds down.
+print(divmod(17, 5))  # (3, 2)
 ```
 
 Comparison and membership:
@@ -300,7 +300,8 @@ print(left is alias)  # True: same object
 | Complex precedence assumptions | Add parentheses for clarity. |
 
 ---
----
+
+**Assessment traps:** `0`, `False`, and empty containers are falsey; use `is None` if only None means missing. `and`/`or` return operands, not necessarily booleans. Python integers do not overflow at 64 bits, but operations on huge integers cost more than on small ones.
 
 ## 5. Strings
 
@@ -349,9 +350,10 @@ def most_frequent_char(text: str) -> str | None:
     return Counter(text).most_common(1)[0][0]
 ```
 
+**Contracts:** `is_palindrome` ignores punctuation and case; the other helpers compare exact characters. `most_frequent_char` breaks ties by first occurrence (`most_frequent_char("baba") == "b"`). Follow the prompt if it requires alphabetical ties instead. `text[::-1]` makes an O(n)-space copy.
+
 **Performance note:** Repeated `result += piece` in a loop can create many intermediate strings. Prefer `"".join(parts)`.
 
----
 ---
 
 ## 6. Lists, Tuples, Sets, And Dictionaries
@@ -406,7 +408,8 @@ copy_of_values = original.copy()
 ```
 
 ---
----
+
+**Assessment traps:** Dict keys and set members must be hashable: use `(row, col)`, not `[row, col]`. A tuple containing a list is still unhashable. Dict insertion order is not sorted order; set iteration order is not guaranteed. `dict.get(key, default)` uses the default only when the key is absent, not when its value is `None`.
 
 ## 7. Conditional Statements
 
@@ -447,7 +450,6 @@ def describe_status(status: str) -> str:
 
 **Common mistakes:** comparing to `True`, using `is` for value comparison, writing deeply nested conditions, and forgetting parentheses in complex boolean expressions.
 
----
 ---
 
 ## 8. Loops And Iteration
@@ -500,7 +502,6 @@ else:
 ```
 
 ---
----
 
 ## 9. Functions
 
@@ -544,7 +545,6 @@ def add_item(item: str, items: list[str] | None = None) -> list[str]:
 **Interview answer:** A pure function returns the same result for the same input and avoids side effects. Pure functions are easier to test.
 
 ---
----
 
 ## 10. Lambda Functions And Functional Programming
 
@@ -577,7 +577,6 @@ def multiplier(factor: int):
 **Interview answer:** Use lambda for small anonymous functions, especially as `key=` functions. Use named functions when logic needs a name, docstring, tests, or multiple lines.
 
 ---
----
 
 ## 11. Comprehensions And Generator Expressions
 
@@ -599,7 +598,6 @@ lazy = (value * value for value in range(1_000_000))
 
 Common mistake: writing nested comprehensions that are clever but hard to read. Use loops when logic becomes complex.
 
----
 ---
 
 ## 12. Modules And Packages
@@ -640,7 +638,6 @@ project/
 
 **Why `src` layout helps:** It prevents tests from accidentally importing local files that are not installed as a package.
 
----
 ---
 
 ## 13. File Handling
@@ -695,7 +692,6 @@ def count_errors(path: Path) -> int:
 ```
 
 ---
----
 
 ## 14. Exception Handling
 
@@ -728,7 +724,6 @@ class InvalidOrderError(Exception):
     """Raised when an order cannot be processed."""
 ```
 
----
 ---
 
 ## 15. Object-Oriented Programming
@@ -768,7 +763,6 @@ class Account:
 **Interview answer:** Use `@property` for computed attribute access, `@classmethod` when construction or behavior depends on the class, and `@staticmethod` for related utility behavior that does not need `self` or `cls`.
 
 ---
----
 
 ## 16. Dataclasses And Modern Data Models
 
@@ -804,7 +798,6 @@ class UserPayload(TypedDict):
 ```
 
 ---
----
 
 ## 17. Iterators And Generators
 
@@ -839,7 +832,6 @@ def matching_lines(path: Path, marker: str) -> Iterator[str]:
 | Why memory-efficient? | Values are produced lazily instead of all at once. |
 
 ---
----
 
 ## 18. Decorators
 
@@ -867,13 +859,14 @@ from functools import lru_cache
 
 @lru_cache(maxsize=None)
 def fibonacci(n: int) -> int:
+    if n < 0:
+        raise ValueError("n must be non-negative")
     if n < 2:
         return n
     return fibonacci(n - 1) + fibonacci(n - 2)
 ```
 
 
----
 ---
 
 ## 19. Context Managers
@@ -902,7 +895,6 @@ with timer("work"):
 
 **Interview answer:** Context managers centralize cleanup logic for files, locks, database connections, temporary configuration, and other resources.
 
----
 ---
 
 ## 20. Type Hints And Static Typing
@@ -933,7 +925,6 @@ def first(values: Sequence[T]) -> T:
     return values[0]
 ```
 
----
 ---
 
 ## 21. Python Memory Model
@@ -969,7 +960,6 @@ values = [[0] for _ in range(3)]
 **Interview answer:** CPython uses reference counting plus garbage collection for cycles. Mutable objects can be changed through any reference to the same object.
 
 ---
----
 
 ## 22. Python Internals
 
@@ -997,37 +987,42 @@ Advanced terms:
 
 | Term | Interview explanation |
 |---|---|
-| GIL | CPython lock around bytecode execution. |
+| GIL | Lock around bytecode execution in GIL-enabled CPython; optional free-threaded builds can disable it. |
 | Descriptor | Object controlling attribute access with `__get__`, `__set__`, or `__delete__`. |
 | MRO | Method lookup order for classes. |
 | Duck typing | If an object supports the needed behavior, its concrete type is less important. |
 
 ---
----
 
 ## 23. Time Complexity And Data-Structure Performance
 
-**General interview knowledge**
+Costs below assume fixed-size keys/comparisons; hash-table costs are average unless stated otherwise.
 
-| Operation | List | Tuple | Set | Dict | Deque | Heap |
-|---|---:|---:|---:|---:|---:|---:|
-| Index lookup | O(1) | O(1) | N/A | N/A | O(n) | O(1) min |
-| Membership | O(n) | O(n) | O(1) avg | O(1) avg keys | O(n) | O(n) |
-| Append right | O(1) amortized | N/A | O(1) avg | N/A | O(1) | O(log n) push |
-| Insert/delete middle | O(n) | N/A | O(1) avg | O(1) avg | O(n) | O(log n) pop |
-| Sort | O(n log n) | N/A | N/A | N/A | N/A | N/A |
-| Slicing | O(k) | O(k) | N/A | N/A | N/A | N/A |
+| Operation | Time | Important detail |
+| --- | --- | --- |
+| List/tuple index | O(1) | Search for a value is O(n). |
+| List append / pop at end | O(1) amortized / O(1) | Insert or pop at the front/middle is O(n). |
+| List/tuple slice of k items | O(k) | Allocates a result container. |
+| Dict lookup/update/delete by key | O(1) average, O(n) worst case | `value in mapping.values()` is O(n). |
+| Set membership/add/remove | O(1) average, O(n) worst case | Members must be hashable. |
+| Deque append/pop at either end | O(1) | Middle indexing or membership is O(n). |
+| Heap peek / push / pop minimum | O(1) / O(log n) / O(log n) | Arbitrary removal is not O(log n) without locating the item. |
+| Build a heap with heapify | O(n) | The heap is not a fully sorted list. |
+| Sort | O(n log n) worst case | Python's sort is stable; extra space can be O(n). |
+| Bisect search / insort insertion | O(log n) / O(n) | Input must already be sorted. |
 
-**Interview answer:** For repeated membership checks, convert a list to a set once. The conversion costs O(n), but each lookup becomes average O(1).
+Repeated lookups: build `seen = set(values)` once in O(n) time and O(n) space. Writing `target in set(values)` inside a loop rebuilds it each time.
 
----
----
+Count hidden work: `sum(values[left:right])` takes O(right-left) time and creates a slice. Use a rolling sum or prefix sums for repeated queries. Nested loops are not automatically O(n²): count total iterations. Include recursion depth and copies in space complexity.
+
+For full patterns and worked examples, see [sections 30–35 of the handbook](python_data_structures_interview_handbook.md#30-algorithm-complexity).
 
 ## 24. Sorting And Searching
 
 ```python
 records = [{"name": "Ada", "score": 98}, {"name": "Lin", "score": 98}]
 ordered = sorted(records, key=lambda record: (-record["score"], record["name"]))
+print([record["name"] for record in ordered])  # ['Ada', 'Lin']: score descending, name ascending.
 ```
 
 `sorted()` vs `.sort()`:
@@ -1056,9 +1051,13 @@ from collections import Counter
 
 def top_k(values: list[str], k: int) -> list[str]:
     return [value for value, _ in Counter(values).most_common(k)]
+
+
+assert top_k(["b", "a", "a", "b", "c"], 2) == ["b", "a"]
 ```
 
----
+Assume k >= 0. Counter breaks equal-frequency ties by first occurrence, not alphabetical order. If the task requires frequency descending then alphabetical order, use `sorted(counts, key=lambda value: (-counts[value], value))[:k]` after `counts = Counter(values)`; that costs O(n + u log u), where u is the distinct-value count.
+
 ---
 
 ## 25. Regular Expressions
@@ -1074,7 +1073,15 @@ if match:
     print(match.groupdict())
 ```
 
-Useful methods: `search`, `match`, `fullmatch`, `findall`, `finditer`, `sub`.
+Use `search` to find a match anywhere, `match` to check from the start, and `fullmatch` to require the whole string. For ASCII-only numeric input, `[0-9]` is more precise than `\d` or `isdigit()`, which also recognize other Unicode characters.
+
+```python
+import re
+
+
+assert re.fullmatch(r"[0-9]+", "123") is not None
+assert re.fullmatch(r"[0-9]+", "123x") is None
+```
 
 Repeated whitespace:
 
@@ -1084,7 +1091,6 @@ cleaned = re.sub(r"\s+", " ", "too    many\nspaces").strip()
 
 **Interview answer:** Do not use regex when a structured parser exists, such as JSON, CSV, XML, SQL parsers, or URL parsers.
 
----
 ---
 
 ## 26. Date And Time Handling
@@ -1102,7 +1108,6 @@ parsed = datetime.strptime("2026-07-16", "%Y-%m-%d")
 
 **Production consideration:** Store timestamps in UTC, display in the user's timezone, and avoid mixing naive and aware datetimes.
 
----
 ---
 
 ## 27. Collections And Standard-Library Utilities
@@ -1134,7 +1139,6 @@ smallest = heappop(heap)
 **Interview answer:** `Counter`, `defaultdict`, `deque`, `heapq`, and `bisect` are high-signal interview utilities.
 
 ---
----
 
 ## 28. Concurrency And Parallelism
 
@@ -1162,7 +1166,6 @@ with ThreadPoolExecutor(max_workers=4) as executor:
 **Interview answer:** Concurrency is about making progress on multiple tasks; parallelism is executing multiple tasks at the same time.
 
 ---
----
 
 ## 29. Async Programming
 
@@ -1178,6 +1181,10 @@ async def fetch(identifier: int) -> str:
 async def main() -> None:
     results = await asyncio.gather(fetch(1), fetch(2))
     print(results)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
 Common mistakes:
@@ -1188,7 +1195,6 @@ Common mistakes:
 - Expecting async to speed up CPU-bound Python code.
 
 
----
 ---
 
 ## 30. Testing
@@ -1226,7 +1232,6 @@ def sample_user() -> dict[str, str]:
 Mock external systems, time, random values, network calls, and slow dependencies. Do not mock the code path you are trying to verify.
 
 ---
----
 
 ## 31. Debugging
 
@@ -1250,7 +1255,6 @@ Troubleshooting:
 
 **Interview answer:** Reproduce the bug, reduce it to a minimal failing case, inspect values, fix the root cause, and add a regression test.
 
----
 ---
 
 ## 32. Logging
@@ -1277,7 +1281,6 @@ def process(order_id: int) -> None:
 **Security note:** Do not log passwords, tokens, full credentials, or sensitive personal data.
 
 ---
----
 
 ## 33. Command-Line Applications
 
@@ -1301,7 +1304,6 @@ def main() -> int:
 
 **Interview answer:** Return explicit exit codes, validate inputs, and keep parsing separate from business logic.
 
----
 ---
 
 ## 34. Environment Variables And Configuration
@@ -1328,7 +1330,6 @@ database_url = required_env("DATABASE_URL")
 **Interview answer:** Configuration belongs outside code. Secrets should come from environment variables, secret managers, or deployment configuration, never source files.
 
 ---
----
 
 ## 35. Working With Databases
 
@@ -1336,11 +1337,12 @@ SQLite example:
 
 ```python
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 
 
 def get_user_name(db_path: Path, user_id: int) -> str | None:
-    with sqlite3.connect(db_path) as connection:
+    with closing(sqlite3.connect(db_path)) as connection:
         cursor = connection.execute(
             "SELECT name FROM users WHERE id = ?",
             (user_id,),
@@ -1349,9 +1351,8 @@ def get_user_name(db_path: Path, user_id: int) -> str | None:
     return row[0] if row else None
 ```
 
-**Interview answer:** Use parameterized queries to avoid SQL injection. Use transactions for multi-step changes and context managers to clean up connections.
+**Interview answer:** Use parameterized queries and explicit transactions for multi-step changes. `closing()` closes this connection. A SQLite connection's own `with connection:` manages transactions; it does not close the connection. [SQLite reference](https://docs.python.org/3/library/sqlite3.html#how-to-use-the-connection-context-manager)
 
----
 ---
 
 ## 36. APIs And JSON
@@ -1395,7 +1396,6 @@ def get_json(url: str) -> dict[str, object]:
 Use retries carefully, set timeouts, and handle pagination explicitly.
 
 ---
----
 
 ## 37. Packaging And Dependency Management
 
@@ -1421,7 +1421,6 @@ python -m pip check
 
 **Interview answer:** Pin dependencies for applications, use ranges carefully for libraries, and test dependency upgrades in CI.
 
----
 ---
 
 ## 38. Code Quality And Style
@@ -1453,7 +1452,6 @@ strict = true
 **Interview answer:** Code quality means readability, correctness, maintainability, tests, clear errors, type clarity, and consistent formatting.
 
 ---
----
 
 ## 39. Clean-Code And Design Principles
 
@@ -1483,7 +1481,6 @@ def calculate_total(values: list[float]) -> float:
 ```
 
 ---
----
 
 ## 40. Common Design Patterns In Python
 
@@ -1510,7 +1507,6 @@ def create_exporter(kind: str) -> JsonExporter | CsvExporter:
 
 **Interview answer:** Patterns are vocabulary for recurring problems, not goals. In Python, simple functions and dictionaries are often better than class-heavy designs.
 
----
 ---
 
 ## 41. Performance Optimization
@@ -1546,7 +1542,6 @@ tracemalloc.stop()
 **Interview answer:** Optimize only after measuring. Biggest wins usually come from better algorithms, better data structures, avoiding unnecessary I/O, caching repeated work, and using vectorized libraries for numeric/tabular workloads.
 
 ---
----
 
 ## 42. Code Review And Quality Checklist
 
@@ -1565,7 +1560,7 @@ Use this checklist when reviewing your own Python code or preparing for a code-r
 | Testing | No tests for error paths | Add unit, integration, and regression tests. |
 | Configuration | Hard-coded paths or secrets | Use environment variables or secret managers. |
 
-Improved retry decorator pattern:
+Retry decorator (`times` counts total attempts; sleep only before another attempt):
 
 ```python
 from collections.abc import Callable
@@ -1578,16 +1573,20 @@ T = TypeVar("T")
 
 
 def retry(times: int, delay_seconds: float) -> Callable[[Callable[..., T]], Callable[..., T]]:
+    if times < 1 or delay_seconds < 0:
+        raise ValueError("times must be positive and delay non-negative")
+
     def decorate(func: Callable[..., T]) -> Callable[..., T]:
         @wraps(func)
         def wrapper(*args: object, **kwargs: object) -> T:
             last_error: Exception | None = None
-            for _ in range(times):
+            for attempt in range(times):
                 try:
                     return func(*args, **kwargs)
                 except TimeoutError as exc:
                     last_error = exc
-                    sleep(delay_seconds)
+                    if attempt + 1 < times:
+                        sleep(delay_seconds)
             raise RuntimeError("retry attempts exhausted") from last_error
 
         return wrapper
@@ -1607,7 +1606,7 @@ Unsafe `eval`:
 result = eval("2 + 2")
 ```
 
-Safer parsing:
+Literal parsing (accepts Python literals, not arbitrary expressions; still limit untrusted input size to avoid resource exhaustion):
 
 ```python
 import ast
@@ -1642,7 +1641,6 @@ Security checklist:
 - Use least privilege.
 
 ---
----
 
 ## 44. Common Python Mistakes
 
@@ -1671,7 +1669,6 @@ print(math.isclose(0.1 + 0.2, 0.3))
 ```
 
 ---
----
 
 ## 45. Frequently Used Python Snippets
 
@@ -1694,6 +1691,7 @@ def read_json(path: Path) -> dict[str, object]:
 
 
 def group_by_first_letter(values: list[str]) -> dict[str, list[str]]:
+    """Group nonempty strings; input strings must have a first character."""
     groups: dict[str, list[str]] = defaultdict(list)
     for value in values:
         groups[value[0]].append(value)
@@ -1721,17 +1719,17 @@ with ThreadPoolExecutor(max_workers=4) as executor:
     results = list(executor.map(str, [1, 2, 3]))
 ```
 
-Process pool:
+Process pool (save as a script; the entry-point guard is required for spawn-based startup):
 
 ```python
 from concurrent.futures import ProcessPoolExecutor
 
 
-with ProcessPoolExecutor() as executor:
-    results = list(executor.map(abs, [-1, -2]))
+if __name__ == "__main__":
+    with ProcessPoolExecutor() as executor:
+        results = list(executor.map(abs, [-1, -2]))
 ```
 
----
 ---
 
 ## 46. Coding Interview Patterns
@@ -1747,30 +1745,39 @@ with ProcessPoolExecutor() as executor:
 | Queue/BFS | Shortest unweighted path/levels | O(V + E) |
 | DFS | Traversal/backtracking/components | O(V + E) |
 | Binary search | Sorted search space | O(log n) |
-| Heap | Top-K/priority | O(n log k) |
+| Heap | Top-K/priority | O(n log k) for a size-k heap, k >= 2; counting costs extra if needed |
 | Prefix sums | Range sums | O(n) build, O(1) query |
 | Dynamic programming | Overlapping subproblems | varies |
 
-Sliding window:
+Fixed-size sliding window (negative values allowed):
 
 ```python
 def max_sum_window(values: list[int], size: int) -> int:
+    if not 1 <= size <= len(values):
+        raise ValueError("size must be between 1 and len(values)")
     current = sum(values[:size])
     best = current
     for index in range(size, len(values)):
         current += values[index] - values[index - size]
         best = max(best, current)
     return best
+
+
+assert max_sum_window([2, -1, 3, 4], 2) == 7
+assert max_sum_window([-5, -2, -3], 2) == -5
 ```
 
----
+O(n) time; the initial slice uses O(size) temporary space. Do not initialize the best sum to 0: all-negative inputs still have a negative answer. Variable-size sum windows that shrink when the sum is too large generally require nonnegative values.
+
+For prefix sums, unweighted shortest paths (BFS), and variable-size windows, see the [worked patterns](python_data_structures_interview_handbook.md#34-common-coding-interview-patterns).
+
 ---
 
 ## 47. Common Coding Interview Problems
 
 **General interview knowledge**
 
-Two Sum:
+Two Sum: return two distinct indexes, or `None` if no pair exists. If several pairs exist, this version returns the first found while scanning left to right.
 
 ```python
 def two_sum(values: list[int], target: int) -> tuple[int, int] | None:
@@ -1783,7 +1790,7 @@ def two_sum(values: list[int], target: int) -> tuple[int, int] | None:
     return None
 ```
 
-Valid parentheses:
+Valid parentheses: this example assumes input contains only `()[]{}`. Other characters are ignored by this implementation; change that if the prompt requires rejection.
 
 ```python
 def is_valid_parentheses(text: str) -> bool:
@@ -1798,7 +1805,7 @@ def is_valid_parentheses(text: str) -> bool:
     return not stack
 ```
 
-Longest substring without repeats:
+Longest substring without repeats: return the length of a contiguous substring, not a subsequence. The left boundary must never move backward.
 
 ```python
 def longest_unique_substring(text: str) -> int:
@@ -1813,7 +1820,7 @@ def longest_unique_substring(text: str) -> int:
     return best
 ```
 
-Merge intervals:
+Merge intervals: input consists of closed intervals with start <= end. Touching intervals such as `(1, 3)` and `(3, 5)` merge. This version returns tuples and does not change the input.
 
 ```python
 def merge_intervals(intervals: list[tuple[int, int]]) -> list[tuple[int, int]]:
@@ -1827,20 +1834,45 @@ def merge_intervals(intervals: list[tuple[int, int]]) -> list[tuple[int, int]]:
     return merged
 ```
 
-Maximum subarray:
+Maximum subarray: choose a nonempty contiguous subarray. This version raises `ValueError` for an empty input.
 
 ```python
 def max_subarray(values: list[int]) -> int:
+    if not values:
+        raise ValueError("values must be nonempty")
     best = current = values[0]
-    for value in values[1:]:
+    for index in range(1, len(values)):
+        value = values[index]
         current = max(value, current + value)
         best = max(best, current)
     return best
 ```
 
-Follow-ups: empty input, duplicates, sorted vs unsorted input, streaming input, memory limits, and time complexity.
+Quick checks (run after the functions above):
 
----
+```python
+assert two_sum([3, 3], 6) == (0, 1)
+assert two_sum([3], 6) is None
+assert is_valid_parentheses("([])") is True
+assert is_valid_parentheses("([)]") is False
+assert is_valid_parentheses("") is True
+assert longest_unique_substring("abba") == 2
+assert longest_unique_substring("") == 0
+assert merge_intervals([(3, 5), (1, 3)]) == [(1, 5)]
+assert merge_intervals([]) == []
+assert max_subarray([-5, -2, -3]) == -2
+```
+
+| Problem | Time | Auxiliary space |
+| --- | --- | --- |
+| Two Sum | O(n) average | O(n) |
+| Parentheses | O(n) | O(n) stack |
+| Longest unique substring | O(n) average | O(u), distinct characters seen |
+| Merge intervals | O(n log n) | O(n) for sorting, plus output |
+| Maximum subarray | O(n) | O(1) |
+
+The examples use tuples for index pairs and intervals. If the task requires lists, return lists instead; correct values with the wrong output shape can still fail. Test only invalid inputs the task allows or explicitly asks you to reject.
+
 ---
 
 ## 48. Python Interview Questions And Answers
@@ -1869,7 +1901,7 @@ Follow-ups: empty input, duplicates, sorted vs unsorted input, streaming input, 
 
 | Question | Interview answer |
 |---|---|
-| What is the GIL? | CPython lock allowing one thread to execute Python bytecode at a time. |
+| What is the GIL? | In GIL-enabled CPython, a lock allowing one thread to execute Python bytecode at a time; free-threaded builds differ. |
 | When use multiprocessing? | CPU-bound workloads that need parallelism. |
 | What is MRO? | Method Resolution Order used for attribute/method lookup in inheritance. |
 | What is a descriptor? | Object controlling attribute access via `__get__`, `__set__`, or `__delete__`. |
@@ -1877,7 +1909,6 @@ Follow-ups: empty input, duplicates, sorted vs unsorted input, streaming input, 
 
 Common incorrect answer: "Python is never compiled." Better: CPython compiles source to bytecode, then executes bytecode.
 
----
 ---
 
 ## 49. Scenario-Based Interview Questions
@@ -1890,7 +1921,7 @@ Common incorrect answer: "Python is never compiled." Better: CPython compiles so
 | Memory keeps growing | Use `tracemalloc`, check caches, globals, retained references, and unclosed resources. |
 | Works locally not production | Compare Python version, env vars, working directory, dependencies, OS paths, and permissions. |
 | Imports fail after reorg | Check package layout, `__init__.py`, interpreter, working directory, and circular imports. |
-| Threads corrupt shared state | Add locks, queues, immutable messages, or move to processes. |
+| Threads corrupt shared state | Protect shared operations with locks or communicate through queues; processes do not automatically protect shared resources. |
 | Async service blocked | Find blocking calls inside coroutines; use async clients or executors. |
 | Large file cannot fit memory | Stream line by line or chunk input. |
 | API calls are slow | Add timeouts, retries, connection pooling, concurrency, caching, and pagination. |
@@ -1899,7 +1930,6 @@ Common incorrect answer: "Python is never compiled." Better: CPython compiles so
 
 **Interview answer pattern:** Explain likely causes, investigation steps, fix, trade-offs, and how you would test the fix.
 
----
 ---
 
 ## 50. Python Interview Quick-Revision Sheets
@@ -1929,6 +1959,14 @@ class Service:
         self.name = name
 ```
 
+**Before submitting a coding task**
+
+- Keep the required signature; return instead of print for function tasks.
+- Check empty input only if allowed, duplicates, ties, zeros, negatives, and no-solution cases.
+- Preserve the input unless mutation is allowed. Avoid persistent globals/default lists across calls.
+- Check bounds: ranges and slices exclude their right endpoint; grid neighbors need explicit bounds (negative indexes wrap).
+- Check time and space against maximum constraints; a correct sample is not proof of scalability.
+
 **Top interview traps**
 
 1. Mutable defaults.
@@ -1944,7 +1982,6 @@ class Service:
 
 Essential standard-library modules: `pathlib`, `collections`, `itertools`, `functools`, `datetime`, `zoneinfo`, `json`, `csv`, `re`, `logging`, `argparse`, `sqlite3`, `concurrent.futures`, `asyncio`, `heapq`, `bisect`, `statistics`, `decimal`.
 
----
 ---
 
 ## 51. Beginner Learning Path
@@ -2000,7 +2037,6 @@ Practice rhythm: read one concept, type the example, change it, break it, fix it
 | Async API collector | asyncio | gather calls | cancellation/timeouts |
 | Tested package | packaging, pytest | local install | CI and type checking |
 
----
 ---
 
 ## 54. Tutorial Improvement Roadmap

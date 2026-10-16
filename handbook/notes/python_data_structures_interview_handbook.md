@@ -1,8 +1,6 @@
 # Python Data Structures Interview Handbook
 
-This standalone handbook is a practical Python tutorial, data-structures and algorithms reference, pytest guide, and
-interview-preparation workbook. It uses Python 3.11+ style and keeps examples concise, runnable, and suitable for daily
-reference.
+> Examples target Python 3.11+.
 
 ## Table Of Contents
 
@@ -65,33 +63,43 @@ reference.
 
 ## 1. How To Use This Handbook
 
-**Beginner:** Read sections 1-19 in order. Type the examples, run them, change inputs, and explain the output aloud.
+### Fast route for coding assessments
 
-**Intermediate:** Use sections 20-35 to strengthen OOP, typing, data structures, complexity, algorithms, and interview
-patterns.
+| Prepare for | Read first |
+| --- | --- |
+| Python operations and common mistakes | Sections [5](#5-built-in-python-data-types)–[16](#16-lambda-functions-and-functional-tools), [26](#26-python-memory-model-and-copying), and [49](#49-common-python-mistakes) |
+| Choosing an efficient solution | Sections [28](#28-standard-library-collections-and-utilities)–[35](#35-common-coding-interview-problems) |
+| Final revision | Section [56](#56-quick-revision-sheets) |
+| Testing or application interviews | Sections [36](#36-pytest-fundamentals)–[48](#48-common-python-design-patterns) |
 
-**Advanced:** Use sections 36-56 for pytest, mocking, concurrency, async, profiling, design, scenario interviews, and
-quick revision.
+Setup, packaging, and production topics are reference material; you do not need to read them all before practicing algorithms.
 
-Run examples:
+### Solve each task in this order
 
-```bash
-python example.py
-python -m pytest
-python -m pytest -v
+1. **Read the contract:** input sizes, allowed values, required output, tie-breaking, and whether mutation is allowed.
+2. **Match the interface:** keep the supplied function/class signature. Return a value for a function task; read stdin and print only when requested.
+3. **Choose the algorithm:** sketch a correct baseline, then remove repeated work using an appropriate structure. Estimate time and space from the constraints.
+4. **Implement the smallest clear solution:** use standard-library tools available in the selected runtime. Keep state local unless the task explicitly requires persistent state.
+5. **Test boundaries:** empty input if allowed, one item, duplicates, zero/negative values, ties, no solution, and maximum-size behavior.
+6. **Submit the required format:** remove debug output, check list vs tuple and value vs index, and submit through the assessment interface.
+
+For a timed task, infer assumptions from the written constraints rather than inventing extra requirements. In a live interview, ask about ambiguous cases.
+
+Example contract: **return the number of positive integers; an empty list returns zero.**
+
+```python
+def solution(numbers: list[int]) -> int:
+    return sum(number > 0 for number in numbers)
+
+
+assert solution([-2, 0, 4, 4]) == 2
+assert solution([]) == 0
+assert solution([0]) == 0
 ```
 
-Use coding problems by following this loop:
+`print(2)` displays a value; `return 2` gives it to the caller. Keep local assertions outside a submitted function unless the platform requests tests.
 
-1. Restate the problem.
-2. Ask clarifying questions.
-3. Give a brute-force idea.
-4. Improve the data structure or algorithm.
-5. Write code.
-6. Test edge cases.
-7. State time and space complexity.
-
-**Interview answer:** A strong Python interview answer explains the trade-off, not just the syntax.
+These are general preparation notes, not a prediction of assessment questions or scoring. Question formats vary; follow the instructions shown in your assessment. [CodeSignal assessment guide](https://support.codesignal.com/hc/en-us/articles/360045953873-Taking-an-assessment-on-CodeSignal)
 
 ## 2. macOS Python Development Environment
 
@@ -301,12 +309,23 @@ print(0.1 + 0.2 == 0.3)
 print(math.isclose(0.1 + 0.2, 0.3))
 ```
 
+### Assessment traps: arithmetic and missing values
+
+```python
+print(-7 // 3, -7 % 3)  # -3 2: // rounds down, not toward zero.
+print(divmod(17, 5))  # (3, 2): quotient and remainder.
+print(bool(0), bool([]))  # False False: valid inputs can be falsey.
+print(isinstance(True, int))  # True: bool is an int subclass.
+```
+
+Use `value is None` when only `None` means missing. Python integers grow beyond 64 bits, but arithmetic on very large integers is not constant-time. Avoid converting large integers to floats for exact calculations. Near zero, use an appropriate absolute tolerance, for example `math.isclose(result, 0.0, abs_tol=1e-9)`.
+
 ## 6. Strings
 
 Strings are immutable Unicode sequences.
 
-**Mental model:** Every string operation returns a new string. Methods like
-`strip`, `lower`, and `replace` do not modify the original text.
+**Mental model:** Strings cannot be changed in place. Methods such as `strip`,
+`lower`, and `replace` return strings; `split` returns a list. The original text stays unchanged.
 
 ```python
 text = "  Python,Data,Engineering  "
@@ -379,11 +398,9 @@ Without `isalnum()`, the comma, spaces, and colon would be compared too, and the
 phrase would look like it is not a palindrome. `char.lower()` handles uppercase
 and lowercase letters consistently.
 
-```python
-return cleaned == cleaned[::-1]
-```
+Inside `is_palindrome`, `cleaned == cleaned[::-1]` compares the cleaned text with its reverse.
 
-This compares the cleaned string with its reverse:
+For this input, both sides are:
 
 ```text
 amanaplanacanalpanama
@@ -404,6 +421,8 @@ when collecting many pieces.
 text should collect pieces in a list and join once. For character counting,
 anagrams, and first-non-repeating-character problems, `Counter` is often the
 clearest tool.
+
+**Match the prompt:** The palindrome helper ignores punctuation and case; the anagram helper compares exact characters. Do not normalize text unless required. For example, `are_anagrams("Ab", "ba")` is `False`. String slices such as `text[::-1]` allocate O(n) space.
 
 ## 7. Lists
 
@@ -436,12 +455,12 @@ Complexity:
 | Sorting              |     O(n log n) |
 | Slicing length `k`   |           O(k) |
 
-Bad nested-list initialization:
+Bad nested-list initialization (all rows reference the same list):
 
 ```python
 matrix = [[0] * 3] * 3
 matrix[0][0] = 1
-print(matrix)
+print(matrix)  # [[1, 0, 0], [1, 0, 0], [1, 0, 0]]
 ```
 
 Correct:
@@ -477,6 +496,7 @@ Multiple return values are usually tuples:
 
 ```python
 def min_max(values: list[int]) -> tuple[int, int]:
+    """Return the minimum and maximum; values must be nonempty."""
     return min(values), max(values)
 ```
 
@@ -539,7 +559,7 @@ duplicates is acceptable.
 
 ## 10. Dictionaries
 
-Dictionaries map hashable keys to values and preserve insertion order in modern Python.
+Dictionaries map hashable keys to values and preserve insertion order (Python 3.7+). Insertion order is not sorted order. Sets have no guaranteed iteration order; sort the result if the task requires ordering.
 
 **Mental model:** A dictionary is a labeled lookup table. Use it when you want to
 find information by a key instead of scanning a whole list.
@@ -561,6 +581,7 @@ def count_words(words: list[str]) -> Counter[str]:
 
 
 def group_by_first_letter(words: list[str]) -> dict[str, list[str]]:
+    """Group nonempty words; this example assumes every word has a first character."""
     groups: dict[str, list[str]] = defaultdict(list)
     for word in words:
         groups[word[0]].append(word)
@@ -598,6 +619,8 @@ mapping` depending on the intent.
 **Decision rule:** If you need order and mutation, start with `list`. If you need
 fast lookup by key, use `dict`. If you need unique values or repeated membership
 tests, use `set`. If you need a fixed record, use `tuple`.
+
+**Hashability:** Dict keys and set members must be hashable. Use `(row, col)` for a grid coordinate, not `[row, col]`. A tuple is hashable only when all its items are hashable. Membership in a dictionary checks keys, not values.
 
 ## 12. Conditions And Control Flow
 
@@ -668,7 +691,7 @@ for index in range(len(values)):
     print(values[index])
 ```
 
-Nested loops are often O(n²):
+Two full scans nested inside each other are O(n²):
 
 ```python
 def all_pairs(values: list[int]) -> list[tuple[int, int]]:
@@ -691,7 +714,7 @@ else:
 
 **Interview answer:** Prefer direct iteration, `enumerate` when you need indexes,
 and `zip` when walking multiple iterables together. Always be ready to state
-whether a nested loop is O(n²).
+how many times the inner operation runs. A sliding window can have nested loops and still be O(n) when each item enters and leaves once.
 
 ## 14. Functions
 
@@ -1292,16 +1315,20 @@ def timed(func):
 
 
 def retry(times: int, delay: float):
+    if times < 1 or delay < 0:
+        raise ValueError("times must be positive and delay non-negative")
+
     def decorate(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             last_error = None
-            for _ in range(times):
+            for attempt in range(times):
                 try:
                     return func(*args, **kwargs)
                 except TimeoutError as exc:
                     last_error = exc
-                    sleep(delay)
+                    if attempt + 1 < times:
+                        sleep(delay)
             raise RuntimeError("retries exhausted") from last_error
 
         return wrapper
@@ -1311,12 +1338,14 @@ def retry(times: int, delay: float):
 
 @lru_cache(maxsize=None)
 def fibonacci(n: int) -> int:
+    if n < 0:
+        raise ValueError("n must be non-negative")
     if n < 2:
         return n
     return fibonacci(n - 1) + fibonacci(n - 2)
 ```
 
-**Decorator order:** In `@a @b def f`, Python applies `f = a(b(f))`.
+**Decorator order:** With `@a` above `@b`, Python applies `f = a(b(f))`. In `retry`, `times` is the total number of attempts, including the first call.
 
 **Interview answer:** Decorators are useful for cross-cutting behavior such as
 timing, logging, caching, authorization, retry, or validation. Use
@@ -1382,6 +1411,7 @@ def find_user(user_id: int) -> User | None:
 
 
 def first(values: Sequence[T]) -> T:
+    """Return the first item; values must be nonempty."""
     return values[0]
 ```
 
@@ -1435,7 +1465,7 @@ dis.dis(add)
 ```
 
 **Interview answer:** CPython compiles source code to bytecode and runs it on the Python virtual machine. The GIL allows
-one thread at a time to execute Python bytecode in one process.
+one thread at a time to execute Python bytecode in a GIL-enabled interpreter. Optional free-threaded builds (Python 3.13+) can disable it; do not assume all builds behave alike.
 
 **Interview caveat:** The GIL does not make your whole program thread-safe. It
 does not prevent race conditions on shared state, and it does not block I/O-bound
@@ -1452,39 +1482,41 @@ Descriptors define `__get__`, `__set__`, or `__delete__` and power features like
 
 ## 28. Standard-Library Collections And Utilities
 
-**Mental model:** The standard library often contains the data structure an
-interview problem is asking you to rediscover. Knowing the right tool can make a
-solution shorter and clearer.
+Choose the tool by the operation, not by the problem's title.
+
+| Need | Tool | Cost to remember |
+| --- | --- | --- |
+| Frequencies | `Counter` | O(n) to count n items on average |
+| Grouping | `defaultdict(list)` | Average O(1) lookup/append per item |
+| FIFO queue / BFS | `deque` | O(1) append and popleft; list.pop(0) is O(n) |
+| Next smallest / top-K | `heapq` | O(log n) push/pop; heapify is O(n) |
+| Position in a sorted list | `bisect_left`, `bisect_right` | O(log n) search; insertion with insort is O(n) |
 
 ```python
-from collections import ChainMap, Counter, defaultdict, deque, namedtuple
-from dataclasses import dataclass
-from enum import Enum
-from functools import cache
-from heapq import heappop, heappush
-from itertools import combinations
-from operator import itemgetter
-import bisect
+from bisect import bisect_left, bisect_right
+from collections import Counter, defaultdict, deque
+from heapq import heapify, heappop
+
+
+print(Counter("banana")["a"])  # 3
+
+groups = defaultdict(list)
+for word in ["ant", "ape", "bat"]:
+    groups[word[0]].append(word)
+print(dict(groups))  # {'a': ['ant', 'ape'], 'b': ['bat']}
+
+queue = deque(["first", "second"])
+print(queue.popleft())  # first
+
+heap = [5, 1, 3]
+heapify(heap)
+print(heappop(heap))  # 1; the rest of a heap need not be sorted.
+
+values = [1, 2, 2, 4]
+print(bisect_left(values, 2), bisect_right(values, 2))  # 1 3
 ```
 
-```python
-counts = Counter("banana")
-groups: dict[str, list[str]] = defaultdict(list)
-queue = deque(["a", "b"])
-queue.appendleft("start")
-
-heap: list[int] = []
-heappush(heap, 3)
-heappush(heap, 1)
-smallest = heappop(heap)
-```
-
-**Interview answer:** `Counter`, `defaultdict`, `deque`, `heapq`, and `bisect` often turn long interview solutions into
-clean short ones.
-
-**Decision rule:** Use `Counter` for frequencies, `defaultdict` for grouping,
-`deque` for queues, `heapq` for top-K or priority queues, and `bisect` for
-searching insertion positions in sorted lists.
+`bisect` returns an insertion position, not proof that a target exists. Check `index < len(values) and values[index] == target` for membership. [Reference: bisect performance](https://docs.python.org/3/library/bisect.html#performance-notes)
 
 ## 29. Abstract Data Types And Implementations
 
@@ -1579,8 +1611,24 @@ class Trie:
     def insert(self, word: str) -> None:
         node = self.root
         for char in word:
-            node = node.children.setdefault(char, TrieNode())
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
         node.is_word = True
+
+    def search(self, word: str) -> bool:
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                return False
+            node = node.children[char]
+        return node.is_word
+
+
+trie = Trie()
+trie.insert("cat")
+assert trie.search("cat") is True
+assert trie.search("ca") is False  # A prefix is not necessarily a stored word.
 ```
 
 Union-find:
@@ -1642,8 +1690,8 @@ stay constant, grow a little, grow linearly, or explode?"
 | O(n)       | Linear scan                  |
 | O(n log n) | Efficient comparison sorting |
 | O(n²)      | All pairs                    |
-| O(2ⁿ)      | Subsets                      |
-| O(n!)      | Permutations                 |
+| O(n × 2ⁿ)  | Materialize all subsets of n distinct items |
+| O(n × n!)  | Materialize all permutations of n distinct items |
 
 ```python
 def linear_sum(values: list[int]) -> int:
@@ -1696,6 +1744,7 @@ Rotated sorted array:
 
 ```python
 def search_rotated(values: list[int], target: int) -> int:
+    """Search a rotated sorted array of distinct integers."""
     left, right = 0, len(values) - 1
     while left <= right:
         mid = (left + right) // 2
@@ -1725,7 +1774,9 @@ def test_binary_search_missing() -> None:
     assert binary_search([1, 3, 5], 2) == -1
 ```
 
-Complexity: binary search is O(log n) time and O(1) space.
+Examples: `binary_search([], 3) == -1`, `binary_search([1, 3, 5], 5) == 2`, and `search_rotated([4, 5, 1, 2, 3], 2) == 3`.
+
+Binary search requires sorted input; with duplicates it may return any matching index. The rotated-array version assumes distinct values; duplicates require additional handling and can degrade the worst case to O(n). Both shown searches use O(log n) time and O(1) auxiliary space under their stated assumptions.
 
 **Interview answer:** Binary search repeatedly discards half of the remaining
 search space. The key requirement is not merely "an array"; it is an ordered or
@@ -1960,7 +2011,7 @@ Big O:
 Best time:    O(n log n)
 Average time: O(n log n)
 Worst time:   O(n²)       bad pivots create very uneven splits
-Extra space:  O(n)        this educational version builds left/middle/right lists
+Extra space:  O(n) balanced; O(n²) worst case because recursive calls retain copied partitions
 ```
 
 Other common sorting pictures:
@@ -2177,7 +2228,9 @@ def permutations(values: list[int]) -> list[list[int]]:
     return result
 ```
 
-**Common mistake:** Forgetting to restore state after recursive exploration.
+**Boundary notes:** These subset/permutation examples treat input positions as distinct; repeated values can produce duplicate results. With n distinct items, storing every subset costs O(n × 2ⁿ) and every permutation O(n × n!) in the worst case. Recursive depth also uses memory; use an explicit stack for a potentially deep graph or grid traversal.
+
+**Common mistake:** Forgetting to restore state after recursive exploration. Memoization removes repeated work but does not remove recursive call depth; an iterative loop is safer for large Fibonacci inputs.
 
 **Interview answer:** A recursive solution needs a base case, progress toward the
 base case, and a clear definition of what each call returns or contributes.
@@ -2204,7 +2257,7 @@ structure.
 | Union-find          | Connectivity groups           | parent/rank       |
 | Dynamic programming | Overlapping subproblems       | table/cache       |
 
-Sliding window example:
+Variable-size sliding window: find the length of the longest contiguous substring without repeated characters. `left` never moves backward.
 
 ```python
 def longest_unique_substring_length(text: str) -> int:
@@ -2218,6 +2271,70 @@ def longest_unique_substring_length(text: str) -> int:
         best = max(best, right - left + 1)
     return best
 ```
+
+Example: `longest_unique_substring_length("abba") == 2`; empty text gives 0. Time O(n), space O(u), where u is the number of distinct characters seen.
+
+Fixed-size sliding window: reuse the previous sum by adding the entering value and subtracting the leaving value. Negative values are allowed.
+
+```python
+def max_sum_window(values: list[int], size: int) -> int:
+    if not 1 <= size <= len(values):
+        raise ValueError("size must be between 1 and len(values)")
+    current = best = sum(values[:size])
+    for right in range(size, len(values)):
+        current += values[right] - values[right - size]
+        best = max(best, current)
+    return best
+
+
+assert max_sum_window([2, -1, 3, 4], 2) == 7
+assert max_sum_window([-5, -2, -3], 2) == -5
+```
+
+O(n) time; the initial slice uses O(size) temporary space. A variable-size sum window that shrinks when the sum is too large generally needs nonnegative values; it is not a general solution when negatives are allowed.
+
+Prefix sums: build once for repeated range-sum queries. Use half-open ranges `[left, right)`.
+
+```python
+def prefix_sums(values: list[int]) -> list[int]:
+    prefix = [0]
+    for value in values:
+        prefix.append(prefix[-1] + value)
+    return prefix
+
+
+prefix = prefix_sums([2, -1, 3, 4])  # [0, 2, 1, 4, 8]
+assert prefix[4] - prefix[1] == 6  # Sum of indexes 1, 2, 3.
+assert prefix[2] - prefix[2] == 0  # Empty range.
+```
+
+O(n) build time and space; O(1) per query. Recomputing `sum(values[left:right])` for every query repeats work.
+
+BFS: shortest number of edges in an unweighted graph. Mark nodes when enqueuing so cycles and duplicate edges do not cause repeated visits.
+
+```python
+from collections import deque
+
+
+def shortest_distance(graph: dict[int, list[int]], start: int, goal: int) -> int:
+    queue = deque([(start, 0)])
+    seen = {start}
+    while queue:
+        node, distance = queue.popleft()
+        if node == goal:
+            return distance
+        for neighbor in graph.get(node, []):
+            if neighbor not in seen:
+                seen.add(neighbor)
+                queue.append((neighbor, distance + 1))
+    return -1
+
+
+assert shortest_distance({0: [1], 1: [0, 2], 2: []}, 0, 2) == 2
+assert shortest_distance({0: []}, 0, 2) == -1
+```
+
+O(V + E) time and O(V) auxiliary space for the reachable graph. Ordinary BFS does not solve general weighted shortest paths.
 
 Topological sort:
 
@@ -2243,6 +2360,8 @@ def can_finish_courses(count: int, prerequisites: list[tuple[int, int]]) -> bool
     return visited == count
 ```
 
+For `can_finish_courses`, each pair is `(course, prerequisite)` and course IDs are in `0..count-1`. A cycle prevents completion. Time and space are O(V + E), where V is the course count and E is the number of prerequisites.
+
 **Interview answer:** Name the pattern, explain why it fits, then state the data
 structure and complexity. For example: "This is a sliding window because we need
 the best contiguous substring while moving through the string once."
@@ -2266,8 +2385,7 @@ def two_sum(values: list[int], target: int) -> tuple[int, int] | None:
     return None
 ```
 
-Two Sum uses a hash map so each previous value can be checked in O(1) average
-time instead of scanning all previous values again.
+Return two distinct indexes, or `None` when no pair exists. Check the complement before inserting the current value so an index is never reused. `two_sum([3, 3], 6) == (0, 1)`; `two_sum([3], 6) is None`. Time O(n) average, space O(n). Follow the task's tie-breaking rule if several pairs exist.
 
 Three Sum:
 
@@ -2296,7 +2414,7 @@ def three_sum(values: list[int]) -> list[tuple[int, int, int]]:
 
 Three Sum sorts first so the inner search can use two pointers. Sorting costs
 O(n log n), and the two-pointer scan across each fixed value gives O(n²) total
-time.
+time. It returns unique value triples, not indexes, and does not modify the input. For example, `three_sum([-1, 0, 1, 2, -1, -4])` gives `[(-1, -1, 2), (-1, 0, 1)]`.
 
 Product except self:
 
@@ -2315,41 +2433,45 @@ def product_except_self(values: list[int]) -> list[int]:
 ```
 
 Product Except Self uses prefix and suffix products to avoid division and handle
-zeros correctly.
+zeros correctly. `product_except_self([1, 0, 3]) == [0, 3, 0]`; two zeros produce all zeros. Time O(n); O(1) auxiliary space excluding the O(n) returned list (under fixed-size arithmetic).
 
 Number of islands:
 
 ```python
 def num_islands(grid: list[list[str]]) -> int:
-    if not grid:
+    """Count 4-directional islands in a rectangular grid; mutate land to water."""
+    if not grid or not grid[0]:
         return 0
     rows, cols = len(grid), len(grid[0])
-
-    def sink(row: int, col: int) -> None:
-        if row < 0 or col < 0 or row >= rows or col >= cols or grid[row][col] != "1":
-            return
-        grid[row][col] = "0"
-        sink(row + 1, col)
-        sink(row - 1, col)
-        sink(row, col + 1)
-        sink(row, col - 1)
-
     count = 0
     for row in range(rows):
         for col in range(cols):
-            if grid[row][col] == "1":
-                count += 1
-                sink(row, col)
+            if grid[row][col] != "1":
+                continue
+            count += 1
+            grid[row][col] = "0"
+            stack = [(row, col)]
+            while stack:
+                current_row, current_col = stack.pop()
+                for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+                    nr, nc = current_row + dr, current_col + dc
+                    if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == "1":
+                        grid[nr][nc] = "0"  # Mark before pushing: visit only once.
+                        stack.append((nr, nc))
     return count
 ```
 
 Number of Islands treats the grid as a graph. Each land cell is a node connected
-to neighboring land cells. DFS "sinks" one island so it is counted once.
+to neighboring land cells. Iterative DFS avoids recursion-depth failures. Only up/down/left/right connect cells, not diagonals. It changes the input; call `num_islands([row[:] for row in grid])` if the original must be preserved. Time and worst-case auxiliary space are O(rows × cols).
 
 Climbing stairs:
 
 ```python
 def climb_stairs(n: int) -> int:
+    if n < 0:
+        raise ValueError("n must be non-negative")
+    if n == 0:
+        return 1  # One way to take no steps.
     if n <= 2:
         return n
     previous, current = 1, 2
@@ -2359,9 +2481,9 @@ def climb_stairs(n: int) -> int:
 ```
 
 Climbing Stairs is Fibonacci in disguise: ways to reach step `n` equals ways to
-reach `n - 1` plus ways to reach `n - 2`.
+reach `n - 1` plus ways to reach `n - 2`. This version counts one empty path for n=0; `climb_stairs(4) == 5`. Time O(n), O(1) integer variables; big-integer costs grow with n.
 
-pytest example:
+Local pytest example (place these tests after the functions above in a `test_*.py` file):
 
 ```python
 def test_two_sum() -> None:
@@ -2380,7 +2502,7 @@ done.
 
 ## 36. pytest Fundamentals
 
-Test discovery finds files named `test_*.py` or `*_test.py` and functions named `test_*`.
+By default, pytest discovers `test_*.py` or `*_test.py` files, `test_*` functions/methods, and `Test*` classes without an `__init__` method. These pytest examples are for local practice; coding judges may use their own test harness.
 
 **Mental model:** A test is executable documentation. It should show what the
 code promises to do.
@@ -2704,15 +2826,14 @@ def square(value: int) -> int:
     return value * value
 
 
-with ThreadPoolExecutor(max_workers=4) as executor:
-    thread_results = list(executor.map(square, [1, 2, 3]))
-
-with ProcessPoolExecutor() as executor:
-    process_results = list(executor.map(square, [1, 2, 3]))
+if __name__ == "__main__":
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        thread_results = list(executor.map(square, [1, 2, 3]))
+    with ProcessPoolExecutor() as executor:
+        process_results = list(executor.map(square, [1, 2, 3]))
 ```
 
-**Interview answer:** Concurrency is overlapping tasks. Parallelism is simultaneous execution. The GIL limits CPU-bound
-Python threads but not processes.
+**Interview answer:** Concurrency is overlapping tasks; parallelism is simultaneous execution. In GIL-enabled CPython, CPU-bound Python threads contend for the GIL. Processes have separate interpreters. Run the process-pool example as a saved script; the entry-point guard prevents recursive worker startup.
 
 **Decision rule:** Use threads for blocking I/O, processes for CPU-heavy pure
 Python work, and async when you have many cooperative I/O tasks and async-capable
@@ -2990,7 +3111,7 @@ code, and explain the trade-off.
 | Beginner     | What is `None`?                 | A singleton object representing no value.                     |
 | Intermediate | What is a generator?            | A lazy iterator created by `yield` or a generator expression. |
 | Intermediate | What is a decorator?            | A callable that wraps another callable.                       |
-| Intermediate | What does a context manager do? | It guarantees setup and cleanup around `with`.                |
+| Intermediate | What does a context manager do? | Runs entry/exit behavior around `with`, typically setup and cleanup. |
 | Advanced     | What is the GIL?                | CPython lock around bytecode execution.                       |
 | Advanced     | What is MRO?                    | The order Python uses to resolve attributes in inheritance.   |
 | Advanced     | What is a descriptor?           | Object controlling attribute access with descriptor methods.  |
@@ -3028,7 +3149,7 @@ failures, repeatable setup, edge cases, and regression protection.
 
 | Question                        | Interview answer                                                                  |
 |---------------------------------|-----------------------------------------------------------------------------------|
-| How does pytest discover tests? | It finds `test_*.py` files and `test_*` functions/classes by convention.          |
+| How does pytest discover tests? | By default: `test_*.py` or `*_test.py` files, `test_*` functions/methods, and `Test*` classes without `__init__`. |
 | What is a fixture?              | A reusable setup object injected into tests by name.                              |
 | What is `conftest.py`?          | A place for shared fixtures and pytest hooks.                                     |
 | Why parameterize?               | To run the same test logic over many cases.                                       |
@@ -3104,10 +3225,11 @@ def add_contact(contacts: dict[str, str], name: str, email: str) -> dict[str, st
     return updated
 ```
 
-Tests:
+Tests (`test_contacts.py`; imports refer to the `contacts.py` above):
 
 ```python
 from pathlib import Path
+from contacts import add_contact, load_contacts, save_contacts
 
 
 def test_add_contact() -> None:
@@ -3127,6 +3249,8 @@ pytest
 ```
 
 ### Project 2: Log-File Analyzer
+
+Save the source below as `log_analyzer.py` and its test as `test_log_analyzer.py` in the same directory.
 
 ```python
 from collections import Counter
@@ -3151,6 +3275,7 @@ def summarize_logs(path: Path) -> Counter[str]:
 
 ```python
 from pathlib import Path
+from log_analyzer import summarize_logs
 
 
 def test_summarize_logs(tmp_path: Path) -> None:
@@ -3161,7 +3286,7 @@ def test_summarize_logs(tmp_path: Path) -> None:
 
 ### Project 3: Data-Structure Library
 
-Implement `Stack`, `Queue`, linked list reversal, heap helper, and graph BFS from sections 29 and 31. Test each
+Implement `Stack`, `Queue`, linked list reversal, heap helper, and graph BFS using sections 28, 29, and 34. Test each
 operation with empty, one-item, and many-item inputs.
 
 Learning goal: explain each data structure by its operations and complexity, not
