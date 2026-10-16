@@ -1,1171 +1,645 @@
 # 10 Python Features You Should Be Using
 
-Based on the video from ArjanCodes, here are 10 Python features with comprehensive examples and practical use cases.
+Inspired by the ArjanCodes video linked below, this guide explains ten useful Python features with small examples.
+**Requires Python 3.10 or later.**
 
-## 1. Caching with `@cache`
+## 1. Cache Repeated Calculations with `@cache`
 
-Located in the `functools` module, this decorator automatically stores the results of function calls, perfect for expensive operations.
+`functools.cache` remembers a function's return value for each set of arguments. Calling it again with the same arguments reuses that value.
 
-### Basic Example
 ```python
 from functools import cache
 
+
 @cache
-def total_from_file(filename):
-    print("Reading file...")
-    with open(filename) as f:
-        return sum(int(line) for line in f)
+def square(number: int) -> int:
+    print(f"Calculating {number} squared")
+    return number * number
 
-# First call - reads the file
-result1 = total_from_file("data.txt")  # Prints: "Reading file..."
 
-# Second call - uses cached result
-result2 = total_from_file("data.txt")  # No print - uses cache!
+print(square(4))
+print(square(4))
+print(square(5))
 ```
 
-### Practical Example: Fibonacci Sequence
+Output:
+
+```text
+Calculating 4 squared
+16
+16
+Calculating 5 squared
+25
+```
+
+The second `square(4)` skips the function body. Squaring is cheap; this example makes the reuse visible. Caching is more useful when a calculation is expensive and its result depends only on its arguments.
+
+**Watch out:**
+
+- `@cache` has no size limit. Use `@lru_cache(maxsize=128)` from `functools` to limit the number of stored calls.
+- Cached file contents or API results can become stale. The cache does not detect external changes or expire entries automatically.
+- Use `square.cache_clear()` to discard its cached results.
+
+### Notes: data types and custom objects
+
+The same rules apply to `@cache` and `@lru_cache`:
+
+| What you pass or return | Rule |
+| --- | --- |
+| Arguments | Must be hashable: `int`, `float`, `bool`, `str`, `bytes`, and `None` work. |
+| Tuple or frozenset arguments | Work if all their contents are hashable. |
+| List, dictionary, or set arguments | Not hashable; passing them raises `TypeError`. |
+| Return values | Can be any type, including a list or dictionary. Cached calls reuse the same returned object. |
+
+**Mutable results:** Changing a returned list or dictionary changes what later callers receive. Prefer immutable results, or copy the result before modifying it. A shallow copy still shares nested mutable objects.
+
+**Custom objects:** For a value-based cache key, use `@dataclass(frozen=True)` with hashable fields. It generates compatible equality and hashing methods:
+
 ```python
+from dataclasses import dataclass
 from functools import cache
-import time
+
+
+@dataclass(frozen=True)
+class Rectangle:
+    width: int
+    height: int
+
 
 @cache
-def fibonacci(n):
-    if n < 2:
-        return n
-    return fibonacci(n - 1) + fibonacci(n - 2)
+def area(rectangle: Rectangle) -> int:
+    print("Calculating...")
+    return rectangle.width * rectangle.height
 
-# Without cache: exponential time complexity O(2^n)
-# With cache: linear time complexity O(n)
 
-start = time.time()
-print(fibonacci(100))  # Returns instantly with cache
-print(f"Time: {time.time() - start:.4f}s")
+print(area(Rectangle(3, 4)))  # Prints Calculating..., then 12.
+print(area(Rectangle(3, 4)))  # Prints only 12: equal instance, cached result.
 ```
 
-### LRU Cache with Size Limit
+Equal objects must have equal hashes, and an object's hash must stay stable throughout its lifetime. For frozen dataclass fields included in the hash, use hashable values such as tuples instead of lists; `frozen=True` does not make nested objects immutable.
+
+Ordinary classes normally use identity-based equality and hashing, so two instances with identical attributes are different cache keys. If you implement `__eq__()` and `__hash__()` yourself, keep them consistent and keep the fields used by them unchanged. Defining `__eq__()` without a suitable `__hash__()` normally makes instances unhashable. Avoid forcing hashing with `unsafe_hash=True` just to bypass an error.
+
+References: [dataclass hashing](https://docs.python.org/3/library/dataclasses.html), [custom object hashing](https://docs.python.org/3/reference/datamodel.html#object.__hash__).
+
+### Related example: limit and inspect an `lru_cache`
+
+LRU means **least recently used**. When the cache is full, it removes the entry that has gone unused the longest. `maxsize` limits entries, not bytes or how long a result stays cached.
+
 ```python
 from functools import lru_cache
 
-@lru_cache(maxsize=128)  # Keep only 128 most recent results
-def fetch_user_data(user_id: int):
-    # Expensive API call or database query
-    return {"id": user_id, "name": f"User{user_id}"}
+
+@lru_cache(maxsize=2)
+def square(number: int) -> int:
+    return number * number
+
+
+print(square(2))  # 4: miss, calculate and store
+print(square(3))  # 9: miss, calculate and store
+print(square(2))  # 4: hit, making 2 the most recently used
+print(square(4))  # 16: miss, evicts 3
+print(square(3))  # 9: miss, must calculate 3 again
+print(square.cache_info())  # CacheInfo(hits=1, misses=4, maxsize=2, currsize=2)
+
+square.cache_clear()  # Removes all entries and resets the statistics.
+print(square.cache_info())  # CacheInfo(hits=0, misses=0, maxsize=2, currsize=0)
 ```
 
-### Use Cases
-- File parsing operations
-- API calls with same parameters
-- Recursive algorithms (Fibonacci, factorial)
-- Database queries with repeated parameters
+A **hit** reuses an entry; a **miss** runs the function. Both `@cache` and `@lru_cache` provide `cache_info()` and `cache_clear()`. Use `@cache` for an unbounded cache or `@lru_cache(maxsize=...)` for a bounded one. Neither provides automatic time-based expiry.
 
----
+[Reference: `functools.lru_cache`](https://docs.python.org/3/library/functools.html#functools.lru_cache)
 
-## 2. Structural Subtyping with `Protocol`
+[Reference: `functools.cache`](https://docs.python.org/3/library/functools.html#functools.cache)
 
-`Protocol` allows duck typing with type hints - if it walks like a duck and quacks like a duck, it's a duck!
+## 2. Describe Required Behavior with `Protocol`
 
-### Basic Example
-```python
-from typing import Protocol
-
-class RateFetcher(Protocol):
-    def get_rate(self, currency: str) -> float:
-        ...
-
-def convert_sale(fetcher: RateFetcher, amount: float, currency: str) -> float:
-    rate = fetcher.get_rate(currency)
-    return amount * rate
-```
-
-### Python Protocol is like a java Interface
-```java
-interface RateFetcher {
-    double getRate(String currency);
-}
-
-class ApiRateFetcher implements RateFetcher {
-    public double getRate(String currency) {
-        return 1.1;
-    }
-}
-```
-
-### File-like Object Protocol
-> **Note:** StringIO implements both read and write
+A protocol tells a type checker which methods an object must provide. A class can satisfy a protocol without inheriting from it. This is called **structural subtyping**.
 
 ```python
 from typing import Protocol
 
-class FileLike(Protocol):
-    def read(self, size: int = -1) -> str:
+
+class MessageSender(Protocol):
+    def send(self, message: str) -> None:
         ...
 
-    def write(self, data: str) -> int:
-        ...
 
-def process_file(file: FileLike):
-    content = file.read()
-    # Process content
-    file.write('\n' + content.upper())
+class ConsoleSender:
+    def send(self, message: str) -> None:
+        print(f"Console: {message}")
 
-# Works with real files, StringIO, custom classes, etc.
-# FileLike  read and write interface methods which StringIO implements,
-# FileLike establishes a contract which StringIO implements
-from io import StringIO
 
-buffer = StringIO("hello world")
-process_file(buffer)  # Type checker happy!
-print(buffer.getvalue())
+class TestSender:
+    def __init__(self) -> None:
+        self.messages: list[str] = []
+
+    def send(self, message: str) -> None:
+        self.messages.append(message)
+
+
+def notify(sender: MessageSender, message: str) -> None:
+    sender.send(message)
+
+
+notify(ConsoleSender(), "Hello!")  # Console: Hello!
+
+test_sender = TestSender()
+notify(test_sender, "Hello!")
+print(test_sender.messages)  # ['Hello!']
 ```
-**Output**
-```
-hello world
-HELLO WORLD
-```
 
-### Practical Example: Payment Processing
+Both classes have a compatible `send()` method, so a type checker accepts either one in `notify()`. This makes it easy to substitute a test implementation.
 
-This example demonstrates **structural subtyping** with Protocols:
-- **Protocol Definition** - `PaymentProcessor` defines a contract with required methods
-- **`@runtime_checkable`** - Allows runtime type checking with `isinstance()`
-- **No Explicit Inheritance** - Classes don't inherit from `PaymentProcessor`, yet they satisfy it structurally
-- **Type Safety** - `checkout()` expects a `PaymentProcessor`, and both implementations work without explicit declaration
+Unlike a Java interface that requires `implements`, a Python protocol does not require an explicit declaration on the implementing class.
 
-The key insight: **duck typing with type hints** — if it walks like a payment processor and quacks like a payment processor, it *is* a payment processor.
+**Watch out:** Type hints do not enforce this contract at runtime. Tools such as mypy or Pyright check it. Adding `@runtime_checkable` enables `isinstance()` checks, but those checks only inspect member presence; they do not validate method signatures or argument types.
+
+### Related example: runtime checks with `@runtime_checkable`
+
+Decorate the protocol when you need to check an object's available members while the program runs:
 
 ```python
 from typing import Protocol, runtime_checkable
 
+
 @runtime_checkable
-class PaymentProcessor(Protocol):
-    def process_payment(self, amount: float, currency: str) -> bool:
+class MessageSender(Protocol):
+    def send(self, message: str) -> None:
         ...
 
-    def refund(self, transaction_id: str) -> bool:
-        ...
 
-# Implementation 1 - doesn't inherit from Protocol
-class StripeProcessor:
-    def process_payment(self, amount: float, currency: str) -> bool:
-        print(f"Processing ${amount} via Stripe")
-        return True
+class ConsoleSender:
+    def send(self, message: str) -> None:
+        print(message)
 
-    def refund(self, transaction_id: str) -> bool:
-        print(f"Refunding transaction {transaction_id}")
-        return True
 
-# Implementation 2
-class PayPalProcessor:
-    def process_payment(self, amount: float, currency: str) -> bool:
-        print(f"Processing ${amount} via PayPal")
-        return True
+class WrongSignatureSender:
+    def send(self) -> None:  # Missing the message parameter.
+        print("No message accepted")
 
-    def refund(self, transaction_id: str) -> bool:
-        print(f"Refunding via PayPal: {transaction_id}")
-        return True
 
-def checkout(processor: PaymentProcessor, amount: float):
-    if processor.process_payment(amount, "USD"):
-        print("Payment successful!")
-
-# Both work without explicit inheritance!
-checkout(StripeProcessor(), 99.99)
-checkout(PayPalProcessor(), 149.99)
-
-# Runtime type checking with isinstance()
-processor = StripeProcessor()
-print(isinstance(processor, PaymentProcessor))  # True at runtime
-
-# Safe checkout with error handling
-def safe_checkout(processor: PaymentProcessor, amount: float):
-    if not isinstance(processor, PaymentProcessor):
-        raise TypeError(f"{type(processor).__name__} doesn't implement PaymentProcessor")
-    if processor.process_payment(amount, "USD"):
-        print("Payment successful!")
+print(isinstance(ConsoleSender(), MessageSender))  # True
+print(isinstance(object(), MessageSender))  # False: no send member
+print(isinstance(WrongSignatureSender(), MessageSender))  # True: signature ignored!
 ```
----
 
-## 3. Data Class `replace`
+The last result shows why a runtime protocol check does not replace a type checker. Calling `WrongSignatureSender().send("Hello")` would raise `TypeError`. Passing that object to a function annotated to accept `MessageSender` should be rejected by a type checker.
 
-Create modified copies of immutable dataclasses without mutation.
+Without `@runtime_checkable`, using a protocol in `isinstance()` raises `TypeError`.
 
-### Basic Example
+[Reference: `typing.runtime_checkable`](https://docs.python.org/3/library/typing.html#typing.runtime_checkable)
+
+[Reference: `typing.Protocol`](https://docs.python.org/3/library/typing.html#typing.Protocol)
+
+## 3. Copy a Dataclass with Changes Using `replace`
+
+`dataclasses.replace()` creates a new instance with selected fields changed. The original instance stays unchanged.
+
 ```python
 from dataclasses import dataclass, replace
 
-@dataclass(frozen=True)
-class Sale:
-    amount: float
-    currency: str
-    converted_value: float = 0.0
-
-original_sale = Sale(100.0, "EUR")
-new_sale = replace(original_sale, converted_value=120.0)
-
-print(original_sale)  # Sale(amount=100.0, currency='EUR', converted_value=0.0)
-print(new_sale)       # Sale(amount=100.0, currency='EUR', converted_value=120.0)
-```
-
-### Practical Example: User Settings
-```python
-from dataclasses import dataclass, replace
-from datetime import datetime
 
 @dataclass(frozen=True)
-class UserSettings:
-    user_id: int
-    theme: str
-    notifications: bool
-    language: str
-    last_updated: datetime
+class Settings:
+    theme: str = "dark"
+    notifications: bool = True
 
-def update_theme(settings: UserSettings, new_theme: str) -> UserSettings:
-    return replace(
-        settings,
-        theme=new_theme,
-        last_updated=datetime.now()
-    )
 
-def toggle_notifications(settings: UserSettings) -> UserSettings:
-    return replace(
-        settings,
-        notifications=not settings.notifications,
-        last_updated=datetime.now()
-    )
+original = Settings()
+updated = replace(original, theme="light")
 
-# Usage
-user_settings = UserSettings(
-    user_id=123,
-    theme="dark",
-    notifications=True,
-    language="en",
-    last_updated=datetime.now()
-)
-
-# Create updated versions
-new_settings = update_theme(user_settings, "light")
-newer_settings = toggle_notifications(new_settings)
+print(original)  # Settings(theme='dark', notifications=True)
+print(updated)   # Settings(theme='light', notifications=True)
 ```
 
-### Configuration Management
+`frozen=True` prevents direct field assignment, such as `original.theme = "light"`. `replace()` is useful for creating a modified version instead. It also works with dataclasses that are not frozen.
+
+**Watch out:** This is a shallow copy. If a field contains a list, both instances share that list unless you explicitly supply a new one. A frozen dataclass does not make objects stored inside its fields immutable.
+
+### Related example: avoid sharing a mutable field
+
 ```python
 from dataclasses import dataclass, replace
 
+
 @dataclass(frozen=True)
-class DatabaseConfig:
-    host: str
-    port: int
-    database: str
-    username: str
-    ssl_enabled: bool = False
-    timeout: int = 30
+class Team:
+    members: list[str]
 
-# Base config
-dev_config = DatabaseConfig("localhost", 5432, "dev_db", "dev_user")
 
-# Production config - just override what's different
-prod_config = replace(
-    dev_config,
-    host="prod.example.com",
-    ssl_enabled=True,
-    timeout=60
-)
+original = Team(["Alice"])
+shared_copy = replace(original)
+independent_copy = replace(original, members=original.members.copy())
+
+shared_copy.members.append("Bob")  # A frozen field can still contain a mutable list.
+print(original.members)  # ['Alice', 'Bob']
+print(independent_copy.members)  # ['Alice']
 ```
 
----
+Copying this list is enough because its items are immutable strings. Nested mutable objects would still be shared by a shallow list copy.
 
-## 4. `itertools.pairwise`
+[Reference: `dataclasses.replace`](https://docs.python.org/3/library/dataclasses.html#dataclasses.replace)
 
-Iterate over overlapping pairs - perfect for calculating differences or analyzing sequences.
+## 4. Compare Neighbors with `itertools.pairwise`
 
-### Basic Example
+`pairwise()` yields overlapping pairs: first and second, second and third, and so on.
+
 ```python
 from itertools import pairwise
 
-numbers = [10, 20, 35, 50]
-deltas = [b - a for a, b in pairwise(numbers)]
-print(deltas)  # [10, 15, 15]
+
+readings = [10, 20, 35, 50]
+
+print(list(pairwise(readings)))  # [(10, 20), (20, 35), (35, 50)]
+
+changes = [current - previous for previous, current in pairwise(readings)]
+print(changes)  # [10, 15, 15]
 ```
 
-### Practical Example: Time Series Analysis
-```python
-from itertools import pairwise
-from datetime import datetime, timedelta
+Use it for changes between measurements, distances between neighboring points, or adjacent duplicate detection.
 
-# Stock prices over time
-prices = [
-    (datetime(2024, 1, 1), 100.0),
-    (datetime(2024, 1, 2), 105.0),
-    (datetime(2024, 1, 3), 103.0),
-    (datetime(2024, 1, 4), 110.0),
-]
-
-# Calculate daily changes
-for (date1, price1), (date2, price2) in pairwise(prices):
-    change = price2 - price1
-    percent = (change / price1) * 100
-    print(f"{date2.date()}: ${price2} ({percent:+.2f}%)")
-
-# Output:
-# 2024-01-02: $105.0 (+5.00%)
-# 2024-01-03: $103.0 (-1.90%)
-# 2024-01-04: $110.0 (+6.80%)
-```
-
-### Path Smoothness Validation
 ```python
 from itertools import pairwise
 
-def validate_smooth_path(points: list[tuple[float, float]]) -> bool:
-    """Check if points form a smooth path (no sharp angles)"""
-    max_angle_change = 45  # degrees
 
-    for (x1, y1), (x2, y2) in pairwise(points):
-        distance = ((x2 - x1)**2 + (y2 - y1)**2)**0.5
-        if distance > 100:  # Too far apart
-            return False
+values = [1, 1, 2, 3, 3, 3]
+duplicates = [left for left, right in pairwise(values) if left == right]
 
-    return True
-
-path = [(0, 0), (10, 10), (20, 15), (30, 20)]
-print(validate_smooth_path(path))
+print(duplicates)  # [1, 3, 3]
 ```
 
-### Detecting Duplicates in Sorted Data
-```python
-from itertools import pairwise
+Three consecutive `3`s produce two matching pairs. This finds equal neighbors, not unique duplicated values. An empty iterable or one containing a single item produces no pairs.
 
-def find_consecutive_duplicates(data: list) -> list:
-    """Find items that appear consecutively"""
-    return [item for item, next_item in pairwise(data) if item == next_item]
+[Reference: `itertools.pairwise`](https://docs.python.org/3/library/itertools.html#itertools.pairwise)
 
-sorted_data = [1, 1, 2, 3, 3, 3, 4, 5, 5]
-duplicates = find_consecutive_duplicates(sorted_data)
-print(duplicates)  # [1, 3, 3, 5]
-```
+## 5. Reuse a Value in a Condition with `:=`
 
----
+The walrus operator assigns a value inside an expression. It helps when you need to test a result and then use it.
 
-## 5. The Walrus Operator (`:=`)
-
-Assign and use a value in the same expression - cleaner code with fewer repetitions.
-
-### Basic Example
-```python
-# Without walrus
-file = open("data.txt")
-line = file.readline()
-while line:
-    process(line)
-    line = file.readline()
-
-# With walrus
-file = open("data.txt")
-while (line := file.readline()):
-    process(line)
-```
-
-### Practical Example: Data Validation
-```python
-def process_user_input(data: dict) -> str:
-    # Validate and use in one step
-    if (username := data.get("username")) and len(username) > 3:
-        return f"Welcome, {username}!"
-
-    if (age := data.get("age")) and age >= 18:
-        return "You are an adult"
-
-    return "Invalid data"
-
-print(process_user_input({"username": "john_doe", "age": 25}))
-```
-
-### List Comprehension with Expensive Operations
-```python
-# Without walrus - compute_value called twice!
-results = [compute_value(x) for x in data if compute_value(x) > 10]
-
-# With walrus - compute_value called once
-results = [value for x in data if (value := compute_value(x)) > 10]
-```
-
-### Practical Example: Data Processing Pipeline
 ```python
 import re
 
-def extract_and_validate_emails(text: str) -> list[str]:
-    """Extract valid emails from text"""
-    pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
 
-    return [
-        email.lower()
-        for line in text.split('\n')
-        if (match := re.search(pattern, line))
-        for email in [match.group()]
-        if email.endswith(('.com', '.org', '.net'))
-    ]
+line = "Order number: 1234"
 
-text = """
-Contact us at support@example.com
-Sales: sales@company.org
-Invalid: notanemail@
-Admin: admin@test.co.uk
-"""
-
-emails = extract_and_validate_emails(text)
-print(emails)  # ['support@example.com', 'sales@company.org']
+if (match := re.search(r"Order number: ([0-9]+)", line)):
+    print(match.group(1))  # 1234
+else:
+    print("No order number found")
 ```
 
-### Regex Matching
+`re.search()` returns a match object or `None`. `:=` saves that result in `match`, and the `if` checks whether a match exists.
+
+For ordinary file lines, a `for` loop is usually clearer. A walrus loop is useful when reading fixed-size chunks:
+
 ```python
-import re
+from io import StringIO
 
-def parse_log_line(line: str) -> dict | None:
-    pattern = r'\[(\d+)\] (\w+): (.+)'
 
-    if (match := re.match(pattern, line)):
-        return {
-            'id': match.group(1),
-            'level': match.group(2),
-            'message': match.group(3)
-        }
-    return None
-
-log = "[123] ERROR: Connection failed"
-if parsed := parse_log_line(log):
-    print(f"Level: {parsed['level']}, Message: {parsed['message']}")
+with StringIO("abcdefghij") as stream:
+    while (chunk := stream.read(4)):
+        print(chunk)
 ```
 
----
+Output:
 
-## 6. `pathlib` for File Handling
+```text
+abcd
+efgh
+ij
+```
 
-Object-oriented file system paths - cleaner and more intuitive than `os.path`.
+The loop stops when `read()` returns an empty string.
 
-### Basic Example
+**Watch out:** A truth test also rejects valid values such as `0` and `False`. If only `None` means “missing,” write `if (value := ...) is not None:`. Prefer a separate assignment if combining assignment and testing makes the code harder to read.
+
+### Related example: keep a valid zero
+
 ```python
-from pathlib import Path
+settings = {"retries": 0}
 
-directory = Path("data/")
-for path in directory.glob("*.json"):
-    data = path.read_text()
-    print(f"File: {path.stem}")  # Filename without extension
+if (retries := settings.get("retries")) is not None:
+    print(f"Retries: {retries}")  # Retries: 0
+else:
+    print("Retries not configured")
 ```
 
-### Practical Example: Project File Management
+Using only `if (retries := settings.get("retries")):` would skip the first branch because zero is false in a truth test.
+
+[Reference: assignment expressions](https://docs.python.org/3/reference/expressions.html#assignment-expressions)
+
+## 6. Work with File Paths Using `pathlib`
+
+`Path` objects let you join paths, inspect filenames, and read or write files through one API.
+
 ```python
 from pathlib import Path
-import json
+from tempfile import TemporaryDirectory
 
-class ProjectManager:
-    def __init__(self, project_root: str):
-        self.root = Path(project_root)
-        self.src = self.root / "src"
-        self.tests = self.root / "tests"
-        self.config = self.root / "config.json"
 
-    def setup_project(self):
-        """Create project structure"""
-        self.src.mkdir(parents=True, exist_ok=True)
-        self.tests.mkdir(parents=True, exist_ok=True)
+with TemporaryDirectory() as directory:
+    folder = Path(directory) / "notes"
+    folder.mkdir()
 
-        # Create config file
-        config_data = {
-            "name": self.root.name,
-            "version": "1.0.0"
-        }
-        self.config.write_text(json.dumps(config_data, indent=2))
+    note = folder / "hello.txt"
+    note.write_text("Hello, Python!\n", encoding="utf-8")
 
-    def get_python_files(self) -> list[Path]:
-        """Find all Python files"""
-        return list(self.src.rglob("*.py"))
+    print(note.name)  # hello.txt
+    print(note.stem)  # hello
+    print(note.suffix)  # .txt
+    print(note.read_text(encoding="utf-8").strip())  # Hello, Python!
 
-    def get_file_size_mb(self, filepath: Path) -> float:
-        """Get file size in MB"""
-        return filepath.stat().st_size / (1024 * 1024)
-
-# Usage
-pm = ProjectManager("my_project")
-pm.setup_project()
-
-for py_file in pm.get_python_files():
-    size = pm.get_file_size_mb(py_file)
-    print(f"{py_file.relative_to(pm.root)}: {size:.2f} MB")
+    for path in sorted(folder.glob("*.txt")):
+        print(path.name)  # hello.txt
 ```
 
-### Cross-Platform Path Operations
+The `/` operator joins path components; it does not create a directory. Use `mkdir(parents=True, exist_ok=True)` when parent directories may need creating.
+
+Use `glob("*.py")` for matching files in one directory and `rglob("*.py")` to search its subdirectories too. `with_suffix(".bak")` returns a different path; it does not copy or rename a file.
+
+**Watch out:** `write_text()` overwrites an existing file. `read_text()` loads the entire file into memory; for large text files, use `with path.open(encoding="utf-8") as file:` and iterate over the lines.
+
+### Related example: nested folders, recursive search, and line reading
+
 ```python
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
-# Works on Windows, Linux, and macOS
-project = Path.home() / "projects" / "myapp"
-config_file = project / "config" / "settings.json"
 
-# Check if file exists
-if config_file.exists():
-    print(f"Config found at: {config_file}")
+with TemporaryDirectory() as directory:
+    root = Path(directory)
+    nested = root / "notes" / "daily"
+    nested.mkdir(parents=True, exist_ok=True)
+    note = nested / "tasks.txt"
+    note.write_text("Learn paths\nPractice Python\n", encoding="utf-8")
 
-# Get absolute path
-print(f"Absolute: {config_file.resolve()}")
+    print(list(root.glob("*.txt")))  # []: no text files directly in root
+    print([path.name for path in root.rglob("*.txt")])  # ['tasks.txt']
 
-# Get parent directory
-print(f"Parent: {config_file.parent}")
+    backup = note.with_suffix(".bak")
+    print(backup.name, backup.exists())  # tasks.bak False: only a path was created
 
-# Change extension
-backup_file = config_file.with_suffix(".bak")
+    with note.open(encoding="utf-8") as file:
+        for line in file:
+            print(line.rstrip())  # Prints each task on its own line.
 ```
 
-### File Operations
-```python
-from pathlib import Path
-import shutil
+`parents=True` creates missing parents; `exist_ok=True` permits an existing directory. Iterating over the open file reads lines without loading the whole file at once.
 
-def backup_files(source_dir: str, backup_dir: str, pattern: str = "*.txt"):
-    """Backup files matching pattern"""
-    source = Path(source_dir)
-    backup = Path(backup_dir)
+[Reference: `pathlib`](https://docs.python.org/3/library/pathlib.html)
 
-    backup.mkdir(parents=True, exist_ok=True)
+## 7. Ignore an Expected Exception with `suppress`
 
-    for file in source.glob(pattern):
-        if file.is_file():
-            dest = backup / file.name
-            shutil.copy2(file, dest)
-            print(f"Backed up: {file.name}")
+`contextlib.suppress` skips a block's remaining statements if a specified exception occurs. Use it when that failure is expected and needs no further action.
 
-# Usage
-backup_files("documents", "backups/2024-03-07", "*.txt")
-```
-
-### Reading and Writing Files
-```python
-from pathlib import Path
-
-# Read entire file
-content = Path("data.txt").read_text()
-
-# Read as bytes
-binary_data = Path("image.png").read_bytes()
-
-# Write text
-Path("output.txt").write_text("Hello, World!")
-
-# Write bytes
-Path("output.bin").write_bytes(b'\x00\x01\x02')
-
-# Iterate over lines
-for line in Path("data.txt").read_text().splitlines():
-    print(line)
-```
-
----
-
-## 7. Exception Suppression with `suppress`
-
-Cleanly ignore specific exceptions - more readable than try-except-pass.
-
-### Basic Example
 ```python
 from contextlib import suppress
 
-# Old way
-try:
-    Path("temp.txt").unlink()
-except FileNotFoundError:
-    pass
 
-# New way
-with suppress(FileNotFoundError):
-    Path("temp.txt").unlink()
+settings = {"theme": "dark", "debug": True}
+
+with suppress(KeyError):
+    del settings["debug"]
+
+with suppress(KeyError):
+    del settings["missing"]
+
+print(settings)  # {'theme': 'dark'}
 ```
 
-### Practical Example: Cleanup Operations
+Each `with` block is equivalent to a `try` block followed by `except KeyError: pass`.
+
+For this particular task, `settings.pop("missing", None)` is shorter. Likewise, for deleting a file that may be missing, `path.unlink(missing_ok=True)` is usually clearer. Use `suppress` when there is no suitable built-in alternative.
+
+**Watch out:** Keep the block small and name only exceptions you intend to ignore. Suppressing `Exception` or all `OSError`s can hide problems that need attention. Use `try`/`except` when you need to log an error, recover, or return a fallback value.
+
+### Related example: use built-in alternatives for missing items
+
 ```python
-from contextlib import suppress
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
-def cleanup_temp_files(temp_dir: Path):
-    """Remove temporary files, ignoring missing files"""
-    temp_files = [
-        "cache.tmp",
-        "log.tmp",
-        "session.tmp"
-    ]
 
-    for filename in temp_files:
-        with suppress(FileNotFoundError):
-            (temp_dir / filename).unlink()
-            print(f"Deleted {filename}")
+settings = {"theme": "dark", "debug": True}
+print(settings.pop("debug", None))  # True: removes and returns the value
+print(settings.pop("missing", None))  # None: returns the default
+print(settings)  # {'theme': 'dark'}
 
-# Usage
-cleanup_temp_files(Path("temp"))
+with TemporaryDirectory() as directory:
+    path = Path(directory) / "cache.tmp"
+    path.write_text("temporary data", encoding="utf-8")
+    path.unlink(missing_ok=True)
+    path.unlink(missing_ok=True)  # Already gone: no FileNotFoundError.
+    print(path.exists())  # False
 ```
 
-### Multiple Exceptions
-```python
-from contextlib import suppress
+`missing_ok=True` ignores a missing file, but still allows errors such as `PermissionError` to surface.
 
-def safe_convert(value: str) -> int | None:
-    """Try to convert to int, return None if fails"""
-    with suppress(ValueError, TypeError):
-        return int(value)
-    return None
+[Reference: `contextlib.suppress`](https://docs.python.org/3/library/contextlib.html#contextlib.suppress)
 
-print(safe_convert("123"))     # 123
-print(safe_convert("abc"))     # None
-print(safe_convert(None))      # None
-```
+## 8. Keep Request Context with `contextvars`
 
-### Dictionary Operations
-```python
-from contextlib import suppress
+Use a `ContextVar` when helpers need information about the current request, such as a request ID, user ID, or language, without passing it through every function call.
 
-def remove_keys(data: dict, keys: list[str]):
-    """Remove keys from dict, ignore if missing"""
-    for key in keys:
-        with suppress(KeyError):
-            del data[key]
-
-user_data = {"name": "John", "age": 30, "email": "john@example.com"}
-remove_keys(user_data, ["age", "phone", "address"])  # No error for missing keys
-print(user_data)  # {"name": "John", "email": "john@example.com"}
-```
-
-### Resource Cleanup
-```python
-from contextlib import suppress
-import os
-
-def safe_cleanup(resource_path: str):
-    """Cleanup resource, ignoring common errors"""
-    with suppress(FileNotFoundError, PermissionError, OSError):
-        os.remove(resource_path)
-        print(f"Removed {resource_path}")
-```
-
----
-
-## 8. `contextvars` for Async Context
-
-Manage context-local state in async code - like thread-local storage for async tasks.
-
-### Basic Example
-```python
-from contextvars import ContextVar
-
-request_id: ContextVar[str] = ContextVar("request_id", default="unknown")
-
-async def handle_request():
-    request_id.set("REQ-123")
-    await process_user()
-
-async def process_user():
-    # Can access request_id without passing it
-    print(f"Processing request: {request_id.get()}")
-```
-
-> ContextVar is thread-safe and async-safe, and that is exactly why it exists. A regular dict is not a safe replacement for the same purpose.
-
-**ContextVar stores context-local state.**
-That means the value is isolated per:
-* async task
-* thread
-* context propagation
-So different requests running concurrently do not overwrite each other.
+**One `ContextVar` object can have a different value in each async task's context.** When `asyncio` switches tasks, it also switches the active context. `get()` reads from that context.
 
 ```python
-from contextvars import ContextVar
 import asyncio
+from contextvars import ContextVar
 
+
+# Create once, at module level.
 request_id = ContextVar("request_id", default="unknown")
 
-async def worker(name, rid):
-    request_id.set(rid)
-    await asyncio.sleep(1)
-    print(name, request_id.get())
 
-async def main():
-    await asyncio.gather(
-        worker("task1", "REQ-1"),
-        worker("task2", "REQ-2")
+def log(message: str) -> None:
+    print(f"[{request_id.get()}] {message}")
+
+
+async def handle_request(identifier: str) -> None:
+    token = request_id.set(identifier)  # Set this task's value.
+    try:
+        await asyncio.sleep(0)  # Let another task run.
+        log("Request complete")
+    finally:
+        request_id.reset(token)  # Restore the previous state, even on failure.
+
+
+async def main() -> None:
+    await asyncio.gather(  # Run each handler as a separate task.
+        handle_request("REQ-1"),
+        handle_request("REQ-2"),
     )
+    log("Outside requests")
 
-asyncio.run(main())
-
-#output
-# task1 REQ-1
-# task2 REQ-2
-```
-
-
-### Practical Example: Request Tracing
-```python
-import asyncio
-from contextvars import ContextVar
-from datetime import datetime
-import random
-
-# Context variables
-request_id_var: ContextVar[str] = ContextVar("request_id")
-user_id_var: ContextVar[int | None] = ContextVar("user_id", default=None)
-
-def log(message: str):
-    """Log with context"""
-    req_id = request_id_var.get()
-    user_id = user_id_var.get()
-    timestamp = datetime.now().strftime("%H:%M:%S")
-    print(f"[{timestamp}] [{req_id}] [User:{user_id}] {message}")
-
-async def authenticate(user_id: int):
-    """Simulate authentication"""
-    await asyncio.sleep(0.1)
-    user_id_var.set(user_id)
-    log(f"User authenticated")
-
-async def fetch_data(data_type: str):
-    """Simulate data fetching"""
-    await asyncio.sleep(0.2)
-    log(f"Fetched {data_type}")
-    return f"{data_type}_data"
-
-async def handle_api_request(request_id: str, user_id: int):
-    """Handle a single API request"""
-    # Set context for this request
-    request_id_var.set(request_id)
-
-    log("Request started")
-
-    # Authenticate
-    await authenticate(user_id)
-
-    # Fetch data
-    profile = await fetch_data("profile")
-    settings = await fetch_data("settings")
-
-    log("Request completed")
-    return {"profile": profile, "settings": settings}
-
-async def main():
-    """Simulate multiple concurrent requests"""
-    tasks = [
-        handle_api_request(f"REQ-{i}", user_id=100 + i)
-        for i in range(3)
-    ]
-
-    results = await asyncio.gather(*tasks)
-    return results
-
-# Run
-asyncio.run(main())
-```
-
-### Practical Example: Database Transaction Context
-```python
-import asyncio
-from contextvars import ContextVar
-from typing import Optional
-
-# Context for current database transaction
-db_transaction: ContextVar[Optional['Transaction']] = ContextVar('db_transaction', default=None)
-
-class Transaction:
-    def __init__(self, transaction_id: str):
-        self.id = transaction_id
-        self.operations = []
-
-    def add_operation(self, operation: str):
-        self.operations.append(operation)
-
-    async def commit(self):
-        print(f"Committing transaction {self.id}: {self.operations}")
-        await asyncio.sleep(0.1)
-
-    async def rollback(self):
-        print(f"Rolling back transaction {self.id}")
-        await asyncio.sleep(0.1)
-
-async def execute_query(query: str):
-    """Execute query within current transaction context"""
-    txn = db_transaction.get()
-    if txn:
-        txn.add_operation(query)
-        print(f"[{txn.id}] Executing: {query}")
-    else:
-        print(f"Executing without transaction: {query}")
-
-async def with_transaction(func):
-    """Decorator to run function in a transaction"""
-    import functools
-
-    @functools.wraps(func)
-    async def wrapper(*args, **kwargs):
-        txn = Transaction(f"TXN-{random.randint(1000, 9999)}")
-        db_transaction.set(txn)
-
-        try:
-            result = await func(*args, **kwargs)
-            await txn.commit()
-            return result
-        except Exception as e:
-            await txn.rollback()
-            raise
-        finally:
-            db_transaction.set(None)
-
-    return wrapper
-
-@with_transaction
-async def create_user(username: str, email: str):
-    """Create user with multiple operations"""
-    await execute_query(f"INSERT INTO users (username) VALUES ('{username}')")
-    await execute_query(f"INSERT INTO emails (email) VALUES ('{email}')")
-    await execute_query(f"INSERT INTO audit_log (action) VALUES ('user_created')")
-    return {"username": username, "email": email}
-
-async def main():
-    # Each call runs in its own transaction context
-    user1 = asyncio.create_task(create_user("alice", "alice@example.com"))
-    user2 = asyncio.create_task(create_user("bob", "bob@example.com"))
-
-    await asyncio.gather(user1, user2)
 
 asyncio.run(main())
 ```
 
----
+Output (the first two lines may appear in either order):
 
-## 9. Structural Pattern Matching with Guards
-
-Pattern matching with conditions - more declarative than if-elif chains.
-
-### Basic Example
-```python
-match amount:
-    case x if x < 0:
-        return "invalid"
-    case 0:
-        return "zero"
-    case x if x > 10000:
-        return "large"
-    case _:
-        return "normal"
+```text
+[REQ-1] Request complete
+[REQ-2] Request complete
+[unknown] Outside requests
 ```
 
-### Practical Example: HTTP Response Handling
+Both tasks use the same `request_id` object, but each stores its own value. The `log()` helper reads the calling task's ID. Neither task changes `main()`'s value.
+
+- `set(value)` assigns a value in the current context and returns a restoration token.
+- `get()` reads the current context's value, falling back to the default if unset.
+- `reset(token)` restores the state from before that `set()`.
+
+A normal function call or direct `await` uses the current task's context. A newly created task normally inherits a copy of its creator's context.
+
+> **Be careful with dictionaries:** `ContextVar` stores object references; it does not copy dictionaries or make them thread-safe. If tasks inherit or are assigned the same dictionary, mutations are visible to all of them. For separate request data, create a fresh dictionary inside each handler, pass it to `set()`, and reset in `finally`. Avoid a shared mutable default such as `default={}`. Prefer immutable values, such as strings, when practical.
+
+Use ordinary arguments when only a few functions need the value. In a notebook with an existing event loop, use `await main()` instead of `asyncio.run(main())`.
+
+[Reference: `contextvars`](https://docs.python.org/3/library/contextvars.html)
+
+## 9. Match Structured Data with Guards
+
+`match` checks a value against patterns. A **guard** is an `if` condition that must also be true before a case runs.
+
 ```python
-def handle_http_response(status_code: int, body: dict):
-    match status_code:
-        case 200:
-            return {"success": True, "data": body}
-
-        case 201:
-            return {"success": True, "created": True, "data": body}
-
-        case code if 400 <= code < 500:
-            return {"success": False, "error": "Client error", "code": code}
-
-        case code if 500 <= code < 600:
-            return {"success": False, "error": "Server error", "code": code}
-
-        case _:
-            return {"success": False, "error": "Unknown status", "code": status_code}
-
-# Usage
-print(handle_http_response(200, {"user": "John"}))
-print(handle_http_response(404, {"message": "Not found"}))
-print(handle_http_response(500, {"message": "Internal error"}))
-```
-
-### Parsing Structured Data
-```python
-from dataclasses import dataclass
-
-@dataclass
-class Point:
-    x: float
-    y: float
-
-@dataclass
-class Circle:
-    center: Point
-    radius: float
-
-@dataclass
-class Rectangle:
-    top_left: Point
-    width: float
-    height: float
-
-def calculate_area(shape):
-    match shape:
-        case Circle(radius=r):
-            return 3.14159 * r * r
-
-        case Rectangle(width=w, height=h):
-            return w * h
-
-        case Circle(center=Point(x=0, y=0), radius=r) if r > 100:
-            return f"Large circle at origin: {3.14159 * r * r}"
-
-        case _:
-            return "Unknown shape"
-
-# Usage
-circle = Circle(Point(0, 0), 5)
-rect = Rectangle(Point(0, 0), 10, 20)
-
-print(calculate_area(circle))  # 78.53975
-print(calculate_area(rect))    # 200
-```
-
-### Command Processing
-```python
-def process_command(command: str, args: list):
+def describe_command(command: str) -> str:
     match command.split():
         case ["quit"] | ["exit"]:
             return "Goodbye!"
-
-        case ["help", topic] if topic in ["commands", "usage"]:
-            return f"Help for: {topic}"
-
-        case ["add", *numbers] if all(n.isdigit() for n in numbers):
-            return sum(int(n) for n in numbers)
-
+        case ["repeat", word, count] if count.isdecimal():
+            return " ".join([word] * int(count))
+        case ["repeat", *_]:
+            return "Usage: repeat WORD NONNEGATIVE_INTEGER"
         case ["echo", *words]:
             return " ".join(words)
-
-        case ["search", query] if len(query) >= 3:
-            return f"Searching for: {query}"
-
         case _:
             return "Unknown command"
 
-# Usage
-print(process_command("add 1 2 3 4", []))      # 10
-print(process_command("echo hello world", [])) # hello world
-print(process_command("search python", []))    # Searching for: python
+
+print(describe_command("repeat hi 3"))  # hi hi hi
+print(describe_command("repeat hi no"))  # Usage: repeat WORD NONNEGATIVE_INTEGER
+print(describe_command("echo hello world"))  # hello world
+print(describe_command("quit"))  # Goodbye!
 ```
 
-### API Request Validation
+The `repeat` case requires exactly three words. It captures the last two in `word` and `count`, then checks the guard. `*words` captures any remaining words as a list; `_` matches anything without saving it.
+
+**Watch out:** Cases are tried from top to bottom, and only the first match with a true guard runs. Put specific cases before general ones. A bare name such as `case status:` captures a value rather than comparing against an existing variable. Use literals, qualified constants, or guards for comparisons.
+
+For a few simple numeric comparisons, `if`/`elif` is usually easier to read. Pattern matching is most useful when the data's shape matters.
+
+### Related example: compare against a named constant
+
+Use a qualified name such as `Status.OK` when a case should compare a value rather than capture it:
+
 ```python
-def validate_api_request(request: dict) -> dict:
-    match request:
-        case {"method": "GET", "path": path, "auth": token} if token:
-            return {"valid": True, "type": "authenticated_get", "path": path}
+from enum import Enum
 
-        case {"method": "POST", "path": "/api/users", "body": body} if "email" in body:
-            return {"valid": True, "type": "user_creation", "email": body["email"]}
 
-        case {"method": method, "path": path} if method in ["GET", "POST", "PUT", "DELETE"]:
-            return {"valid": True, "type": "standard_request", "method": method}
+class Status(Enum):
+    OK = "ok"
+    FAILED = "failed"
 
-        case {"method": method}:
-            return {"valid": False, "error": f"Unsupported method: {method}"}
 
+def describe(status: Status) -> str:
+    match status:
+        case Status.OK:
+            return "Success"
+        case Status.FAILED:
+            return "Failure"
         case _:
-            return {"valid": False, "error": "Invalid request format"}
+            return "Unknown status"
 
-# Usage
-request1 = {"method": "GET", "path": "/api/data", "auth": "token123"}
-request2 = {"method": "POST", "path": "/api/users", "body": {"email": "user@example.com"}}
 
-print(validate_api_request(request1))
-print(validate_api_request(request2))
+print(describe(Status.OK))  # Success
+print(describe(Status.FAILED))  # Failure
 ```
 
----
+[Reference: the `match` statement](https://docs.python.org/3/reference/compound_stmts.html#the-match-statement)
 
-## 10. `ExitStack` for Dynamic Context Managers
+## 10. Manage a Variable Number of Resources with `ExitStack`
 
-Manage multiple context managers dynamically - perfect when you don't know how many files you'll need to open.
+Use `ExitStack` when the number of context managers is decided at runtime. Each call to `enter_context()` enters a context manager and registers its exit method.
 
-### Basic Example
 ```python
 from contextlib import ExitStack
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
-with ExitStack() as stack:
-    files = [stack.enter_context(open(p)) for p in paths]
-    # All files are automatically closed when exiting
-    for f in files:
-        print(f.read())
+
+with TemporaryDirectory() as directory:
+    folder = Path(directory)
+    paths = [folder / "first.txt", folder / "second.txt"]
+    for path, content in zip(paths, ["Hello", "Python"]):
+        path.write_text(content, encoding="utf-8")
+
+    with ExitStack() as stack:
+        files = [
+            stack.enter_context(path.open(encoding="utf-8"))
+            for path in paths
+        ]
+        for file in files:
+            print(file.read())
+
+    print(all(file.closed for file in files))
 ```
 
-### Practical Example: Batch File Processing
+Output:
+
+```text
+Hello
+Python
+True
+```
+
+Resources exit in reverse order. If opening a later file fails, previously opened files still close. They also close if an exception leaves the `with` block.
+
+**Watch out:** Use a normal `with` for a fixed, small number of resources. If you only need one file at a time, open it inside a loop to avoid holding many files open. `ExitStack` coordinates cleanup; it does not make multiple database transactions atomic.
+
+### Related example: a normal `with` for fixed resources
+
+When there are exactly two known resources, a regular `with` can manage both:
+
 ```python
-from contextlib import ExitStack
 from pathlib import Path
-import json
+from tempfile import TemporaryDirectory
 
-def merge_json_files(input_dir: Path, output_file: Path):
-    """Merge multiple JSON files into one"""
-    json_files = list(input_dir.glob("*.json"))
 
-    merged_data = {}
+with TemporaryDirectory() as directory:
+    source = Path(directory) / "source.txt"
+    target = Path(directory) / "target.txt"
+    source.write_text("Hello, Python!\n", encoding="utf-8")
 
-    with ExitStack() as stack:
-        # Open all input files
-        opened_files = [
-            stack.enter_context(open(f, 'r'))
-            for f in json_files
-        ]
+    with (
+        source.open(encoding="utf-8") as reader,
+        target.open("w", encoding="utf-8") as writer,
+    ):
+        for line in reader:
+            writer.write(line)
 
-        # Read and merge all data
-        for file in opened_files:
-            data = json.load(file)
-            merged_data.update(data)
-
-        # Open output file and write merged data
-        output = stack.enter_context(open(output_file, 'w'))
-        json.dump(merged_data, output, indent=2)
-
-    print(f"Merged {len(json_files)} files into {output_file}")
-
-# Usage
-merge_json_files(Path("data/configs"), Path("data/merged_config.json"))
+    print(reader.closed, writer.closed)  # True True
+    print(target.read_text(encoding="utf-8").strip())  # Hello, Python!
 ```
 
-### Database Connections Pool
-```python
-from contextlib import ExitStack
-from typing import Protocol
+Both files close on exit, including when an exception occurs. Choose `ExitStack` when the number or selection of resources is determined while the program runs.
 
-class DatabaseConnection(Protocol):
-    def execute(self, query: str): ...
-    def close(self): ...
+[Reference: `contextlib.ExitStack`](https://docs.python.org/3/library/contextlib.html#contextlib.ExitStack)
 
-class Connection:
-    def __init__(self, conn_id: int):
-        self.id = conn_id
-        print(f"Opening connection {conn_id}")
+## Quick Reference
 
-    def execute(self, query: str):
-        print(f"[Conn {self.id}] Executing: {query}")
+| Feature | Use it when you need to... |
+| --- | --- |
+| `@cache` | Reuse a calculation for repeated arguments |
+| `Protocol` | Describe behavior accepted by a typed function |
+| `dataclasses.replace` | Create a modified dataclass instance |
+| `pairwise` | Compare neighboring items |
+| `:=` | Save and test a result in one expression |
+| `pathlib` | Build paths and work with files |
+| `suppress` | Ignore a specific, expected exception |
+| `contextvars` | Make request context available to helper functions |
+| `match` with guards | Branch on data structure and conditions |
+| `ExitStack` | Manage a variable number of context managers |
 
-    def close(self):
-        print(f"Closing connection {self.id}")
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *args):
-        self.close()
-
-def batch_execute_queries(queries: list[str], num_connections: int = 3):
-    """Execute queries using a pool of connections"""
-    with ExitStack() as stack:
-        # Create connection pool
-        connections = [
-            stack.enter_context(Connection(i))
-            for i in range(num_connections)
-        ]
-
-        # Distribute queries across connections
-        for i, query in enumerate(queries):
-            conn = connections[i % num_connections]
-            conn.execute(query)
-
-# Usage
-queries = [
-    "SELECT * FROM users",
-    "SELECT * FROM orders",
-    "SELECT * FROM products",
-    "SELECT * FROM reviews",
-]
-
-batch_execute_queries(queries, num_connections=2)
-```
-
-### Resource Manager with Conditional Cleanup
-```python
-from contextlib import ExitStack, contextmanager
-from pathlib import Path
-import tempfile
-import shutil
-
-@contextmanager
-def temp_directory():
-    """Create a temporary directory"""
-    temp_dir = tempfile.mkdtemp()
-    try:
-        yield Path(temp_dir)
-    finally:
-        shutil.rmtree(temp_dir)
-        print(f"Cleaned up {temp_dir}")
-
-def process_with_resources(use_temp: bool = False, num_files: int = 2):
-    """Process with conditional resources"""
-    with ExitStack() as stack:
-        # Conditionally create temp directory
-        if use_temp:
-            work_dir = stack.enter_context(temp_directory())
-        else:
-            work_dir = Path(".")
-
-        # Open multiple files
-        files = []
-        for i in range(num_files):
-            file_path = work_dir / f"file_{i}.txt"
-            f = stack.enter_context(open(file_path, 'w'))
-            files.append(f)
-            f.write(f"Content for file {i}")
-
-        print(f"Processed {num_files} files in {work_dir}")
-
-# Usage
-process_with_resources(use_temp=True, num_files=3)
-```
-
-### Nested Transaction Management
-```python
-from contextlib import ExitStack
-
-class Transaction:
-    def __init__(self, name: str):
-        self.name = name
-
-    def __enter__(self):
-        print(f"BEGIN {self.name}")
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if exc_type:
-            print(f"ROLLBACK {self.name}")
-        else:
-            print(f"COMMIT {self.name}")
-        return False
-
-def nested_transaction_example():
-    """Example with multiple nested transactions"""
-    transaction_names = ["outer", "middle", "inner"]
-
-    with ExitStack() as stack:
-        transactions = [
-            stack.enter_context(Transaction(name))
-            for name in transaction_names
-        ]
-
-        print("Doing work in nested transactions...")
-        # All transactions will be properly committed/rolled back
-
-nested_transaction_example()
-```
-
----
-
-## Summary
-
-These 10 features can significantly improve your Python code:
-
-1. **`@cache`** - Eliminate redundant computation
-2. **`Protocol`** - Type-safe duck typing
-3. **`replace`** - Immutable dataclass updates
-4. **`pairwise`** - Elegant sequence pair iteration
-5. **`:=` (walrus)** - Cleaner assignment expressions
-6. **`pathlib`** - Modern file path handling
-7. **`suppress`** - Clean exception ignoring
-8. **`contextvars`** - Async-safe context state
-9. **Pattern matching** - Declarative conditional logic
-10. **`ExitStack`** - Dynamic resource management
-
-**Original Video:** [10 Python Features You're Not Using (But Really Should)](http://www.youtube.com/watch?v=cXl-AUXHHZY)
+**Original video:** [10 Python Features You're Not Using (But Really Should)](https://www.youtube.com/watch?v=cXl-AUXHHZY)
