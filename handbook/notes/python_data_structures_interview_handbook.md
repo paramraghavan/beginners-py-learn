@@ -1,483 +1,231 @@
 # Python Data Structures Interview Handbook
-> Python 3.11+
 
-## Table Of Contents
+> Python 3.11+. Learn what each structure stores, which operations it supports, and when to choose it. Examples use small inputs and `assert` checks; silence means a check passed.
 
-1. [How To Use This Handbook](#1-how-to-use-this-handbook)
-2. [macOS Python Development Environment](#2-macos-python-development-environment)
-3. [Recommended Python Project Structure](#3-recommended-python-project-structure)
-4. [Python Syntax And Execution Model](#4-python-syntax-and-execution-model)
-5. [Built-In Python Data Types](#5-built-in-python-data-types)
-6. [Strings](#6-strings)
-7. [Lists](#7-lists)
-8. [Tuples](#8-tuples)
-9. [Sets And Frozensets](#9-sets-and-frozensets)
-10. [Dictionaries](#10-dictionaries)
-11. [Comparing Core Python Collections](#11-comparing-core-python-collections)
-12. [Conditions And Control Flow](#12-conditions-and-control-flow)
-13. [Loops And Iteration](#13-loops-and-iteration)
-14. [Functions](#14-functions)
-15. [Comprehensions And Generator Expressions](#15-comprehensions-and-generator-expressions)
-16. [Lambda Functions And Functional Tools](#16-lambda-functions-and-functional-tools)
-17. [Modules, Packages, And Imports](#17-modules-packages-and-imports)
-18. [File Handling And Serialization](#18-file-handling-and-serialization)
-19. [Exception Handling](#19-exception-handling)
-20. [Object-Oriented Programming](#20-object-oriented-programming)
-21. [Dataclasses And Modern Python Models](#21-dataclasses-and-modern-python-models)
-22. [Iterables, Iterators, And Generators](#22-iterables-iterators-and-generators)
-23. [Decorators](#23-decorators)
-24. [Context Managers](#24-context-managers)
-25. [Type Hints And Static Analysis](#25-type-hints-and-static-analysis)
-26. [Python Memory Model And Copying](#26-python-memory-model-and-copying)
-27. [Python Internals](#27-python-internals)
-28. [Standard-Library Collections And Utilities](#28-standard-library-collections-and-utilities)
-29. [Abstract Data Types And Implementations](#29-abstract-data-types-and-implementations)
-30. [Algorithm Complexity](#30-algorithm-complexity)
-31. [Searching Algorithms](#31-searching-algorithms)
-32. [Sorting Algorithms](#32-sorting-algorithms)
-33. [Recursion And Backtracking](#33-recursion-and-backtracking)
-34. [Common Coding-Interview Patterns](#34-common-coding-interview-patterns)
-35. [Common Coding-Interview Problems](#35-common-coding-interview-problems)
-36. [pytest Fundamentals](#36-pytest-fundamentals)
-37. [pytest Fixtures](#37-pytest-fixtures)
-38. [pytest Parameterization And Markers](#38-pytest-parameterization-and-markers)
-39. [Mocking And Patching](#39-mocking-and-patching)
-40. [Testing Exceptions, Files, Classes, And APIs](#40-testing-exceptions-files-classes-and-apis)
-41. [Test Design And Quality](#41-test-design-and-quality)
-42. [Debugging](#42-debugging)
-43. [Logging](#43-logging)
-44. [Concurrency And Parallelism](#44-concurrency-and-parallelism)
-45. [Async Programming](#45-async-programming)
-46. [Performance And Profiling](#46-performance-and-profiling)
-47. [Clean Python And Design Principles](#47-clean-python-and-design-principles)
-48. [Common Python Design Patterns](#48-common-python-design-patterns)
-49. [Common Python Mistakes](#49-common-python-mistakes)
-50. [Frequently Used Python Snippets](#50-frequently-used-python-snippets)
-51. [Python Interview Questions And Answers](#51-python-interview-questions-and-answers)
-52. [Data-Structure And Algorithm Interview Questions](#52-data-structure-and-algorithm-interview-questions)
-53. [pytest Interview Questions](#53-pytest-interview-questions)
-54. [Scenario-Based Interview Preparation](#54-scenario-based-interview-preparation)
-55. [Runnable Practice Projects](#55-runnable-practice-projects)
-56. [Quick-Revision Sheets](#56-quick-revision-sheets)
+Use these three documents together:
 
-## 1. How To Use This Handbook
+| Need | Read |
+|---|---|
+| Python collections, their behavior, and operation costs | This handbook |
+| Searching, sorting, BFS/DFS, windows, DP, and worked algorithms | [Python algorithms notebook](../../dsa/python_algorithms_notebook.md) |
+| Syntax, functions, files/pickle, testing, concurrency, and application tools | [Python interview reference](python_interview_reference_guide.md) |
 
-**Beginner:** Read sections 1-19 in order. Type the examples, run them, change inputs, and explain the output aloud.
+Read sections 1–8 first for core collections, then 9–13 for standard-library tools and memory behavior. Section 14 is an optional bridge to custom structures and the algorithms notebook.
 
-**Intermediate:** Use sections 20-35 to strengthen OOP, typing, data structures, complexity, algorithms, and interview
-patterns.
+## Contents
 
-**Advanced:** Use sections 36-56 for pytest, mocking, concurrency, async, profiling, design, scenario interviews, and
-quick revision.
+1. [Choose a structure by its job](#1-choose-a-structure-by-its-job)
+2. [Shared rules: references, mutability, equality, and hashing](#2-shared-rules-references-mutability-equality-and-hashing)
+3. [Strings and binary sequences](#3-strings-and-binary-sequences)
+4. [Lists](#4-lists)
+5. [Tuples and named tuples](#5-tuples-and-named-tuples)
+6. [Dictionaries](#6-dictionaries)
+7. [Sets and frozensets](#7-sets-and-frozensets)
+8. [Deques, stacks, and queues](#8-deques-stacks-and-queues)
+9. [Counter and defaultdict](#9-counter-and-defaultdict)
+10. [Heaps and priority queues](#10-heaps-and-priority-queues)
+11. [Records: dataclasses and TypedDict](#11-records-dataclasses-and-typeddict)
+12. [Copying and nested containers](#12-copying-and-nested-containers)
+13. [Iteration, comprehensions, and lazy values](#13-iteration-comprehensions-and-lazy-values)
+14. [Custom structures: what Python gives you](#14-custom-structures-what-python-gives-you)
+15. [Quick revision and interview practice](#15-quick-revision-and-interview-practice)
 
-Run examples:
+## 1. Choose a structure by its job
 
-```bash
-python example.py
-python -m pytest
-python -m pytest -v
-```
+Imagine organizing a classroom: a list keeps a seating order, a dictionary finds a student by ID, a set records unique attendees, and a queue handles students in arrival order.
 
-Use coding problems by following this loop:
+| Structure | Stores | Preserves order? | First choice when you need |
+|---|---|---|---|
+| `str` | Text characters | Sequence order | Immutable text |
+| `list` | A sequence of object references | Yes | Indexing, duplicates, and changes to a sequence |
+| `tuple` / `NamedTuple` | A fixed group of references | Yes | A record whose positions should not change |
+| `dict` | Unique keys mapped to values | Insertion order | Lookup by a label or ID |
+| `set` | Unique hashable elements | No guaranteed iteration order | Membership, uniqueness, set operations |
+| `frozenset` | An immutable set | No guaranteed iteration order | A group used as a dict key/set element |
+| `deque` | Items in a sequence | Yes | Add/remove at both ends |
+| `Counter` | Hashable items mapped to counts | Dict insertion order | Frequencies |
+| `defaultdict` | Keys mapped to automatically created defaults | Dict insertion order | Grouping and accumulation |
+| A list maintained with `heapq` | Heap-ordered items | Not fully sorted | Repeatedly access the smallest priority |
+| `dataclass` | Named fields | Field definition order for generated methods | A readable application record |
 
-1. Restate the problem.
-2. Ask clarifying questions.
-3. Give a brute-force idea.
-4. Improve the data structure or algorithm.
-5. Write code.
-6. Test edge cases.
-7. State time and space complexity.
+**Decision rule:** start with the operations you repeat. Lists make position lookup fast; sets/dicts make average membership/key lookup fast; deques make end operations fast. No structure makes every operation O(1).
 
-**Interview answer:** A strong Python interview answer explains the trade-off, not just the syntax.
+**Cost conventions:** `n` is the collection size; `k` is a slice/result size. Hash costs assume O(1) hashing/comparison and ordinary hash distribution. Average O(1) does not mean worst-case O(1). Amortized O(1) spreads occasional expensive resizing across many operations. Space costs describe additional allocations, not the input already stored. The algorithms notebook explains Big O in more detail.
 
-## 2. macOS Python Development Environment
+## 2. Shared rules: references, mutability, equality, and hashing
 
-Install Homebrew if needed, then install Python and Git:
+### Names and containers refer to objects
 
-```bash
-brew install python
-brew install git
-python3 --version
-git --version
-```
-
-Apple Silicon notes:
-
-- Homebrew usually lives under `/opt/homebrew`.
-- Intel Homebrew usually lives under `/usr/local`.
-- If commands fail, check `echo $PATH` and `which brew`.
-
-Create and activate a virtual environment:
-
-**Why this matters:** A virtual environment gives each project its own installed
-packages. Without it, one project's dependency upgrade can accidentally break
-another project.
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-which python
-python --version
-python -m pip --version
-```
-
-Install development tools:
-
-**Why this matters:** These tools catch different classes of mistakes. `pytest`
-checks behavior, `ruff` catches common code issues, `black` formats consistently,
-`mypy` checks type hints, and `pre-commit` runs checks before code is committed.
-
-```bash
-python -m pip install --upgrade pip
-python -m pip install pytest pytest-cov ruff black mypy pre-commit
-```
-
-Deactivate:
-
-```bash
-deactivate
-```
-
-Create dependency files:
-
-```bash
-python -m pip freeze > requirements.txt
-```
-
-Minimal `pyproject.toml`:
-
-**Why this matters:** `pyproject.toml` is the modern place to store project and
-tool configuration. Keeping settings in one file makes the project easier for
-another developer, teammate, or interviewer to run.
-
-```toml
-[project]
-name = "python-handbook-examples"
-version = "0.1.0"
-requires-python = ">=3.11"
-dependencies = []
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-
-[tool.ruff]
-line-length = 100
-
-[tool.black]
-line-length = 100
-```
-
-Run scripts, modules, and tests:
-
-```bash
-python script.py
-python -m package.module
-pytest
-pytest -v
-pytest --cov=src
-```
-
-**Production note:** Virtual environments isolate dependencies so one project does not break another.
-
-**Common mistake:** Calling `pip` directly can install into a different Python. Prefer `python -m pip`.
-
-## 3. Recommended Python Project Structure
-
-**Why this matters:** A consistent project layout makes imports, tests, and
-packaging predictable. Beginners often lose time because code works from one
-folder but fails from another; a clear layout prevents that.
-
-```text
-python-handbook-examples/
-├── README.md
-├── pyproject.toml
-├── requirements.txt
-├── src/
-│   └── python_examples/
-│       ├── __init__.py
-│       ├── collections_examples.py
-│       ├── algorithms.py
-│       ├── models.py
-│       └── main.py
-└── tests/
-    ├── conftest.py
-    ├── test_collections.py
-    └── test_algorithms.py
-```
-
-**Beginner:** A module is a `.py` file. A package is a directory of modules. `__init__.py` marks a directory as a
-regular package and can expose package-level imports.
-
-**Intermediate:** The `src` layout helps tests import installed package code instead of accidentally importing files
-from the working directory.
-
-**Production note:** Do not make application logic depend on the current working directory. Pass paths explicitly or
-derive them from configuration.
-
-## 4. Python Syntax And Execution Model
-
-Python programs are made of statements and expressions. Expressions produce values; statements perform actions.
-
-**Mental model:** Python runs a file from top to bottom. A name is not a box that
-contains a value; it is a label that points to an object. This matters when two
-names point to the same mutable object.
-
-```python
-name = "Ada"
-score = 95
-
-if score >= 90:
-    print(f"{name} passed")
-```
-
-Names refer to objects:
+Assignment creates another reference; it does not copy the object.
 
 ```python
 values = [1, 2]
 alias = values
 alias.append(3)
-print(values)
+assert values == [1, 2, 3]
+assert alias is values
+
+separate = [1, 2, 3]
+assert separate == values      # Equal contents.
+assert separate is not values  # Different list objects.
 ```
 
-`==` compares values. `is` compares object identity.
+Use `==` for value equality and `is` for identity, especially `value is None`.
+
+### Mutable versus immutable
+
+- Lists, dictionaries, sets, deques, and bytearrays can change after creation.
+- Strings, numbers, tuples, bytes, and frozensets are immutable.
+- An immutable container can refer to mutable objects. A tuple containing a list cannot replace that list, but the list itself can change.
+
+### Hashable is the requirement for keys and set elements
+
+A dictionary key or set element must have a stable hash; equal objects must have equal hashes. Strings, integers, and tuples of hashable elements work. Lists, dictionaries, and sets do not.
 
 ```python
-left = [1, 2]
-right = [1, 2]
-same_object = left
+locations = {(2, 3): "desk"}
+assert locations[(2, 3)] == "desk"
 
-print(left == right)
-print(left is right)
-print(left is same_object)
+try:
+    locations[[2, 3]] = "desk"  # A list is unhashable.
+except TypeError:
+    pass
+else:
+    raise AssertionError("A list must not be accepted as a key")
 ```
 
-**Interview answer:** Python is dynamically typed because names can refer to different object types over time. It is
-strongly typed because it does not silently combine incompatible types like `"x" + 1`.
+**Immutable does not automatically mean hashable:** `(1, [2])` is a tuple but contains an unhashable list. Some mutable custom objects are hashable; do not change attributes used for hashing/equality while they are keys. Prefer stable IDs or frozen records with hashable fields. Dictionary **values** may be any type.
 
-**When explaining in an interview:** Say both parts. "Dynamic" means the type is
-checked while the program runs. "Strong" means Python will not guess a conversion
-when the operation is unsafe.
+## 3. Strings and binary sequences
 
-**Common mistake:** Use `is None`, but use `==` for normal value comparison.
-
-## 5. Built-In Python Data Types
-
-| Type        | Example             | Mutable | Use                        |
-|-------------|---------------------|--------:|----------------------------|
-| `int`       | `42`                |      No | Whole numbers              |
-| `float`     | `3.14`              |      No | Approximate decimal values |
-| `complex`   | `1 + 2j`            |      No | Scientific/math work       |
-| `bool`      | `True`              |      No | Conditions                 |
-| `str`       | `"text"`            |      No | Unicode text               |
-| `bytes`     | `b"abc"`            |      No | Immutable binary data      |
-| `bytearray` | `bytearray(b"abc")` |     Yes | Mutable binary data        |
-| `None`      | `None`              |      No | Absence of value           |
-
-**Mental model:** Choose a type by the promise you want to make. Use immutable
-types when a value should not change, and mutable containers when the program
-needs to add, remove, or update items.
+A string is an immutable Unicode sequence. Methods return results; they do not modify the original string.
 
 ```python
-value = 42
-print(type(value))
-print(isinstance(value, int))
+text = "  Python,Data  "
+clean = text.strip()
+assert clean == "Python,Data"
+assert text == "  Python,Data  "
+assert clean.split(",") == ["Python", "Data"]
+assert "-".join(["a", "b", "c"]) == "a-b-c"
+assert clean.replace("Python", "Modern Python") == "Modern Python,Data"
+assert clean[0] == "P"
 ```
 
-**Interview answer:** Prefer `isinstance(value, expected_type)` when checking type relationships because it respects
-inheritance and can check multiple allowed types.
+| Operation on a string of length n | Typical time | Allocation |
+|---|---|---|
+| Index one character | O(1) | A character result |
+| Slice/copy k characters | O(k) | O(k) result |
+| Search for a single character | O(n) worst | No full result copy needed |
+| Join pieces totaling n characters | O(n + number of pieces) | O(n) result |
 
-**Common mistake:** Do not compare exact types with `type(value) == SomeClass`
-unless you intentionally want to reject subclasses.
+Build text from pieces and join once when assembling many pieces. Repeated concatenation may repeatedly copy growing strings. String indices refer to Unicode code points, which are not always the same as user-perceived characters such as combined emoji.
 
-Floating-point caution:
+`bytes` stores immutable binary data; `bytearray` is its mutable counterpart. Indexing either returns an integer byte value.
 
 ```python
-import math
-
-print(0.1 + 0.2 == 0.3)
-print(math.isclose(0.1 + 0.2, 0.3))
+raw = b"ABC"
+editable = bytearray(raw)
+editable[0] = 90
+assert raw[0] == 65
+assert bytes(editable) == b"ZBC"
 ```
 
-## 6. Strings
+For palindrome checks, anagrams, and substring algorithms, use the algorithms notebook; this section focuses on how text is stored and accessed.
 
-Strings are immutable Unicode sequences.
+## 4. Lists
 
-**Mental model:** Every string operation returns a new string. Methods like
-`strip`, `lower`, and `replace` do not modify the original text.
+A list is a mutable, ordered sequence of object references. Duplicates are allowed. Think of numbered seats: indexing jumps directly to a position, but inserting a seat in the middle shifts later positions.
 
 ```python
-text = "  Python,Data,Engineering  "
-print(text.strip())
-print(text.lower())
-print(text.split(","))
-print("-".join(["a", "b", "c"]))
-print(text.replace("Python", "Modern Python"))
+numbers = [10, 20, 30]
+assert numbers[1] == 20
+numbers.append(40)       # Add one item.
+numbers.extend([50, 60]) # Add items from an iterable.
+assert numbers[-1] == 60
+assert numbers[1:3] == [20, 30]  # Stop index is excluded.
+assert numbers.pop() == 60      # Remove/return last item.
+assert numbers == [10, 20, 30, 40, 50]
 ```
 
-Runnable interview helpers:
+| Operation | Time | What happens |
+|---|---|---|
+| `items[i]` / `items[i] = value` | O(1) | Access/replace a reference |
+| `items.append(value)` | Amortized O(1) | Occasional resizing copies references |
+| `items.pop()` | Amortized O(1) | Remove the last item; resizing can occur |
+| `value in items` / `items.index(value)` | O(n) worst | Scan for a value |
+| `items.insert(i, value)` / `del items[i]` | O(n) worst | Shift later references |
+| `items.remove(value)` | O(n) worst | Find the first equal value, then remove it |
+| `items[a:b]` selecting k items | O(k) | Allocate a new, shallow list |
+| `items.sort()` | O(n log n) worst | Mutates the list; can use O(n) workspace |
+
+### Why append is amortized O(1)
+
+Most appends fill an available slot. Occasionally Python needs a larger underlying array and copies existing references, costing O(n). Extra capacity makes those resizes infrequent; the average work per append over a long sequence is O(1).
+
+### Middle insertion: does order matter?
+
+Normal insertion keeps the relative order of existing items:
 
 ```python
-from collections import Counter
-
-
-def reverse_string(text: str) -> str:
-    return text[::-1]
-
-
-def is_palindrome(text: str) -> bool:
-    cleaned = "".join(char.lower() for char in text if char.isalnum())
-    return cleaned == cleaned[::-1]
-
-
-def character_frequency(text: str) -> Counter[str]:
-    return Counter(text)
-
-
-def first_non_repeating(text: str) -> str | None:
-    counts = Counter(text)
-    for char in text:
-        if counts[char] == 1:
-            return char
-    return None
-
-
-def remove_duplicate_characters(text: str) -> str:
-    return "".join(dict.fromkeys(text))
-
-
-def are_anagrams(left: str, right: str) -> bool:
-    return Counter(left) == Counter(right)
-
-
-def longest_unique_substring(text: str) -> int:
-    seen: dict[str, int] = {}
-    left = 0
-    best = 0
-    for right, char in enumerate(text):
-        if char in seen and seen[char] >= left:
-            left = seen[char] + 1
-        seen[char] = right
-        best = max(best, right - left + 1)
-    return best
+items = [10, 20, 30, 40]
+items.insert(1, 99)
+assert items == [10, 99, 20, 30, 40]  # Shift 20, 30, and 40 right.
 ```
 
-Why `is_palindrome` uses `char.isalnum()`:
-
-Many interview palindrome questions say to ignore spaces, punctuation, and
-capitalization. `isalnum()` keeps only letters and numbers.
+If rearranging existing items is allowed, you can put the new item at an existing index by appending and swapping:
 
 ```python
-text = "A man, a plan, a canal: Panama"
-cleaned = "".join(char.lower() for char in text if char.isalnum())
-print(cleaned)  # amanaplanacanalpanama
+items = [10, 20, 30, 40]
+items.append(99)
+items[1], items[-1] = items[-1], items[1]
+assert items == [10, 99, 30, 40, 20]
 ```
 
-Without `isalnum()`, the comma, spaces, and colon would be compared too, and the
-phrase would look like it is not a palindrome. `char.lower()` handles uppercase
-and lowercase letters consistently.
+This costs amortized O(1), but changes order. If the new value needs no specific position, just append it. Confirm the ordering requirement in an interview. A deque does not make arbitrary middle insertion O(1).
 
-```python
-return cleaned == cleaned[::-1]
-```
-
-This compares the cleaned string with its reverse:
-
-```text
-amanaplanacanalpanama
-amanaplanacanalpanama
-```
-
-Build large strings efficiently:
-
-```python
-parts = ["row", ":", "42"]
-line = "".join(parts)
-```
-
-**Performance note:** Repeated `result += piece` in a loop may allocate many intermediate strings. Use `"".join(parts)`
-when collecting many pieces.
-
-**Interview answer:** Strings are immutable, so algorithms that repeatedly build
-text should collect pieces in a list and join once. For character counting,
-anagrams, and first-non-repeating-character problems, `Counter` is often the
-clearest tool.
-
-## 7. Lists
-
-Lists are mutable ordered arrays of object references.
-
-**Mental model:** A list is best when order matters and you need to change the
-sequence. It is excellent for appending and indexing, but not ideal for repeated
-membership checks on large data.
+### Methods that mutate versus methods that return
 
 ```python
 numbers = [3, 1, 2]
-numbers.append(4)
-numbers.extend([5, 6])
-numbers.insert(0, 0)
-numbers.remove(3)
-last = numbers.pop()
-numbers.sort()
-copy_of_numbers = numbers.copy()
+assert numbers.sort() is None
+assert numbers == [1, 2, 3]
+ordered = sorted([3, 1, 2])
+assert ordered == [1, 2, 3]
 ```
 
-Complexity:
+`append()`, `extend()`, and `sort()` mutate the list and return `None`; `pop()` removes and returns an item. `sorted()` returns a new list. Avoid removing items while iterating over the same list; construct a filtered result instead.
 
-| Operation            |     Complexity |
-|----------------------|---------------:|
-| Index lookup         |           O(1) |
-| Membership           |           O(n) |
-| Append               | O(1) amortized |
-| Insert/delete middle |           O(n) |
-| Pop end              |           O(1) |
-| Sorting              |     O(n log n) |
-| Slicing length `k`   |           O(k) |
-
-Bad nested-list initialization:
+### Searching a sorted list with bisect
 
 ```python
-matrix = [[0] * 3] * 3
-matrix[0][0] = 1
-print(matrix)
+from bisect import bisect_left, insort
+
+numbers = [1, 3, 5]
+assert bisect_left(numbers, 4) == 2  # An insertion position, not a found item.
+insort(numbers, 4)
+assert numbers == [1, 3, 4, 5]
 ```
 
-Correct:
+Boundary search takes O(log n); insertion still takes O(n) because references shift. A sorted list and a heap provide different promises: a sorted list orders every item; a heap only makes the minimum easy to access. Manual search/sort implementations belong in the algorithms notebook.
 
-```python
-matrix = [[0 for _ in range(3)] for _ in range(3)]
-```
+## 5. Tuples and named tuples
 
-**Common mistake:** Do not remove from a list while iterating over the same list. Build a new filtered list.
-
-```python
-numbers = [1, 2, 3, 4]
-evens = [number for number in numbers if number % 2 == 0]
-```
-
-**Interview answer:** Lists give O(1) indexing and amortized O(1) append. Middle
-insertions, middle deletions, and membership checks are O(n), so switch to a set,
-dict, or deque when those operations dominate.
-
-## 8. Tuples
-
-Tuples are immutable ordered containers.
-
-**Mental model:** Use a tuple when the position has meaning and the group should
-not change, such as `(x, y)` or `(status_code, message)`.
+A tuple fixes its sequence of references: you cannot append, delete, or assign a position. Use it for a small fixed-shape record; use a list when the sequence itself needs to change.
 
 ```python
 point = (10, 20)
 x, y = point
+assert (x, y) == (10, 20)
+assert ("only",) == tuple(["only"])  # A one-item tuple needs the comma.
+
+record = ("Ada", ["Python"])
+record[1].append("SQL")  # The nested list remains mutable.
+assert record == ("Ada", ["Python", "SQL"])
 ```
 
-Multiple return values are usually tuples:
+Tuple indexing is O(1); membership is O(n); slicing k items is O(k). Tuple immutability does not recursively freeze its contents. A tuple is hashable only when all its elements are hashable.
 
-```python
-def min_max(values: list[int]) -> tuple[int, int]:
-    return min(values), max(values)
-```
-
-Named tuple:
+A `NamedTuple` adds readable field names while retaining tuple behavior:
 
 ```python
 from typing import NamedTuple
@@ -486,2754 +234,870 @@ from typing import NamedTuple
 class Point(NamedTuple):
     x: int
     y: int
+
+
+point = Point(10, 20)
+assert point.x == 10
+assert point[1] == 20
+assert tuple(point) == (10, 20)
 ```
 
-**Interview answer:** Use tuples for fixed-shape values and lists for mutable sequences.
+## 6. Dictionaries
 
-**Common mistake:** A tuple can contain mutable objects. The tuple cannot be
-resized, but a list inside the tuple can still be mutated.
-
-## 9. Sets And Frozensets
-
-Sets store unique hashable values and support fast average membership checks.
-
-**Mental model:** A set answers the question "Have I seen this before?" quickly.
-It is the right default for deduplication and repeated membership tests.
-
-```python
-values = {1, 2, 3}
-other = {3, 4}
-
-print(values | other)
-print(values & other)
-print(values - other)
-print(values ^ other)
-```
-
-Practical examples:
-
-```python
-def has_duplicates(values: list[int]) -> bool:
-    return len(values) != len(set(values))
-
-
-def common_values(left: list[int], right: list[int]) -> set[int]:
-    return set(left) & set(right)
-```
-
-`frozenset` is immutable and hashable:
-
-```python
-key = frozenset({"read", "write"})
-permissions = {key: "editor"}
-```
-
-**Performance note:** Set membership is average O(1), but values must be hashable.
-
-**Interview answer:** Use a set when uniqueness or fast membership is more
-important than order or duplicates. Convert a list to a set only if losing
-duplicates is acceptable.
-
-## 10. Dictionaries
-
-Dictionaries map hashable keys to values and preserve insertion order in modern Python.
-
-**Mental model:** A dictionary is a labeled lookup table. Use it when you want to
-find information by a key instead of scanning a whole list.
+A dictionary maps unique hashable keys to values. Keys identify values; they are not positional indices. Lookup, insertion, and deletion by key are average O(1), with O(n) worst cases under heavy collisions. Hashing long keys or expensive custom comparisons can add cost.
 
 ```python
 user = {"id": 1, "name": "Ada"}
 user["role"] = "engineer"
-print(user.get("missing", "default"))
+user["name"] = "Grace"  # Update an existing key.
+assert user["name"] == "Grace"
+assert user.get("missing", "default") == "default"
+assert "name" in user       # Membership checks keys.
+assert "Grace" not in user  # Not a key, even though it is a value.
+assert "Grace" in user.values()  # Value search is O(n).
 ```
 
-Frequency map:
+`user["missing"]` raises `KeyError`; `get()` supplies a fallback without inserting the missing key. `pop(key)` removes and returns a value, while `del mapping[key]` removes the entry.
+
+### Insertion order is not sorted order
+
+Since Python 3.7, dictionaries guarantee insertion order. Updating an existing key does not move it; deleting and reinserting it puts it at the end.
 
 ```python
-from collections import Counter, defaultdict
-
-
-def count_words(words: list[str]) -> Counter[str]:
-    return Counter(words)
-
-
-def group_by_first_letter(words: list[str]) -> dict[str, list[str]]:
-    groups: dict[str, list[str]] = defaultdict(list)
-    for word in words:
-        groups[word[0]].append(word)
-    return dict(groups)
+scores = {"Bob": 80, "Alice": 95, "Carol": 70}
+scores["Bob"] = 90
+assert list(scores) == ["Bob", "Alice", "Carol"]
+assert sorted(scores) == ["Alice", "Bob", "Carol"]  # New list of keys.
+assert sorted(scores.items(), key=lambda pair: pair[1]) == [
+    ("Carol", 70), ("Bob", 90), ("Alice", 95)
+]
+del scores["Bob"]
+scores["Bob"] = 91
+assert list(scores) == ["Alice", "Carol", "Bob"]
 ```
 
-Merge configurations:
+### Views, snapshots, and iteration
+
+`keys()`, `values()`, and `items()` return views that reflect later dictionary changes. Use `list(mapping.items())` when you need a snapshot of the entries for iteration; it is shallow, so nested values can still change.
+
+```python
+mapping = {"a": 1}
+keys = mapping.keys()
+snapshot = list(mapping.items())
+mapping["b"] = 2
+assert list(keys) == ["a", "b"]
+assert snapshot == [("a", 1)]
+```
+
+Do not add/delete dictionary entries while iterating its live views. An entry snapshot lets you decide removals without changing the collection being iterated.
+
+### Merge and deduplicate
 
 ```python
 defaults = {"debug": False, "retries": 3}
 override = {"debug": True}
-config = defaults | override
+assert defaults | override == {"debug": True, "retries": 3}
+assert defaults["debug"] is False  # | returns a new dictionary.
+
+names = ["Ada", "Ben", "Ada", "Cy"]
+assert list(dict.fromkeys(names)) == ["Ada", "Ben", "Cy"]
 ```
 
-**Interview answer:** Dict lookup is average O(1). Worst case can degrade if many keys collide, but Python's
-implementation is engineered to make this rare.
+Dictionary keys are unique, so `dict.fromkeys()` can remove duplicates while preserving first-occurrence order. Elements must be hashable. Avoid `dict.fromkeys(keys, [])` for independent lists: every key would refer to the same list.
 
-**Common mistake:** Accessing `mapping[key]` raises `KeyError` if the key is
-missing. Use `get`, `setdefault`, `defaultdict`, or an explicit `if key in
-mapping` depending on the intent.
+## 7. Sets and frozensets
 
-## 11. Comparing Core Python Collections
-
-| Collection  | Ordered | Mutable | Duplicates |          Lookup | Best use                  |
-|-------------|--------:|--------:|-----------:|----------------:|---------------------------|
-| `list`      |     Yes |     Yes |        Yes | O(n) membership | Ordered mutable sequence  |
-| `tuple`     |     Yes |      No |        Yes | O(n) membership | Fixed records             |
-| `set`       |      No |     Yes |         No |        O(1) avg | Unique values             |
-| `frozenset` |      No |      No |         No |        O(1) avg | Immutable set key         |
-| `dict`      |     Yes |     Yes |    Keys no |    O(1) avg key | Key-value lookup          |
-| `deque`     |     Yes |     Yes |        Yes | O(n) membership | Fast append/pop both ends |
-
-**Interview answer:** Use the structure that matches the operation you need most often.
-
-**Decision rule:** If you need order and mutation, start with `list`. If you need
-fast lookup by key, use `dict`. If you need unique values or repeated membership
-tests, use `set`. If you need a fixed record, use `tuple`.
-
-## 12. Conditions And Control Flow
+A set stores unique hashable elements. Membership/add/remove are average O(1), O(n) worst under collisions. It has no positional indexing and guarantees neither insertion order nor sorted iteration order.
 
 ```python
-status = "ready"
-
-if status == "ready":
-    print("start")
-elif status == "paused":
-    print("wait")
-else:
-    print("stop")
+left = {1, 2, 3}
+right = {3, 4}
+assert left | right == {1, 2, 3, 4}  # Union.
+assert left & right == {3}           # Intersection.
+assert left - right == {1, 2}        # Difference.
+assert left ^ right == {1, 2, 4}     # Symmetric difference.
+assert {1, 2} <= left                # Subset.
+assert set([1, 1, 2]) == {1, 2}
 ```
 
-**Mental model:** Conditions should read like business rules. Put unusual or
-invalid cases early as guard clauses so the normal path is easy to follow.
+Use `set()` for an empty set; `{}` creates an empty dictionary. `remove(x)` raises `KeyError` when absent; `discard(x)` does nothing when absent.
 
-Guard clause:
+### Ordered output from an unordered collection
 
 ```python
-def discount(price: float, active: bool) -> float:
-    if price < 0:
-        raise ValueError("price must be non-negative")
-    if not active:
-        return price
-    return price * 0.9
+values = {30, 10, 20}
+assert sorted(values) == [10, 20, 30]
+assert sorted(values, reverse=True) == [30, 20, 10]
+assert isinstance(values, set)  # Sorting did not change the set.
 ```
 
-Pattern matching is Python 3.10+:
+`sorted()` returns a **new list**, and its elements need a compatible ordering or an appropriate `key` function. Converting that list back to a set loses the ordering guarantee. To deduplicate while keeping input order, use the dictionary example above.
+
+Set union creates a result in average O(n + m) time; intersection is average O(min(n, m)) for two sets of sizes n and m. These operations can allocate new result sets. Membership is fast only after the set exists: repeatedly rebuilding `set(values)` inside a loop repeats O(n) work.
+
+### Frozenset: an immutable group
 
 ```python
-def describe(command: str) -> str:
-    match command:
-        case "start":
-            return "starting"
-        case "stop":
-            return "stopping"
-        case _:
-            return "unknown"
+permissions = frozenset({"read", "write"})
+labels = {permissions: "editor"}
+assert labels[frozenset({"write", "read"})] == "editor"
 ```
 
-**Common mistake:** Avoid `if value == True:`. Prefer `if value:`.
+A frozenset is immutable and hashable. Its elements must still be hashable; freezing a collection does not convert unhashable elements into hashable ones.
 
-**Interview answer:** Python uses truthiness. Empty containers, `0`, `0.0`, `""`,
-`False`, and `None` are falsey; most other objects are truthy.
+## 8. Deques, stacks, and queues
 
-## 13. Loops And Iteration
-
-Direct iteration is usually clearer than index iteration:
-
-**Mental model:** In Python, loop over the thing itself unless you truly need the
-index. This makes code shorter and avoids off-by-one errors.
+A **stack** is a rule: last in, first out (LIFO). A **queue** is a rule: first in, first out (FIFO). A **deque** is a double-ended queue that supports both styles. Use a list for a stack or a deque when both ends are important.
 
 ```python
-values = ["a", "b", "c"]
+from collections import deque
 
-for value in values:
-    print(value)
+stack = ["A", "B", "C"]
+assert stack.pop() == "C"  # Most recently added.
 
-for index, value in enumerate(values):
-    print(index, value)
+queue = deque(["A", "B", "C"])
+queue.append("D")
+assert queue.popleft() == "A"  # Earliest added.
+queue.appendleft("first")
+assert queue.pop() == "D"      # Right end: no popright() method.
+assert list(queue) == ["first", "B", "C"]
 ```
 
-Avoid this unless the index is required:
+| Deque operation | Time |
+|---|---|
+| `append`, `appendleft`, `pop`, `popleft` | O(1) |
+| Index at either end | O(1) |
+| General middle indexing / membership | O(n) worst |
 
 ```python
-for index in range(len(values)):
-    print(values[index])
+from collections import deque
+
+recent = deque(maxlen=3)
+recent.extend([1, 2, 3, 4])
+assert list(recent) == [2, 3, 4]  # Oldest item discarded automatically.
 ```
 
-Nested loops are often O(n²):
+A bounded deque is useful for recent history, but silently discarding an item is wrong for a queue that must retain every job. Popping an empty list/deque raises `IndexError`. A deque is not a replacement for a list when you need repeated arbitrary indexing.
+
+BFS/DFS, bracket matching, and monotonic stacks are worked through in the algorithms notebook. For coordinating threads with blocking/waiting behavior, see the general reference and `queue.Queue` rather than assuming a deque provides a complete task-coordination protocol.
+
+## 9. Counter and defaultdict
+
+### Counter: a frequency dictionary
 
 ```python
-def all_pairs(values: list[int]) -> list[tuple[int, int]]:
-    pairs = []
-    for left in values:
-        for right in values:
-            pairs.append((left, right))
-    return pairs
+from collections import Counter
+
+counts = Counter("banana")
+assert counts["a"] == 3
+assert counts["z"] == 0
+assert "z" not in counts  # Reading a missing count does not insert it.
+assert counts.most_common(1) == [("a", 3)]
+counts["z"] = 0
+assert "z" in counts      # An explicit zero-count entry still exists.
 ```
 
-Loop `else` runs if no `break` occurs:
+Counting n items takes average O(n) time and O(u) space for u distinct items. `most_common()` adds its own selection/sorting cost; it is not a constant-time operation. Counter counts may be zero or negative.
+
+### defaultdict: create a value on a missing-key lookup
 
 ```python
-for number in [1, 3, 5]:
-    if number % 2 == 0:
-        break
-else:
-    print("no even number")
+from collections import defaultdict
+
+groups = defaultdict(list)
+for word in ["apple", "apricot", "banana"]:
+    groups[word[0]].append(word)
+assert dict(groups) == {"a": ["apple", "apricot"], "b": ["banana"]}
+assert groups.get("z") is None
+assert "z" not in groups  # get() does not call the default factory.
+assert groups["z"] == []
+assert "z" in groups      # [] lookup created and inserted the default list.
 ```
 
-**Interview answer:** Prefer direct iteration, `enumerate` when you need indexes,
-and `zip` when walking multiple iterables together. Always be ready to state
-whether a nested loop is O(n²).
+Pass the factory `list`, not `list()`. A new list is created for each missing key. Grouping n items uses average O(n) dictionary operations and O(n) references in the grouped result, assuming constant-time grouping-key calculation. Unlike a normal dict, `groups[missing]` can change the mapping just by being read.
 
-## 14. Functions
+## 10. Heaps and priority queues
+
+A min-heap promises that the smallest item is at index 0. It does **not** promise that the rest of the list is sorted. Python's `heapq` maintains a heap inside an ordinary list.
 
 ```python
-def add(left: int, right: int) -> int:
-    """Return the sum of two integers."""
-    return left + right
+import heapq
+
+heap = [5, 1, 4, 2]
+heapq.heapify(heap)
+assert heap[0] == 1
+heapq.heappush(heap, 0)
+assert heapq.heappop(heap) == 0
+assert heapq.heappop(heap) == 1
+assert sorted(heap) == [2, 4, 5]
 ```
 
-**Mental model:** A function should do one clear job, name its inputs, return a
-result, and avoid surprising changes to external state unless mutation is the
-point of the function.
+| Operation | Time |
+|---|---|
+| `heap[0]`, peek at minimum | O(1) |
+| `heappush` / `heappop` | O(log n), in the usual heap-operation model |
+| `heapify` an existing list | O(n) |
+| Search for an arbitrary value | O(n) |
 
-Argument forms:
+Popping an empty heap raises `IndexError`. Do not mutate a priority inside the heap and assume the heap property repairs itself. For equal priorities and non-comparable payloads, include a unique tie-breaker:
 
 ```python
-def describe(name: str, /, role: str = "user", *, active: bool = True) -> str:
-    return f"{name}:{role}:{active}"
+import heapq
+from itertools import count
+
+sequence = count()
+heap = []
+heapq.heappush(heap, (1, next(sequence), {"task": "first"}))
+heapq.heappush(heap, (1, next(sequence), {"task": "second"}))
+assert heapq.heappop(heap)[2] == {"task": "first"}
 ```
 
-Closure:
+Tuples compare left to right. The sequence number breaks ties before Python tries to compare the dictionaries; it also preserves arrival order among equal priorities in this example. The algorithms notebook shows top-k and Dijkstra applications.
 
-```python
-def multiplier(factor: int):
-    def multiply(value: int) -> int:
-        return value * factor
+## 11. Records: dataclasses and TypedDict
 
-    return multiply
-```
-
-**Interview answer:** Python does not pass variables by value or by reference in
-the C++ sense. Python passes object references by assignment.
-
-That means a function parameter becomes another name for the same object the
-caller passed in.
-
-If the object is mutable and the function changes it, the caller sees the
-change:
-
-```python
-def add_score(scores: list[int]) -> None:
-    scores.append(100)
-
-
-exam_scores = [80, 90]
-add_score(exam_scores)
-print(exam_scores)  # [80, 90, 100]
-```
-
-The function did not receive a copy of the list. `scores` and `exam_scores`
-pointed to the same list object.
-
-But assigning the parameter to a new object does not change the caller's name:
-
-```python
-def replace_scores(scores: list[int]) -> None:
-    scores = [100]
-
-
-exam_scores = [80, 90]
-replace_scores(exam_scores)
-print(exam_scores)  # [80, 90]
-```
-
-`scores = [100]` only makes the local name `scores` point to a new list. It does
-not reassign `exam_scores` in the caller.
-
-**Common mistake:** Default argument values are created once when Python defines
-the function, not every time the function is called.
-
-Bad:
-
-```python
-def add_item_bad(item: str, items: list[str] = []) -> list[str]:
-    items.append(item)
-    return items
-
-
-print(add_item_bad("a"))  # ['a']
-print(add_item_bad("b"))  # ['a', 'b'] surprise: same default list
-```
-
-Good:
-
-```python
-def add_item(item: str, items: list[str] | None = None) -> list[str]:
-    if items is None:
-        items = []
-    items.append(item)
-    return items
-```
-
-Use `None` as the default, then create a fresh list inside the function.
-
-## 15. Comprehensions And Generator Expressions
-
-```python
-numbers = [1, 2, 3, 4]
-squares = [number * number for number in numbers]
-lookup = {number: number * number for number in numbers}
-unique_parity = {number % 2 for number in numbers}
-```
-
-Generator expression:
-
-```python
-squares = (number * number for number in range(1_000_000))
-```
-
-The syntax looks similar, but the result is different:
-
-```python
-numbers = range(1_000_000)
-
-all_squares = [number * number for number in numbers]
-lazy_squares = (number * number for number in numbers)
-```
-
-`all_squares` is a list. Python calculates every square immediately and stores all
-1,000,000 results in memory.
-
-`lazy_squares` is a generator expression. Python does not calculate all results
-up front. It produces one value at a time when you iterate over it:
-
-```python
-for square in lazy_squares:
-    print(square)
-    if square > 100:
-        break
-```
-
-Use a list comprehension when you need the whole result now, need to reuse it,
-need its length, or need indexing:
-
-```python
-squares = [number * number for number in range(10)]
-print(len(squares))
-print(squares[0])
-```
-
-Use a generator expression when you only need to loop once, stream values, or
-feed another function:
-
-```python
-total = sum(number * number for number in range(1_000_000))
-```
-
-This avoids building a large temporary list.
-
-**Interview answer:** A list comprehension eagerly builds and stores a full list.
-A generator expression lazily produces one value at a time, so it can use much
-less memory. The trade-off is that a generator is one-pass: after it is consumed,
-you must create it again if you want to iterate over the values again.
-
-**Common mistake:** If the comprehension needs multiple nested conditions, use a normal loop for readability.
-
-## 16. Lambda Functions And Functional Tools
-
-**Mental model:** `lambda` creates a small anonymous function. It is useful when
-the function is short and local to one expression, but it should not hide logic
-that deserves a name.
-
-```python
-from functools import partial, reduce
-
-numbers = [1, 2, 3, 4]
-squares = list(map(lambda number: number * number, numbers))
-evens = list(filter(lambda number: number % 2 == 0, numbers))
-total = reduce(lambda left, right: left + right, numbers, 0)
-```
-
-Often clearer:
-
-```python
-squares = [number * number for number in numbers]
-evens = [number for number in numbers if number % 2 == 0]
-```
-
-Partial function:
-
-```python
-def power(base: int, exponent: int) -> int:
-    return base ** exponent
-
-
-square = partial(power, exponent=2)
-print(square(5))  # 25
-```
-
-`partial` creates a new function by pre-filling some arguments of an existing
-function.
-
-Here, `power` normally needs two arguments:
-
-```python
-power(5, 2)
-```
-
-`partial(power, exponent=2)` creates a new function where `exponent` is already
-set to `2`. So this:
-
-```python
-square(5)
-```
-
-means:
-
-```python
-power(5, exponent=2)
-```
-
-It is similar to writing this manually:
-
-```python
-def square(base: int) -> int:
-    return power(base, exponent=2)
-```
-
-Use `partial` when you already have a general function and want to create a more
-specific version of it.
-
-`key=` is another common place where small functions are useful. Functions such
-as `sorted`, `min`, and `max` can receive a `key` function. Python calls that
-function for each item and sorts or compares by the returned value.
-
-```python
-names = ["Grace", "Ada", "Katherine"]
-
-by_length = sorted(names, key=lambda name: len(name))
-print(by_length)  # ['Ada', 'Grace', 'Katherine']
-```
-
-The lambda says: "For each name, use `len(name)` as the value to sort by."
-
-For a dictionary or object-like record:
-
-```python
-students = [
-    {"name": "Ada", "score": 95},
-    {"name": "Grace", "score": 99},
-    {"name": "Katherine", "score": 97},
-]
-
-by_score = sorted(students, key=lambda student: student["score"])
-```
-
-Here, Python sorts the dictionaries by each student's `score`.
-
-**Interview answer:** Use lambda for tiny throwaway functions, commonly with `key=`, but prefer named functions for
-testable business logic.
-
-**Common mistake:** Do not use `lambda` to show off. A named function is easier
-to test, document, reuse, and debug.
-
-## 17. Modules, Packages, And Imports
-
-**Mental model:** A module is one `.py` file. A package is a directory of modules.
-Imports are how Python code shares names across files.
-
-```python
-import json
-from pathlib import Path
-from collections import Counter as FrequencyCounter
-```
-
-Script entry point:
-
-```python
-def main() -> int:
-    print("running")
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
-```
-
-Troubleshooting:
-
-| Problem               | Likely cause                                                |
-|-----------------------|-------------------------------------------------------------|
-| `ModuleNotFoundError` | Wrong environment, missing install, wrong working directory |
-| Relative import error | Running a file directly instead of as a module              |
-| Circular import       | Two modules import each other at import time                |
-| `json.py` shadowing   | File named after a standard-library module                  |
-
-**Interview answer:** Imports execute module top-level code once, then cache the
-module in `sys.modules`. Keep top-level code lightweight and put runnable script
-behavior behind `if __name__ == "__main__":`.
-
-**Common mistake:** Naming your file `json.py`, `typing.py`, `collections.py`, or
-`pytest.py` can shadow real packages and create confusing import errors.
-
-## 18. File Handling And Serialization
-
-Use `pathlib` and context managers.
-
-**Mental model:** Opening a file creates an external resource. A context manager
-closes it reliably, even if an exception happens while reading or writing.
-
-```python
-from pathlib import Path
-
-
-def read_text(path: Path) -> str:
-    return path.read_text(encoding="utf-8")
-```
-
-JSON:
-
-```python
-import json
-from pathlib import Path
-
-
-def write_json(path: Path, payload: dict[str, object]) -> None:
-    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-```
-
-Usage example:
-
-```python
-import json
-from pathlib import Path
-
-
-def save_tasks(path: Path, tasks: list[dict[str, object]]) -> None:
-    text = json.dumps(tasks, indent=2)
-    path.write_text(text, encoding="utf-8")
-
-
-def load_tasks(path: Path) -> list[dict[str, object]]:
-    if not path.exists():
-        return []
-    text = path.read_text(encoding="utf-8")
-    data = json.loads(text)
-    if not isinstance(data, list):
-        raise ValueError("tasks file must contain a JSON list")
-    return data
-
-
-tasks_file = Path("tasks.json")
-
-save_tasks(
-    tasks_file,
-    [
-        {"title": "review notes", "done": False},
-        {"title": "practice pytest", "done": True},
-    ],
-)
-
-tasks = load_tasks(tasks_file)
-print(tasks[0]["title"])  # review notes
-```
-
-This pattern is useful for beginner projects such as contact managers, todo
-lists, small settings files, and command-line tools. JSON is readable by humans
-and can be shared with many other languages.
-
-CSV:
-
-```python
-import csv
-from pathlib import Path
-
-
-def read_csv(path: Path) -> list[dict[str, str]]:
-    with path.open(newline="", encoding="utf-8") as file_obj:
-        return list(csv.DictReader(file_obj))
-```
-
-Large file:
-
-```python
-from pathlib import Path
-from collections.abc import Iterator
-
-
-def lines_containing(path: Path, marker: str) -> Iterator[str]:
-    with path.open(encoding="utf-8") as file_obj:
-        for line in file_obj:
-            if marker in line:
-                yield line.rstrip()
-```
-
-**Production note:** Do not unpickle untrusted data. Pickle can execute code during loading.
-
-**Interview answer:** For text files, always be explicit about encoding. For
-large files, stream line by line instead of calling `read_text()` on the whole
-file. For portable structured data, prefer JSON or CSV before pickle.
-
-## 19. Exception Handling
-
-**Mental model:** Exceptions separate the normal path from failure paths. Catch an
-exception only when you can add context, recover, retry, or convert it into a
-clearer domain-specific error.
-
-```python
-from pathlib import Path
-
-
-def read_required(path: Path) -> str:
-    try:
-        return path.read_text(encoding="utf-8")
-    except FileNotFoundError as exc:
-        raise RuntimeError(f"missing required file: {path}") from exc
-```
-
-Unsafe:
-
-```python
-try:
-    risky_operation()
-except Exception:
-    pass
-```
-
-**Interview answer:** `except Exception: pass` hides failures, makes debugging harder, and can leave data inconsistent.
-
-**Common mistake:** Catching too broadly and continuing can make the program look
-successful after it has already failed. Catch specific exceptions and preserve
-the original cause with `raise ... from exc`.
-
-Custom exception:
-
-```python
-class InvalidInputError(ValueError):
-    """Raised when input validation fails."""
-```
-
-## 20. Object-Oriented Programming
-
-**Mental model:** Use a class when data and behavior naturally belong together.
-Do not create classes only to hold unrelated functions.
-
-```python
-from abc import ABC, abstractmethod
-
-
-class Shape(ABC):
-    @abstractmethod
-    def area(self) -> float:
-        raise NotImplementedError
-
-
-class Rectangle(Shape):
-    def __init__(self, width: float, height: float) -> None:
-        self.width = width
-        self.height = height
-
-    @property
-    def is_square(self) -> bool:
-        return self.width == self.height
-
-    def area(self) -> float:
-        return self.width * self.height
-
-    @classmethod
-    def square(cls, side: float) -> "Rectangle":
-        return cls(side, side)
-
-    @staticmethod
-    def is_valid_side(side: float) -> bool:
-        return side > 0
-```
-
-| Decorator       | Receives                 | Use                                           |
-|-----------------|--------------------------|-----------------------------------------------|
-| `@staticmethod` | Neither `self` nor `cls` | Related utility                               |
-| `@classmethod`  | `cls`                    | Alternate constructor or class-level behavior |
-| `@property`     | `self`                   | Computed attribute                            |
-
-**Interview answer:** Prefer composition when an object "has a" dependency; use inheritance for true "is a"
-relationships.
-
-**Decision rule:** If you can describe the relationship as "uses a" or "has a",
-prefer composition. If every subclass truly satisfies the parent contract, then
-inheritance may be appropriate.
-
-## 21. Dataclasses And Modern Python Models
-
-**Mental model:** A dataclass removes boilerplate for objects that mostly store
-named fields. It is a good fit for application data, configuration, and small
-domain records.
+A dataclass describes a record with named fields and generates methods such as initialization, representation, and equality. It is useful when a dictionary's free-form keys are too loose for the model you want.
 
 ```python
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import NamedTuple, TypedDict
 
 
-class Status(Enum):
-    OPEN = "open"
-    CLOSED = "closed"
+@dataclass
+class Student:
+    name: str
+    courses: list[str] = field(default_factory=list)
+
+
+ada = Student("Ada")
+ben = Student("Ben")
+ada.courses.append("Python")
+assert ben.courses == []  # Each instance gets its own list.
+```
+
+### slots=True: fixed attribute storage
+
+Slots usually avoid a per-instance `__dict__`, reducing memory when many instances exist. They also prevent adding undeclared attributes in a class without an inherited instance dictionary.
+
+```python
+from dataclasses import dataclass
+
+
+@dataclass(slots=True)
+class SlottedPoint:
+    x: int
+    y: int
+
+
+point = SlottedPoint(2, 3)
+point.x = 10  # Existing fields remain writable.
+try:
+    point.color = "red"  # No slot for color.
+except AttributeError as error:
+    print(f"AttributeError: {error}")
+```
+
+Output:
+
+```text
+AttributeError: 'SlottedPoint' object has no attribute 'color'
+```
+
+`slots=True` controls storage; `frozen=True` blocks normal attribute assignment/deletion after initialization. Frozen records are not deeply immutable: a list stored inside a frozen field can still be changed.
+
+```python
+from dataclasses import dataclass
 
 
 @dataclass(frozen=True, slots=True)
-class Ticket:
-    ticket_id: int
-    title: str
-    status: Status = Status.OPEN
-    tags: tuple[str, ...] = field(default_factory=tuple)
-
-
-class Point(NamedTuple):
+class Coordinate:
     x: int
     y: int
+
+
+labels = {Coordinate(2, 3): "desk"}
+assert labels[Coordinate(2, 3)] == "desk"
+```
+
+A frozen dataclass with default equality normally gets a generated hash, but hashing still fails if one of its hashed fields is unhashable. A typical mutable dataclass with generated equality is unhashable. Avoid `unsafe_hash=True` as a shortcut around fields that can change.
+
+### TypedDict: a dictionary shape for type checkers
+
+```python
+from typing import TypedDict
 
 
 class UserPayload(TypedDict):
     id: int
     name: str
+
+
+payload: UserPayload = {"id": 1, "name": "Ada"}
+assert isinstance(payload, dict)
 ```
 
-**Interview answer:** Dataclasses are best for Python objects with named fields and light behavior. `TypedDict`
-describes dictionary-shaped data for type checkers.
+`TypedDict` adds static typing information; it is still a normal mutable dictionary at runtime and does not validate a JSON payload. Choose `NamedTuple` for tuple-style immutable records, dataclasses for modeled objects, and dictionaries/TypedDict for mapping-shaped data.
 
-**Common mistake:** Use `field(default_factory=list)` for mutable defaults in a
-dataclass. Do not write `tags: list[str] = []`.
+## 12. Copying and nested containers
 
-## 22. Iterables, Iterators, And Generators
-
-**Mental model:** An iterable can be looped over. An iterator remembers where it
-is during iteration. A generator is a convenient way to write an iterator.
-
-Custom iterator:
-
-```python
-class CountUp:
-    def __init__(self, stop: int) -> None:
-        self.current = 0
-        self.stop = stop
-
-    def __iter__(self) -> "CountUp":
-        return self
-
-    def __next__(self) -> int:
-        if self.current >= self.stop:
-            raise StopIteration
-        self.current += 1
-        return self.current
-```
-
-Generator pipeline:
-
-```python
-from collections.abc import Iterable, Iterator
-
-
-def only_even(values: Iterable[int]) -> Iterator[int]:
-    for value in values:
-        if value % 2 == 0:
-            yield value
-
-
-def squared(values: Iterable[int]) -> Iterator[int]:
-    for value in values:
-        yield value * value
-```
-
-Paginated producer:
-
-```python
-from collections.abc import Iterator
-
-
-def pages(total: int, page_size: int) -> Iterator[range]:
-    for start in range(0, total, page_size):
-        yield range(start, min(start + page_size, total))
-```
-
-**Interview answer:** `yield` turns a function into a generator. It returns values one at a time and preserves state
-between iterations.
-
-**When to use generators:** Use them for streaming data, large files, pipelines,
-or early stopping. Convert to a list only when you truly need all values at once.
-
-## 23. Decorators
-
-**Mental model:** A decorator takes a function and returns a new function, usually
-adding behavior before or after the original call.
-
-```python
-from functools import lru_cache, wraps
-from time import perf_counter, sleep
-
-
-def timed(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        started = perf_counter()
-        try:
-            return func(*args, **kwargs)
-        finally:
-            print(f"{func.__name__}: {perf_counter() - started:.3f}s")
-
-    return wrapper
-
-
-def retry(times: int, delay: float):
-    def decorate(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            last_error = None
-            for _ in range(times):
-                try:
-                    return func(*args, **kwargs)
-                except TimeoutError as exc:
-                    last_error = exc
-                    sleep(delay)
-            raise RuntimeError("retries exhausted") from last_error
-
-        return wrapper
-
-    return decorate
-
-
-@lru_cache(maxsize=None)
-def fibonacci(n: int) -> int:
-    if n < 2:
-        return n
-    return fibonacci(n - 1) + fibonacci(n - 2)
-```
-
-**Decorator order:** In `@a @b def f`, Python applies `f = a(b(f))`.
-
-**Interview answer:** Decorators are useful for cross-cutting behavior such as
-timing, logging, caching, authorization, retry, or validation. Use
-`functools.wraps` so the wrapper keeps the original function metadata.
-
-## 24. Context Managers
-
-**Mental model:** A context manager wraps setup and cleanup around a block. It is
-the pattern behind `with open(...) as file_obj:`.
-
-```python
-from contextlib import contextmanager
-from pathlib import Path
-from tempfile import TemporaryDirectory
-from time import perf_counter
-from collections.abc import Iterator
-
-
-@contextmanager
-def timer(label: str) -> Iterator[None]:
-    started = perf_counter()
-    try:
-        yield
-    finally:
-        print(f"{label}: {perf_counter() - started:.3f}s")
-
-
-with TemporaryDirectory() as directory:
-    path = Path(directory) / "example.txt"
-    path.write_text("hello", encoding="utf-8")
-```
-
-**Interview answer:** Context managers guarantee cleanup even when exceptions occur.
-
-**Common mistake:** Manually opening files without closing them is fragile. Use
-`with` for files, locks, temporary directories, database sessions, and timers.
-
-## 25. Type Hints And Static Analysis
-
-**Mental model:** Type hints are notes for humans and tools. They make contracts
-visible without changing normal Python runtime behavior.
-
-```python
-from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
-from typing import Any, Literal, Protocol, TypeVar, TypedDict
-
-
-class User(TypedDict):
-    id: int
-    name: str
-
-
-class SupportsSave(Protocol):
-    def save(self) -> None:
-        ...
-
-
-T = TypeVar("T")
-
-
-def find_user(user_id: int) -> User | None:
-    return {"id": user_id, "name": "Ada"} if user_id > 0 else None
-
-
-def first(values: Sequence[T]) -> T:
-    return values[0]
-```
-
-**Interview answer:** Type hints do not normally enforce runtime behavior. Static tools use annotations to catch errors
-earlier and improve maintainability.
-
-**Decision rule:** Prefer `Sequence[T]` for read-only ordered inputs,
-`Iterable[T]` when you only loop, `Mapping[K, V]` for read-only dictionaries, and
-concrete `list` or `dict` when the function mutates the object.
-
-## 26. Python Memory Model And Copying
-
-**Mental model:** Assignment gives another name to the same object. Copying makes
-a new object, but shallow copy does not recursively copy nested objects.
+Assignment shares an object; a shallow copy duplicates the outer container; a deep copy recursively copies nested content, respecting object-specific copying behavior.
 
 ```python
 import copy
 
 original = {"items": [1, 2]}
 alias = original
-shallow = copy.copy(original)
+shallow = original.copy()
 deep = copy.deepcopy(original)
 
 shallow["items"].append(3)
-print(original["items"])
-
+assert original["items"] == [1, 2, 3]
+assert alias is original
+assert shallow is not original
+assert shallow["items"] is original["items"]
 deep["items"].append(4)
-print(original["items"])
+assert deep["items"] == [1, 2, 4]
+assert original["items"] == [1, 2, 3]
 ```
 
-**Interview answer:** Assignment creates another reference to the same object. A shallow copy copies the outer
-container; a deep copy recursively copies nested objects.
+A shallow copy of n entries is O(n) time/space. Deep-copy cost depends on the reachable object graph and copying hooks; it is not automatically O(n) in just the outer container's length.
 
-**Common mistake:** Shallow copying a list of lists copies the outer list only.
-The inner lists are still shared.
-
-## 27. Python Internals
-
-**Mental model:** Python source code is compiled to bytecode, and CPython runs
-that bytecode on a virtual machine.
+### Repeated nested lists share the same row
 
 ```python
-import dis
+bad = [[0] * 3] * 3
+bad[0][0] = 1
+assert bad == [[1, 0, 0], [1, 0, 0], [1, 0, 0]]
 
-
-def add(left: int, right: int) -> int:
-    return left + right
-
-
-dis.dis(add)
+good = [[0] * 3 for _ in range(3)]
+good[0][0] = 1
+assert good == [[1, 0, 0], [0, 0, 0], [0, 0, 0]]
 ```
 
-**Interview answer:** CPython compiles source code to bytecode and runs it on the Python virtual machine. The GIL allows
-one thread at a time to execute Python bytecode in one process.
+`* 3` repeats references to one row; the comprehension creates each row separately. Also be careful with shared mutable defaults: use `default_factory` in dataclasses and create independent values per dictionary key.
 
-**Interview caveat:** The GIL does not make your whole program thread-safe. It
-does not prevent race conditions on shared state, and it does not block I/O-bound
-concurrency from being useful.
+## 13. Iteration, comprehensions, and lazy values
 
-LEGB name lookup:
-
-1. Local
-2. Enclosing
-3. Global
-4. Built-in
-
-Descriptors define `__get__`, `__set__`, or `__delete__` and power features like properties and methods.
-
-## 28. Standard-Library Collections And Utilities
-
-**Mental model:** The standard library often contains the data structure an
-interview problem is asking you to rediscover. Knowing the right tool can make a
-solution shorter and clearer.
+An iterable can supply an iterator. The iterator remembers its position; a generator is an iterator that produces values lazily.
 
 ```python
-from collections import ChainMap, Counter, defaultdict, deque, namedtuple
-from dataclasses import dataclass
-from enum import Enum
-from functools import cache
-from heapq import heappop, heappush
-from itertools import combinations
-from operator import itemgetter
-import bisect
+values = [10, 20, 30]
+iterator = iter(values)
+assert next(iterator) == 10
+assert list(iterator) == [20, 30]
+assert list(iterator) == []  # Exhausted; the original list still exists.
+assert list(values) == [10, 20, 30]
 ```
+
+Lists are reusable; a particular iterator/generator is one-pass. Once exhausted, `next()` raises `StopIteration` unless a default is supplied.
 
 ```python
-counts = Counter("banana")
-groups: dict[str, list[str]] = defaultdict(list)
-queue = deque(["a", "b"])
-queue.appendleft("start")
-
-heap: list[int] = []
-heappush(heap, 3)
-heappush(heap, 1)
-smallest = heappop(heap)
+values = [1, 2, 3, 4]
+squares = [value * value for value in values]
+lookup = {value: value * value for value in values}
+parities = {value % 2 for value in values}
+lazy_squares = (value * value for value in values)
+assert squares == [1, 4, 9, 16]
+assert lookup[3] == 9
+assert parities == {0, 1}
+assert sum(lazy_squares) == 30
+assert list(lazy_squares) == []
 ```
 
-**Interview answer:** `Counter`, `defaultdict`, `deque`, `heapq`, and `bisect` often turn long interview solutions into
-clean short ones.
-
-**Decision rule:** Use `Counter` for frequencies, `defaultdict` for grouping,
-`deque` for queues, `heapq` for top-K or priority queues, and `bisect` for
-searching insertion positions in sorted lists.
-
-## 29. Abstract Data Types And Implementations
-
-Educational implementations help interviews. In production, prefer built-ins unless you need custom behavior.
-
-**Mental model:** An abstract data type describes behavior, not implementation.
-A stack means last-in, first-out. A queue means first-in, first-out. Many
-different internal structures can provide the same behavior.
-
-**Why this matters:** Interviewers often ask you to implement a structure to see
-whether you understand its operations and trade-offs. In production, the same
-knowledge helps you choose Python's built-in `list`, `deque`, `dict`, `set`,
-`heapq`, or another library structure wisely.
-
-Stack and queue:
-
-Use a stack when the most recent item should be handled first, such as undo,
-backtracking, depth-first search, or matching parentheses. Use a queue when the
-oldest item should be handled first, such as breadth-first search, task queues,
-or level-order traversal.
+A list comprehension materializes n results in O(n) time and O(n) result memory when each expression is O(1). The generator keeps O(1) internal iteration state for this example, but retains access to its input; it does not make the input list disappear. Consuming all its results still takes O(n) work. Use a normal loop when nested conditions make a comprehension difficult to read.
 
 ```python
-from collections import deque
-
-
-class Stack:
-    def __init__(self) -> None:
-        self._items: list[int] = []
-
-    def push(self, value: int) -> None:
-        self._items.append(value)
-
-    def pop(self) -> int:
-        return self._items.pop()
-
-
-class Queue:
-    def __init__(self) -> None:
-        self._items: deque[int] = deque()
-
-    def enqueue(self, value: int) -> None:
-        self._items.append(value)
-
-    def dequeue(self) -> int:
-        return self._items.popleft()
+numbers = range(0, 10, 2)
+assert list(numbers) == [0, 2, 4, 6, 8]
+assert numbers[2] == 4
 ```
 
-Linked list:
+A `range` stores its start/stop/step, not a list of all represented integers. For ordinary-sized integer bounds its storage is constant; converting it to a list allocates every result. It is reusable and supports indexing, unlike a generator.
 
-Linked lists are less common in everyday Python because `list` is highly
-optimized. They are still useful for interviews because they test pointer-style
-reasoning: changing `next` links without losing the rest of the chain.
+## 14. Custom structures: what Python gives you
+
+A **data structure** organizes items and their relationships. An **abstract data type** describes the behavior you need; an implementation chooses how to store it. For example, “newest item first” describes a stack, and a Python list can implement it.
+
+Python gives you lists, dictionaries, sets, and classes as building blocks. It does not provide a general-purpose linked-list, balanced-BST, trie, or union-find class in the standard library. `heapq` provides heap operations on a list. Build a custom structure when its relationships or operations fit your problem; everyday Python code often needs only built-ins.
+
+### Singly linked list: follow the next link
+
+**Picture:** a chain of treasure-hunt clues. Each clue holds a value and points to the next clue. You cannot jump directly to clue 100 without following links.
+
+```text
+head
+ ↓
+[10 | next] → [20 | next] → [30 | None]
+```
 
 ```python
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(eq=False)
 class ListNode:
     value: int
     next: "ListNode | None" = None
 
 
-def reverse_linked_list(head: ListNode | None) -> ListNode | None:
-    previous = None
+head = ListNode(10, ListNode(20, ListNode(30)))
+assert head.value == 10
+assert head.next.value == 20
+assert head.next.next.value == 30
+
+# Insert 15 immediately after a node we already have: head.
+head.next = ListNode(15, head.next)
+assert head.next.value == 15
+assert head.next.next.value == 20
+```
+
+The new node points to the old second node, then the first node points to the new node. The chain becomes `10 → 15 → 20 → 30`. Later nodes do not shift as they would in a list. Each node still occupies its own object; `next` stores a reference, not a copy of the rest of the chain.
+
+**Append 40 after 30:** start with the original three-node chain.
+
+```python
+head = ListNode(10, ListNode(20, ListNode(30)))
+head.next.next.next = ListNode(40)
+```
+
+`head.next.next` is the node containing `30`. Assigning its `.next` attaches
+`40`: `10 → 20 → 30 → 40 → None`. This shortcut assumes exactly three nodes;
+for a list of any length, walk to the last node instead:
+
+```python
+head = ListNode(10, ListNode(20, ListNode(30)))
+new_node = ListNode(40)
+
+if head is None:
+    head = new_node           # An empty list starts with the new node.
+else:
     current = head
-    while current is not None:
-        following = current.next
-        current.next = previous
-        previous = current
-        current = following
-    return previous
+    while current.next is not None:
+        current = current.next
+    current.next = new_node  # Attach 40 after the last node.
 ```
 
-Trie:
+Walking to the tail takes **O(n) time** and **O(1) extra space**. If you already
+keep a reference to the tail, attaching the new node and updating that reference
+takes O(1) time.
 
-A trie is useful when many strings share prefixes. It avoids repeatedly scanning
-whole words for prefix lookup, autocomplete, spell-checking, and dictionary-word
-search problems.
-
-```python
-class TrieNode:
-    def __init__(self) -> None:
-        self.children: dict[str, TrieNode] = {}
-        self.is_word = False
-
-
-class Trie:
-    def __init__(self) -> None:
-        self.root = TrieNode()
-
-    def insert(self, word: str) -> None:
-        node = self.root
-        for char in word:
-            node = node.children.setdefault(char, TrieNode())
-        node.is_word = True
-```
-
-Union-find:
-
-Union-find is useful when the problem asks whether items belong to the same
-group. It appears in connectivity, network, friend-circle, island-merging, and
-minimum-spanning-tree problems.
-
-```python
-class UnionFind:
-    def __init__(self, size: int) -> None:
-        self.parent = list(range(size))
-        self.rank = [0] * size
-
-    def find(self, value: int) -> int:
-        if self.parent[value] != value:
-            self.parent[value] = self.find(self.parent[value])
-        return self.parent[value]
-
-    def union(self, left: int, right: int) -> None:
-        root_left = self.find(left)
-        root_right = self.find(right)
-        if root_left == root_right:
-            return
-        if self.rank[root_left] < self.rank[root_right]:
-            self.parent[root_left] = root_right
-        elif self.rank[root_left] > self.rank[root_right]:
-            self.parent[root_right] = root_left
-        else:
-            self.parent[root_right] = root_left
-            self.rank[root_left] += 1
-```
-
-Complexity summary:
-
-**Why this matters:** Complexity tells you when a data structure will still work
-as input grows. A solution that is clear for 10 items may be unusable for
-1,000,000 items if the main operation is too slow.
-
-| Structure   | Main operations                           |
-|-------------|-------------------------------------------|
-| Stack       | push/pop O(1)                             |
-| Queue/deque | append/popleft O(1)                       |
-| Linked list | insert after node O(1), search O(n)       |
-| Hash table  | average lookup/insert/delete O(1)         |
-| Heap        | push/pop O(log n)                         |
-| Trie        | insert/search O(k), k = word length       |
-| Union-find  | near O(1) amortized with path compression |
-
-## 30. Algorithm Complexity
-
-**Mental model:** Big O is about growth. Ask: "If input doubles, does the work
-stay constant, grow a little, grow linearly, or explode?"
-
-| Class      | Example                      |
-|------------|------------------------------|
-| O(1)       | Indexing a list              |
-| O(log n)   | Binary search                |
-| O(n)       | Linear scan                  |
-| O(n log n) | Efficient comparison sorting |
-| O(n²)      | All pairs                    |
-| O(2ⁿ)      | Subsets                      |
-| O(n!)      | Permutations                 |
-
-```python
-def linear_sum(values: list[int]) -> int:
-    total = 0
-    for value in values:
-        total += value
-    return total
-```
-
-**Interview answer:** Big O describes how runtime or memory grows as input grows. It ignores constants and lower-order
-terms.
-
-Recursion stack space counts as space complexity.
-
-**Common mistake:** Do not say an algorithm is O(1) space if recursion can go
-O(n) deep. The call stack is memory too.
-
-## 31. Searching Algorithms
-
-**Mental model:** Linear search works on any sequence. Binary search is faster,
-but only when the search space is sorted or has a monotonic true/false pattern.
-
-Linear search:
-
-```python
-def linear_search(values: list[int], target: int) -> int:
-    for index, value in enumerate(values):
-        if value == target:
-            return index
-    return -1
-```
-
-Binary search:
-
-```python
-def binary_search(values: list[int], target: int) -> int:
-    left, right = 0, len(values) - 1
-    while left <= right:
-        mid = (left + right) // 2
-        if values[mid] == target:
-            return mid
-        if values[mid] < target:
-            left = mid + 1
-        else:
-            right = mid - 1
-    return -1
-```
-
-Rotated sorted array:
-
-```python
-def search_rotated(values: list[int], target: int) -> int:
-    left, right = 0, len(values) - 1
-    while left <= right:
-        mid = (left + right) // 2
-        if values[mid] == target:
-            return mid
-        if values[left] <= values[mid]:
-            if values[left] <= target < values[mid]:
-                right = mid - 1
-            else:
-                left = mid + 1
-        else:
-            if values[mid] < target <= values[right]:
-                left = mid + 1
-            else:
-                right = mid - 1
-    return -1
-```
-
-pytest tests:
-
-```python
-def test_binary_search_found() -> None:
-    assert binary_search([1, 3, 5], 3) == 1
-
-
-def test_binary_search_missing() -> None:
-    assert binary_search([1, 3, 5], 2) == -1
-```
-
-Complexity: binary search is O(log n) time and O(1) space.
-
-**Interview answer:** Binary search repeatedly discards half of the remaining
-search space. The key requirement is not merely "an array"; it is an ordered or
-monotonic condition that tells you which half can be ignored.
-
-## 32. Sorting Algorithms
-
-**Mental model:** In real Python code, use `sorted()` or `.sort()` first. Learn
-manual sorts to understand complexity, stability, and interview trade-offs.
-
-Built-in sorting:
-
-```python
-values = [3, 1, 2]
-new_values = sorted(values)
-values.sort()
-```
-
-`sorted()` returns a new list. `.sort()` mutates the list and returns `None`.
-
-Picture:
+**Keep a tail reference:** `head` refers to the first node; `tail` refers to
+the last node. They are references to existing nodes, not extra nodes.
 
 ```text
-Original list:
-values = [3, 1, 2]
-
-Using sorted(values):
-Step 1: Python reads values
-Step 2: Python creates a new sorted list
-Step 3: values is unchanged
-
-values             -> [3, 1, 2]
-new_values         -> [1, 2, 3]
-
-Using values.sort():
-Step 1: Python sorts the same list object in place
-Step 2: values itself changes
-
-values before      -> [3, 1, 2]
-values after       -> [1, 2, 3]
+head        tail
+ ↓           ↓
+10 → 20 → 30 → None
 ```
 
-Python's built-in sort uses Timsort. It is the best default in real Python code
-because it is stable and performs very well on partially sorted data.
+```python
+head = ListNode(10, ListNode(20, ListNode(30)))
+tail = head.next.next       # Keep a reference to the node containing 30.
 
-Big O:
+tail.next = ListNode(40)   # Attach 40 directly to the last node.
+tail = tail.next           # Move tail to the new last node: 40.
+
+assert head.value == 10
+assert head.next.next.next is tail
+assert tail.value == 40
+assert tail.next is None
+```
+
+The chain is now `10 → 20 → 30 → 40 → None`. Appending takes **O(1) time**
+because no traversal is needed. Update `tail` after every append; otherwise it
+still points to the old last node, and the next append could overwrite a link.
+Keeping the tail reference uses **O(1) extra space**. Finding the tail of an
+existing list first takes O(n) time; `head.next.next` above assumes three nodes.
+For an empty list, both `head` and `tail` are `None`; for a one-node list,
+both refer to the same node. On the first append to an empty list, set both
+references to the new node.
+
+**Why `@dataclass(eq=False)`?** `eq=False` tells the dataclass not to generate an
+`__eq__` method for field-by-field equality. These node classes inherit directly
+from `object`, so `==` checks whether two references point to the same object.
+Two nodes can hold the same value while occupying different positions in a structure.
+
+```python
+a = ListNode(10)
+b = ListNode(10)
+c = a
+
+assert a != b                 # Same value, different node objects.
+assert a == c                 # Both references point to the same node.
+assert a.value == b.value     # The stored values are equal.
+```
+
+The default, `eq=True`, generates field-based equality: these two separate nodes
+would compare equal. The same `eq=False` reasoning applies to `TreeNode` below.
+If a parent class defines its own `__eq__`, `eq=False` leaves that inherited
+behavior in place.
+
+**Useful for:** learning node/reference manipulation and structures that splice around known nodes. Python's built-in list is a dynamic array, not this chain, and is usually a better everyday sequence.
+
+**Costs:** reaching the kth node takes O(k), up to O(n); inserting after a **known** node is O(1). Finding that node first may cost O(n). Storing n nodes takes O(n) space.
+
+### Binary search tree: smaller left, larger right
+
+**Picture:** organize numbered records so each comparison tells you which branch to follow. Every node has at most two children. For this example all values are distinct, and every value in a left subtree is smaller than its parent; every value in a right subtree is larger.
 
 ```text
-Best time:    O(n)        when data is already mostly sorted
-Average time: O(n log n)
-Worst time:   O(n log n)
-Extra space:  O(n)        worst case for merging runs
+         10
+        /  \
+       5    15
+           /
+          12
 ```
-
-Insertion sort:
 
 ```python
-def insertion_sort(values: list[int]) -> list[int]:
-    result = values.copy()
-    for index in range(1, len(result)):
-        current = result[index]
-        position = index - 1
-        while position >= 0 and result[position] > current:
-            result[position + 1] = result[position]
-            position -= 1
-        result[position + 1] = current
-    return result
-```
-
-Picture:
-
-```text
-Start: [5, 2, 4, 1]
-
-The left side is the sorted side.
-
-Pass 1: take 2
-[5 | 2, 4, 1]
- 2 is smaller than 5, so shift 5 right
-[_, 5 | 4, 1]
- insert 2
-[2, 5 | 4, 1]
-
-Pass 2: take 4
-[2, 5 | 4, 1]
- 4 is smaller than 5, so shift 5 right
-[2, _, 5 | 1]
- insert 4
-[2, 4, 5 | 1]
-
-Pass 3: take 1
-[2, 4, 5 | 1]
- 1 is smaller than 5, shift 5 right
-[2, 4, _, 5]
- 1 is smaller than 4, shift 4 right
-[2, _, 4, 5]
- 1 is smaller than 2, shift 2 right
-[_, 2, 4, 5]
- insert 1
-[1, 2, 4, 5]
-```
-
-Why it works: everything left of the divider is already sorted. Each new value is
-moved left until it lands in the correct position.
-
-Big O:
-
-```text
-Best time:    O(n)        when the list is already sorted
-Average time: O(n²)
-Worst time:   O(n²)       when the list is reversed
-Extra space:  O(n)        in this implementation because it copies the list
-```
-
-Merge sort:
-
-```python
-def merge_sort(values: list[int]) -> list[int]:
-    if len(values) <= 1:
-        return values.copy()
-    mid = len(values) // 2
-    left = merge_sort(values[:mid])
-    right = merge_sort(values[mid:])
-    return merge(left, right)
-
-
-def merge(left: list[int], right: list[int]) -> list[int]:
-    result: list[int] = []
-    i = j = 0
-    while i < len(left) and j < len(right):
-        if left[i] <= right[j]:
-            result.append(left[i])
-            i += 1
-        else:
-            result.append(right[j])
-            j += 1
-    result.extend(left[i:])
-    result.extend(right[j:])
-    return result
-```
-
-Picture:
-
-```text
-Start:
-[5, 2, 4, 1]
-
-Split phase:
-Level 0: [5, 2, 4, 1]
-Level 1: [5, 2]        [4, 1]
-Level 2: [5] [2]       [4] [1]
-
-Merge phase:
-Merge [5] and [2]:
-compare 5 vs 2 -> take 2
-remaining 5    -> take 5
-result         -> [2, 5]
-
-Merge [4] and [1]:
-compare 4 vs 1 -> take 1
-remaining 4    -> take 4
-result         -> [1, 4]
-
-Merge [2, 5] and [1, 4]:
-compare 2 vs 1 -> take 1
-compare 2 vs 4 -> take 2
-compare 5 vs 4 -> take 4
-remaining 5    -> take 5
-result         -> [1, 2, 4, 5]
-```
-
-Why it works: single-item lists are already sorted. Merge sort repeatedly merges
-two sorted lists into one bigger sorted list.
-
-Big O:
-
-```text
-Best time:    O(n log n)
-Average time: O(n log n)
-Worst time:   O(n log n)
-Extra space:  O(n)        needs temporary lists while merging
-```
-
-Quick sort educational version:
-
-```python
-def quick_sort(values: list[int]) -> list[int]:
-    if len(values) <= 1:
-        return values.copy()
-    pivot = values[len(values) // 2]
-    left = [value for value in values if value < pivot]
-    middle = [value for value in values if value == pivot]
-    right = [value for value in values if value > pivot]
-    return quick_sort(left) + middle + quick_sort(right)
-```
-
-Picture:
-
-```text
-Start: [5, 2, 4, 1, 3]
-
-Call 1:
-pivot = 4
-less than 4:    [2, 1, 3]
-equal to 4:     [4]
-greater than 4: [5]
-
-Now sort the left side [2, 1, 3]:
-pivot = 1
-less than 1:    []
-equal to 1:     [1]
-greater than 1: [2, 3]
-
-Now sort [2, 3]:
-pivot = 3
-less than 3:    [2]
-equal to 3:     [3]
-greater than 3: []
-
-Build result back up:
-[2] + [3]       -> [2, 3]
-[1] + [2, 3]    -> [1, 2, 3]
-[1, 2, 3] + [4] + [5] -> [1, 2, 3, 4, 5]
-```
-
-Why it works: after partitioning, every value on the left belongs before the
-pivot, and every value on the right belongs after the pivot.
-
-Big O:
-
-```text
-Best time:    O(n log n)
-Average time: O(n log n)
-Worst time:   O(n²)       bad pivots create very uneven splits
-Extra space:  O(n)        this educational version builds left/middle/right lists
-```
-
-Other common sorting pictures:
-
-Bubble sort:
-
-```text
-Start: [4, 2, 3, 1]
-
-Pass 1:
-compare 4 and 2 -> swap    [2, 4, 3, 1]
-compare 4 and 3 -> swap    [2, 3, 4, 1]
-compare 4 and 1 -> swap    [2, 3, 1, 4]
-4 is now fixed at the end.
-
-Pass 2:
-compare 2 and 3 -> keep    [2, 3, 1, 4]
-compare 3 and 1 -> swap    [2, 1, 3, 4]
-3 is now fixed.
-
-Pass 3:
-compare 2 and 1 -> swap    [1, 2, 3, 4]
-Sorted.
-```
-
-Big O:
-
-```text
-Best time:    O(n)        if optimized to stop when no swaps happen
-Average time: O(n²)
-Worst time:   O(n²)
-Extra space:  O(1)        in-place
-```
-
-Selection sort:
-
-```text
-Start: [4, 2, 3, 1]
-
-Pass 1:
-unsorted part: [4, 2, 3, 1]
-smallest value is 1
-swap 1 with first unsorted value 4
-[1 | 2, 3, 4]
-
-Pass 2:
-unsorted part: [2, 3, 4]
-smallest value is 2
-2 is already in the correct place
-[1, 2 | 3, 4]
-
-Pass 3:
-unsorted part: [3, 4]
-smallest value is 3
-3 is already in the correct place
-[1, 2, 3 | 4]
-
-Sorted: [1, 2, 3, 4]
-```
-
-Big O:
-
-```text
-Best time:    O(n²)       still scans for the smallest each pass
-Average time: O(n²)
-Worst time:   O(n²)
-Extra space:  O(1)        in-place
-```
-
-Heap sort:
-
-```text
-Start: [4, 2, 3, 1]
-
-Build a max heap:
-        4
-      /   \
-     2     3
-    /
-   1
-
-Remove largest 4 and place it at the end:
-heap left: [3, 2, 1]     sorted end: [4]
-
-Remove largest 3:
-heap left: [2, 1]        sorted end: [3, 4]
-
-Remove largest 2:
-heap left: [1]           sorted end: [2, 3, 4]
-
-Remove largest 1:
-heap left: []            sorted end: [1, 2, 3, 4]
-```
-
-Big O:
-
-```text
-Best time:    O(n log n)
-Average time: O(n log n)
-Worst time:   O(n log n)
-Extra space:  O(1)        for classic in-place heap sort
-```
-
-Timsort:
-
-```text
-Real data often has sorted runs:
-[1, 2, 5] [3, 4, 8] [6, 7]
-
-Step 1: detect existing sorted runs
-Run A: [1, 2, 5]
-Run B: [3, 4, 8]
-Run C: [6, 7]
-
-Step 2: sort small messy pieces if needed
-In this example, each run is already sorted.
-
-Step 3: merge runs
-Merge A and B:
-[1, 2, 5] + [3, 4, 8] -> [1, 2, 3, 4, 5, 8]
-
-Merge with C:
-[1, 2, 3, 4, 5, 8] + [6, 7] -> [1, 2, 3, 4, 5, 6, 7, 8]
-```
-
-Big O:
-
-```text
-Best time:    O(n)        when existing runs are already ordered
-Average time: O(n log n)
-Worst time:   O(n log n)
-Extra space:  O(n)        worst case
-```
-
-| Algorithm |       Best |    Average |      Worst |     Stable |
-|-----------|-----------:|-----------:|-----------:|-----------:|
-| Bubble    |       O(n) |      O(n²) |      O(n²) |        Yes |
-| Selection |      O(n²) |      O(n²) |      O(n²) |         No |
-| Insertion |       O(n) |      O(n²) |      O(n²) |        Yes |
-| Merge     | O(n log n) | O(n log n) | O(n log n) |        Yes |
-| Quick     | O(n log n) | O(n log n) |      O(n²) | Usually no |
-| Heap      | O(n log n) | O(n log n) | O(n log n) |         No |
-| Timsort   |       O(n) | O(n log n) | O(n log n) |        Yes |
-
-**Interview answer:** Python's built-in sort is Timsort, stable, and optimized
-for partially sorted real-world data. In interviews, explain whether your chosen
-sort is stable, in-place, and what its worst-case runtime is.
-
-## 33. Recursion And Backtracking
-
-**Mental model:** Recursion solves a problem by solving a smaller version of the
-same problem. Backtracking explores choices, then undoes a choice before trying
-the next one.
-
-Factorial:
-
-```python
-def factorial(n: int) -> int:
-    if n < 0:
-        raise ValueError("n must be non-negative")
-    if n in (0, 1):
-        return 1
-    return n * factorial(n - 1)
-```
-
-Memoized Fibonacci:
-
-```python
-from functools import cache
-
-
-@cache
-def fibonacci(n: int) -> int:
-    if n < 0:
-        raise ValueError("n must be non-negative")
-    if n < 2:
-        return n
-    return fibonacci(n - 1) + fibonacci(n - 2)
-```
-
-Subsets:
-
-```python
-def subsets(values: list[int]) -> list[list[int]]:
-    result: list[list[int]] = []
-
-    def backtrack(index: int, path: list[int]) -> None:
-        if index == len(values):
-            result.append(path.copy())
-            return
-        backtrack(index + 1, path)
-        path.append(values[index])
-        backtrack(index + 1, path)
-        path.pop()
-
-    backtrack(0, [])
-    return result
-```
-
-Permutations:
-
-```python
-def permutations(values: list[int]) -> list[list[int]]:
-    result: list[list[int]] = []
-
-    def backtrack(path: list[int], remaining: list[int]) -> None:
-        if not remaining:
-            result.append(path.copy())
-            return
-        for index, value in enumerate(remaining):
-            backtrack(path + [value], remaining[:index] + remaining[index + 1:])
-
-    backtrack([], values)
-    return result
-```
-
-**Common mistake:** Forgetting to restore state after recursive exploration.
-
-**Interview answer:** A recursive solution needs a base case, progress toward the
-base case, and a clear definition of what each call returns or contributes.
-Backtracking usually has choose, explore, unchoose.
-
-## 34. Common Coding-Interview Patterns
-
-**Mental model:** Patterns are shortcuts for recognizing the shape of a problem.
-They do not replace reasoning, but they help you choose the first useful data
-structure.
-
-| Pattern             | Recognize it by               | Main structure    |
-|---------------------|-------------------------------|-------------------|
-| Frequency map       | Count occurrences             | `Counter`, dict   |
-| Hash-set lookup     | Need fast membership          | set               |
-| Two pointers        | Sorted array or pair scan     | two indexes       |
-| Sliding window      | Contiguous substring/subarray | two indexes + map |
-| Fast/slow pointers  | Cycle or midpoint             | two pointers      |
-| Prefix sums         | Range sums                    | list of sums      |
-| Monotonic stack     | Next greater/smaller          | stack             |
-| Heap                | Top-K or priority             | `heapq`           |
-| Intervals           | Merge/overlap                 | sorting           |
-| Topological sort    | Prerequisites                 | graph + indegree  |
-| Union-find          | Connectivity groups           | parent/rank       |
-| Dynamic programming | Overlapping subproblems       | table/cache       |
-
-Sliding window example:
-
-```python
-def longest_unique_substring_length(text: str) -> int:
-    seen: dict[str, int] = {}
-    left = 0
-    best = 0
-    for right, char in enumerate(text):
-        if char in seen and seen[char] >= left:
-            left = seen[char] + 1
-        seen[char] = right
-        best = max(best, right - left + 1)
-    return best
-```
-
-Topological sort:
-
-```python
-from collections import deque
-
-
-def can_finish_courses(count: int, prerequisites: list[tuple[int, int]]) -> bool:
-    graph = {course: [] for course in range(count)}
-    indegree = [0] * count
-    for course, prerequisite in prerequisites:
-        graph[prerequisite].append(course)
-        indegree[course] += 1
-    queue = deque([course for course in range(count) if indegree[course] == 0])
-    visited = 0
-    while queue:
-        course = queue.popleft()
-        visited += 1
-        for neighbor in graph[course]:
-            indegree[neighbor] -= 1
-            if indegree[neighbor] == 0:
-                queue.append(neighbor)
-    return visited == count
-```
-
-**Interview answer:** Name the pattern, explain why it fits, then state the data
-structure and complexity. For example: "This is a sliding window because we need
-the best contiguous substring while moving through the string once."
-
-## 35. Common Coding-Interview Problems
-
-**How to study these:** For each problem, say the brute-force approach first,
-identify the repeated work, then introduce the data structure or pattern that
-removes that repeated work.
-
-Two Sum:
-
-```python
-def two_sum(values: list[int], target: int) -> tuple[int, int] | None:
-    seen: dict[int, int] = {}
-    for index, value in enumerate(values):
-        needed = target - value
-        if needed in seen:
-            return seen[needed], index
-        seen[value] = index
-    return None
-```
-
-Two Sum uses a hash map so each previous value can be checked in O(1) average
-time instead of scanning all previous values again.
-
-Three Sum:
-
-```python
-def three_sum(values: list[int]) -> list[tuple[int, int, int]]:
-    values = sorted(values)
-    result: list[tuple[int, int, int]] = []
-    for index, value in enumerate(values):
-        if index > 0 and value == values[index - 1]:
-            continue
-        left, right = index + 1, len(values) - 1
-        while left < right:
-            total = value + values[left] + values[right]
-            if total == 0:
-                result.append((value, values[left], values[right]))
-                left += 1
-                right -= 1
-                while left < right and values[left] == values[left - 1]:
-                    left += 1
-            elif total < 0:
-                left += 1
-            else:
-                right -= 1
-    return result
-```
-
-Three Sum sorts first so the inner search can use two pointers. Sorting costs
-O(n log n), and the two-pointer scan across each fixed value gives O(n²) total
-time.
-
-Product except self:
-
-```python
-def product_except_self(values: list[int]) -> list[int]:
-    result = [1] * len(values)
-    prefix = 1
-    for index, value in enumerate(values):
-        result[index] = prefix
-        prefix *= value
-    suffix = 1
-    for index in range(len(values) - 1, -1, -1):
-        result[index] *= suffix
-        suffix *= values[index]
-    return result
-```
-
-Product Except Self uses prefix and suffix products to avoid division and handle
-zeros correctly.
-
-Number of islands:
-
-```python
-def num_islands(grid: list[list[str]]) -> int:
-    if not grid:
-        return 0
-    rows, cols = len(grid), len(grid[0])
-
-    def sink(row: int, col: int) -> None:
-        if row < 0 or col < 0 or row >= rows or col >= cols or grid[row][col] != "1":
-            return
-        grid[row][col] = "0"
-        sink(row + 1, col)
-        sink(row - 1, col)
-        sink(row, col + 1)
-        sink(row, col - 1)
-
-    count = 0
-    for row in range(rows):
-        for col in range(cols):
-            if grid[row][col] == "1":
-                count += 1
-                sink(row, col)
-    return count
-```
-
-Number of Islands treats the grid as a graph. Each land cell is a node connected
-to neighboring land cells. DFS "sinks" one island so it is counted once.
-
-Climbing stairs:
-
-```python
-def climb_stairs(n: int) -> int:
-    if n <= 2:
-        return n
-    previous, current = 1, 2
-    for _ in range(3, n + 1):
-        previous, current = current, previous + current
-    return current
-```
-
-Climbing Stairs is Fibonacci in disguise: ways to reach step `n` equals ways to
-reach `n - 1` plus ways to reach `n - 2`.
-
-pytest example:
-
-```python
-def test_two_sum() -> None:
-    assert two_sum([2, 7, 11], 9) == (0, 1)
-
-
-def test_product_except_self() -> None:
-    assert product_except_self([1, 2, 3, 4]) == [24, 12, 8, 6]
-```
-
-For each problem, explain brute force first, then optimize with a stronger data structure.
-
-**Interview checklist:** Clarify input size, handle empty input, state complexity,
-and test at least one normal case plus one edge case before calling the solution
-done.
-
-## 36. pytest Fundamentals
-
-Test discovery finds files named `test_*.py` or `*_test.py` and functions named `test_*`.
-
-**Mental model:** A test is executable documentation. It should show what the
-code promises to do.
-
-```python
-def add(left: int, right: int) -> int:
-    return left + right
-
-
-def test_add() -> None:
-    assert add(2, 3) == 5
-```
-
-Commands:
-
-```bash
-pytest
-pytest -v
-pytest tests/test_algorithms.py
-pytest -k "binary_search"
-pytest -m "slow"
-```
-
-**Testing note:** Plain `assert` is preferred in pytest because pytest rewrites assertions to show useful failure
-details.
-
-**Common mistake:** Testing only the happy path. Add edge cases, invalid input,
-and regression cases for bugs you fixed.
-
-## 37. pytest Fixtures
-
-**Mental model:** A fixture is reusable setup. pytest injects it into a test by
-matching the fixture name to a test parameter.
-
-```python
-from pathlib import Path
-import pytest
-
-
-@pytest.fixture
-def sample_numbers() -> list[int]:
-    return [1, 2, 3]
-
-
-def test_sum(sample_numbers: list[int]) -> None:
-    assert sum(sample_numbers) == 6
-
-
-@pytest.fixture
-def data_file(tmp_path: Path) -> Path:
-    path = tmp_path / "data.txt"
-    path.write_text("hello", encoding="utf-8")
-    return path
-```
-
-Yield fixture:
-
-```python
-import pytest
-
-
-@pytest.fixture
-def resource():
-    value = {"open": True}
-    yield value
-    value["open"] = False
-```
-
-Fixture scopes include `function`, `class`, `module`, `package`, and `session`.
-
-**Decision rule:** Keep fixture scope as small as practical. Wider scopes can
-speed up tests but make shared-state bugs easier to create.
-
-## 38. pytest Parameterization And Markers
-
-**Mental model:** Parameterization lets one test body cover many examples. This
-keeps test logic in one place while making cases explicit.
-
-```python
-import sys
-import pytest
-
-
-@pytest.mark.parametrize(
-    "value,expected",
-    [(1, False), (2, True), (3, False)],
-    ids=["one", "two", "three"],
-)
-def test_even(value: int, expected: bool) -> None:
-    assert (value % 2 == 0) is expected
-
-
-@pytest.mark.skip(reason="example skip")
-def test_skipped() -> None:
-    assert False
-
-
-@pytest.mark.skipif(sys.platform == "win32", reason="not for Windows")
-def test_non_windows() -> None:
-    assert True
-
-
-@pytest.mark.xfail(reason="known bug being fixed")
-def test_expected_failure() -> None:
-    assert False
-```
-
-**Testing note:** Use `xfail` for known, tracked defects. Do not use it to hide unexplained failures.
-
-**Interview answer:** Use parameterization when behavior should be the same shape
-across many inputs. Use markers to select, skip, or label tests intentionally.
-
-## 39. Mocking And Patching
-
-**Mental model:** Mock external behavior, not the logic you are trying to test.
-Good mocks isolate slow, random, expensive, or network-dependent boundaries.
-
-```python
-from unittest.mock import Mock, patch
-
-
-def send_message(client, text: str) -> bool:
-    response = client.send(text)
-    return response == "ok"
-
-
-def test_send_message() -> None:
-    client = Mock()
-    client.send.return_value = "ok"
-    assert send_message(client, "hello") is True
-    client.send.assert_called_once_with("hello")
-```
-
-Patch where dependency is looked up:
-
-```python
-from unittest.mock import patch
-
-
-def get_username() -> str:
-    import os
-    return os.getenv("USER", "unknown")
-
-
-def test_get_username() -> None:
-    with patch("os.getenv", return_value="Ada"):
-        assert get_username() == "Ada"
-```
-
-**Testing note:** Prefer dependency injection over excessive patching. Do not mock simple value objects or the function
-under test.
-
-**Common mistake:** Patch where the dependency is imported or looked up by the
-code under test, not necessarily where it was originally defined.
-
-## 40. Testing Exceptions, Files, Classes, And APIs
-
-**Mental model:** A good test checks both success and failure contracts. If your
-function promises to reject invalid input, that rejection deserves a test.
-
-```python
-import os
-from pathlib import Path
-import pytest
-
-
-def parse_positive(text: str) -> int:
-    value = int(text)
-    if value <= 0:
-        raise ValueError("must be positive")
-    return value
-
-
-def test_parse_positive_error() -> None:
-    with pytest.raises(ValueError, match="positive"):
-        parse_positive("-1")
-
-
-def test_tmp_path(tmp_path: Path) -> None:
-    path = tmp_path / "sample.txt"
-    path.write_text("hello", encoding="utf-8")
-    assert path.read_text(encoding="utf-8") == "hello"
-
-
-def test_environment(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("APP_ENV", "test")
-    assert os.getenv("APP_ENV") == "test"
-```
-
-Capture output:
-
-```python
-def greet() -> None:
-    print("hello")
-
-
-def test_greet(capsys) -> None:
-    greet()
-    captured = capsys.readouterr()
-    assert captured.out == "hello\n"
-```
-
-**Testing note:** `tmp_path`, `monkeypatch`, `capsys`, and `pytest.raises` cover
-many real-world tests without touching the user's machine or global environment.
-
-## 41. Test Design And Quality
-
-**Mental model:** Tests should fail for the reason a user would care about. Avoid
-tests that simply repeat implementation details.
-
-| Test type   | Purpose                              |
-|-------------|--------------------------------------|
-| Unit        | Small isolated behavior              |
-| Integration | Multiple components working together |
-| End-to-end  | User-level workflow                  |
-| Regression  | Prevent a bug from returning         |
-| Negative    | Invalid/error behavior               |
-
-Arrange-Act-Assert:
-
-```python
-def test_discount() -> None:
-    price = 100.0
-    discounted = price * 0.9
-    assert discounted == 90.0
-```
-
-**Testing note:** High coverage does not guarantee good tests. Tests must assert meaningful behavior and edge cases.
-
-**Interview answer:** A strong test suite includes normal cases, boundaries,
-invalid inputs, and regression tests. It avoids depending on test order or shared
-mutable state.
-
-## 42. Debugging
-
-**Mental model:** Debugging is narrowing. First reproduce the problem, then make
-the failing example smaller until the cause is visible.
-
-```python
-def divide(left: int, right: int) -> float:
-    breakpoint()
-    return left / right
-```
-
-Troubleshooting:
-
-| Error                 | Check                                |
-|-----------------------|--------------------------------------|
-| `NameError`           | Spelling and scope                   |
-| `TypeError`           | Types and function signature         |
-| `ValueError`          | Input value assumptions              |
-| `KeyError`            | Dict key existence                   |
-| `IndexError`          | Sequence length                      |
-| `AttributeError`      | Object type and attributes           |
-| `ModuleNotFoundError` | Environment and package layout       |
-| `RecursionError`      | Missing base case or excessive depth |
-
-**Interview answer:** Reproduce, minimize, inspect state, fix root cause, add a regression test.
-
-**Common mistake:** Changing several things at once can hide the real fix. Make
-one hypothesis, test it, then move to the next.
-
-## 43. Logging
-
-**Mental model:** Logging is for future you. A useful log says what happened,
-where it happened, and includes identifiers needed to trace the event.
-
-```python
-import logging
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(name)s %(message)s",
-)
-logger = logging.getLogger(__name__)
-
-
-def process(order_id: int) -> None:
-    try:
-        logger.info("processing order_id=%s", order_id)
-    except Exception:
-        logger.exception("processing failed")
-        raise
-```
-
-Test logs:
-
-```python
-import logging
-
-
-def test_logging(caplog) -> None:
-    logger = logging.getLogger("example")
-    with caplog.at_level(logging.INFO):
-        logger.info("ready")
-    assert "ready" in caplog.text
-```
-
-**Production note:** Never log passwords, tokens, or sensitive personal data.
-
-**Interview answer:** Use logging instead of `print` in applications because it
-supports levels, formatting, destinations, and structured operational debugging.
-
-## 44. Concurrency And Parallelism
-
-**Mental model:** Concurrency is about managing many tasks in progress.
-Parallelism is about doing work at the exact same time on multiple CPU cores.
-
-| Workload                 | Tool                  |
-|--------------------------|-----------------------|
-| I/O-bound blocking calls | `ThreadPoolExecutor`  |
-| CPU-bound work           | `ProcessPoolExecutor` |
-| Many async I/O tasks     | `asyncio`             |
-| Shared mutable state     | Locks or queues       |
-
-```python
-from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
-
-
-def square(value: int) -> int:
-    return value * value
-
-
-with ThreadPoolExecutor(max_workers=4) as executor:
-    thread_results = list(executor.map(square, [1, 2, 3]))
-
-with ProcessPoolExecutor() as executor:
-    process_results = list(executor.map(square, [1, 2, 3]))
-```
-
-**Interview answer:** Concurrency is overlapping tasks. Parallelism is simultaneous execution. The GIL limits CPU-bound
-Python threads but not processes.
-
-**Decision rule:** Use threads for blocking I/O, processes for CPU-heavy pure
-Python work, and async when you have many cooperative I/O tasks and async-capable
-libraries.
-
-## 45. Async Programming
-
-**Mental model:** Async code runs on an event loop. A coroutine gives control
-back to the loop at `await`, allowing other tasks to make progress.
-
-```python
-import asyncio
-
-
-async def fetch(identifier: int) -> str:
-    await asyncio.sleep(0.1)
-    return f"item-{identifier}"
-
-
-async def main() -> None:
-    results = await asyncio.gather(fetch(1), fetch(2))
-    print(results)
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
-
-Timeout:
-
-```python
-import asyncio
-
-
-async def work() -> str:
-    await asyncio.sleep(0.1)
-    return "done"
-
-
-async def run_with_timeout() -> str:
-    return await asyncio.wait_for(work(), timeout=1.0)
-```
-
-**Common mistake:** Calling blocking functions inside async code blocks the event loop.
-
-**Interview answer:** Async improves throughput for many I/O-bound tasks. It does
-not make CPU-heavy Python code faster by itself.
-
-## 46. Performance And Profiling
-
-**Mental model:** Measure before optimizing. Guessing often improves code that
-was not the bottleneck.
-
-```python
-from functools import lru_cache
-from timeit import timeit
-import cProfile
-import pstats
-import tracemalloc
-
-
-@lru_cache(maxsize=None)
-def fib(n: int) -> int:
-    if n < 2:
-        return n
-    return fib(n - 1) + fib(n - 2)
-
-
-print(timeit("sum(range(1000))", number=1000))
-```
-
-Profile command:
-
-```bash
-python -m cProfile -s cumulative script.py
-```
-
-Memory example:
-
-```python
-import tracemalloc
-
-tracemalloc.start()
-values = [number for number in range(1000)]
-print(tracemalloc.get_traced_memory())
-tracemalloc.stop()
-```
-
-**Performance note:** Algorithm choice usually matters more than micro-optimizations.
-
-**Interview answer:** Start with complexity, then profile real workloads, then
-optimize the hot path. Keep benchmark inputs realistic and add regression tests
-so performance fixes do not break correctness.
-
-## 47. Clean Python And Design Principles
-
-**Mental model:** Clean code is code another person can safely change. Names,
-small functions, explicit inputs, and tests matter more than cleverness.
-
-| Principle             | Practice                                        |
-|-----------------------|-------------------------------------------------|
-| DRY                   | Remove meaningful duplication                   |
-| KISS                  | Prefer simple functions                         |
-| YAGNI                 | Do not overbuild                                |
-| SOLID                 | Keep responsibilities focused                   |
-| Composition           | Inject dependencies instead of hard-coding them |
-| Defensive programming | Validate boundaries                             |
-
-```python
-def total_active_scores(records: list[dict[str, object]]) -> int:
-    total = 0
-    for record in records:
-        if record.get("active") is True:
-            total += int(record.get("score", 0))
-    return total
-```
-
-**Production note:** Clean code is testable, observable, explicit, and boring in the best possible way.
-
-**Common mistake:** Over-abstracting too early. Add an abstraction when it removes
-real duplication or clarifies a stable concept, not because two lines look
-similar today.
-
-## 48. Common Python Design Patterns
-
-**Mental model:** A pattern is a reusable solution shape. Python often expresses
-patterns with plain functions, protocols, context managers, decorators, or small
-classes.
-
-Factory:
-
-```python
-class JsonExporter:
-    def export(self) -> str:
-        return "{}"
-
-
-class CsvExporter:
-    def export(self) -> str:
-        return ""
-
-
-def create_exporter(kind: str) -> JsonExporter | CsvExporter:
-    if kind == "json":
-        return JsonExporter()
-    if kind == "csv":
-        return CsvExporter()
-    raise ValueError(f"unknown kind: {kind}")
-```
-
-Strategy:
-
-```python
-from collections.abc import Callable
-
-
-def apply_discount(price: float, strategy: Callable[[float], float]) -> float:
-    return strategy(price)
-```
-
-**Interview answer:** Patterns are tools, not trophies. Prefer simple Python unless a pattern removes real complexity.
-
-**Decision rule:** If a simple function solves the problem, use a function. Reach
-for a class or formal pattern only when state, interchangeable behavior, or
-lifecycle management is becoming hard to manage.
-
-## 49. Common Python Mistakes
-
-**How to use this section:** Each mistake is a signal to slow down and ask,
-"What object is being shared? What is being mutated? What is Python comparing?"
-
-| Mistake                              | Correct approach                                    |
-|--------------------------------------|-----------------------------------------------------|
-| Mutable defaults                     | Use `None` sentinel                                 |
-| Modifying collection while iterating | Build a new collection                              |
-| `is` vs `==`                         | Use `is` only for identity checks like `None`       |
-| Shadowing built-ins                  | Avoid names like `list`, `dict`, `file`             |
-| Broad ignored exceptions             | Catch specific exceptions                           |
-| Late-binding closures                | Bind values at definition time                      |
-| Shallow copy surprises               | Use `deepcopy` when nested data must be independent |
-| Direct float equality                | Use `math.isclose`                                  |
-| Threads for CPU-heavy work           | Use processes or native/vectorized libraries        |
-| Blocking async code                  | Use async clients or executors                      |
-
-Late-binding fix:
-
-```python
-functions = [lambda value=value: value for value in range(3)]
-print([function() for function in functions])
-```
-
-**Interview answer:** Many Python bugs come from misunderstanding names,
-mutability, scope, and iteration. Explain the underlying rule, not just the fix.
-
-## 50. Frequently Used Python Snippets
-
-Use these snippets as starting points, not magic spells. In an interview, explain
-why the snippet fits the problem before writing it.
-
-**Why this matters:** Snippets reduce typing and recall pressure, but they should
-not replace reasoning. Before using one, identify the input, output, failure
-cases, and the data structure that makes it appropriate.
-
-```python
-from collections import Counter, defaultdict
 from dataclasses import dataclass
-from pathlib import Path
-import json
-import logging
-import re
 
 
-def read_json(path: Path) -> dict[str, object]:
-    data = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(data, dict):
-        raise ValueError("expected JSON object")
-    return data
+@dataclass(eq=False)
+class TreeNode:
+    value: int
+    left: "TreeNode | None" = None
+    right: "TreeNode | None" = None
 
 
-def group_by_key(records: list[dict[str, str]], key: str) -> dict[str, list[dict[str, str]]]:
-    groups: dict[str, list[dict[str, str]]] = defaultdict(list)
-    for record in records:
-        groups[record[key]].append(record)
-    return dict(groups)
-
-
-@dataclass
-class User:
-    user_id: int
-    name: str
-
-
-logger = logging.getLogger(__name__)
-numbers = re.findall(r"\d+", "a1 b2")
-counts = Counter("banana")
+root = TreeNode(10, TreeNode(5), TreeNode(15, TreeNode(12)))
+assert root.left.value == 5
+assert root.right.value == 15
+assert root.right.left.value == 12
 ```
 
-| Snippet                       | Why it is useful                                                      |
-|-------------------------------|-----------------------------------------------------------------------|
-| `read_json`                   | Validates file data before the rest of the program trusts it.         |
-| `group_by_key`                | Uses `defaultdict` to group records without repetitive key checks.    |
-| `@dataclass`                  | Creates a small named data object with less boilerplate.              |
-| `logging.getLogger(__name__)` | Gives each module a logger that can be configured by the application. |
-| `re.findall`                  | Extracts repeated text patterns such as numbers, IDs, or tokens.      |
-| `Counter`                     | Turns frequency counting into one clear line.                         |
+**Find 12 by hand:** compare with 10 → larger, go right. Compare with 15 → smaller, go left. Reach 12 → found. We follow one path; we do not inspect every node. A general binary tree does not promise this ordering.
 
-pytest parameterization:
+**What do the references mean?** `root` refers to the first node we examine.
+Each node's `left` and `right` refer to child nodes; `None` means that child
+is absent. `current = root` gives us another reference to the same node, not a
+copy of the tree. Moving `current` to a child does not move `root`.
 
-Why this snippet exists: parameterization turns several nearly identical tests
-into one test definition with multiple cases. That makes edge cases easy to add
-without duplicating test logic.
+**Add 13 to this tree:** follow `10 → 15 → 12`. Since 13 is larger than 12,
+attach it as 12's right child:
 
 ```python
-import pytest
-
-
-@pytest.mark.parametrize("value,expected", [(1, False), (2, True)])
-def test_even(value: int, expected: bool) -> None:
-    assert (value % 2 == 0) is expected
+root.right.left.right = TreeNode(13)
+assert root.right.left.right.value == 13
 ```
-
-## 51. Python Interview Questions And Answers
-
-Use the table for quick review. In a real interview, expand each concise answer
-with one example and one trade-off.
-
-**Why this matters:** Short answers prove vocabulary. Expanded answers prove
-understanding. A strong candidate can define a term, show where it appears in
-code, and explain the trade-off.
-
-| Level        | Question                        | Concise answer                                                |
-|--------------|---------------------------------|---------------------------------------------------------------|
-| Beginner     | List vs tuple?                  | Lists are mutable; tuples are immutable.                      |
-| Beginner     | `is` vs `==`?                   | `is` checks identity; `==` checks equality.                   |
-| Beginner     | What is `None`?                 | A singleton object representing no value.                     |
-| Intermediate | What is a generator?            | A lazy iterator created by `yield` or a generator expression. |
-| Intermediate | What is a decorator?            | A callable that wraps another callable.                       |
-| Intermediate | What does a context manager do? | It guarantees setup and cleanup around `with`.                |
-| Advanced     | What is the GIL?                | CPython lock around bytecode execution.                       |
-| Advanced     | What is MRO?                    | The order Python uses to resolve attributes in inheritance.   |
-| Advanced     | What is a descriptor?           | Object controlling attribute access with descriptor methods.  |
-
-**Common incorrect answer:** "Python is never compiled." Better: source is compiled to bytecode, then executed by the
-VM.
-
-**Interview habit:** After a short definition, add a practical consequence. For
-example: "A generator is lazy, so it saves memory, but it is consumed after one
-pass."
-
-## 52. Data-Structure And Algorithm Interview Questions
-
-For each answer, be ready to draw the state change for a small input. Interviewers
-often care more about reasoning than memorized labels.
-
-| Topic       | Question                      | Strong answer                                          |
-|-------------|-------------------------------|--------------------------------------------------------|
-| Arrays      | Why use two pointers?         | To scan from both ends or maintain a window in O(n).   |
-| Hash tables | Why are dict lookups fast?    | Hashing maps keys to table positions, average O(1).    |
-| Stacks      | When use a stack?             | Matching parentheses, DFS, undo, monotonic problems.   |
-| Queues      | When use BFS?                 | Shortest path in unweighted graphs or level traversal. |
-| Heaps       | Top-K complexity?             | O(n log k) with a size-k heap.                         |
-| Tries       | Prefix search complexity?     | O(k), where k is prefix length.                        |
-| Graphs      | DFS vs BFS?                   | DFS explores depth; BFS explores levels.               |
-| DP          | When use dynamic programming? | Overlapping subproblems plus optimal substructure.     |
-
-**Interview habit:** State time and space complexity after the algorithm, and
-include what `n`, `k`, `V`, or `E` means.
-
-## 53. pytest Interview Questions
-
-pytest interview answers should connect testing tools to risk reduction: clearer
-failures, repeatable setup, edge cases, and regression protection.
-
-| Question                        | Interview answer                                                                  |
-|---------------------------------|-----------------------------------------------------------------------------------|
-| How does pytest discover tests? | It finds `test_*.py` files and `test_*` functions/classes by convention.          |
-| What is a fixture?              | A reusable setup object injected into tests by name.                              |
-| What is `conftest.py`?          | A place for shared fixtures and pytest hooks.                                     |
-| Why parameterize?               | To run the same test logic over many cases.                                       |
-| What is monkeypatch for?        | Safely changing attributes, dicts, environment variables, or paths during a test. |
-| What should not be mocked?      | The function under test, simple data objects, or behavior better tested directly. |
-| Why can coverage mislead?       | Lines can execute without meaningful assertions.                                  |
-
-**Interview habit:** When asked about testing, include one example of a bad test
-and how you would improve it.
-
-## 54. Scenario-Based Interview Preparation
-
-Scenario questions test diagnosis. A strong answer gives an immediate mitigation,
-a root-cause investigation plan, and a prevention step.
-
-| Scenario                             | Strong response                                                              |
-|--------------------------------------|------------------------------------------------------------------------------|
-| Program slows as data grows          | Identify complexity, profile, replace O(n²) patterns, add benchmarks.        |
-| Memory keeps increasing              | Use `tracemalloc`, check caches/globals/open resources/reference cycles.     |
-| Large file cannot fit memory         | Stream line by line or chunk data.                                           |
-| Dict key raises `TypeError`          | Key is unhashable, such as list or dict. Use tuple/frozenset or a stable ID. |
-| List modification skips elements     | Do not mutate during iteration; build a filtered list.                       |
-| Mock not intercepting call           | Patch where the dependency is looked up.                                     |
-| Async app is blocked                 | Locate blocking calls in event loop. Use async client or executor.           |
-| Threads produce inconsistent results | Shared state race; use locks, queues, or immutable messages.                 |
-| Recursion limit exceeded             | Check base case, convert to iterative, or use explicit stack.                |
-| Tests pass alone but fail together   | Shared state, order dependency, time, temp files, or global mocks.           |
-
-**Answer pattern:** "First I would reproduce it, then isolate the smallest case,
-then inspect the likely state/resource boundary, then add a regression test after
-the fix."
-
-## 55. Runnable Practice Projects
-
-Each project below is intentionally small but complete enough to build and test.
-
-**How to practice:** Build each project in small commits. Write one failing test,
-make it pass, then refactor. Keep a short README explaining how to run it.
-
-### Project 1: Command-Line Contact Manager
-
-Structure:
 
 ```text
-contact_manager/
-├── contacts.py
-└── test_contacts.py
+         10
+        /  \
+       5    15
+           /
+          12
+            \
+             13
 ```
 
-Source:
+This shortcut assumes the pictured tree and an empty child slot. Assigning to
+an occupied slot would replace that link and could disconnect an entire subtree.
+For an arbitrary tree, follow comparisons until an empty slot is found:
 
 ```python
-import json
-from pathlib import Path
+def insert(root: TreeNode | None, value: int) -> TreeNode:
+    if root is None:
+        return TreeNode(value)
+    current = root
+    while True:
+        if value == current.value:
+            return root  # This example ignores duplicate values.
+        if value < current.value:
+            if current.left is None:
+                current.left = TreeNode(value)
+                return root
+            current = current.left
+        else:
+            if current.right is None:
+                current.right = TreeNode(value)
+                return root
+            current = current.right
 
 
-def load_contacts(path: Path) -> dict[str, str]:
-    if not path.exists():
-        return {}
-    data = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(data, dict):
-        raise ValueError("contacts must be a JSON object")
-    return {str(key): str(value) for key, value in data.items()}
-
-
-def save_contacts(path: Path, contacts: dict[str, str]) -> None:
-    path.write_text(json.dumps(contacts, indent=2), encoding="utf-8")
-
-
-def add_contact(contacts: dict[str, str], name: str, email: str) -> dict[str, str]:
-    updated = contacts.copy()
-    updated[name] = email
-    return updated
+root = insert(root, 18)
+assert root.right.right.value == 18
+empty_tree = insert(None, 7)
+assert empty_tree.value == 7
 ```
 
-Tests:
+Keep the returned `root`, especially when inserting into an empty tree.
+Attaching a child at a known empty slot is O(1); finding its correct slot takes
+O(h) time. This iterative insertion uses O(1) working space, plus the new node.
+It does not rebalance the tree. There is no single tail: a tree can have many leaves.
 
-```python
-from pathlib import Path
+**Useful for:** ordered lookup, range queries, and keeping keys searchable in sorted order. A self-balancing implementation is needed for reliable logarithmic operation costs. A dict is a hash table: insertion order does not make it a search tree.
 
+**Costs:** search/insert/delete take O(h), where h is tree height. A balanced tree has O(log n) height; a chain-shaped tree can have O(n) height. Node storage is O(n). The insertion above follows this O(h) bound; it does not implement deletion or balancing.
 
-def test_add_contact() -> None:
-    assert add_contact({}, "Ada", "ada@example.com") == {"Ada": "ada@example.com"}
+### Graph: a map of connections
 
-
-def test_save_and_load(tmp_path: Path) -> None:
-    path = tmp_path / "contacts.json"
-    save_contacts(path, {"Ada": "ada@example.com"})
-    assert load_contacts(path) == {"Ada": "ada@example.com"}
-```
-
-Run:
-
-```bash
-pytest
-```
-
-### Project 2: Log-File Analyzer
-
-```python
-from collections import Counter
-from pathlib import Path
-from collections.abc import Iterator
-
-
-def log_levels(path: Path) -> Iterator[str]:
-    with path.open(encoding="utf-8") as file_obj:
-        for line in file_obj:
-            if "ERROR" in line:
-                yield "ERROR"
-            elif "WARN" in line:
-                yield "WARN"
-            elif "INFO" in line:
-                yield "INFO"
-
-
-def summarize_logs(path: Path) -> Counter[str]:
-    return Counter(log_levels(path))
-```
-
-```python
-from pathlib import Path
-
-
-def test_summarize_logs(tmp_path: Path) -> None:
-    path = tmp_path / "app.log"
-    path.write_text("INFO start\nERROR fail\nERROR fail2\n", encoding="utf-8")
-    assert summarize_logs(path)["ERROR"] == 2
-```
-
-### Project 3: Data-Structure Library
-
-Implement `Stack`, `Queue`, linked list reversal, heap helper, and graph BFS from sections 29 and 31. Test each
-operation with empty, one-item, and many-item inputs.
-
-Learning goal: explain each data structure by its operations and complexity, not
-by its implementation details alone.
-
-### Project 4: Algorithm-Practice Package
-
-Implement binary search, merge sort, two sum, sliding window, top-K frequent values, tree traversal, graph traversal,
-and dynamic programming problems. Use `pytest.mark.parametrize` for edge cases.
-
-Learning goal: practice recognizing problem patterns and stating brute force,
-optimized approach, time complexity, and space complexity.
-
-### Project 5: Concurrent File Processor
-
-Use `ThreadPoolExecutor` for I/O-bound file reads, log failures, and compare runtime with sequential processing. Add
-tests with `tmp_path`.
-
-Learning goal: understand why threads help blocking I/O, how to collect results,
-and how to report partial failures safely.
-
-## 56. Quick-Revision Sheets
-
-Use this section the day before an interview. If any line feels unfamiliar, jump
-back to the full section and run the example.
-
-**Why this matters:** Quick revision should trigger memory, not replace learning.
-If a quick note feels vague, that is a signal to practice the full example again.
-
-Core syntax:
-
-```python
-name = "Ada"
-values = [1, 2, 3]
-result = [value * 2 for value in values if value > 1]
-```
-
-Collections:
+**Picture:** rooms joined by corridors. A room can have many neighbors, and routes can form cycles. A dictionary maps each room to a list of adjacent rooms.
 
 ```text
-list: ordered, mutable, duplicates
-tuple: ordered, immutable, duplicates
-set: unordered, mutable, unique
-dict: insertion-ordered mapping
-deque: fast both-end operations
+Entrance — Library — Lab
 ```
 
-Complexities:
+```python
+graph = {
+    "Entrance": ["Library"],
+    "Library": ["Entrance", "Lab"],
+    "Lab": ["Library"],
+}
+
+assert graph["Entrance"] == ["Library"]
+assert "Lab" in graph["Library"]
+assert "Lab" not in graph["Entrance"]  # Not directly connected.
+```
+
+Read `graph["Library"]` as “where can I go in one move from Library?” Both directions are stored because these corridors are two-way. In a directed graph, A → B does not automatically imply B → A.
+
+**Add a room and a two-way connection:** create the room's neighbor list,
+then record the corridor at both ends.
+
+```python
+graph["Cafe"] = []  # A new room with no connections yet.
+graph["Lab"].append("Cafe")
+graph["Cafe"].append("Lab")
+
+assert graph["Lab"] == ["Library", "Cafe"]
+assert graph["Cafe"] == ["Lab"]
+```
 
 ```text
-dict/set lookup: O(1) average
-list membership: O(n)
-sort: O(n log n)
-binary search: O(log n)
-BFS/DFS: O(V + E)
+Entrance — Library — Lab — Cafe
 ```
 
-pytest:
+`neighbors = graph["Lab"]` refers to the actual stored list. Changing that list through
+this reference changes the graph too:
 
-```bash
-pytest
-pytest -v
-pytest -k "name"
-pytest --cov=src
+```python
+neighbors = graph["Lab"]
+assert neighbors is graph["Lab"]
+
+# Remove the same two-way corridor at both ends.
+neighbors.remove("Cafe")
+graph["Cafe"].remove("Lab")
+assert graph["Cafe"] == []  # The room remains, now isolated.
 ```
 
-Top interview traps:
+Removing only one side would leave inconsistent two-way connections. For a
+one-way corridor, store only the outgoing connection. Neighbor lists permit
+duplicates, so repeated `append` calls can store the same corridor twice.
+Use sets if each connection should occur only once.
 
-1. Mutable default arguments.
-2. `is` vs `==`.
-3. Modifying a list while iterating.
-4. Forgetting `return`.
-5. Overusing broad exceptions.
-6. Using list membership for repeated lookups.
-7. Blocking inside async code.
-8. Shallow-copy surprises.
-9. Timezone-naive datetimes.
-10. Over-mocking tests.
+Adding a new room is average O(1); each list append is amortized O(1).
+Removing a neighbor from a list takes O(d), including finding it and shifting
+remaining references. A graph has no universal head or tail; a traversal chooses
+its starting room.
+
+**Useful for:** routes, social connections, dependencies, and networks. The structure stores connections; BFS, DFS, and shortest-path algorithms decide how to explore them.
+
+**Costs:** an adjacency list uses O(V + E) space for V rooms and E connections. Retrieving a room's list is average O(1); checking whether a neighbor is in that list takes O(d), where d is the room's number of neighbors. Undirected edges appear twice, which does not change the Big O bound.
+
+If repeated edge-membership checks dominate, a neighbor **set** offers average O(1) membership, but no guaranteed iteration order or duplicate edges. An adjacency matrix offers O(1) edge lookup at O(V²) storage. Representation changes the costs.
+
+### Trie: words share their starting letters
+
+**Picture:** store `car` and `cat` by sharing the path `c → a`, then branching at the final letter. A trie is a prefix tree.
+
+```text
+(root)
+   c
+   a          "ca" is a prefix, not a stored whole word.
+  / \
+ r   t        "car" and "cat" are complete words.
+```
+
+A small trie can be represented with nested dictionaries. Each one-character key leads to a child. The special `_end` key marks a complete word; it is metadata, not a letter to follow.
+
+```python
+trie = {
+    "c": {
+        "a": {
+            "r": {"_end": True},
+            "t": {"_end": True},
+        }
+    }
+}
+
+prefix_node = trie["c"]["a"]
+assert not prefix_node.get("_end", False)  # "ca" is not a complete word.
+assert prefix_node["r"]["_end"]           # "car" is stored.
+assert prefix_node["t"]["_end"]           # "cat" is stored.
+assert "n" not in prefix_node              # No "can" path.
+```
+
+**Add the word `can`:** reuse `c → a` and create only the missing `n` branch.
+
+```python
+node = trie  # Start at the root dictionary.
+for letter in "can":
+    node = node.setdefault(letter, {})
+node["_end"] = True
+
+assert trie["c"]["a"]["n"]["_end"]
+assert prefix_node["n"] is node  # The earlier reference sees the new branch.
+```
+
+`setdefault(letter, {})` returns the existing child dictionary if the letter is
+present; otherwise it stores and returns a new empty child. Assigning that result
+to `node` moves our reference one level down. The root `trie` stays in place.
+
+```text
+(root) → c → a
+            /|\
+           r t n     car, cat, can are complete words.
+```
+
+**Store `ca` as a word too:** marking its existing node does not remove children.
+
+```python
+prefix_node["_end"] = True
+assert trie["c"]["a"]["_end"]        # "ca" is now a complete word.
+assert trie["c"]["a"]["r"]["_end"]   # "car" is still stored.
+
+# Stop treating "ca" as a whole word, but keep its longer words.
+prefix_node.pop("_end")
+assert not prefix_node.get("_end", False)
+assert prefix_node["n"]["_end"]        # "can" is still stored.
+```
+
+Deleting `trie["c"]["a"]` instead would remove the entire branch containing
+`car`, `cat`, and `can`. The end marker is essential: having a path for a prefix
+does not by itself mean that the prefix is a stored word.
+
+**Useful for:** autocomplete and prefix queries. To look up the prefix `ca`, follow two letters; its descendants hold possible completions. If you also store the word `ca`, mark `_end` at that node without removing the longer words.
+
+**Costs:** following/inserting a word of k characters takes average O(k) dictionary operations. The insertion loop uses O(1) working space and creates up to O(k) new nodes; an already stored word reuses its path. Locating a prefix is not the same as listing every completion: enumerating them adds work proportional to what is explored and returned. Storage is O(P) for P distinct nonempty prefixes, plus the root; in the worst case P grows with the total characters stored.
+
+### Union-find: keep track of connected groups
+
+**Why do we need it?** Suppose a company keeps connecting offices with cables.
+After each new cable, we want to ask: **“Can office A communicate with office D,
+even through other offices?”** Union-find remembers which offices belong to the
+same connected group, so we can answer without searching the cable network again.
+It is also called a **disjoint-set structure**.
+
+**One example, step by step:**
+
+```text
+Action             Actual cables       Connected groups
+Start              A   B   C   D       {A} {B} {C} {D}
+Connect A to B     A — B   C   D       {A, B} {C} {D}
+Connect C to D     A — B   C — D       {A, B} {C, D}
+Connect B to C     A — B — C — D       {A, B, C, D}
+```
+
+Before the last connection, A cannot reach D. After it, A can reach D through
+B and C. **A direct-cable check would miss this indirect connection.**
+
+Union-find has two operations:
+
+| Operation | Meaning |
+|---|---|
+| `union(a, b)` | Merge the groups containing a and b when a connection is added |
+| `find(x)` | Return a representative that identifies x's current group |
+
+Compare `find(a) == find(b)` to check whether two offices belong to the same group.
+
+**Runnable Python example:** a dictionary stores parent links using office names.
+
+```python
+parent = {office: office for office in "ABCD"}
+
+
+def find(office: str) -> str:
+    while parent[office] != office:
+        office = parent[office]
+    return office
+
+
+def union(a: str, b: str) -> None:
+    root_a = find(a)
+    root_b = find(b)
+    if root_a != root_b:
+        parent[root_b] = root_a
+
+
+union("A", "B")              # Groups: {A, B}, {C}, {D}
+union("C", "D")              # Groups: {A, B}, {C, D}
+assert find("A") != find("D")  # A cannot reach D yet.
+
+union("B", "C")              # Groups: {A, B, C, D}
+assert find("A") == find("D")  # A can now reach D.
+
+# Proposed extra cable A—D: are its endpoints already connected?
+assert find("A") == find("D")  # Yes: adding it would create a cycle.
+```
+
+**How does it remember groups?** Each group has a representative, or **root**.
+A root points to itself; other members follow parent links to reach it.
+For this code, the dictionary changes as follows:
+
+```text
+After A—B and C—D:  {"A": "A", "B": "A", "C": "C", "D": "C"}
+After B—C:          {"A": "A", "B": "A", "C": "A", "D": "C"}
+
+find("D") follows D → C → A and returns "A".
+find("A") returns "A" too: same representative, same group.
+```
+
+During `union("B", "C")`, B's root is A and C's root is C. Setting
+`parent["C"] = "A"` joins the entire C/D group to the A/B group. Always link
+**roots**, rather than changing an arbitrary member's parent.
+These parent links record group membership; they do not record the actual cables.
+The representative is just an internal group label and can change after a merge.
+
+**When is it useful?** Many connectivity checks as connections are added, or
+checking whether a proposed edge would create a cycle in an undirected graph.
+For one small connectivity question, a BFS/DFS graph search may be enough.
+Use a graph search to find the actual route. Basic union-find does not efficiently
+handle removing connections and splitting groups.
+
+**Costs:** this simple version has O(n) worst-case time per find/union, O(1)
+working space per call, and O(n) total storage and initialization time.
+With **path compression** (shorten parent paths) and **union by size/rank**
+(keep trees shallow), operations take amortized O(α(n)) time—effectively constant
+for practical inputs. See the [algorithms notebook](../../dsa/python_algorithms_notebook.md)
+for the optimized implementation.
+
+### Choose the relationship before the algorithm
+
+| What you need to represent | Start with |
+|---|---|
+| A chain of successors | Linked nodes |
+| Keys arranged for ordered search | A balanced search tree |
+| Arbitrary connections between items | A graph |
+| Shared text prefixes | A trie |
+| Groups that repeatedly merge | Union-find |
+
+**Practice aloud:** “Can Library connect to several rooms?” Graph. “Can `car` and `cat` share storage for `ca`?” Trie. “Can offices A and D communicate?” Union-find. The question you need to answer guides the structure you choose.
+
+For complete reversal, traversal, union-find, and shortest-path implementations, use the [algorithms notebook](../../dsa/python_algorithms_notebook.md). This section focuses on what is stored and small updates; the notebook develops the complete algorithms.
+
+## 15. Quick revision and interview practice
+
+| Question | Say this, then give an example |
+|---|---|
+| List or tuple? | List for a changing sequence; tuple for fixed references. Both can contain mutable objects |
+| List or set? | List for positions/order/duplicates; set for uniqueness and average O(1) membership |
+| Dict order? | Insertion order, not automatic key/value sorting |
+| Dict membership? | `key in mapping` checks keys; searching values is generally O(n) |
+| Can a tuple be a key? | Only if every contained element is hashable |
+| Can a frozen dataclass be a key? | With the normal generated hash, only if all hashed fields are hashable |
+| Queue or heap? | Queue serves arrival order; heap serves the smallest priority |
+| Does an in-place change mean O(1) memory? | No; list sorting can use O(n) temporary workspace |
+| What does a shallow copy share? | The nested objects, not the outer container |
+| List or generator? | Reusable indexed results versus one-pass lazy production |
+
+**Practice by choosing and explaining:**
+
+1. Find student records by ID: use a dictionary; keep IDs hashable and stable.
+2. Remember unique visitor IDs: use a set; sort a result list only when ordered output is needed.
+3. Process every submitted job in arrival order: use an unbounded deque, not a bounded history deque that discards jobs.
+4. Keep the most recent ten readings: use `deque(maxlen=10)`.
+5. Count events by category: use `Counter`; group actual records using `defaultdict(list)`.
+6. Repeatedly process the smallest deadline/priority: use a heap; include a tie-breaker for non-comparable payloads.
+
+For each answer, say what order/duplicates/mutation are allowed, which operation dominates, and its time/memory cost. Use [the algorithms notebook](../../dsa/python_algorithms_notebook.md) to practice combining these structures into solutions.
+
+References: Python's [built-in types](https://docs.python.org/3.11/library/stdtypes.html), [collections](https://docs.python.org/3.11/library/collections.html), [heapq](https://docs.python.org/3.11/library/heapq.html), [bisect](https://docs.python.org/3.11/library/bisect.html), and [dataclasses](https://docs.python.org/3.11/library/dataclasses.html).

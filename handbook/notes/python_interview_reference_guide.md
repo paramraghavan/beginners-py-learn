@@ -1,25 +1,7 @@
 # Python Interview Tutorial And Reference Guide
 
-A Python refresher for coding assessments and technical interviews, examples target Python 3.11+; 
-
-**How to use this guide**
-
-| Need | Use |
-|---|---|
-| Fast refresher | Read the quick snippets and cheat-sheet sections. |
-| Interview prep | Focus on sections about patterns, problems, questions, and scenarios. |
-| Daily reference | Use the examples as copy-ready starting points. |
-| Deep learning | Work through the beginner and advanced learning paths. |
-
-**Callouts**
-
-| Label | Meaning |
-|---|---|
-| **Tutorial note** | Practical explanation or learning guidance. |
-| **Interview answer** | Short answer you can say aloud in an interview. |
-| **Deeper explanation** | Extra context for follow-up questions. |
-| **Common mistake** | Pitfall to avoid. |
-| **Production note** | Guidance for real applications. |
+A Python refresher for coding assessments and technical interviews, examples target Python 3.11+;
+For collection-specific behavior and operation costs, use the [Python data-structures handbook](python_data_structures_interview_handbook.md). For algorithm walkthroughs, use the [Python algorithms notebook](../../dsa/python_algorithms_notebook.md).
 
 ## Table Of Contents
 
@@ -642,18 +624,20 @@ project/
 
 ## 13. File Handling
 
-Use `pathlib`:
+Use `pathlib` and context managers.
+
+**Mental model:** Opening a file creates an external resource. A context manager
+closes it reliably, even if an exception happens while reading or writing.
 
 ```python
 from pathlib import Path
 
 
-path = Path("data/input.txt")
-if path.exists():
-    text = path.read_text(encoding="utf-8")
+def read_text(path: Path) -> str:
+    return path.read_text(encoding="utf-8")
 ```
 
-Write JSON:
+JSON:
 
 ```python
 import json
@@ -664,7 +648,47 @@ def write_json(path: Path, payload: dict[str, object]) -> None:
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 ```
 
-Read CSV:
+Usage example:
+
+```python
+import json
+from pathlib import Path
+
+
+def save_tasks(path: Path, tasks: list[dict[str, object]]) -> None:
+    text = json.dumps(tasks, indent=2)
+    path.write_text(text, encoding="utf-8")
+
+
+def load_tasks(path: Path) -> list[dict[str, object]]:
+    if not path.exists():
+        return []
+    text = path.read_text(encoding="utf-8")
+    data = json.loads(text)
+    if not isinstance(data, list):
+        raise ValueError("tasks file must contain a JSON list")
+    return data
+
+
+tasks_file = Path("tasks.json")
+
+save_tasks(
+    tasks_file,
+    [
+        {"title": "review notes", "done": False},
+        {"title": "practice pytest", "done": True},
+    ],
+)
+
+tasks = load_tasks(tasks_file)
+print(tasks[0]["title"])  # review notes
+```
+
+This pattern is useful for beginner projects such as contact managers, todo
+lists, small settings files, and command-line tools. JSON is readable by humans
+and can be shared with many other languages.
+
+CSV:
 
 ```python
 import csv
@@ -676,7 +700,75 @@ def read_csv(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(file_obj))
 ```
 
-Process large files line by line:
+Large file:
+
+```python
+from pathlib import Path
+from collections.abc import Iterator
+
+
+def lines_containing(path: Path, marker: str) -> Iterator[str]:
+    with path.open(encoding="utf-8") as file_obj:
+        for line in file_obj:
+            if marker in line:
+                yield line.rstrip()
+```
+
+**Production note:** Do not unpickle untrusted data. Pickle can execute code during loading.
+
+**Why?** A pickle can store instructions to call a function while reconstructing
+an object. This harmless example saves those instructions in a real file:
+
+```python
+import pickle
+
+
+class Demo:
+    def __reduce__(self):
+        # Return a function and its arguments for reconstruction.
+        return (print, ("2. print() was called inside pickle.load()!",))
+
+
+with open("demo.pkl", "wb") as file:
+    pickle.dump(Demo(), file)
+
+print("1. File saved; the recorded print() has not run yet.")
+
+with open("demo.pkl", "rb") as file:
+    result = pickle.load(file)  # Calls the print function recorded in the file.
+
+print("3. Loading returned:", result)  # print() returns None.
+```
+
+Output:
+
+```text
+1. File saved; the recorded print() has not run yet.
+2. print() was called inside pickle.load()!
+3. Loading returned: None
+```
+
+**What happened?** `pickle.dump()` calls the special `__reduce__()` hook to obtain
+a function and its argument tuple, then records how to reconstruct the object.
+During `pickle.load()`, Python calls that recorded function—in this case,
+built-in `print`. Its return value becomes `result`, which is why the result is
+`None` rather than a new `Demo` instance.
+
+`__reduce__` is a recognized special-method name; an ordinary method named
+`reduce()` does not act as this hook. Other hooks include `__reduce_ex__()` and
+`__setstate__()`, and pickle instructions can call functions without the file's
+creator defining these methods. Avoiding `__reduce__()` does not make loading safe.
+
+A malicious file could call a harmful function with your program's permissions.
+The call happens **before loading returns**, so checking the returned object's
+type afterward is too late. Only unpickle trusted, untampered data; prefer JSON
+for ordinary data exchange and validate its structure and values.
+
+**Interview answer:** For text files, always be explicit about encoding. For
+large files, stream line by line instead of calling `read_text()` on the whole
+file. For portable structured data, prefer JSON or CSV before pickle.
+
+### Count matching lines while streaming
 
 ```python
 from pathlib import Path
@@ -1015,7 +1107,7 @@ Repeated lookups: build `seen = set(values)` once in O(n) time and O(n) space. W
 
 Count hidden work: `sum(values[left:right])` takes O(right-left) time and creates a slice. Use a rolling sum or prefix sums for repeated queries. Nested loops are not automatically O(n²): count total iterations. Include recursion depth and copies in space complexity.
 
-For full patterns and worked examples, see [sections 30–35 of the handbook](python_data_structures_interview_handbook.md#30-algorithm-complexity).
+For full patterns and worked examples, see [the Python algorithms notebook](../../dsa/python_algorithms_notebook.md).
 
 ## 24. Sorting And Searching
 
@@ -1230,6 +1322,242 @@ def sample_user() -> dict[str, str]:
 ```
 
 Mock external systems, time, random values, network calls, and slow dependencies. Do not mock the code path you are trying to verify.
+
+### pytest Fundamentals
+
+Test discovery finds files named `test_*.py` or `*_test.py` and functions named `test_*`.
+
+**Mental model:** A test is executable documentation. It should show what the
+code promises to do.
+
+```python
+def add(left: int, right: int) -> int:
+    return left + right
+
+
+def test_add() -> None:
+    assert add(2, 3) == 5
+```
+
+Commands:
+
+```bash
+pytest
+pytest -v
+pytest tests/test_algorithms.py
+pytest -k "binary_search"
+pytest -m "slow"
+```
+
+**Testing note:** Plain `assert` is preferred in pytest because pytest rewrites assertions to show useful failure
+details.
+
+**Common mistake:** Testing only the happy path. Add edge cases, invalid input,
+and regression cases for bugs you fixed.
+
+### pytest Fixtures
+
+**Mental model:** A fixture is reusable setup. pytest injects it into a test by
+matching the fixture name to a test parameter.
+
+```python
+from pathlib import Path
+import pytest
+
+
+@pytest.fixture
+def sample_numbers() -> list[int]:
+    return [1, 2, 3]
+
+
+def test_sum(sample_numbers: list[int]) -> None:
+    assert sum(sample_numbers) == 6
+
+
+@pytest.fixture
+def data_file(tmp_path: Path) -> Path:
+    path = tmp_path / "data.txt"
+    path.write_text("hello", encoding="utf-8")
+    return path
+```
+
+Yield fixture:
+
+```python
+import pytest
+
+
+@pytest.fixture
+def resource():
+    value = {"open": True}
+    yield value
+    value["open"] = False
+```
+
+Fixture scopes include `function`, `class`, `module`, `package`, and `session`.
+
+**Decision rule:** Keep fixture scope as small as practical. Wider scopes can
+speed up tests but make shared-state bugs easier to create.
+
+### pytest Parameterization And Markers
+
+**Mental model:** Parameterization lets one test body cover many examples. This
+keeps test logic in one place while making cases explicit.
+
+```python
+import sys
+import pytest
+
+
+@pytest.mark.parametrize(
+    "value,expected",
+    [(1, False), (2, True), (3, False)],
+    ids=["one", "two", "three"],
+)
+def test_even(value: int, expected: bool) -> None:
+    assert (value % 2 == 0) is expected
+
+
+@pytest.mark.skip(reason="example skip")
+def test_skipped() -> None:
+    assert False
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="not for Windows")
+def test_non_windows() -> None:
+    assert True
+
+
+@pytest.mark.xfail(reason="known bug being fixed")
+def test_expected_failure() -> None:
+    assert False
+```
+
+**Testing note:** Use `xfail` for known, tracked defects. Do not use it to hide unexplained failures.
+
+**Interview answer:** Use parameterization when behavior should be the same shape
+across many inputs. Use markers to select, skip, or label tests intentionally.
+
+### Mocking And Patching
+
+**Mental model:** Mock external behavior, not the logic you are trying to test.
+Good mocks isolate slow, random, expensive, or network-dependent boundaries.
+
+```python
+from unittest.mock import Mock, patch
+
+
+def send_message(client, text: str) -> bool:
+    response = client.send(text)
+    return response == "ok"
+
+
+def test_send_message() -> None:
+    client = Mock()
+    client.send.return_value = "ok"
+    assert send_message(client, "hello") is True
+    client.send.assert_called_once_with("hello")
+```
+
+Patch where dependency is looked up:
+
+```python
+from unittest.mock import patch
+
+
+def get_username() -> str:
+    import os
+    return os.getenv("USER", "unknown")
+
+
+def test_get_username() -> None:
+    with patch("os.getenv", return_value="Ada"):
+        assert get_username() == "Ada"
+```
+
+**Testing note:** Prefer dependency injection over excessive patching. Do not mock simple value objects or the function
+under test.
+
+**Common mistake:** Patch where the dependency is imported or looked up by the
+code under test, not necessarily where it was originally defined.
+
+### Testing Exceptions, Files, Classes, And APIs
+
+**Mental model:** A good test checks both success and failure contracts. If your
+function promises to reject invalid input, that rejection deserves a test.
+
+```python
+import os
+from pathlib import Path
+import pytest
+
+
+def parse_positive(text: str) -> int:
+    value = int(text)
+    if value <= 0:
+        raise ValueError("must be positive")
+    return value
+
+
+def test_parse_positive_error() -> None:
+    with pytest.raises(ValueError, match="positive"):
+        parse_positive("-1")
+
+
+def test_tmp_path(tmp_path: Path) -> None:
+    path = tmp_path / "sample.txt"
+    path.write_text("hello", encoding="utf-8")
+    assert path.read_text(encoding="utf-8") == "hello"
+
+
+def test_environment(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("APP_ENV", "test")
+    assert os.getenv("APP_ENV") == "test"
+```
+
+Capture output:
+
+```python
+def greet() -> None:
+    print("hello")
+
+
+def test_greet(capsys) -> None:
+    greet()
+    captured = capsys.readouterr()
+    assert captured.out == "hello\n"
+```
+
+**Testing note:** `tmp_path`, `monkeypatch`, `capsys`, and `pytest.raises` cover
+many real-world tests without touching the user's machine or global environment.
+
+### Test Design And Quality
+
+**Mental model:** Tests should fail for the reason a user would care about. Avoid
+tests that simply repeat implementation details.
+
+| Test type   | Purpose                              |
+|-------------|--------------------------------------|
+| Unit        | Small isolated behavior              |
+| Integration | Multiple components working together |
+| End-to-end  | User-level workflow                  |
+| Regression  | Prevent a bug from returning         |
+| Negative    | Invalid/error behavior               |
+
+Arrange-Act-Assert:
+
+```python
+def test_discount() -> None:
+    price = 100.0
+    discounted = price * 0.9
+    assert discounted == 90.0
+```
+
+**Testing note:** High coverage does not guarantee good tests. Tests must assert meaningful behavior and edge cases.
+
+**Interview answer:** A strong test suite includes normal cases, boundaries,
+invalid inputs, and regression tests. It avoids depending on test order or shared
+mutable state.
 
 ---
 
@@ -1769,7 +2097,7 @@ assert max_sum_window([-5, -2, -3], 2) == -5
 
 O(n) time; the initial slice uses O(size) temporary space. Do not initialize the best sum to 0: all-negative inputs still have a negative answer. Variable-size sum windows that shrink when the sum is too large generally require nonnegative values.
 
-For prefix sums, unweighted shortest paths (BFS), and variable-size windows, see the [worked patterns](python_data_structures_interview_handbook.md#34-common-coding-interview-patterns).
+For prefix sums, unweighted shortest paths (BFS), and variable-size windows, see the [worked patterns in the algorithms notebook](../../dsa/python_algorithms_notebook.md#part-3-work-with-consecutive-items-and-ranges).
 
 ---
 
@@ -2036,6 +2364,128 @@ Practice rhythm: read one concept, type the example, change it, break it, fix it
 | SQLite application | SQL, transactions | CRUD | data-access layer |
 | Async API collector | asyncio | gather calls | cancellation/timeouts |
 | Tested package | packaging, pytest | local install | CI and type checking |
+
+### Runnable examples
+
+Each project below is intentionally small but complete enough to build and test.
+
+**How to practice:** Build each project in small commits. Write one failing test,
+make it pass, then refactor. Keep a short README explaining how to run it.
+
+#### Project 1: Command-Line Contact Manager
+
+Structure:
+
+```text
+contact_manager/
+├── contacts.py
+└── test_contacts.py
+```
+
+Source:
+
+```python
+import json
+from pathlib import Path
+
+
+def load_contacts(path: Path) -> dict[str, str]:
+    if not path.exists():
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError("contacts must be a JSON object")
+    return {str(key): str(value) for key, value in data.items()}
+
+
+def save_contacts(path: Path, contacts: dict[str, str]) -> None:
+    path.write_text(json.dumps(contacts, indent=2), encoding="utf-8")
+
+
+def add_contact(contacts: dict[str, str], name: str, email: str) -> dict[str, str]:
+    updated = contacts.copy()
+    updated[name] = email
+    return updated
+```
+
+Tests:
+
+```python
+from pathlib import Path
+
+
+def test_add_contact() -> None:
+    assert add_contact({}, "Ada", "ada@example.com") == {"Ada": "ada@example.com"}
+
+
+def test_save_and_load(tmp_path: Path) -> None:
+    path = tmp_path / "contacts.json"
+    save_contacts(path, {"Ada": "ada@example.com"})
+    assert load_contacts(path) == {"Ada": "ada@example.com"}
+```
+
+Run:
+
+```bash
+pytest
+```
+
+#### Project 2: Log-File Analyzer
+
+```python
+from collections import Counter
+from pathlib import Path
+from collections.abc import Iterator
+
+
+def log_levels(path: Path) -> Iterator[str]:
+    with path.open(encoding="utf-8") as file_obj:
+        for line in file_obj:
+            if "ERROR" in line:
+                yield "ERROR"
+            elif "WARN" in line:
+                yield "WARN"
+            elif "INFO" in line:
+                yield "INFO"
+
+
+def summarize_logs(path: Path) -> Counter[str]:
+    return Counter(log_levels(path))
+```
+
+```python
+from pathlib import Path
+
+
+def test_summarize_logs(tmp_path: Path) -> None:
+    path = tmp_path / "app.log"
+    path.write_text("INFO start\nERROR fail\nERROR fail2\n", encoding="utf-8")
+    assert summarize_logs(path)["ERROR"] == 2
+```
+
+#### Project 3: Data-Structure Library
+
+Implement `Stack`, `Queue`, linked list reversal, heap helper, and graph BFS using the data-structures handbook and algorithms notebook. Test each
+operation with empty, one-item, and many-item inputs.
+
+Learning goal: explain each data structure by its operations and complexity, not
+by its implementation details alone.
+
+#### Project 4: Algorithm-Practice Package
+
+Implement binary search, merge sort, two sum, sliding window, top-K frequent values, tree traversal, graph traversal,
+and dynamic programming problems. Use `pytest.mark.parametrize` for edge cases.
+
+Learning goal: practice recognizing problem patterns and stating brute force,
+optimized approach, time complexity, and space complexity.
+
+#### Project 5: Concurrent File Processor
+
+Use `ThreadPoolExecutor` for I/O-bound file reads, log failures, and compare runtime with sequential processing. Add
+tests with `tmp_path`.
+
+Learning goal: understand why threads help blocking I/O, how to collect results,
+and how to report partial failures safely.
 
 ---
 
