@@ -500,6 +500,29 @@ def describe(name: str, /, role: str = "user", *, active: bool = True) -> str:
     return f"{name}:{role}:{active}"
 ```
 
+**What do `/` and `*` mean?** They separate how arguments can be passed;
+neither separator receives a value. `/` is not division in a function signature.
+
+| Parameter | Position in signature | How to pass it |
+|---|---|---|
+| `name` | Before `/` | By position only |
+| `role` | Between `/` and `*` | By position or keyword |
+| `active` | After the bare `*` | By keyword only |
+
+```python
+assert describe("Alice") == "Alice:user:True"
+assert describe("Alice", "admin") == "Alice:admin:True"
+assert describe("Alice", role="admin", active=False) == "Alice:admin:False"
+
+# Invalid calls (uncomment either line to see TypeError):
+# describe(name="Alice")             # name must be passed by position.
+# describe("Alice", "admin", False)  # active must use active=False.
+```
+
+**Remember:** parameters **before `/` are positional-only**; parameters
+**after the bare `*` are keyword-only**. A parameter between them supports both
+styles. Defaults such as `role="user"` still apply when the argument is omitted.
+
 `*args` and `**kwargs`:
 
 ```python
@@ -523,6 +546,28 @@ def add_item(item: str, items: list[str] | None = None) -> list[str]:
     items.append(item)
     return items
 ```
+
+**Why is `items=[]` bad here?** Python creates the default list **once, when
+it executes the function definition**, not on each call. Calls that omit `items`
+reuse that same list, so appending changes the default for future calls:
+
+```python
+first = add_item_bad("apple")
+assert first == ["apple"]
+
+second = add_item_bad("banana")
+assert second == ["apple", "banana"]  # The previous call's item remains.
+assert first is second                # Both names refer to the same list.
+assert first == ["apple", "banana"]  # Even the earlier result has changed.
+
+assert add_item("apple") == ["apple"]
+assert add_item("banana") == ["banana"]  # A fresh list for each omitted argument.
+```
+
+Use `None` as the default and create `[]` inside the function, as in `add_item`
+above. The same caution applies to mutable defaults such as `{}` and `set()`.
+If the caller explicitly passes a list, both versions append to that caller's
+list; the fix prevents accidental sharing between calls that omit the argument.
 
 **Interview answer:** A pure function returns the same result for the same input and avoids side effects. Pure functions are easier to test.
 
@@ -1234,58 +1279,238 @@ smallest = heappop(heap)
 
 ## 28. Concurrency And Parallelism
 
-| Workload | Best tool | Why |
-|---|---|---|
-| I/O-bound blocking calls | `ThreadPoolExecutor` | Simple concurrent waiting. |
-| CPU-bound Python work | `ProcessPoolExecutor` | Uses multiple processes and bypasses GIL limits. |
-| Many async network calls | `asyncio` | Cooperative concurrency. |
-| Shared mutable state | Locks/queues | Prevent race conditions. |
+**Concurrency** means making progress on multiple tasks. **Parallelism** means
+executing work at the same time. Both threads and async tasks can overlap time
+spent waiting for I/O; neither automatically speeds up heavy Python calculations.
 
-Thread pool:
+| Workload | Start with | Example use case |
+|---|---|---|
+| Blocking I/O functions | `ThreadPoolExecutor` | Downloads with `urllib`, blocking SDK/database calls, file operations |
+| Async I/O libraries | `asyncio` | Async web servers, WebSockets, many API calls with an async client |
+| CPU-bound Python work | `ProcessPoolExecutor` | Independent calculations using multiple processes |
+
+For ordinary GIL-enabled CPython, processes allow CPU-bound Python code to use
+multiple cores. Threads can also help computations in native libraries that release the GIL.
+
+### Thread pool: workers run blocking functions
+
+**Practical example:** download three pages. While one worker waits for a
+response, other workers can continue their requests.
 
 ```python
 from concurrent.futures import ThreadPoolExecutor
+from urllib.request import urlopen
 
 
-def fetch(identifier: int) -> str:
-    return f"item-{identifier}"
+def download_size(url: str) -> tuple[str, int]:
+    with urlopen(url, timeout=10) as response:
+        content = response.read()
+    return url, len(content)  # Bytes downloaded, not characters.
 
 
-with ThreadPoolExecutor(max_workers=4) as executor:
-    results = list(executor.map(fetch, [1, 2, 3]))
+urls = [
+    "https://www.python.org/",
+    "https://docs.python.org/3/",
+    "https://example.com/",
+]
+
+with ThreadPoolExecutor(max_workers=3) as executor:
+    results = list(executor.map(download_size, urls))
+
+for url, size in results:
+    print(f"{url}: {size} bytes")  # Sizes vary.
 ```
 
-**Interview answer:** Concurrency is about making progress on multiple tasks; parallelism is executing multiple tasks at the same time.
+`max_workers=3` allows up to three worker **threads**, not processes. Each
+blocking download occupies a worker until it finishes. With 100 submitted jobs,
+remaining jobs wait for a free worker. Workers do not wait for a batch of three:
+
+```text
+Worker 1: download 1 finishes → starts download 4
+Worker 2: download 2 still running
+Worker 3: download 3 finishes → starts download 5
+```
+
+**Is this Python's built-in `map()`?** It follows the same function-per-input
+idea, but the execution differs:
+
+| Expression | Execution | Results |
+|---|---|---|
+| `map(download_size, urls)` | Sequentially in the caller, as consumed | Iterator in input order |
+| `executor.map(download_size, urls)` | Schedules calls on worker threads | Iterator in input order |
+
+Pass the function name without parentheses: `download_size` lets the executor
+call it once per URL. `list(...)` consumes the iterator and waits to collect all
+results. The following `print` loop therefore starts only after all downloads
+succeed. A failed call raises when its result is retrieved. Leaving the executor's
+`with` block shuts down the pool and waits for pending work.
+
+### Show results as each download finishes
+
+Reuse `download_size` and `urls` from above. `submit()` returns a **Future**, an
+object representing one pending or completed call. `as_completed()` yields
+completed futures without requiring input order.
+
+```python
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+with ThreadPoolExecutor(max_workers=3) as executor:
+    jobs = {executor.submit(download_size, url): url for url in urls}
+
+    for completed in as_completed(jobs):
+        url = jobs[completed]
+        try:
+            _, size = completed.result()
+            print(f"Finished: {url} — {size} bytes", flush=True)
+        except Exception as error:
+            print(f"Failed: {url} — {error}", flush=True)
+```
+
+**Yes, a result can be shown while workers continue with later requests.**
+Here, `completed.result()` retrieves an already completed call's result or raises
+its exception. Other downloads continue independently. In a web app, stream
+these updates to the browser if users should see them immediately; printing only
+writes to the server's output.
+
+Looping directly over `executor.map(...)` also avoids building a whole result
+list, but preserves input order: a slow first request can delay displaying later
+results that are already ready. `as_completed()` avoids that ordering delay.
+
+These examples need internet access. Each download reads its whole page into
+memory; use chunked reads for large files. Threads do not guarantee a speedup
+for tiny or already fast requests. Protect shared mutable state with appropriate
+locks or communicate through queues.
 
 ---
 
 ## 29. Async Programming
 
+**How is asyncio different from a thread pool?** Both overlap I/O waiting.
+A thread pool assigns blocking functions to worker threads. Asyncio runs tasks
+on an event loop: when an async operation needs to wait, the task yields control
+so the loop can run another ready task on the same thread.
+
+| Question | Thread pool | Asyncio |
+|---|---|---|
+| What waits for a response? | A worker thread | A suspended task |
+| How does other work progress? | Other worker threads run | The loop runs other ready tasks |
+| Which libraries fit? | Blocking I/O libraries | Async I/O libraries |
+| Good use cases | Existing blocking HTTP clients or SDKs | Async web servers, WebSockets, many concurrent async requests |
+| Can you handle results as they finish? | Yes: `concurrent.futures.as_completed()` | Yes: `asyncio.as_completed()` |
+
+### Practical example: download pages with an async HTTP client
+
+Install the dependency once with `python -m pip install httpx`.
+
 ```python
 import asyncio
+import httpx
 
 
-async def fetch(identifier: int) -> str:
-    await asyncio.sleep(0.1)
-    return f"result-{identifier}"
+async def download_size(client: httpx.AsyncClient, url: str) -> tuple[str, int]:
+    response = await client.get(url)
+    response.raise_for_status()
+    return url, len(response.content)
 
 
 async def main() -> None:
-    results = await asyncio.gather(fetch(1), fetch(2))
-    print(results)
+    urls = [
+        "https://www.python.org/",
+        "https://docs.python.org/3/",
+        "https://example.com/",
+    ]
+    async with httpx.AsyncClient(timeout=10) as client:
+        results = await asyncio.gather(
+            *(download_size(client, url) for url in urls)
+        )
+    for url, size in results:
+        print(f"{url}: {size} bytes")
 
 
 if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-Common mistakes:
+`gather()` schedules the downloads to run concurrently. At
+`await client.get(url)`, a task can pause for network I/O while other tasks make
+progress. When all downloads succeed, `gather()` returns results in input order.
+An exception can propagate before every other task finishes; the example does
+not collect partial successes. See [HTTPX async support](https://www.python-httpx.org/async/)
+for the client API.
 
-- Forgetting `await`.
-- Calling blocking I/O inside async code.
-- Creating coroutine objects without executing them.
+### “But both examples wait!”
+
+Yes: both examples need every page size before printing their result lists.
+**Waiting for results and blocking the event-loop thread are different things.**
+
+- `list(executor.map(...))` waits in the calling thread; worker threads continue.
+- `await asyncio.gather(...)` waits in the current task; other ready tasks on the
+  event loop can continue. It does not block that thread while waiting on async I/O.
+- `asyncio.run(main())` waits for the top-level coroutine to finish before the
+  script moves on. Async does not make unfinished results instantly available.
+
+For illustration, three independent requests taking 3, 1, and 2 seconds need
+about 6 seconds sequentially. Either approach can overlap the waiting and finish
+in roughly 3 seconds, plus overhead, if all three requests can run concurrently.
+
+**To process async results as they finish:** replace the `results = await ...`
+statement inside the client's `async with` block with this loop, and remove the
+later `for url, size in results` loop:
+
+```python
+tasks = [asyncio.create_task(download_size(client, url)) for url in urls]
+for completed in asyncio.as_completed(tasks):
+    try:
+        url, size = await completed
+        print(f"Finished: {url} — {size} bytes", flush=True)
+    except Exception as error:
+        print(f"Failed request: {error}", flush=True)
+```
+
+This processes each result when ready while other requests continue. The loop
+eventually handles every task; it does not wait for all tasks before showing the
+first result. Keep it inside the client context so the client stays open.
+
+### When to use ThreadPoolExecutor versus asyncio
+
+**Use `ThreadPoolExecutor` when your work waits on I/O and your existing functions
+are blocking.** For example, download pages with `urllib.request`, call a
+blocking cloud SDK, or process independent file reads. You can keep ordinary
+`def` functions and run them through a bounded worker pool. Each task should use
+its own resources, or share only resources that support concurrent access.
+
+**Use `asyncio` when your work waits on I/O and your application and libraries
+support `async`/`await`.** For example, an async web server can call several APIs
+with `httpx.AsyncClient`, or manage many WebSocket connections. Waiting tasks do
+not each need their own worker thread, making async a good fit for many open,
+mostly waiting connections. Still limit concurrent requests and resource usage.
+
+| Your situation | Choose | Reason |
+|---|---|---|
+| Existing script uses blocking HTTP requests or SDK calls | `ThreadPoolExecutor` | Overlap waiting without rewriting those calls as async |
+| Existing async application calls async HTTP/database clients | `asyncio` | Integrates with its event loop and async libraries |
+| Many long-lived network connections using async libraries | `asyncio` | Avoids assigning a worker thread to every waiting connection |
+| Async application must call a blocking I/O function | `await asyncio.to_thread(...)` | Runs that call in a thread without blocking the event loop |
+| Heavy calculations written in Python | Usually `ProcessPoolExecutor` | Neither async waiting nor a normal GIL-enabled thread pool speeds up CPU-bound Python execution |
+| A few quick operations with no meaningful waiting | Ordinary sequential code | Concurrency overhead may exceed any benefit |
+
+**Decision rule:** start with the library you need. Blocking I/O → thread pool.
+Async I/O in an async application → asyncio. The number of tasks alone does not
+decide: 100 downloads can use either approach. Both can return results as each
+job finishes, and both need you to wait for any result you depend on.
+
+**Common mistakes:**
+
+- Calling a coroutine without awaiting it or scheduling it as a task.
+- Expecting `async def` alone to make blocking functions nonblocking.
+- Using `time.sleep()` or blocking HTTP calls on the event-loop thread; these
+  can stall every task on that loop. Use async equivalents, or
+  `await asyncio.to_thread(blocking_function, ...)` for suitable blocking I/O.
 - Expecting async to speed up CPU-bound Python code.
+- Starting unlimited requests without considering server and connection limits.
 
+See Python's [asyncio task documentation](https://docs.python.org/3/library/asyncio-task.html)
+for scheduling, waiting, and completion-order iteration.
 
 ---
 
