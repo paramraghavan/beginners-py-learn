@@ -304,24 +304,46 @@ def fibonacci_memo(n):
 
 ### 2. Iterative Approach
 
-Use a loop instead of heavy recursion.
-
-Example:
+Fibonacci starts with `0, 1`; each following number is the sum of the previous
+two. A loop avoids the repeated calculations of naive recursion.
 
 ```python
-def fibonacci_iterative(n):
-    if n <= 1:
-        return n
+def fibonacci_iterative(n: int) -> int:
+    """Return the Fibonacci number at index n (starting at index 0)."""
+    if n < 0:
+        raise ValueError("n must be non-negative")
 
     a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b  # Move forward using the OLD values of a and b.
+    return a
 
-    for _ in range(2, n + 1):
-        a, b = b, a + b
 
-    return b
+assert fibonacci_iterative(0) == 0
+assert fibonacci_iterative(1) == 1
+assert fibonacci_iterative(6) == 8
 ```
 
-This version runs in **$O(n)$** time.
+**How the update works:** `a, b = b, a + b` calculates both right-hand values
+before assigning either variable. If `a=2` and `b=3`, they become `a=3` and
+`b=5`. After n iterations, `a` holds the Fibonacci number at index n.
+
+```text
+Step     a    b
+Start    0    1
+1        1    1
+2        1    2
+3        2    3
+4        3    5
+5        5    8
+6        8   13   → return a: 8
+```
+
+**Complexity:** O(n) time for n iterations and O(1) auxiliary space for a fixed
+number of variables, assuming constant-cost integer arithmetic. Unlike recursion,
+there is no growing call stack or memoization table. Python integers grow with
+the result: counting individual bits, this implementation uses O(n) space and
+O(n²) time for its growing integer additions.
 
 ---
 
