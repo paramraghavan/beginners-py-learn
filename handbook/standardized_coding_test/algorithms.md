@@ -479,6 +479,23 @@ def bfs(graph, start):
 
     return visited
 
+
+def main():
+    graph = {
+        "A": ["B", "C"],
+        "B": ["A", "D"],
+        "C": ["A", "D"],
+        "D": ["B", "C"],
+    }
+    visited = bfs(graph, "A")
+    print("Visited nodes:", sorted(visited))
+    # Output: Visited nodes: ['A', 'B', 'C', 'D']
+    # Sorting makes the set's display consistent; it is not BFS visit order.
+
+
+if __name__ == "__main__":
+    main()
+
 # Space used:
 # - visited set: stores up to n nodes
 # - queue: stores up to n nodes
