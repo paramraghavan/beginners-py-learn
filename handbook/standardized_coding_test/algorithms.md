@@ -169,13 +169,13 @@ def binary_search(arr, target):
         if arr[mid] == target:
             return mid
         elif arr[mid] < target:
-            left = mid + 1      # Eliminate right half
+            left = mid + 1      # Eliminate mid and the left half
         else:
-            right = mid - 1     # Eliminate left half
+            right = mid - 1     # Eliminate mid and the right half
 
 # Each iteration eliminates half the remaining elements
-# n=16: iterations = 16 → 8 → 4 → 2 → 1 = 4 iterations
-# n=32: iterations = 32 → 16 → 8 → 4 → 2 → 1 = 5 iterations
+# n=16: 16 → 8 → 4 → 2 → 1 = 4 halvings, plus a final check
+# n=32: 32 → 16 → 8 → 4 → 2 → 1 = 5 halvings, plus a final check
 # n=1000: iterations ≈ 10
 ```
 
@@ -183,11 +183,11 @@ def binary_search(arr, target):
 ```
 How many times can we divide n by 2 until we reach 1?
 
-n=2:    2 → 1            = 1 iteration
-n=4:    4 → 2 → 1        = 2 iterations
-n=8:    8 → 4 → 2 → 1    = 3 iterations
-n=16:   16 → 8 → 4 → 2 → 1 = 4 iterations
-n=1000: ≈ 10 iterations
+n=2:    2 → 1            = 1 halving
+n=4:    4 → 2 → 1        = 2 halvings
+n=8:    8 → 4 → 2 → 1    = 3 halvings
+n=16:   16 → 8 → 4 → 2 → 1 = 4 halvings
+n=1000: ≈ 10 halvings
 
 This is logarithm! log₂(n)
 n=2:    log₂(2) = 1
@@ -196,9 +196,69 @@ n=8:    log₂(8) = 3
 n=16:   log₂(16) = 4
 n=1000: log₂(1000) ≈ 10
 
-Pattern: iterations = log₂(n)
+Pattern: the number of halvings grows like log₂(n)
 Therefore: O(log n)
 ```
+
+**Note: Is `log` always base 2 in Big O?** No. Binary search uses base 2
+because each step halves the search space. Dividing the remaining size by 3
+each step would give log₃(n), which is also O(log n).
+
+Any **fixed base greater than 1** gives the same Big O class because changing
+the base only introduces a constant multiplier:
+
+```text
+log₂(n) = log₁₀(n) / log₁₀(2) ≈ 3.322 × log₁₀(n)
+O(log₂ n) = O(log₁₀ n) = O(log n)
+```
+
+For exact counts, the base still matters. Also, halving 16 down to 1 takes
+four reductions, but the binary search above can need a fifth iteration to
+check the last element. For n ≥ 1, its worst-case number of loop iterations
+is floor(log₂(n)) + 1. That extra constant does not change O(log n).
+
+#### Example 7: O(n³) - Cubic Time
+
+**Cubic time** means the amount of work grows in proportion to n × n × n.
+A common example is three nested loops, each running n times, with constant
+work in the innermost loop:
+
+```python
+def count_ordered_triples(arr):
+    count = 0
+    for i in range(len(arr)):          # n choices for the first position
+        for j in range(len(arr)):      # n choices for each i
+            for k in range(len(arr)):  # n choices for each (i, j)
+                count += 1            # Constant work per triple
+    return count
+
+print(count_ordered_triples([1, 2, 3]))  # Output: 27
+```
+
+This counts ordered triples of indices, allowing repeats. For each of the n
+choices of i, there are n choices of j and n choices of k.
+
+**Calculation:**
+
+```text
+n=2:       2 × 2 × 2 = 8 increments
+n=3:       3 × 3 × 3 = 27 increments
+n=10:      10 × 10 × 10 = 1,000 increments
+n=100:     100 × 100 × 100 = 1,000,000 increments
+n=1000:    1000 × 1000 × 1000 = 1,000,000,000 increments
+
+Pattern: increments = n³
+Time complexity: O(n³)
+Extra space: O(1), because we only keep a counter and loop variables
+```
+
+**Key insight:** Doubling n multiplies cubic work by 8: (2n)³ = 8n³.
+For comparison, doubling n multiplies linear work by 2 and quadratic work
+by 4. Cubic algorithms can therefore become expensive quickly as inputs grow.
+
+Three nested loops are O(n³) only when all three run proportionally to n
+and the innermost work is O(1). If their sizes are n, m, and k instead,
+the time is O(n × m × k).
 
 #### Common Time Complexities (from fastest to slowest)
 ```
@@ -274,27 +334,108 @@ def create_matrix(n):
 # Therefore: O(n²)
 ```
 
-#### Example 4: Recursion Stack Space - O(n)
+#### Example 4: Iterative Factorial - O(1) Extra Space
+
+**Iteration means repeating work using a loop.** This function calculates
+n! = 1 × 2 × ... × n for a non-negative integer n:
+
 ```python
 def factorial(n):
+    result = 1
+    for number in range(2, n + 1):
+        result *= number
+    return result
+
+
+print(factorial(5))  # 120
+print(factorial(0))  # 1
+```
+
+**Step by step for `factorial(5)`:**
+
+```text
+Start:       result = 1
+number = 2:  result = 1 × 2  = 2
+number = 3:  result = 2 × 3  = 6
+number = 4:  result = 6 × 4  = 24
+number = 5:  result = 24 × 5 = 120
+Return 120
+```
+
+`range(2, n + 1)` visits 2 through n; the upper bound is excluded.
+For n = 0 or n = 1, the loop runs zero times and returns the initial 1.
+
+**How to identify the complexity:**
+
+- **Time: O(n).** For n ≥ 1, the loop performs n−1 multiplications.
+  Assuming constant-cost arithmetic, the work grows linearly with n.
+- **Extra space: O(1).** The function keeps a running result and a loop
+  variable. It does not create a growing list or a recursive call stack.
+  This is the usual simplified model that treats each integer as one value.
+
+The recursive version keeps O(n) calls on the stack. This iterative version
+updates `result` in the same call, so its stack usage stays constant.
+
+**Do not confuse the answer with the work:** Returning the number n! does
+not mean O(n!) time. This loop multiplies n−1 times; generating all
+permutations explores n! completed arrangements.
+
+Python integers grow with their values. The O(1) extra-space statement counts
+variables; the actual number of bits needed for the result grows with n.
+Large-integer multiplication also requires more work than the simplified
+constant-cost arithmetic model assumes.
+
+##### Recursive Factorial: O(n) Time, O(n) Stack Space
+
+The recursive version calculates the same answer by calling itself on a
+smaller input:
+
+```python
+def factorial_recursive(n):
     if n <= 1:
         return 1
-    return n * factorial(n - 1)  # Recursive call
+    return n * factorial_recursive(n - 1)
 
-# Call stack grows with n:
-# factorial(5):
-#   → factorial(4):
-#     → factorial(3):
-#       → factorial(2):
-#         → factorial(1): [depth = 5]
 
-# For n=10:     10 calls on stack = O(10)
-# For n=100:    100 calls on stack = O(100)
-# For n=1000:   1000 calls on stack = O(1000)
-
-# Pattern: Stack depth = n
-# Therefore: O(n)
+print(factorial_recursive(5))  # 120
 ```
+
+For `factorial_recursive(5)`, follow the calls:
+
+```text
+factorial_recursive(5)
+  → factorial_recursive(4)
+    → factorial_recursive(3)
+      → factorial_recursive(2)
+        → factorial_recursive(1) returns 1
+```
+
+Then the waiting calls finish their multiplications:
+
+```text
+factorial_recursive(2): 2 × 1  = 2
+factorial_recursive(3): 3 × 2  = 6
+factorial_recursive(4): 4 × 6  = 24
+factorial_recursive(5): 5 × 24 = 120
+```
+
+There are **five calls and four multiplications**. For n ≥ 1, there are
+n calls and n−1 multiplications. Each call makes only one smaller call,
+so there is one chain of work. Assuming constant-cost arithmetic,
+the time complexity is **O(n)**.
+
+At the deepest point, all n calls are still active. Keeping their unfinished
+work requires **O(n) stack space** under the usual constant-space-per-call model.
+
+| Version | Time | Extra space | Reason for space cost |
+|---|---|---|---|
+| Recursive factorial | O(n) | O(n) | Keeps waiting calls on the stack |
+| Iterative factorial | O(n) | O(1) | Reuses a fixed number of variables |
+
+Both versions return n!, but neither explores n! arrangements. The value of
+the answer does not determine the number of steps. The table uses the same
+simplified arithmetic model as the iterative example above. Python also
+limits recursion depth, so large inputs can raise `RecursionError`.
 
 #### Example 5: Recursion with Memoization - O(n)
 ```python
